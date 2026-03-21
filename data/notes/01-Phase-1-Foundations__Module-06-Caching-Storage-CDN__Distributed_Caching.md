@@ -130,7 +130,7 @@ graph TD
     LB --> App1[App Server 1]
     LB --> App2[App Server 2]
     
-    subgraph Distributed Cache Ring
+    subgraph "Distributed Cache Ring"
         App1 -- "Hash(key) -> Node B" --> CacheB[(Cache Node B)]
         App2 -- "Hash(key) -> Node A" --> CacheA[(Cache Node A)]
         CacheC[(Cache Node C)]

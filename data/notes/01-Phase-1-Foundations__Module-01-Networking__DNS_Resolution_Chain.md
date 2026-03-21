@@ -114,7 +114,7 @@ graph TD
     Client[Client Browser] -->|1. Cache Check| Local[OS Resolver Cache]
     Local -->|2. Miss| Recursive[Recursive Resolver 8.8.8.8]
     
-    subgraph Iterative Resolution
+    subgraph "Iterative Resolution"
         Recursive -->|3. Query .com| Root[Root Server .]
         Root -->|4. Referral| Recursive
         Recursive -->|5. Query example.com| TLD[TLD Server .com]

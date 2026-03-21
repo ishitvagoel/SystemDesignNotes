@@ -22,7 +22,7 @@ Both nodes and keys are hashed onto a fixed circular space (typically 0 to 2^32 
 
 ```mermaid
 graph LR
-    subgraph Hash Ring
+    subgraph "Hash Ring"
     A["Node A (pos 47)"] --> B["Node B (pos 152)"]
     B --> C["Node C (pos 234)"]
     C --> A

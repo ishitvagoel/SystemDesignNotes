@@ -107,16 +107,16 @@ This is a first-class architectural pattern, not a niche technique. Netflix's St
 
 ```mermaid
 graph LR
-    subgraph Client Tier
+    subgraph "Client Tier"
         Mobile[Mobile App]
-        Web[Web Dashboard]
+        Web[Web SPA]
     end
 
-    subgraph API Gateway / BFF
-        Gateway[GraphQL Federation Gateway]
+    subgraph "API Gateway / BFF"
+        Gateway[GraphQL Gateway]
     end
 
-    subgraph Internal Services (Mesh)
+    subgraph "Internal Services (Mesh)"
         User[User Service]
         Order[Order Service]
         Inv[Inventory Service]
