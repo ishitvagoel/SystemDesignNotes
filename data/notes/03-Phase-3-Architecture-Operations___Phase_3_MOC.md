@@ -37,6 +37,7 @@ graph TD
 | [[_Module 16 MOC]] | Reliability Engineering & Testing | How do you design for failure and verify resilience? |
 | [[_Module 17 MOC]] | Observability & Deployment | How do you see what's happening and ship changes safely? |
 | [[_Module 18 MOC]] | Multi-Tenancy, Geo & Cost | How do you serve many customers globally without going broke? |
+| [[03-Phase-3-Architecture-Operations__Module-24-Data-Privacy-Compliance|Module 24]] | Data Privacy & Compliance | How do you handle sensitive data and regulatory requirements? |
 
 ## After This Phase
 
