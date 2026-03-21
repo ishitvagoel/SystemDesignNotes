@@ -63,7 +63,7 @@ graph TD
     subgraph "UDP: Unreliable Datagram"
         C2[Client] -- "1. Data (Postcard)" --> S2[Server]
         C2 -- "2. Data (Postcard)" --> S2
-        S2 -->x C2: No ACK back
+        S2 -.->|No ACK back| C2
     end
 
     style S1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
