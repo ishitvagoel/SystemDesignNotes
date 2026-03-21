@@ -19,7 +19,7 @@ graph LR
 - **The "Cross-Module" Challenge**: Find two modules that seem unrelated (e.g., M1: Networking and M19: AI Inference). Find at least one point where they connect.
 - **The "Case Study" Drill**: Take any case study from the vault and explain which 3 modules were most critical to that company's success.
 
-## Recommended 20-Week Study Plan
+## Recommended 22-Week Study Plan
 
 This vault is designed for one module per week, with capstones spread across the final weeks. Adjust pace to your schedule — there's no penalty for going slower.
 
@@ -42,22 +42,24 @@ This vault is designed for one module per week, with capstones spread across the
 | 10 | M10: Distributed TX | 2PC, sagas, outbox, idempotent consumers |
 | 11 | M11: Replication | Failover, conflict resolution, CRDTs |
 
-### Phase 3: Architecture & Operations (Weeks 12–17)
+### Phase 3: Architecture & Operations (Weeks 12–18)
 | Week | Module | Focus |
 |------|--------|-------|
 | 12 | M12: Architecture | Monolith vs microservices, event sourcing, cell architecture |
 | 13 | M13: Messaging | Kafka vs RabbitMQ, EDA, stream processing, data pipelines |
 | 14 | M14: Search + M15: Security | Full-text + vector search, TLS, auth, supply chain |
 | 15 | M16: Reliability | SLOs, resilience patterns, chaos engineering |
-| 16 | M17: Observability + M18: Multi-Tenancy | Monitoring, deployment, geo-distribution, cost |
-| 17 | Capstones 1–2 | URL Shortener, News Feed |
+| 16 | M17: Observability | Monitoring, deployment, alerting, incident management |
+| 17 | M22: Cloud-Native + M23: FinOps | K8s, serverless, cost engineering, FinOps |
+| 18 | M24: Privacy + M18: Multi-Tenancy | Data sovereignty, compliance, SaaS isolation, geo-distribution |
 
-### Phase 4: Modern & Capstones (Weeks 18–20)
+### Phase 4: Modern & Capstones (Weeks 19–22)
 | Week | Module | Focus |
 |------|--------|-------|
-| 18 | M19: AI Inference + M20: RAG/Agents | LLM serving, RAG, agentic systems |
-| 19 | M21: Serverless/Platform + Capstone 3 | Edge compute, K8s, Payments design |
-| 20 | Capstones 4–6 | Collaborative Editor, AI Search, Multi-Region E-Commerce |
+| 19 | Capstones 1–2 | URL Shortener, News Feed |
+| 20 | M19: AI Inference + M20: RAG/Agents | LLM serving, RAG, agentic systems |
+| 21 | M21: Serverless/Platform + Capstone 3 | Edge compute, platform engineering, Payments design |
+| 22 | Capstones 4–6 | Collaborative Editor, AI Search, Multi-Region E-Commerce |
 
 ## How to Use Each Note
 
