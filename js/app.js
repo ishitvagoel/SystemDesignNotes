@@ -451,10 +451,6 @@ function renderNote(id) {
     if (rawText.startsWith('graph ') || rawText.startsWith('flowchart ')) {
       // Change --|Label| to -->|Label|
       rawText = rawText.replace(/ --\|/g, ' -->|');
-      // Change -- "Label" --> to -->|Label|
-      rawText = rawText.replace(/ -- "([^"]+)" -->/g, ' -->|$1|');
-      // Change -- Label --> to -->|Label|
-      rawText = rawText.replace(/ -- ([^ \-\->\n]+) -->/g, ' -->|$1|');
       // Change --x to -->x
       rawText = rawText.replace(/ --x /g, ' -->x ');
       // Change --o to -->o
