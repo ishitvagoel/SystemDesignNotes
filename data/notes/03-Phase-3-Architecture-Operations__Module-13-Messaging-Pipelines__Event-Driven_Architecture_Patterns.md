@@ -106,6 +106,42 @@ A special case of event-carried state transfer where the events are generated fr
 
 **Event schema breakage**: A producer changes an event's schema (removes a field, changes a type) without coordinating with consumers. Consumers fail to deserialize the event. Solution: schema registry with backward compatibility enforcement (Avro + Confluent Schema Registry), semantic versioning for events, and CI checks that validate schema compatibility before deployment.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    User[User Checkout] --> API[Order API]
+    
+    subgraph Event-Carried State Transfer
+        API -- "Publish: OrderCreated (Full State)" --> Kafka[Event Stream / Kafka]
+    end
+    
+    Kafka --> Inv[Inventory Service]
+    Kafka --> Notif[Notification Service]
+    Kafka --> Search[Search Indexer]
+    
+    Inv -- "Consume & Update" --> InvDB[(Local Inv DB)]
+    Search -- "Consume & Upsert" --> Elastic[(Elasticsearch)]
+    
+    classDef primary fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    classDef secondary fill:var(--bg2),stroke:var(--border),stroke-width:1px;
+    class Kafka,API primary;
+    class Inv,Notif,Search secondary;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Event Size**: Keep individual events under **1MB** (default Kafka limit). Ideally, events should be **1KB - 10KB** for maximum throughput.
+- **Throughput**: A well-tuned Kafka cluster can handle **100k to 1M+ messages/sec** per topic.
+- **Latency**: End-to-end publish/consume latency on an event stream is typically **10ms - 50ms**.
+- **Retention**: Start with **7 days** of event retention for standard topics, allowing enough time to fix broken consumers and replay weekend failures.
+
+## Real-World Case Studies
+
+- **Uber (Event-Driven Pricing)**: Uses an event-driven architecture built on Kafka to calculate surge pricing. Geospatial events, ride requests, and driver availability are streamed and aggregated in real-time.
+- **LinkedIn (Event-Carried State Transfer)**: Databus (and later Kafka) is used to capture database changes and distribute them as full-state events to downstream systems like the search index and cache invalidation services.
+- **Netflix (Event Notification)**: Uses events to trigger complex asynchronous media encoding pipelines. When a video is uploaded, an event kicks off parallel processing across hundreds of microservices.
+
 ## Connections
 
 - [[Message Queues vs Event Streams]] — The transport layer for these patterns

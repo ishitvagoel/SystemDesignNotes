@@ -122,6 +122,43 @@ A cold cache (empty after restart or failover) means every request is a miss, hi
 
 **Cross-datacenter cache coherence**: Each data center has its own cache cluster. An update invalidates the cache in DC1 but not DC2. Users routed to DC2 see stale data. Solution: cross-DC invalidation via message bus (publish invalidation events to all DCs), or accept stale reads with TTL-based eventual consistency. True cross-DC cache coherence is expensive and often unnecessary.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Client[Client Request] --> LB[Load Balancer]
+    LB --> App1[App Server 1]
+    LB --> App2[App Server 2]
+    
+    subgraph Distributed Cache Ring
+        App1 -- "Hash(key) -> Node B" --> CacheB[(Cache Node B)]
+        App2 -- "Hash(key) -> Node A" --> CacheA[(Cache Node A)]
+        CacheC[(Cache Node C)]
+    end
+    
+    CacheA -- "Miss" --> DB[(Primary DB)]
+    CacheB -- "Miss" --> DB
+    
+    classDef primary fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    classDef secondary fill:var(--bg2),stroke:var(--border),stroke-width:1px;
+    class Client,LB secondary;
+    class App1,App2,DB primary;
+    class CacheA,CacheB,CacheC primary;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Latency**: Redis/Memcached local network reads take **~0.5ms to 1ms**.
+- **Throughput**: A single Redis node can comfortably handle **50k - 100k+ ops/sec** (depending on command complexity and payload size).
+- **Memory**: A general rule of thumb is to size the cache to hold **10% to 20% of your total dataset** (aiming for the "hot" working set).
+- **Hit Rate**: Aim for a **90%+ cache hit rate**. If it drops below 80%, you are either under-provisioned (cache churn) or experiencing a shift in access patterns.
+
+## Real-World Case Studies
+
+- **Facebook (Memcached)**: Scaled Memcached to thousands of servers holding hundreds of terabytes. They pioneered the "McRouter" architecture to solve connection pooling and scaling limits of massive Memcached clusters.
+- **Twitter / X (Redis)**: Uses Redis heavily for timeline generation. When a user tweets, it is fanned out to the Redis lists of their followers (for users with < 100k followers), blending push (write-time) and pull (read-time) caching strategies.
+- **Discord (ScyllaDB + Redis)**: Uses Redis as an L1 cache in front of ScyllaDB to handle the massive read volume of chat messages, specifically protecting the database from "hot chat" channels with thousands of active participants.
+
 ## Connections
 
 - [[Cache Patterns and Strategies]] — The caching patterns that this infrastructure supports
