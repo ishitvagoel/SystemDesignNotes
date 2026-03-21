@@ -87,8 +87,8 @@ graph TD
     
     subgraph "In-Memory Cache"
         BP -->|2. Check Hash Table| HT{Page Table}
-        HT --|Hit| Return[Return Buffer Pointer]
-        HT --|Miss| Evict[Choose Victim Page]
+        HT -->|Hit| Return[Return Buffer Pointer]
+        HT -->|Miss| Evict[Choose Victim Page]
     end
     
     subgraph "Disk I/O"

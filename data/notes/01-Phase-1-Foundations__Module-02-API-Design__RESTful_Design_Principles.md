@@ -152,15 +152,15 @@ graph TD
     
     subgraph "REST Resource Handling"
         API -->|Check Cache| Cache{Redis Cache}
-        Cache --|Hit| Return[Return 200 OK + JSON]
-        Cache --|Miss| DB[(Database)]
+        Cache -->|Hit| Return[Return 200 OK + JSON]
+        Cache -->|Miss| DB[(Database)]
         DB -->|Fetch Noun| Result[Book Object]
         Result -->|Transform| JSON[JSON Representation]
         JSON -->|Store| Cache
     end
     
-    API --|201 Created| Client2[POST /books]
-    API --|404 Not Found| Client3[GET /missing]
+    API -->|201 Created| Client2[POST /books]
+    API -->|404 Not Found| Client3[GET /missing]
 
     style API fill:var(--surface),stroke:var(--accent),stroke-width:2px;
 ```

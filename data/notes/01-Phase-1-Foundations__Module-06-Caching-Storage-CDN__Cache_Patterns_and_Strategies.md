@@ -165,8 +165,8 @@ graph TD
     subgraph "Read Path (Cache-Aside)"
         User[Client] -->|1. Get User:123| App[Application]
         App -->|2. Check Cache| Cache{Redis}
-        Cache --|Hit| Return[Return Value]
-        Cache --|Miss| DB[(Primary DB)]
+        Cache -->|Hit| Return[Return Value]
+        Cache -->|Miss| DB[(Primary DB)]
         DB -->|3. Fetch| App
         App -->|4. Populate| Cache
     end

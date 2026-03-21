@@ -116,11 +116,11 @@ graph TD
     
     subgraph Iterative Resolution
         Recursive -->|3. Query .com| Root[Root Server .]
-        Root --|4. Referral| Recursive
+        Root -->|4. Referral| Recursive
         Recursive -->|5. Query example.com| TLD[TLD Server .com]
-        TLD --|6. Referral| Recursive
+        TLD -->|6. Referral| Recursive
         Recursive -->|7. Query api.example.com| Auth[Authoritative NS Route53]
-        Auth --|8. A Record: 93.184.216.34| Recursive
+        Auth -->|8. A Record: 93.184.216.34| Recursive
     end
     
     Recursive -->|9. Final Answer| Client
