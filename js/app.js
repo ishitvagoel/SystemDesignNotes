@@ -777,13 +777,6 @@ const GRAPH_PHASE_LABELS = {
 };
 
 function buildGraphData() {
-  const notesByTitle = {};
-  for (const note of FILTERED_INDEX) {
-    const normalize = s => s.replace(/[,;:—–]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
-    notesByTitle[normalize(note.title)] = note;
-    notesByTitle[normalize(note.filename.replace('.md',''))] = note;
-  }
-
   const nodes = FILTERED_INDEX.map(n => ({
     id: n.id,
     title: n.title,
@@ -795,26 +788,13 @@ function buildGraphData() {
   const nodeMap = {};
   nodes.forEach(n => nodeMap[n.id] = n);
 
-  const linksSet = new Set();
   const links = [];
 
-  for (const note of FILTERED_INDEX) {
-    const content = VAULT_CONTENT[note.id] || '';
-    const re = /\[\[([^\]]+)\]\]/g;
-    let m;
-    while ((m = re.exec(content)) !== null) {
-      let target = m[1].split('|')[0].trim();
-      const normalize = s => s.replace(/[,;:—–]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
-      const targetNote = notesByTitle[normalize(target)];
-      if (targetNote && targetNote.id !== note.id) {
-        const key = [note.id, targetNote.id].sort().join('|');
-        if (!linksSet.has(key)) {
-          linksSet.add(key);
-          links.push({ source: note.id, target: targetNote.id });
-          nodeMap[note.id].links++;
-          nodeMap[targetNote.id].links++;
-        }
-      }
+  for (const edge of GRAPH_EDGES) {
+    if (nodeMap[edge.source] && nodeMap[edge.target]) {
+      links.push({ source: edge.source, target: edge.target });
+      nodeMap[edge.source].links++;
+      nodeMap[edge.target].links++;
     }
   }
 
@@ -1145,34 +1125,28 @@ document.getElementById('view-outline').addEventListener('click', () => {
 });
 
 // ── STUDY MODE ──
+let ALL_STUDY_PROMPTS = [];
 let studyPrompts = [];
 let studyIndex = 0;
 let studyPhaseFilter = 'all';
 
-function extractReflectionPrompts(phaseFilter) {
-  const prompts = [];
-  for (const note of FILTERED_INDEX) {
-    if (note.is_moc) continue;
-    if (phaseFilter !== 'all' && note.folder !== phaseFilter) continue;
-    const content = VAULT_CONTENT[note.id] || '';
-    const match = content.match(/## Reflection Prompts\s*\n([\s\S]*?)(?=\n## |$)/);
-    if (!match) continue;
-    const block = match[1].trim();
-    // Parse numbered prompts
-    const items = block.split(/\n(?=\d+\.\s)/).filter(s => s.trim());
-    for (const item of items) {
-      const cleaned = item.replace(/^\d+\.\s*/, '').trim();
-      if (cleaned.length > 20) {
-        prompts.push({ text: cleaned, noteId: note.id, noteTitle: note.title, folder: note.folder });
-      }
-    }
-  }
+// Load prompts once
+fetch('data/study-prompts.json')
+  .then(r => r.json())
+  .then(data => { ALL_STUDY_PROMPTS = data; })
+  .catch(console.error);
+
+function getFilteredPrompts(phaseFilter) {
+  let filtered = phaseFilter === 'all' 
+    ? [...ALL_STUDY_PROMPTS] 
+    : ALL_STUDY_PROMPTS.filter(p => p.folder === phaseFilter);
+  
   // Shuffle (Fisher-Yates)
-  for (let i = prompts.length - 1; i > 0; i--) {
+  for (let i = filtered.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [prompts[i], prompts[j]] = [prompts[j], prompts[i]];
+    [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
   }
-  return prompts;
+  return filtered;
 }
 
 function renderStudyCard() {
@@ -1201,14 +1175,9 @@ function renderStudyCard() {
   document.getElementById('study-note-label').textContent = `${cfg.short || ''} · ${prompt.noteTitle}`;
   document.getElementById('study-prompt').textContent = prompt.text;
 
-  // Build context answer from the note's "How It Works" and "Mental Model" sections
-  const content = VAULT_CONTENT[prompt.noteId] || '';
-  const mentalMatch = content.match(/## Mental Model\s*\n([\s\S]*?)(?=\n## )/);
-  const mentalSnippet = mentalMatch ? mentalMatch[1].trim().split('\n').slice(0, 6).join('\n') : '';
-
   document.getElementById('study-answer').style.display = 'none';
-  if (mentalSnippet) {
-    document.getElementById('study-answer').innerHTML = `<div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Mental Model from this note</div>` + marked.parse(mentalSnippet);
+  if (prompt.mentalSnippet) {
+    document.getElementById('study-answer').innerHTML = `<div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Mental Model from this note</div>` + marked.parse(prompt.mentalSnippet);
   } else {
     document.getElementById('study-answer').innerHTML = '<em style="color:var(--text3)">Open the note for full context.</em>';
   }
@@ -1219,7 +1188,7 @@ function renderStudyCard() {
 }
 
 function restartStudy() {
-  studyPrompts = extractReflectionPrompts(studyPhaseFilter);
+  studyPrompts = getFilteredPrompts(studyPhaseFilter);
   studyIndex = 0;
   renderStudyCard();
   // Restore buttons
@@ -1251,7 +1220,7 @@ function bindStudyButtons() {
 }
 
 function initStudyMode() {
-  studyPrompts = extractReflectionPrompts(studyPhaseFilter);
+  studyPrompts = getFilteredPrompts(studyPhaseFilter);
   studyIndex = 0;
 
   // Build phase filter buttons
@@ -1259,7 +1228,7 @@ function initStudyMode() {
   phaseBtns.innerHTML = '';
   const allBtn = document.createElement('button');
   allBtn.className = 'study-phase-btn active';
-  allBtn.textContent = `All (${extractReflectionPrompts('all').length})`;
+  allBtn.textContent = `All (${ALL_STUDY_PROMPTS.length})`;
   allBtn.addEventListener('click', () => {
     studyPhaseFilter = 'all';
     updateStudyFilters();
@@ -1268,7 +1237,7 @@ function initStudyMode() {
   phaseBtns.appendChild(allBtn);
 
   for (const [folder, cfg] of Object.entries(PHASE_CONFIG)) {
-    const count = extractReflectionPrompts(folder).length;
+    const count = ALL_STUDY_PROMPTS.filter(p => p.folder === folder).length;
     if (count === 0) continue;
     const btn = document.createElement('button');
     btn.className = 'study-phase-btn';
@@ -1334,7 +1303,18 @@ document.getElementById('btn-export').addEventListener('click', async function()
     };
 
     for (const note of FILTERED_INDEX) {
-      const content = VAULT_CONTENT[note.id] || '';
+      let content = NOTE_CACHE[note.id];
+      if (!content) {
+        try {
+          const res = await fetch(`data/notes/${note.id}.md`);
+          content = await res.text();
+          NOTE_CACHE[note.id] = content; // cache it for later
+        } catch (e) {
+          console.error('Failed to fetch for export:', note.id);
+          content = '';
+        }
+      }
+
       const phaseFolder = phaseFolders[note.folder] || note.folder;
 
       // Build path
