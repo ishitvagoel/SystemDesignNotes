@@ -1437,7 +1437,8 @@ document.getElementById('btn-export').addEventListener('click', async function()
 });
 
 // ── MERMAID MODAL HANDLERS ──
-document.getElementById('mermaid-modal-close').addEventListener('click', () => {
+document.getElementById('mermaid-modal-close').addEventListener('click', (e) => {
+  e.stopPropagation();
   document.getElementById('mermaid-modal').style.display = 'none';
 });
 
