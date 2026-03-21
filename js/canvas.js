@@ -33,6 +33,9 @@ class CanvasEngine {
 
     // Palette setup
     this.initPalette();
+
+    // Load persisted state
+    this.loadState();
     
     // Global click to deselect
     this.svg.on('click', (e) => {
@@ -141,6 +144,7 @@ class CanvasEngine {
     const components = [
       { type: 'client', label: 'Client', icon: '💻' },
       { type: 'lb', label: 'Load Balancer', icon: '⚖️' },
+      { type: 'cdn', label: 'CDN', icon: '🌐' },
       { type: 'app', label: 'App Server', icon: '⚙️' },
       { type: 'db', label: 'Database', icon: '🗄️' },
       { type: 'cache', label: 'Cache', icon: '⚡' },
@@ -222,6 +226,7 @@ class CanvasEngine {
           d.y = e.y;
           self.render();
         })
+        .on('end', () => this.saveState())
       );
 
     nodeEnter.append('rect')
@@ -298,14 +303,52 @@ class CanvasEngine {
     content.innerHTML = `
       <div style="margin-bottom:12px;">
         <label style="display:block; font-size:10px; color:var(--text3); margin-bottom:4px;">NAME</label>
-        <input type="text" value="${this.selectedNode.label}" style="width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:6px; border-radius:4px; font-size:12px;">
+        <input id="prop-name" type="text" value="${this.selectedNode.label}" style="width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:6px; border-radius:4px; font-size:12px; outline:none;">
       </div>
       <div style="margin-bottom:12px;">
         <label style="display:block; font-size:10px; color:var(--text3); margin-bottom:4px;">CAPACITY (RPS)</label>
-        <input type="number" value="${this.selectedNode.capacity}" style="width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:6px; border-radius:4px; font-size:12px;">
+        <input id="prop-cap" type="number" value="${this.selectedNode.capacity}" style="width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:6px; border-radius:4px; font-size:12px; outline:none;">
+      </div>
+      <div style="font-size:10px; color:var(--text3); line-height:1.4; margin-top:16px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>CURRENT LOAD</span> <span>${Math.round(this.selectedNode.load)} RPS</span></div>
+        <div style="height:4px; background:var(--surface2); border-radius:2px; overflow:hidden;">
+          <div style="width:${Math.min(100, (this.selectedNode.load / this.selectedNode.capacity) * 100)}%; height:100%; background:${this.selectedNode.load > this.selectedNode.capacity ? 'var(--pink)' : 'var(--accent)'};"></div>
+        </div>
+      </div>
+      <div id="node-links" style="margin-top:16px;">
+        <div style="font-size:10px; color:var(--text3); text-transform:uppercase; margin-bottom:8px;">Connections</div>
+        <div id="links-list"></div>
       </div>
       <button id="node-delete" style="width:100%; padding:8px; background:rgba(222,107,138,0.1); border:1px solid var(--pink); color:var(--pink); border-radius:4px; font-size:11px; cursor:pointer; margin-top:20px;">Delete Component</button>
     `;
+
+    // Render connections
+    const nodeLinks = this.links.filter(l => l.source.id === this.selectedNode.id || l.target.id === this.selectedNode.id);
+    const linksList = document.getElementById('links-list');
+    nodeLinks.forEach(l => {
+      const target = l.source.id === this.selectedNode.id ? l.target : l.source;
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text2); margin-bottom:4px; background:var(--surface); padding:4px 8px; border-radius:4px;';
+      row.innerHTML = `<span>→ ${target.label}</span> <span class="link-del" style="color:var(--pink); cursor:pointer;">×</span>`;
+      row.querySelector('.link-del').onclick = () => {
+        this.links = this.links.filter(link => link !== l);
+        this.updateProps();
+        this.render();
+        this.saveState();
+      };
+      linksList.appendChild(row);
+    });
+
+    document.getElementById('prop-name').oninput = (e) => {
+      this.selectedNode.label = e.target.value;
+      this.render();
+      this.saveState();
+    };
+    document.getElementById('prop-cap').oninput = (e) => {
+      this.selectedNode.capacity = Number(e.target.value);
+      this.render();
+      this.saveState();
+    };
 
     document.getElementById('node-delete').onclick = () => {
       this.nodes = this.nodes.filter(n => n.id !== this.selectedNode.id);
@@ -313,7 +356,33 @@ class CanvasEngine {
       this.selectedNode = null;
       this.updateProps();
       this.render();
+      this.saveState();
     };
+  }
+
+  saveState() {
+    // Only save free-form design, not active quest state
+    if (!this.activeQuest) {
+      const state = {
+        nodes: this.nodes.map(n => ({ ...n, load: 0 })),
+        links: this.links.map(l => ({ source: l.source.id, target: l.target.id }))
+      };
+      localStorage.setItem('system-design-canvas-state', JSON.stringify(state));
+    }
+  }
+
+  loadState() {
+    const raw = localStorage.getItem('system-design-canvas-state');
+    if (!raw) return;
+    try {
+      const state = JSON.parse(raw);
+      this.nodes = state.nodes;
+      this.links = state.links.map(l => ({
+        source: this.nodes.find(n => n.id === l.source),
+        target: this.nodes.find(n => n.id === l.target)
+      })).filter(l => l.source && l.target);
+      this.render();
+    } catch (e) { console.error('Failed to load state', e); }
   }
 
   startSimulation() {
@@ -326,31 +395,95 @@ class CanvasEngine {
     const sources = this.nodes.filter(n => n.type === 'client');
     
     sources.forEach(source => {
-      this.generatePackets(source, 100); // 100 requests per tick
+      this.generatePackets(source, 200); // Increased default load
     });
 
-    setTimeout(() => this.startSimulation(), 1000);
+    // Check quest win condition
+    if (this.activeQuest) {
+      this.checkWinCondition();
+    }
+
+    this.simTimeout = setTimeout(() => this.startSimulation(), 1000);
   }
 
   generatePackets(source, count) {
-    const targets = this.links
-      .filter(l => l.source.id === source.id || l.target.id === source.id)
-      .map(l => l.source.id === source.id ? l.target : l.source);
+    // Find all outgoing links
+    const links = this.links.filter(l => l.source.id === source.id || l.target.id === source.id);
+    const targets = links.map(l => l.source.id === source.id ? l.target : l.source);
 
     if (targets.length === 0) return;
 
+    // Load Balancer logic: Round-robin or even split
+    // Cache logic: reduce load to next hop if cache is present
+    let nextCount = count;
+    if (source.type === 'cache') {
+      nextCount = count * 0.1; // Cache hit: only 10% traffic goes through
+    }
+
+    const perTarget = nextCount / targets.length;
+
     targets.forEach(target => {
-      const perTarget = count / targets.length;
       target.load += perTarget;
       this.animatePacket(source, target);
       
-      // Propagate if not a DB
-      if (target.type !== 'db') {
-        setTimeout(() => this.generatePackets(target, perTarget), 200);
+      // Stop propagation at DB or if load is negligible
+      if (target.type !== 'db' && perTarget > 1) {
+        setTimeout(() => this.generatePackets(target, perTarget), 300);
       }
     });
 
     this.render();
+  }
+
+  checkWinCondition() {
+    const q = this.activeQuest;
+    if (!q || !q.winCondition) return;
+
+    const win = q.winCondition;
+    let satisfied = true;
+
+    // Check RPS requirement
+    const clients = this.nodes.filter(n => n.type === 'client');
+    if (win.minRps && clients.length === 0) satisfied = false;
+
+    // Check bottlenecks
+    const overloaded = this.nodes.find(n => n.load > n.capacity);
+    if (overloaded) satisfied = false;
+
+    // Check required components
+    if (win.requiredTypes) {
+      for (const type of win.requiredTypes) {
+        if (!this.nodes.some(n => n.type === type)) satisfied = false;
+      }
+    }
+
+    if (satisfied && !this.questWon) {
+      this.questWon = true;
+      this.showWinMessage();
+    }
+  }
+
+  showWinMessage() {
+    const props = document.getElementById('canvas-props');
+    const content = document.getElementById('props-content');
+    const winEl = document.createElement('div');
+    winEl.style.cssText = `
+      margin-top: 20px;
+      padding: 16px;
+      background: rgba(107,222,140,0.15);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      color: var(--accent);
+      font-weight: 600;
+      text-align: center;
+      animation: fadeIn 0.3s ease;
+    `;
+    winEl.innerHTML = `
+      <div style="font-size:24px; margin-bottom:8px;">🏆</div>
+      <div>Quest Complete!</div>
+      <div style="font-size:11px; font-weight:400; margin-top:4px; color:var(--text2);">You successfully scaled the system.</div>
+    `;
+    content.appendChild(winEl);
   }
 
   animatePacket(source, target) {
