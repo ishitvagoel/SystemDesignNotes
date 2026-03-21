@@ -137,6 +137,24 @@ graph TD
 - [[Cache Patterns and Strategies]] — KV cache is a specialized cache; prefix caching parallels CDN origin shield
 - [[Cost Engineering and FinOps]] — GPU cost dominates AI infrastructure spend
 
+## Cost Per Token Benchmarks (2025–2026)
+
+Inference cost varies dramatically across providers, model sizes, and optimization choices:
+
+| Provider / Model | Input Cost (per 1M tokens) | Output Cost (per 1M tokens) | Notes |
+|-----------------|---------------------------|----------------------------|-------|
+| OpenAI GPT-4o | $2.50 | $10.00 | Optimized multi-modal model |
+| OpenAI GPT-4o-mini | $0.15 | $0.60 | Best cost/quality for simple tasks |
+| Anthropic Claude Sonnet | $3.00 | $15.00 | Strong reasoning, long context |
+| Anthropic Claude Haiku | $0.25 | $1.25 | Fast, cost-effective for classification |
+| Google Gemini 2.0 Flash | $0.10 | $0.40 | Aggressive pricing, multi-modal |
+| Self-hosted Llama 3 70B (H100) | ~$0.50–1.00* | ~$1.00–2.00* | *Amortized GPU cost; varies with utilization |
+| Self-hosted Llama 3 8B (A10G) | ~$0.05–0.10* | ~$0.10–0.20* | *Best unit economics for simple tasks |
+
+**Key insight**: The cost difference between the most and least expensive options is **50–100×**. For high-volume applications (>1M requests/day), model and provider selection dominates total cost — not infrastructure optimization.
+
+**Reasoning models (o1, o3, R1)**: These models generate internal "thinking" tokens that are not visible but are billed. A simple question may consume 500–5,000 thinking tokens before producing a 100-token answer. This makes reasoning models **5–50× more expensive per request** than standard models and breaks traditional batching assumptions (output length is unpredictable). Budget for 10× the output tokens of standard models when estimating reasoning model costs.
+
 ## Canonical Sources
 
 - Kwon et al., "Efficient Memory Management for Large Language Model Serving with PagedAttention" (2023) — the vLLM paper

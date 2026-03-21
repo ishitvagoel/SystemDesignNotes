@@ -201,8 +201,8 @@ graph TD
 
 ## Connections
 
-- [[Vector Search and Hybrid Retrieval]] — The retrieval backbone of RAG
-- [[Full-Text Search Architecture]] — BM25 keyword search in the hybrid retrieval step
+- [[Vector Search and Hybrid Retrieval]] — The retrieval backbone of RAG. That note covers the indexing algorithms (HNSW, IVF, PQ) and vector database selection; this note covers how to use retrieval within a generation pipeline
+- [[Full-Text Search Architecture]] — BM25 keyword search in the hybrid retrieval step. That note covers inverted indexes and ranking algorithms; this note covers how BM25 complements dense retrieval in hybrid RAG
 - [[Inference Serving Architecture]] — The LLM serving layer that generates responses
 - [[AI Gateway and LLM Operations]] — Semantic caching, model routing, and cost management for RAG
 - [[Cache Patterns and Strategies]] — Semantic caching can cache RAG responses for repeated similar queries

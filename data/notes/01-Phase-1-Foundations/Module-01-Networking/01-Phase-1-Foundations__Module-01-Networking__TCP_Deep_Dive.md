@@ -98,9 +98,9 @@ Key kernel parameters that matter in production:
 
 ## Failure Modes
 
-- **Connection storms after restart**: A service restarts and thousands of clients simultaneously reconnect. Each connection requires a handshake + slow start. The service is overwhelmed before it reaches steady state. Mitigation: client-side jittered reconnection backoff, connection draining before shutdown.
-- **Bufferbloat**: Oversized network buffers absorb packets instead of dropping them, masking congestion from TCP's detection algorithms. Latency spikes to seconds while throughput stays stable. BBR is more resistant to this than loss-based algorithms.
-- **Idle connection death**: A connection sits idle, a middlebox (NAT, firewall, cloud load balancer) silently drops the connection state after its timeout, and the next request on that "dead" connection fails. Mitigation: application-level keepalives (not just TCP keepalives), which many middleboxes also track.
+- **Connection storms after restart**: A service restarts and thousands of clients simultaneously reconnect. Each connection requires a handshake + slow start. With 10,000 clients reconnecting simultaneously at 150ms RTT, the SYN queue backlog can add **500ms–2s** of additional latency per connection, and many connections will be dropped entirely (SYN queue overflow). The service is overwhelmed before it reaches steady state. Mitigation: client-side jittered reconnection backoff (spread reconnections over 30–60 seconds), connection draining before shutdown.
+- **Bufferbloat**: Oversized network buffers absorb packets instead of dropping them, masking congestion from TCP's detection algorithms. Latency spikes to **1–5 seconds** while throughput stays stable — the classic "high bandwidth but terrible latency" symptom. BBR is more resistant to this than loss-based algorithms because it measures RTT directly rather than waiting for packet loss.
+- **Idle connection death**: A connection sits idle, a middlebox (NAT, firewall, cloud load balancer) silently drops the connection state after its timeout (typically **60–350 seconds** depending on the middlebox), and the next request on that "dead" connection fails with "connection reset by peer." Mitigation: application-level keepalives at **30-second intervals** (not just TCP keepalives, which many middleboxes ignore).
 
 ## Architecture Diagram
 

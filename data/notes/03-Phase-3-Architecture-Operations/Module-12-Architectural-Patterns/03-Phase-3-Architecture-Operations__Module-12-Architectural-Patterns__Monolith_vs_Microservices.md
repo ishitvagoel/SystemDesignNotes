@@ -85,9 +85,11 @@ graph TD
 ## Back-of-the-Envelope Heuristics
 
 - **Team Size Rule**: Consider Microservices only when you have **> 3-4 independent teams** (approx. 30+ engineers). Below this, the coordination overhead usually exceeds the productivity gains.
+- **Codebase Threshold**: A single team can typically manage **50,000–100,000 lines** of well-structured monolith code. Above 200K LOC with multiple teams, consider modular boundaries. Above 500K LOC with 5+ teams, microservices decomposition often pays off.
 - **Network Tax**: Every microservice hop adds **~1ms - 30ms** of latency (L7 proxy + network RTT). A chain of 5 services can easily add **100ms** to a request.
 - **Operational Overhead**: A microservice architecture requires **~3x more** infrastructure monitoring, logging, and deployment automation (CI/CD) than a monolith.
 - **Data Consistency**: In a monolith, cross-module updates are **1 database transaction**. In microservices, they are **1 Saga** (eventually consistent, much more complex).
+- **Deployment Cadence Signal**: If different parts of your system need to deploy at different cadences (recommendation engine: 5×/day, billing: 1×/month), that's a strong signal for decomposition.
 
 ## Real-World Case Studies
 

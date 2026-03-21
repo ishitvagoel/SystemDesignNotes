@@ -29,6 +29,28 @@ graph LR
 | 23 | Operations | FinOps & Privacy | M22, M23 |
 | 24 | Capstones | Design Drill Down | Capstones |
 
+## Module Prerequisites
+
+Some modules build on concepts from earlier modules. Use this dependency map to ensure you have the foundations before tackling advanced topics:
+
+| Module | Recommended Prerequisites |
+|--------|--------------------------|
+| M08 (Consistency Models) | M04 (Databases), M07 (ID Generation & Ordering) |
+| M09 (Consensus & Coordination) | M07 (Logical Clocks), M08 (Consistency Models) |
+| M10 (Distributed Transactions) | M04 (Databases), M08 (Consistency), M09 (Consensus) |
+| M11 (Replication & Conflicts) | M04 (Database Replication), M08 (Consistency) |
+| M12 (Architectural Patterns) | M02 (API Design), M04 (Databases), M06 (Caching) |
+| M13 (Messaging & Streaming) | M12 (Event-Driven Architecture) |
+| M14 (Search Systems) | M03 (Storage Engines — inverted indexes), M06 (Caching) |
+| M16 (Reliability & Testing) | M01 (Networking), M12 (Architecture) |
+| M19 (AI Inference) | M01 (Networking), M06 (Caching — KV cache parallels), M12 (Architecture) |
+| M20 (RAG & Agents) | M14 (Search Systems — vector search), M19 (Inference Serving) |
+| M22 (FinOps) | M17 (Observability), M12 (Architecture) |
+| M23 (Data Privacy) | M04 (Databases), M15 (Security) |
+| Capstones | All modules in Phases 1–3 (minimum); Phases 4–5 recommended |
+
+**You don't need to follow this strictly** — but if a module feels confusing, check whether you've covered its prerequisites first.
+
 ## Learning Heuristics
 
 1. **Don't Memorize, Derive**: If you understand why gRPC uses Protobuf (binary serialization, HTTP/2 multiplexing), you don't need to memorize that it's faster than REST.
