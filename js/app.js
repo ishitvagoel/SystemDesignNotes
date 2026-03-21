@@ -370,6 +370,47 @@ function renderNote(id) {
   const body = document.getElementById('note-body');
   body.innerHTML = marked.parse(content);
 
+  // Add Copy Buttons to code blocks
+  body.querySelectorAll('pre').forEach(block => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-code-btn';
+    btn.innerHTML = 'Copy';
+    btn.onclick = () => {
+      const code = block.querySelector('code').innerText;
+      navigator.clipboard.writeText(code);
+      btn.innerHTML = 'Copied!';
+      setTimeout(() => btn.innerHTML = 'Copy', 2000);
+    };
+    block.style.position = 'relative';
+    block.appendChild(btn);
+    // Syntax highlighting
+    if (typeof hljs !== 'undefined') {
+      const code = block.querySelector('code');
+      if (code) hljs.highlightElement(code);
+    }
+  });
+
+  // Build In-Page TOC
+  const tocList = document.getElementById('toc-list');
+  const tocContainer = document.getElementById('note-toc');
+  const headings = body.querySelectorAll('h2, h3');
+  tocList.innerHTML = '';
+  
+  if (headings.length > 1 && window.innerWidth > 1100) {
+    tocContainer.style.display = 'block';
+    headings.forEach((h, i) => {
+      const id = `heading-${i}`;
+      h.id = id;
+      const item = document.createElement('div');
+      item.className = `toc-item toc-${h.tagName.toLowerCase()}`;
+      item.textContent = h.textContent;
+      item.onclick = () => h.scrollIntoView({ behavior: 'smooth' });
+      tocList.appendChild(item);
+    });
+  } else {
+    tocContainer.style.display = 'none';
+  }
+
   // Render mermaid diagrams
   body.querySelectorAll('.mermaid').forEach((el, i) => {
     try {
@@ -648,6 +689,31 @@ async function init() {
   VAULT_INDEX = await indexRes.json();
   VAULT_CONTENT = await contentRes.json();
   FILTERED_INDEX = VAULT_INDEX.filter(n => !n.title.includes('{{title}}') && !n.id.includes('Note_Template'));
+  
+  // Theme Toggle
+  const themeToggle = document.getElementById('theme-toggle');
+  const body = document.body;
+  
+  if (localStorage.getItem('theme') === 'light') {
+    body.classList.add('light-mode');
+  }
+  
+  themeToggle.addEventListener('click', () => {
+    body.classList.toggle('light-mode');
+    localStorage.setItem('theme', body.classList.contains('light-mode') ? 'light' : 'dark');
+  });
+
+  // Scroll Tracking
+  const pane = document.getElementById('content-pane');
+  const progress = document.getElementById('reading-progress');
+  pane.addEventListener('scroll', () => {
+    const total = pane.scrollHeight - pane.clientHeight;
+    const current = pane.scrollTop;
+    if (total > 0) {
+      progress.style.width = (current / total * 100) + '%';
+    }
+  });
+
   buildSidebar();
   renderWelcomeStats();
 }

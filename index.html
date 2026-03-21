@@ -8,12 +8,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
 <!-- HEADER -->
 <div id="header">
+  <div id="reading-progress" style="position:absolute; top:0; left:0; height:2px; background:var(--accent); width:0; transition:width 0.1s; z-index:101;"></div>
   <button id="mobile-toggle" aria-label="Toggle sidebar">☰</button>
   <div class="logo">
     <div class="logo-icon">SD</div>
@@ -32,6 +35,7 @@
     <button class="pill" id="view-canvas" data-tip="Design Playground">Canvas</button>
     <button class="pill pill-export" id="btn-export" data-tip="Export to Obsidian">↓ Obsidian</button>
     <button class="pill pill-study" id="view-study" data-tip="Spaced repetition study">Study</button>
+    <button id="theme-toggle" class="pill" style="margin-left:8px; width:34px; padding:0; display:flex; align-items:center; justify-content:center;" data-tip="Toggle Light/Dark Mode">🌓</button>
   </div>
 </div>
 
@@ -57,14 +61,18 @@
           <div class="welcome-hint">Drag notes to reorder · Multiple tabs · Full-text search</div>
         </div>
       </div>
-      <div id="note-screen" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
-        <div id="content-pane">
+      <div id="note-screen" style="display:none; flex:1; overflow:hidden; flex-direction:row;">
+        <div id="content-pane" style="flex:1; overflow-y:auto;">
           <div id="note-header">
             <div class="note-phase-breadcrumb" id="note-breadcrumb"></div>
             <div class="note-title-h1" id="note-title"></div>
             <div class="note-meta" id="note-meta"></div>
           </div>
           <div id="note-body"></div>
+        </div>
+        <div id="note-toc" style="width:200px; padding:28px 20px; border-left:1px solid var(--border); background:var(--bg2); overflow-y:auto; display:none;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; margin-bottom:12px;">On this page</div>
+          <div id="toc-list"></div>
         </div>
       </div>
       <div id="search-screen" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
