@@ -1597,5 +1597,32 @@
     "module": "13",
     "filename": "Change Data Capture.md",
     "last_updated": "2025-03-18"
+  },
+  {
+    "id": "03-Phase-3-Architecture-Operations__Module-22-Cloud-Native-Serverless",
+    "title": "M22: Cloud-Native & Serverless",
+    "folder": "03-Phase-3-Architecture-Operations",
+    "filename": "03-Phase-3-Architecture-Operations__Module-22-Cloud-Native-Serverless.md",
+    "is_moc": false,
+    "phase": 3,
+    "module": 22
+  },
+  {
+    "id": "03-Phase-3-Architecture-Operations__Module-23-FinOps-Cost-Engineering",
+    "title": "M23: FinOps & Cost Engineering",
+    "folder": "03-Phase-3-Architecture-Operations",
+    "filename": "03-Phase-3-Architecture-Operations__Module-23-FinOps-Cost-Engineering.md",
+    "is_moc": false,
+    "phase": 3,
+    "module": 23
+  },
+  {
+    "id": "03-Phase-3-Architecture-Operations__Module-24-Data-Privacy-Compliance",
+    "title": "M24: Data Privacy & Compliance",
+    "folder": "03-Phase-3-Architecture-Operations",
+    "filename": "03-Phase-3-Architecture-Operations__Module-24-Data-Privacy-Compliance.md",
+    "is_moc": false,
+    "phase": 3,
+    "module": 24
   }
 ]
