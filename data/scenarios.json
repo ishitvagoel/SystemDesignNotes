@@ -89,5 +89,56 @@
         "component": { "type": "db", "label": "Zookeeper Ensemble", "capacity": 2000 }
       }
     ]
+  },
+  "serverless_cold_start_crisis": {
+    "text": "Your Lambda-based checkout service is timing out during peak load. Mitigate the cold start.",
+    "choices": [
+      {
+        "text": "Provisioned Concurrency",
+        "id": "provisioned_concurrency",
+        "impact": "Eliminates cold starts by keeping functions warm, but increases costs.",
+        "component": { "type": "app", "label": "Warm Lambda", "capacity": 5000 }
+      },
+      {
+        "text": "Switch to Fargate",
+        "id": "switch_fargate",
+        "impact": "Moving to containers avoids cold start overhead for steady-state traffic.",
+        "component": { "type": "app", "label": "Fargate Service", "capacity": 8000 }
+      }
+    ]
+  },
+  "egress_cost_explosion": {
+    "text": "Your inter-region data transfer is costing more than your compute. How will you optimize?",
+    "choices": [
+      {
+        "text": "Local Read Replicas",
+        "id": "local_replicas",
+        "impact": "Keep reads within the same region to avoid egress fees.",
+        "component": { "type": "db", "label": "Local Replica", "capacity": 2000 }
+      },
+      {
+        "text": "Global Accelerator",
+        "id": "global_accelerator",
+        "impact": "Optimizes network paths across the global backbone, potentially reducing egress.",
+        "component": { "type": "cdn", "label": "Network Accelerator", "capacity": 12000 }
+      }
+    ]
+  },
+  "pii_data_leak_prevention": {
+    "text": "An auditor found PII in your debug logs. What is your immediate fix?",
+    "choices": [
+      {
+        "text": "Log Masking Middleware",
+        "id": "log_masking",
+        "impact": "Automatically redacts PII before it reaches the logging service.",
+        "component": { "type": "app", "label": "Masking Proxy", "capacity": 10000 }
+      },
+      {
+        "text": "Tokenization Service",
+        "id": "tokenization",
+        "impact": "Replace sensitive data with non-sensitive tokens throughout the system.",
+        "component": { "type": "db", "label": "Token Vault", "capacity": 5000 }
+      }
+    ]
   }
 }

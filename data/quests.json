@@ -67,5 +67,32 @@
     "winCondition": {
       "requiredTypes": ["db", "cache"]
     }
+  },
+  {
+    "id": "q6",
+    "title": "The Cost of Growth",
+    "description": "Your cloud bill is $100k/mo. Reduce it by 40% without sacrificing availability. (Focus on M23: FinOps)",
+    "objectives": [
+      "Analyze cloud spend across all regions",
+      "Introduce auto-scaling to match demand dynamically",
+      "Switch to spot instances for non-critical batch processing"
+    ],
+    "winCondition": {
+      "maxNodeLoad": 0.7,
+      "requiredTypes": ["lb", "app"]
+    }
+  },
+  {
+    "id": "q7",
+    "title": "GDPR Hammer",
+    "description": "A user requests all their data be deleted. Implement 'Right to be Forgotten' across 5 sharded databases. (Focus on M24: Compliance)",
+    "objectives": [
+      "Locate PII across distributed shards",
+      "Execute a consistent deletion across the cluster",
+      "Verify data erasure without violating audit requirements"
+    ],
+    "winCondition": {
+      "requiredTypes": ["db"]
+    }
   }
 ]
