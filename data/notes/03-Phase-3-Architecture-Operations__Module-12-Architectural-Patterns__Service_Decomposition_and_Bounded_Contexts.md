@@ -71,6 +71,48 @@ Concepts that change together, are queried together, and are owned by the same t
 
 **Data duplication consistency drift**: Each service maintains its own copy of shared data (customer name, product price). Over time, these copies drift — Billing has the old name, Support has the new name. Solution: define a single source of truth for each data element, propagate changes via CDC or domain events, and audit for drift periodically.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "The 'Customer' Across Bounded Contexts"
+        subgraph "Sales Context"
+            S_C[Customer Model] --- S_Lead[Lead Score]
+            S_C --- S_Opp[Opportunity]
+        end
+
+        subgraph "Support Context"
+            Sup_C[Customer Model] --- Tickets[Ticket History]
+            Sup_C --- SLA[Service Level]
+        end
+
+        subgraph "Billing Context"
+            B_C[Customer Model] --- Invoices[Invoice History]
+            B_C --- Pay[Payment Methods]
+        end
+    end
+
+    S_C -.->|Event: Lead Won| B_C
+    B_C -.->|Event: Payment Overdue| Sup_C
+
+    style S_C fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Sup_C fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style B_C fill:var(--surface),stroke:var(--border),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Cognitive Load**: If a developer can no longer hold the entire domain model of a service in their head, it is a candidate for decomposition.
+- **The "Two-Pizza" Rule**: A single microservice should ideally be owned by one "Two-Pizza Team" (6-10 people). If a service requires 3 teams to maintain, its boundaries are likely too broad.
+- **Deployment Coupling**: If you have to deploy Service A and Service B together **> 20% of the time**, they should probably be the same service.
+- **Latency Budget**: Assume each cross-service synchronous call adds **~10ms - 50ms** to your total request time (network + serialization). Limit call chains to **< 3 hops** for user-facing requests.
+
+## Real-World Case Studies
+
+- **Netflix (Fine-Grained Evolution)**: Netflix is the poster child for microservices. They decompose services not just by domain, but by **Criticality**. The "Sign-up" service is isolated from the "Video Playback" service. If the sign-up database is down, existing users can still watch movies. This granular decomposition is what allows them to maintain high availability despite having thousands of moving parts.
+- **Uber (Consolidation to DOMA)**: By 2020, Uber had over 4,000 microservices. They realized they had decomposed *too* far, leading to "Microservice Sprawl." They introduced **DOMA (Domain-Oriented Microservice Architecture)**, which grouped these thousands of services into "Domain Gateways." This effectively re-established larger Bounded Contexts to reduce cross-team coordination overhead.
+- **Segment (The Reversal)**: Segment famously moved from microservices back to a monolith for their worker fleet. They had hundreds of tiny services (one for each integration like Google Analytics, Mixpanel). The operational overhead of managing 100+ separate repos and deployment pipelines for integration-specific logic was killing their velocity. By merging them into a single "Centrifuge" worker, they simplified their architecture while maintaining logical separation in the code.
+
 ## Connections
 
 - [[Monolith vs Microservices]] — Bounded contexts define where to draw service boundaries

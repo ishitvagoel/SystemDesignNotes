@@ -120,6 +120,48 @@ Example: Split a file into 8 data fragments, generate 4 parity fragments (12 tot
 
 - **Incomplete multipart upload leak**: A failed upload leaves parts in S3 consuming storage. Without a cleanup lifecycle rule, these parts persist forever. Mitigation: add a lifecycle rule to abort incomplete multipart uploads after 7 days.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Application Layer"
+        App[App Instance] -->|1. PUT Metadata| DB[(Postgres)]
+        App -->|2. Get Presigned URL| S3
+        User[Client] -->|3. Direct Upload| S3
+    end
+
+    subgraph "Storage Layer (S3 / R2)"
+        S3[(Object Store)] -->|4. Trigger| Lambda[Thumbnail Worker]
+        Lambda -->|5. Store| S3
+        
+        subgraph "Lifecycle"
+            S3 -->|30 days| IA[Infrequent Access]
+            IA -->|90 days| Glacier[(Glacier Archive)]
+        end
+    end
+
+    subgraph "Delivery"
+        CDN[CDN Edge] -->|Cache Hit| User
+        CDN -->|Cache Miss| S3
+    end
+
+    style S3 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style CDN fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Egress vs. Storage**: In AWS, **Egress ($0.09/GB)** is ~4x more expensive than **Storage ($0.023/GB)**. Always prioritize reducing egress (via CDN) over reducing storage.
+- **The 128KB Rule**: S3 Standard-IA has a minimum billable object size of **128KB**. If you store millions of 10KB files in IA, you are paying for 12x the storage you actually use.
+- **Throughput Limits**: S3 supports **3,500 PUT/POST/DELETE** and **5,500 GET** requests per second per prefix. If you exceed this, add a random hash to the start of your keys to distribute across partitions.
+- **Durability (11 Nines)**: With 99.999999999% durability, if you store 10 million objects, you can expect to lose one object every **10,000 years**.
+
+## Real-World Case Studies
+
+- **Netflix (The S3 Data Lake)**: Netflix stores its entire content library and all its analytical data (petabytes) in S3. They pioneered the "S3 as a Data Lake" pattern, using S3 as the source of truth and spinning up ephemeral EMR/Spark clusters to process data, rather than keeping a massive persistent database cluster running 24/7.
+- **Pinterest (Content-Addressable Storage)**: Pinterest uses content-addressing for images. By hashing the image data to create the S3 key, they ensure that if 1,000 users "Pin" the same image, it's only stored once in S3. This deduplication saves them millions of dollars in storage and egress costs.
+- **Cloudflare (R2 Zero-Egress)**: Cloudflare launched R2 specifically to disrupt the AWS "Egress Trap." By offering object storage with zero egress fees, they've made it viable for companies to build multi-cloud architectures where data is stored in R2 and processed in whichever cloud (AWS, GCP, Azure) is cheapest at the moment, without being penalized for moving data between them.
+
 ## Connections
 
 - [[Cache Patterns and Strategies]] — Object storage responses should be cached aggressively (CDN, browser cache)

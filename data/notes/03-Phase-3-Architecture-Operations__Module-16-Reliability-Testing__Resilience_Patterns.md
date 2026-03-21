@@ -92,6 +92,40 @@ The most dangerous failure mode in distributed systems: failure in one service c
 
 **Fallback masking real failures**: A service falls back to cached data when the primary data source is down. The fallback works so well that nobody notices the primary has been down for 3 days. The cache becomes increasingly stale. Solution: alert on fallback activation, track fallback duration, and set a maximum fallback window after which the fallback degrades gracefully rather than serving ancient data.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Resilient Client (Service A)"
+        A_App[App Logic] --> TO[Timeout: 500ms]
+        TO --> RET[Retry: 3x Backoff/Jitter]
+        RET --> CB{Circuit Breaker}
+        CB --> BH((Bulkhead: Pool 10))
+    end
+
+    subgraph "Downstream (Service B)"
+        BH -->|Success| SvcB[Service B]
+        BH -->|Failure/Slow| FB[Fallback: Cached Data]
+    end
+
+    CB -- "Threshold > 50%" --> Open[OPEN: Fast Fail]
+    style CB fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style BH fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Timeout Formula**: `Average Latency + (4 * Standard Deviation)`. This usually captures 99% of normal requests without failing too early.
+- **Retry Budget**: Limit retries to **< 10%** of total request volume to avoid "Retry Storms" that amplify outages.
+- **Circuit Breaker Window**: Use a **10 - 60 second** sliding window. Windows too short are noisy; windows too long react too slowly to recovery.
+- **Jitter Strategy**: Use **Full Jitter** (`random(0, delay)`) rather than Equal Jitter. It provides the best desynchronization for thundering herds.
+
+## Real-World Case Studies
+
+- **Amazon (Prime Day Load Shedding)**: During Prime Day, Amazon's "Recommendations" and "Related Products" services are often the first to be **shed**. If latency on these non-critical services spikes, the API gateway simply returns an empty list (Fallback), preserving all available CPU and database IOPS for the critical "Add to Cart" and "Checkout" flows.
+- **Google (The 2014 Gmail Outage)**: A bug in a routine load-balancing change caused a massive **Cascading Failure** in Gmail. A small cluster became overloaded, shed its traffic to the next cluster, which then became overloaded and shed to the next, like falling dominoes. This incident led to the widespread adoption of **L7 Load Shedding** and tighter circuit breaker integration across Google's infrastructure.
+- **Netflix (Hystrix/Resilience4j)**: Netflix famously open-sourced **Hystrix**, which brought the Circuit Breaker pattern to the mainstream. They used it to isolate over 500 downstream microservices. They found that by wrapping every remote call in a circuit breaker with a fallback, they could maintain 99.99% availability even if dozens of individual microservices were failing simultaneously.
+
 ## Connections
 
 - [[SLOs SLIs and Error Budgets]] — Resilience patterns help you stay within SLO

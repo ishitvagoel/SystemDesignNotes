@@ -102,6 +102,43 @@ If the consumer crashes mid-processing, the Kafka transaction is rolled back —
 
 - **Partial processing**: Consumer processes half the message (writes to database) then crashes before committing the dedup entry. On redelivery, the dedup check passes (no entry) and the message is processed again — duplicating the database writes. Mitigation: the dedup entry and business writes MUST be in the same transaction.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Messaging Infrastructure"
+        Broker[Message Broker: Kafka/SQS] -->|1. Deliver (At-least-once)| Consumer[App Consumer]
+    end
+
+    subgraph "Idempotent Logic (Atomic Transaction)"
+        Consumer -->|2. Check/Insert ID| DedupTable[Dedup Table: processed_msgs]
+        DedupTable -- "ID Exists" --> Skip[Discard Duplicate]
+        DedupTable -- "New ID" --> BizLogic[Business Logic: Update DB]
+        BizLogic -->|3. Commit Both| DB[(Primary Database)]
+    end
+
+    subgraph "External Side Effects"
+        BizLogic -->|4. Call with ID| Notify[Email/Payment Svc]
+        Note over Notify: Downstream uses ID as Idemp Key
+    end
+
+    style Consumer fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style DB fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Dedup TTL**: Keep message IDs for **7 - 14 days**. Most redeliveries happen within seconds, but rebalances or backup restores can trigger older redeliveries.
+- **Index Overhead**: A unique index on `message_id` (UUID) adds **~32-64 bytes** per message. Storing 100M IDs consumes **~6GB - 10GB** of index space.
+- **Transaction Impact**: Adding a dedup check to a business transaction typically increases latency by **< 5ms** if the database is local.
+- **Conflict Rate**: In a stable Kafka cluster, redelivery rate is typically **< 0.1%**. Design for the 0.1%, but optimize for the 99.9% (the "happy path").
+
+## Real-World Case Studies
+
+- **Stripe (Event Webhooks)**: Stripe sends webhooks for every event (e.g., `payment_intent.succeeded`). They explicitly state in their documentation that they deliver webhooks **at-least-once** and provide a unique `id` for every event. They instruct all developers to store this ID in their database and check it before processing to prevent duplicate business logic.
+- **Airbnb (The 'Orpheus' Library)**: Airbnb built an internal library called **Orpheus** to handle idempotency across their SOA. Every service consumer uses Orpheus to wrap its logic. It handles the "check-then-insert" pattern into a shared database, ensuring that even if multiple instances of a service receive the same message, only one proceeds.
+- **Apache Flink (Exactly-Once)**: Flink achieves "exactly-once" state updates by using **Checkpointing** and a **Two-Phase Commit** sink. It periodically snapshots its state and only "commits" the processed message offsets to Kafka once the state update is safely persisted, effectively creating an idempotent consumer at the framework level.
+
 ## Connections
 
 - [[Idempotency]] — API-level idempotency concepts that apply equally to message consumers

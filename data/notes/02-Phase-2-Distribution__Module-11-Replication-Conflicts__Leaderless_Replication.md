@@ -76,6 +76,41 @@ Read repair is opportunistic — it only fixes stale replicas that happen to be 
 
 - **Anti-entropy lag**: A replica was down for a week. When it comes back, the anti-entropy process must synchronize a week's worth of changes. If the dataset is large, this can take hours and consume significant I/O. During this window, reads that hit the stale replica return old data.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Quorum Write (W=2, N=3)"
+        ClientW[Client] -->|Write| Node1[(Node 1: OK)]
+        ClientW -->|Write| Node2[(Node 2: OK)]
+        ClientW -.->|Write| Node3[(Node 3: Offline)]
+        Note over ClientW: 2 ACKs >= W. SUCCESS!
+    end
+
+    subgraph "Quorum Read (R=2, N=3)"
+        ClientR[Client] -->|Read v2| Node1
+        ClientR -->|Read v1| Node2
+        Note over ClientR: Compare v2 vs v1. Return v2.
+        ClientR -->|Read Repair: Write v2| Node2
+    end
+
+    style Node1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Node2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Quorum Math**: To guarantee seeing the latest write, ensure **R + W > N**. Standard config: `N=3, W=2, R=2`.
+- **Write Availability**: A system with `N=3, W=2` can tolerate **1 node failure** for writes. `W=1` provides higher availability but risks data loss.
+- **Read Repair Overhead**: If your nodes drift frequently, read repair can add **~10-20% latency** to read operations as the client performs background writes to stale nodes.
+- **Anti-Entropy Bandwidth**: Merkle tree comparisons for background repair typically consume **< 1% of total network bandwidth** but can spike during full cluster rebalances.
+
+## Real-World Case Studies
+
+- **Amazon (The Dynamo Paper)**: Amazon's **Dynamo** was the pioneer of leaderless replication. They needed a system that was "always writable" for their shopping cart. They used **Sloppy Quorums** and **Hinted Handoff** to ensure that even if the primary storage nodes for a user were down, some other node would accept the "Add to Cart" request, ensuring no lost sales.
+- **Apache Cassandra**: Cassandra is the most popular open-source implementation of leaderless replication. It allows developers to tune consistency per-query (e.g., `SELECT ... USING CONSISTENCY QUORUM`). Uber uses Cassandra to store trip data, relying on its leaderless nature to handle the high-throughput write volume of millions of concurrent GPS updates.
+- **Riak (Distributed Key-Value)**: Riak was an early leaderless database that used **Merkle Trees** for extremely efficient anti-entropy. It was used by companies like Betfair to handle massive betting volumes during sporting events, where the ability to scale horizontally by just adding "dumb" nodes (no leader election required) was a major operational advantage.
+
 ## Connections
 
 - [[Database Replication]] — Leaderless is one of the three replication topologies introduced in Module 4

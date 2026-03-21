@@ -98,6 +98,44 @@ Total Cost of Ownership goes far beyond the cloud bill:
 
 - **Observability cost explosion**: Logging and metrics infrastructure can become the most expensive component. Storing every log line at DEBUG level, retaining metrics at 10-second resolution for 5 years, and tracing 100% of requests costs more than the application itself. Mitigation: log levels (INFO in production, DEBUG only when debugging), metric resolution tiering (10s for recent, 5min after 30 days), and trace sampling (1–10%).
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Cost Awareness Pipeline"
+        Resources[AWS / GCP Resources] -->|1. Tagging| Billing[Billing Export / CUR]
+        Billing -->|2. Ingest| Tools[FinOps Tools: Kubecost / CloudHealth]
+        Tools -->|3. Dashboard| Visibility[Team Cost Dashboards]
+    end
+
+    subgraph "Optimization Loop"
+        Visibility -->|4. Identify Waste| Resize[Right-sizing Engine]
+        Visibility -->|5. Commit| Savings[Savings Plans / RI]
+        Visibility -->|6. Guardrail| Budget[Budget Alerts / Quotas]
+    end
+
+    subgraph "Unit Economics"
+        Visibility -->|Cost per Tenant| Price[Pricing Strategy]
+        Visibility -->|Cost per Feature| Roadmap[Product Roadmap]
+    end
+
+    style Visibility fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Resize fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **The 30% Rule**: In most un-optimized cloud environments, **~30% of the bill** is waste (idle instances, oversized DBs, unattached volumes).
+- **Compute vs. Data**: Data transfer (Egress) and specialized managed services often scale **faster than compute**. If your bill is growing faster than your active user count, look at your network and storage patterns.
+- **Spot Savings**: Using Spot instances for 80% of your CI/CD and batch workloads can reduce your total compute bill by **~40% - 60%**.
+- **The "Managed" Tax**: Expect to pay **~1.5x - 2x** more for a managed service (RDS, MSK) than raw EC2. This is usually worth it for teams of < 50 engineers, but starts to reverse at extreme scales.
+
+## Real-World Case Studies
+
+- **Pinterest (Egress Optimization)**: Pinterest saved millions of dollars by optimizing their network traffic. They discovered they were paying massive cross-AZ (Availability Zone) data transfer fees. By restructuring their Kafka clusters and application layout to prioritize **Single-AZ traffic**, they reduced their inter-AZ data transfer by **over 40%**.
+- **Airbnb (The 'Cost-Per-Night' Metric)**: Airbnb shifted their engineering culture to focus on **Unit Economics**. They don't just track "Cloud Spend"; they track "Infrastructure Cost per Night Booked." This aligns engineering work with business value—if an engineer adds a feature that improves the booking rate but increases costs, they can mathematically prove if it's a net win for the company.
+- **DoorDash (Scaling with Savings Plans)**: DoorDash uses a combination of **Compute Savings Plans** and **Spot Instances** to manage their high-variance traffic. During peak meal times, they scale up on On-Demand/Savings Plan capacity to ensure reliability. During off-peak hours, they shift background processing and ML training to Spot instances, maximizing their discount during the 20 hours a day when traffic is lower.
+
 ## Connections
 
 - [[Object Storage Fundamentals]] — Storage tiering is a primary cost lever

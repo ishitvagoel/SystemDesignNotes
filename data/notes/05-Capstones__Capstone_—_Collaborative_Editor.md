@@ -187,6 +187,48 @@ Collaborative editing is a microcosm of distributed systems: each client is a "n
 
 The design also demonstrates cell-based isolation applied to a collaborative system: each document is an independent universe, making horizontal scaling natural and blast radius containment automatic.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Clients"
+        C1[Client A: Active]
+        C2[Client B: Offline]
+        C3[Client C: Active]
+    end
+
+    subgraph "WebSocket Tier (Anycast)"
+        WS[WebSocket Gateway]
+    end
+
+    subgraph "Sync Cell (Document Domain)"
+        WS <--> Sync[Yjs Sync Service]
+        Sync <--> Presence[Redis: Presence]
+        Sync --> Store[(Doc Store: S3/Postgres)]
+    end
+
+    C1 <-->|Op Delta| WS
+    C3 <-->|Op Delta| WS
+    C2 -.->|Queue Ops| C2
+    C2 -- "Reconnect & Replay" --> WS
+
+    style Sync fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style WS fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Fan-out Load**: Keystrokes per sec * (N-1) users. For 100 users typing 5 chars/sec, the server must handle **~500 incoming ops** and **~50,000 outgoing broadcasts** per second per document.
+- **CRDT Overhead**: A typical text CRDT (like Yjs) adds **~1.5x - 2x** memory overhead compared to the raw text size to store tombstones and metadata.
+- **Latency Threshold**: For "Google Docs-like" snappiness, remote edits must appear in **< 200ms**. Local edits must be **< 10ms** (instant feedback).
+- **Snapshot Frequency**: Snapshot the document state every **30 - 60 seconds** of active editing to keep the "replay time" for new joiners low.
+
+## Real-World Case Studies
+
+- **Figma (Live Design)**: Figma uses a specialized CRDT system to handle thousands of layers and properties. They found that standard CRDTs were too slow for complex design files, so they built a system where the "Scene Graph" is the CRDT. They also use **WebAssembly (Wasm)** on the client to ensure the CRDT merge logic is identical and high-performance across all browsers.
+- **Google Docs (OT Heritage)**: Google Docs popularized **Operational Transformation (OT)**. Unlike CRDTs, OT requires a central server to sequence every edit and "transform" concurrent operations against each other. While complex to implement, it allows Google to maintain a single, authoritative version of the document on their servers, making features like "Suggesting Mode" easier to build.
+- **Miro (Canvas Collaboration)**: Miro uses a combination of WebSockets and an asynchronous message bus to handle millions of whiteboards. They use **Cell-Based Routing** to ensure that all editors of a specific board are connected to the same WebSocket server instance, eliminating the need for a complex distributed pub/sub layer for every keystroke.
+
 ## Connections
 
 **Core concepts applied:**

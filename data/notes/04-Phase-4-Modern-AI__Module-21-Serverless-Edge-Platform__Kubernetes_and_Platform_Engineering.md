@@ -53,6 +53,50 @@ Treat the platform team's internal customers (developers) like a product team tr
 
 **Self-service infrastructure**: Developers request a database via a portal form or API call. The platform provisions it (via Terraform, Crossplane, or cloud APIs), configures backups, monitoring, and access credentials, and delivers connection details — without a ticket to the infrastructure team.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Internal Developer Platform (IDP)"
+        Portal[Developer Portal: Backstage] -->|1. Scaffold| Git[Git Repository]
+        Portal -->|2. Provision| IAC[Infrastructure as Code]
+    end
+
+    subgraph "Control Plane (The Brain)"
+        K8s_API[K8s API Server] --> etcd[(etcd: Raft Store)]
+        K8s_API --> Sched[Scheduler]
+        K8s_API --> Ctrl[Controller Manager]
+    end
+
+    subgraph "Data Plane (The Fleet)"
+        K8s_API --> Node1[Worker Node 1]
+        K8s_API --> Node2[Worker Node 2]
+        
+        subgraph "Pod (Smallest Unit)"
+            Node1 --- Pod[App Container + Sidecar Proxy]
+        end
+    end
+
+    Git -->|3. CI/CD| K8s_API
+    IAC -->|4. Cloud API| Cloud[AWS / GCP Resources]
+
+    style Portal fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style etcd fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Break-even Point**: Adopting Kubernetes typically pays off when you reach **> 10 independent microservices** or **> 20 engineers**. Below this, the "K8s Tax" (YAML complexity, cluster management) often outweighs the benefits.
+- **Resource Requests**: Set `requests` to the **p50 - p75** of your actual usage. Set `limits` to **p99**. If `requests == limits`, you are wasting money; if `limits` are too low, you hit OOMKills.
+- **Node Density**: Aim for **10 - 20 pods per node**. Too few pods wastes money on base OS overhead; too many pods risks massive blast radius if a node fails.
+- **Sidecar Overhead**: A service mesh sidecar (Envoy) adds **~1ms - 5ms** latency and **~50MB - 100MB** RAM per pod. Multiply this by your total pod count to see your "Mesh Tax."
+
+## Real-World Case Studies
+
+- **Spotify (Backstage Origins)**: Spotify created **Backstage** because they reached a point where developers couldn't find their own services. With over 2,000 microservices, the "Scaffold" feature allowed a new engineer to go from "Idea" to "Hello World in Production" in **less than 5 minutes**, following all company security and observability best practices automatically.
+- **Chick-fil-A (Kubernetes at the Edge)**: Chick-fil-A runs a 3-node Kubernetes cluster **inside every restaurant**. They use it to manage local IoT devices (fryers, ovens) and ensure that even if the restaurant loses internet connection, the local "Platform" keeps the store running. This is an extreme example of Kubernetes used for high availability in a decentralized environment.
+- **Adobe (Internal Developer Platform)**: Adobe built an IDP on top of Kubernetes that serves over 5,000 developers. They found that by providing "Golden Paths" (pre-approved templates), they could automate **90% of security compliance checks**, allowing product teams to focus entirely on feature code while the platform team handled the underlying K8s complexity.
+
 ## Connections
 
 - [[Serverless and Edge Computing]] — Kubernetes vs serverless: K8s for persistent workloads, serverless for event-driven

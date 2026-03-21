@@ -54,6 +54,47 @@ If you later need to extract a module into a separate service, the well-defined 
 - **Nano-services**: Decomposing too finely. Each service does one tiny thing. A single user action triggers 20 inter-service calls. Latency explodes, debugging is impossible, and operational overhead is enormous. Guidance: a service should be owned by one team and represent a meaningful business capability, not a single database table.
 - **Shared database anti-pattern**: Multiple services read/write the same database tables. Schema changes require coordinating across services. Services are coupled through their data, not their interfaces. Each service should own its data store exclusively.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Monolith"
+        M_UI[Web UI] --- M_Logic[App Logic]
+        M_Logic --- M_Users[User Mod]
+        M_Logic --- M_Orders[Order Mod]
+        M_Logic --- M_Pay[Payment Mod]
+        M_Users & M_Orders & M_Pay --- M_DB[(Single DB)]
+    end
+
+    subgraph "Microservices"
+        MS_Gateway[API Gateway] --> S_User[User Service]
+        MS_Gateway --> S_Order[Order Service]
+        MS_Gateway --> S_Pay[Payment Service]
+        
+        S_User --- S_User_DB[(User DB)]
+        S_Order --- S_Order_DB[(Order DB)]
+        S_Pay --- S_Pay_DB[(Payment DB)]
+        
+        S_Order -- "gRPC / Event" --> S_User
+    end
+
+    style M_Logic fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style MS_Gateway fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Team Size Rule**: Consider Microservices only when you have **> 3-4 independent teams** (approx. 30+ engineers). Below this, the coordination overhead usually exceeds the productivity gains.
+- **Network Tax**: Every microservice hop adds **~1ms - 30ms** of latency (L7 proxy + network RTT). A chain of 5 services can easily add **100ms** to a request.
+- **Operational Overhead**: A microservice architecture requires **~3x more** infrastructure monitoring, logging, and deployment automation (CI/CD) than a monolith.
+- **Data Consistency**: In a monolith, cross-module updates are **1 database transaction**. In microservices, they are **1 Saga** (eventually consistent, much more complex).
+
+## Real-World Case Studies
+
+- **Shopify (Modular Monolith)**: Shopify handles over $200 billion in GMV using a massive **Modular Monolith**. They intentionally decided *not* to move to microservices, instead investing in strict internal boundaries and tooling to keep their Ruby on Rails monolith manageable for 1,000+ developers.
+- **Amazon (The 2002 Mandate)**: Jeff Bezos famously issued a mandate in 2002 requiring all teams to expose their data and functionality through service interfaces. This forced Amazon to decompose their monolith into what we now call microservices, which became the foundation for both their retail scale and the creation of AWS.
+- **Uber (Microservice Sprawl)**: Uber grew to **4,000+ microservices** by 2020. They eventually hit "Microservice Sprawl," where the complexity of managing so many small services became a bottleneck. They began a process of "Domain-Oriented Microservice Architecture" (DOMA), consolidating thousands of tiny services into larger, more meaningful "macro-services" organized by business domain.
+
 ## Connections
 
 - [[Service Decomposition and Bounded Contexts]] — How to find the right service boundaries

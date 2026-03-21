@@ -55,6 +55,21 @@ These concepts appear across many modules:
 
 Every module in Phases 2–4 answers one of these:
 
-1. **How do you keep copies in sync?** → Replication (M4, M11), consistency models (M8), CRDTs (M11)
-2. **How do you agree on things?** → Consensus (M9), distributed transactions (M10), leader election (M9)
-3. **How do you handle failure?** → Resilience patterns (M16), sagas (M10), circuit breakers (M16), cell architecture (M12)
+## Design Navigation Heuristics
+
+- **Start with the User (M1)**: Always begin your design at the user entry point. How do they find you (DNS)? How do they talk to you (API/Paradigms)?
+- **Follow the Data (M3-M5)**: Once the request hits your system, follow the data path. Where is it stored? How is it modeled? How does it scale?
+- **Assume Failure (M16)**: For every link in your graph, ask: "What if this part is slow or dead?" This leads you to resilience and coordination patterns.
+- **Cost is a Constraint (M18)**: A technically perfect design that costs $1M/month for a $10k/month business is a failure.
+
+## Real-World Connection: The "Buy Now" Journey
+
+Tracing a single action through the graph:
+1. **Networking**: User hits `Anycast IP`, DNS routes to nearest PoP.
+2. **Security**: `TLS 1.3` handshake establishes a secure tunnel.
+3. **API Design**: `POST /orders` hit the Gateway with an `Idempotency-Key`.
+4. **Resilience**: `Circuit Breaker` protects the Inventory service.
+5. **Consensus**: Order ID generated via `Snowflake` or `Raft`-backed counter.
+6. **Distributed TX**: A `Saga` begins: Reserve Stock -> Charge Card -> Ship.
+7. **Storage**: Data hits the `WAL`, then the `B-Tree` pages in the `Buffer Pool`.
+8. **Observability**: `SLI` metrics update the `Error Budget` dashboard.

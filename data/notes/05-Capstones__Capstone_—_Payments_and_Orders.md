@@ -177,6 +177,45 @@ This is a key lesson: **for payment systems, the payment processor fee dwarfs in
 
 Payments are where distributed systems theory meets real-world consequences. The non-negotiable principles: idempotency on every external call (especially payment processors), double-entry accounting for financial correctness, saga orchestration for multi-service operations, and event sourcing for audit trails. The system is designed so that every possible failure mode — crash, timeout, retry, duplicate delivery — results in either correct completion or safe, detectable partial failure that can be resolved.
 
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Saga as Saga Orchestrator
+    participant Inv as Inventory Service
+    participant Pay as Payment Service (Stripe)
+    participant Ledger as Ledger Service (immutable)
+
+    User->>Saga: 1. Create Order
+    Saga->>Inv: 2. Reserve Items
+    Inv-->>Saga: 2b. Reserved (Success)
+    
+    Saga->>Pay: 3. Charge Card (Key: order_123)
+    Note over Pay: Call Stripe with Idemp Key
+    Pay-->>Saga: 3b. Charged (Success)
+    
+    Note over Saga: PIVOT POINT: Forward Commit
+    
+    Saga->>Ledger: 4. Record Transaction
+    Ledger-->>Saga: 4b. Recorded
+    
+    Saga->>User: 5. Order Confirmed!
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Integer Currency**: Always store amounts in **integers** (cents/pence) to avoid floating-point errors. Use `BIGINT` or `DECIMAL` in SQL.
+- **Reservation TTL**: Typically set to **10 - 15 minutes**. Long enough for a slow checkout, short enough to release inventory for other buyers if the user abandons.
+- **Idempotency Window**: Store idempotency keys for at least **24 - 48 hours**. 99% of retries happen within the first hour.
+- **Ledger Immutability**: The ledger should be **Append-Only**. Never `DELETE` or `UPDATE` a transaction; instead, issue a "Reversing Entry" (Refund) to balance the books.
+
+## Real-World Case Studies
+
+- **Stripe (Idempotency-Key)**: Stripe popularized the use of the `Idempotency-Key` header. They use a **Distributed Lock** (backed by Redis) to ensure that if two identical requests arrive at the same time, one is processed while the other waits for the first to finish, preventing accidental double-charges.
+- **Amazon (The Ledger)**: Amazon's retail backend uses a sophisticated internal ledger system that tracks the movement of every cent. They famously use a **Reconciliation Loop** that constantly compares the bank's records with their internal ledger, flagging even a 1-cent discrepancy for human review.
+- **Uber (Money Mover)**: Uber's payment system handles dozens of currencies and thousands of payout combinations (split between driver, Uber, and city taxes). They use **Temporal** (an orchestration engine) to manage these complex, multi-step sagas, ensuring that even if a payout fails halfway through, the system eventually reaches a consistent state.
+
 ## Connections
 
 **Core concepts applied:**

@@ -86,6 +86,47 @@ Application secrets — database passwords, API keys, encryption keys — are th
 
 2. A developer commits an AWS access key with admin privileges to a public GitHub repo. Walk through your response in the first 5 minutes, 30 minutes, and 24 hours.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Encryption in Transit (TLS 1.3)"
+        User[Client] -->|HTTPS| ALB[Application Load Balancer]
+        ALB -->|mTLS| App[App Service]
+        App -->|SSL/TLS| DB[(Database)]
+    end
+
+    subgraph "Encryption at Rest (Envelope Pattern)"
+        subgraph "KMS (Trusted Environment)"
+            KEK[Key Encryption Key - Master]
+        end
+        
+        App2[App Service] -->|1. Request DEK| KMS
+        KMS -->|2. Plain DEK + Encrypted DEK| App2
+        App2 -->|3. Encrypt Data| Data[Plaintext Data]
+        Data --> Cipher[Ciphertext]
+        App2 -->|4. Store| Storage[(S3 / EBS)]
+        Storage --- Cipher
+        Storage --- E_DEK[Encrypted DEK]
+    end
+
+    style KEK fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Cipher fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **AES-256 Overhead**: Modern CPUs have hardware acceleration (AES-NI). Encryption typically adds **< 1% CPU overhead**.
+- **KMS Latency**: A network call to a cloud KMS (e.g., AWS KMS) takes **~5ms - 20ms**. Use **Data Key Caching** to avoid calling KMS on every operation.
+- **Key Rotation**: Rotate Master Keys (KEKs) **annually**. DEKs are effectively "rotated" with every new object or row.
+- **Searchability**: Encrypted fields cannot be searched using `WHERE field = 'value'` without using **Deterministic Encryption** or a **Searchable Encryption** scheme, both of which have security trade-offs.
+
+## Real-World Case Studies
+
+- **Capital One (2019 Breach)**: An attacker exploited a misconfigured WAF to gain access to an EC2 instance, which then had permissions to call the **KMS Decrypt** API for millions of records in S3. This highlighted that encryption is useless if the **IAM Roles** governing access to the keys are too permissive.
+- **WhatsApp (End-to-End Encryption)**: WhatsApp uses the **Signal Protocol** for encryption in transit. Unlike standard TLS, the keys are generated and stored only on the users' devices. WhatsApp servers only act as a blind relay, meaning they couldn't decrypt messages even if they were served with a government warrant.
+- **Adobe (The "Hint" Leak)**: Adobe famously suffered a breach where they used symmetric encryption with the same key for all passwords. Even worse, they stored "password hints" in plaintext. Researchers were able to use the hints to reverse-engineer the encrypted passwords, proving that **Application-Level Encryption** requires careful salt and key management to be effective.
+
 ## Connections
 
 - [[TLS and Certificate Management]] — TLS is encryption in transit; this note covers the key management and at-rest side

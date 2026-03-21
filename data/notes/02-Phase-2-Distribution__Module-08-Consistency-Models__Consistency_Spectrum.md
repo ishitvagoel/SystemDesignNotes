@@ -110,6 +110,43 @@ If no new writes occur, all replicas will *eventually* converge to the same valu
 
 **Monotonic read violations in load-balanced reads**: A load balancer round-robins read requests across replicas with different replication lag. Request 1 reads from replica A (caught up), request 2 reads from replica B (lagging). The user sees time go backward — new data disappears on the second request. Solution: session affinity to a single replica, or pass a read timestamp/LSN with each request and route to a replica that's at least that current.
 
+## Architecture Diagram
+
+```mermaid
+graph LR
+    subgraph "Strong Consistency (Linearizable)"
+        C1[Client] -->|1. Write| Leader[(Raft Leader)]
+        Leader -->|2. Sync| F1[(Follower A)]
+        Leader -->|3. Sync| F2[(Follower B)]
+        Leader -- "Success" --> C1
+        Note over C1, Leader: Read-after-Write guaranteed
+    end
+
+    subgraph "Eventual Consistency"
+        C2[Client] -->|1. Write| P1[(Primary)]
+        P1 -- "Success" --> C2
+        P1 -.->|2. Async Replication| R1[(Replica)]
+        C3[Other Client] -->|3. Read| R1
+        Note over C3, R1: May see stale data for 100ms
+    end
+
+    style Leader fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style P1 fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Strong Consistency Tax**: Expect **2x-3x higher latency** for writes compared to asynchronous eventual consistency, as you must wait for a quorum of nodes to acknowledge.
+- **Staleness Window**: In a well-tuned local network, "eventual" usually means **< 50ms**. In cross-region systems, it can be **200ms - 5s**.
+- **Conflict Probability**: For most web apps, the probability of two users editing the exact same record within the same 100ms window is **< 0.01%**, which is why eventual consistency is often a safe default.
+- **Read-Your-Writes**: Implementing this at the application layer (via session pinning) gives users the *illusion* of strong consistency while keeping the backend eventually consistent.
+
+## Real-World Case Studies
+
+- **Google Spanner (Financial Scale)**: Spanner is one of the few systems that provides **External Consistency** globally. A bank in London can transfer money to an account in New York, and Spanner's use of atomic clocks ensures that anyone reading the New York account *immediately* after the transfer sees the correct balance, regardless of which data center they hit.
+- **Amazon S3 (The Migration)**: S3 was famously **Eventually Consistent** for years. If you uploaded a file and immediately listed the bucket, the file might not appear. In 2020, Amazon performed a massive engineering feat to make S3 **Strongly Consistent** for all operations, eliminating a huge source of bugs for developers who previously had to build complex retry logic.
+- **Facebook (Causal Consistency)**: Facebook uses **Causal Consistency** for social interactions. If Alice posts a status and Bob replies, Alice's friends are guaranteed to see the status *before* the reply. It would be jarring to see a comment on a post that doesn't exist yet, but it's okay if Alice's friends in Japan see the post 2 seconds later than her friends in California.
+
 ## Connections
 
 - [[CAP Theorem and PACELC]] — The theoretical framework for understanding why you can't have strong consistency + high availability + partition tolerance simultaneously

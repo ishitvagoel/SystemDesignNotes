@@ -89,6 +89,47 @@ The LLM serving ecosystem has consolidated around a few production-grade framewo
 | AWS Inferentia2/Trainium | AWS | Cost-optimized for inference/training on AWS | AWS-native workloads |
 | Meta MTIA | Meta | Custom chip for ranking/recommendation | Meta internal |
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Inference Gateway"
+        Request[User Prompt] --> LB[Inference Load Balancer]
+    end
+
+    subgraph "GPU Worker Cluster (vLLM/SGLang)"
+        LB --> Worker1[GPU Node 1]
+        LB --> Worker2[GPU Node 2]
+        
+        subgraph "Worker Internals"
+            Worker1 --> Scheduler[Continuous Batching Scheduler]
+            Scheduler --> PagedAttn[PagedAttention: KV Cache]
+            PagedAttn --> GPU[(NVIDIA H100 / TPU)]
+        end
+    end
+
+    subgraph "Model & KV Storage"
+        Worker1 & Worker2 --> ModelStore[(Model Registry: S3)]
+        Worker1 & Worker2 -.-> PrefixCache{Shared Prefix Cache}
+    end
+
+    style GPU fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style PagedAttn fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Memory Formula**: A model requires `2 * Number of Parameters` GB of VRAM in FP16 (e.g., Llama-70B needs **140GB**). Quantization (INT4) reduces this by **4x**.
+- **KV Cache Size**: For a typical 70B model, the KV cache consumes **~1MB per token per request**. 100 concurrent users with 1000 tokens each = **~100GB of extra VRAM** needed.
+- **Throughput vs Latency**: Increasing batch size from 1 to 32 typically increases throughput by **4x - 8x** but can double the **Time Per Output Token (TPOT)**.
+- **Speculative Decoding**: Using a small draft model (e.g., 1B draft for a 70B target) can reduce latency by **2x - 3x** for standard prose.
+
+## Real-World Case Studies
+
+- **OpenAI (Disaggregated Inference)**: OpenAI famously moved to a disaggregated architecture where "Prefill" (processing the prompt) and "Decode" (generating tokens) happen on different GPU pools. This allows them to optimize the high-compute prefill phase differently than the memory-bandwidth-bound decode phase, maximizing the efficiency of their massive H100 clusters.
+- **DoorDash (Multi-LoRA Serving)**: DoorDash uses LLMs for various tasks like menu parsing and customer support. Instead of deploying dozens of full models, they use a single base model (Llama-3) and swap tiny **LoRA Adapters** (~100MB each) on the fly. This allows them to serve personalized models for different tasks on the same GPU fleet, reducing costs by **80%**.
+- **DeepSeek (Multi-Head Latent Attention)**: DeepSeek-V3 introduced a novel architecture that dramatically reduces the KV cache size compared to standard Transformers. By compressing the KV state into a latent vector, they can handle **much higher batch sizes** on the same hardware, which is a major factor in their industry-leading price-to-performance ratio.
+
 ## Connections
 
 - [[AI Gateway and LLM Operations]] — The routing, caching, and governance layer above inference serving

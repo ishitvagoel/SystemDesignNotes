@@ -84,6 +84,45 @@ FLP and CAP are related but distinct:
 
 **Recovery after total cluster restart**: All nodes in a consensus group restart simultaneously (power failure, data center outage). Each node replays its log, but if WAL is corrupted or incomplete, the cluster may fail to re-form consensus. Solution: replicate across availability zones, test total cluster recovery as part of disaster recovery drills, and ensure WAL durability (fsync, battery-backed write cache).
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Asynchronous Model (FLP Reality)"
+        NodeA[Node A]
+        NodeB[Node B - SLEEPING?]
+        NodeC[Node C]
+        
+        NodeA -- "Message Delayed 1hr" --> NodeC
+        NodeA -- "Check Node B" --> NodeB
+        Note over NodeB: Is B crashed or just slow?
+        Note over NodeA: FLP says you CAN'T know.
+    end
+
+    subgraph "Practical Solution (Partial Synchrony)"
+        RaftL[Raft Leader] -->|Heartbeat| F1[Follower 1]
+        RaftL -->|Heartbeat| F2[Follower 2]
+        
+        Note over RaftL: Timeout = 150ms.
+        Note over RaftL: If no ACK in 150ms, ASSUME crash.
+    end
+
+    style NodeB fill:var(--surface),stroke:#ff4d4d,stroke-dasharray: 5 5;
+    style RaftL fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Safety vs. Liveness**: FLP proves you must choose. All production consensus systems (Raft, Paxos) choose **Safety** (never decide an incorrect value) over **Liveness** (always reach a decision).
+- **The Timeout Bet**: Production timeouts (150ms-500ms) are a bet that the network is "mostly" synchronous. If the network becomes asynchronous (e.g., a 2-second GC pause on the leader), the system will stall until conditions improve.
+- **Node Count**: Adding more nodes **increases** the probability of a failure that triggers FLP-related stalls. Use the smallest odd number that meets your fault-tolerance needs (usually 3 or 5).
+
+## Real-World Case Studies
+
+- **etcd (Kubernetes Heartbeats)**: etcd, the consensus store for Kubernetes, is a direct implementation of a system that "cheats" FLP using Raft timeouts. When etcd loses its leader, the entire Kubernetes control plane stops making progress (Liveness loss) to ensure that no two nodes are ever given the same IP or resource (Safety preservation).
+- **Cloudflare (The 2020 etcd Outage)**: Cloudflare suffered a major outage when their etcd cluster entered a "livelock" state. Due to high disk latency, the leader couldn't write heartbeats fast enough. Follower nodes timed out and started new elections, which further stressed the disks, preventing the new leaders from finishing their elections. This was FLP in action: the system couldn't reach consensus because the timing assumptions of the "partial synchrony" escape hatch were violated.
+- **ZooKeeper (ZAB vs FLP)**: Yahoo! engineers designed the ZAB protocol for ZooKeeper to be "eventually live." They acknowledged that under pathological network conditions, ZooKeeper might stop accepting writes forever, but they proved that as soon as the network returned to a "normal" state (synchrony restored), the system would immediately recover and reach consensus.
+
 ## Connections
 
 - [[Consensus and Raft]] — Raft circumvents FLP by using timeouts (partial synchrony assumption) and randomized election timeouts

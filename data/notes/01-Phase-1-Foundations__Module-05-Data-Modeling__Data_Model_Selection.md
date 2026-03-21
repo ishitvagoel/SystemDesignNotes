@@ -111,6 +111,42 @@ Data is modeled as nodes (entities) and edges (relationships). Both nodes and ed
 
 **Schemaless doesn't mean schema-free**: Without schema enforcement, document stores accumulate inconsistent data over time — some documents have `email`, others have `emailAddress`, others have `Email`. Application code becomes riddled with null checks and field name normalization. Solution: enforce schemas at the application layer (JSON Schema, Mongoose schemas, Pydantic models) even when the database doesn't require it.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Relational (Tables)"
+        R1[User Table] -- "FK" --> R2[Order Table]
+        R2 -- "Join" --> R3[Product Table]
+    end
+
+    subgraph "Document (JSON)"
+        D1[User Document: { id, orders: [ { product, total } ] }]
+    end
+
+    subgraph "Graph (Nodes & Edges)"
+        G1((User)) -- "FRIEND" --> G2((User))
+        G1 -- "PURCHASED" --> G3((Product))
+    end
+
+    style R2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style D1 fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style G1 fill:var(--surface),stroke:var(--border),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Relationship Depth**: If your queries consistently join **> 3-4 tables**, consider denormalizing into a Document or using a Graph database.
+- **Schema Variance**: If **> 30%** of your fields are NULL because they only apply to specific subtypes, use a Document model (or Postgres JSONB).
+- **Read Locality**: Document models can be **2x-5x faster** for "Profile" pages because all data is fetched in a single I/O instead of multiple joins.
+- **Graph Traversal**: A 5-hop relationship query in Neo4j can be **100x-1000x faster** than the equivalent self-joins in SQL.
+
+## Real-World Case Studies
+
+- **LinkedIn (Graph for Connections)**: LinkedIn is the quintessential use case for a Graph database. Finding "3rd-degree connections" is a recursive join nightmare in SQL but a simple breadth-first search in a graph. They built their own distributed graph database (**LI-Graph**) to handle this at scale.
+- **Amazon (Relational to NoSQL)**: Amazon's retail site moved its core "shopping cart" and "order" functionality from Oracle to DynamoDB. They found that most e-commerce operations don't actually need complex joins—they just need highly available, scalable key-value access to a specific user's data.
+- **The Guardian (Document for CMS)**: The Guardian newspaper uses a document model (MongoDB) for its content management system. Articles have wildly different structures (live blogs, photo galleries, long-form text), and the document model allows them to evolve the "Article" schema without expensive database migrations.
+
 ## Connections
 
 - [[SQL vs NoSQL Decision Framework]] — This note focuses on data models; that note covers the broader database selection including operational concerns

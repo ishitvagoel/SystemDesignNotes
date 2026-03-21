@@ -160,6 +160,43 @@ At 5B feed reads/day and 10B posts/day: the feed cache grows to ~4 TB (multiple 
 
 The news feed is a classic read-heavy system where pre-computation (materialized views in the form of feed caches) shifts work from read time to write time. The hybrid fan-out approach is the critical insight: the architecture adapts its strategy based on the data's structure (follower count distribution), not a one-size-fits-all approach. This pattern — different strategies for different data segments — appears across many system designs.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Write Path (Publish)"
+        UserP[Publisher] -->|POST /post| API_W[Publish API]
+        API_W -->|1. Persist| DB[(Post DB)]
+        API_W -->|2. Queue| Kafka[Fan-out Queue]
+        Kafka --> Worker[Fan-out Worker]
+        Worker -->|3. Push| FeedCache{Redis Cluster}
+    end
+
+    subgraph "Read Path (Feed)"
+        UserR[Follower] -->|GET /feed| API_R[Feed API]
+        API_R -->|4. Pull| FeedCache
+        API_R -->|5. Merge| PullCelebrity[Celebrity Post Cache]
+        API_R -->|6. Rank| Ranker[Ranking ML Model]
+        Ranker --> UserR
+    end
+
+    style FeedCache fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Kafka fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Fan-out Amplification**: If average followers = 300, 1,000 posts/sec results in **300,000 writes/sec** to the feed cache.
+- **The 10k Threshold**: Typically, use **Push** (Fan-out on Write) for users with < 10,000 followers, and **Pull** (Fan-out on Read) for "Mega-users" (> 10,000 followers).
+- **Feed Depth**: Users rarely scroll past **500 - 1,000 posts**. Bound your feed cache size accordingly to save Redis memory.
+- **Ranking Latency**: A simple weighted score (time decay + engagement) takes **< 5ms**. A deep learning model for ranking can take **20ms - 50ms**.
+
+## Real-World Case Studies
+
+- **Facebook (TAO)**: Facebook uses a specialized distributed graph store called **TAO** to handle its social graph and news feed. TAO is optimized for high-volume, low-latency reads of associations (like "who are my friends?") and is built on top of a massive layer of Memcached nodes to ensure that feed generation never hits the primary databases.
+- **Twitter (The 2013 Migration)**: Twitter famously moved from a pull-based model to a **Hybrid Push/Pull** model. They found that purely pulling tweets for users with 1,000+ follows was too slow, but pushing for celebrities like Lady Gaga (millions of followers) was too expensive. Their hybrid approach is now the industry standard for feed architectures.
+- **Instagram (Media-First Feed)**: Instagram's news feed challenge is different because of high media weight. They use **Pre-fetching** logic: as you scroll down your feed, the app predicts which photos/videos you'll see next and starts downloading them from the **CDN** before they enter your viewport, ensuring a seamless "infinite scroll" experience.
+
 ## Connections
 
 **Core concepts applied:**

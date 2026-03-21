@@ -69,6 +69,46 @@ Traditional observability (metrics, logs, traces) isn't sufficient. Agentic syst
 - **Token tracking**: Track tokens consumed per step, per agent, per session for cost attribution.
 - **Cost attribution per agent step**: Which step consumed the most tokens? Which tool call was most expensive? This guides optimization.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Agent Loop (ReAct)"
+        Goal[User Goal] --> Plan[Plan / Thought]
+        Plan --> Act[Action: Tool Call]
+        Act --> Obs[Observation: Result]
+        Obs --> Plan
+        Plan --> Final[Response]
+    end
+
+    subgraph "Tool Belt (MCP)"
+        Act --> DB[(Database MCP)]
+        Act --> Web[Search MCP]
+        Act --> API[SaaS API MCP]
+    end
+
+    subgraph "Memory & State"
+        Plan -.-> Short[Short-term: Context]
+        Plan -.-> Long[Long-term: Vector DB]
+    end
+
+    style Plan fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Act fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Reasoning Depth**: Limit agents to **5 - 10 steps** per task. Most agents that haven't solved a problem in 10 steps are in an infinite loop.
+- **Cost per Step**: A single reasoning step using GPT-4o typically costs **$0.01 - $0.05**. A 10-step agent run can cost **$0.50**.
+- **Latency Multiplier**: Each agent step adds **2s - 5s** of latency (LLM generation + tool execution). A 5-step agent run takes **~15s - 25s**.
+- **Tool Selection**: LLMs can reliably select from **~10 - 20 tools** provided in a single prompt. Beyond that, use a two-stage retrieval (RAG) to find relevant tool definitions first.
+
+## Real-World Case Studies
+
+- **Anthropic (MCP Adoption)**: Anthropic released the **Model Context Protocol (MCP)** to standardize how agents talk to tools. Companies like **Cursor** and **Windsurf** use MCP to give their AI coding agents secure access to your local filesystem, terminal, and git history, allowing them to fix bugs and run tests autonomously.
+- **Salesforce (Agentforce)**: Salesforce built a platform where businesses can deploy thousands of autonomous agents to handle sales and service. They use a **Hierarchical Orchestration** model: a "Coordinator Agent" listens to the customer and delegates work to specialized "Action Agents" (e.g., a "Refund Agent" or a "Scheduling Agent"), ensuring strict governance and security boundaries.
+- **HubSpot (Breeze)**: HubSpot uses agentic workflows to automate marketing tasks. They found that purely autonomous agents were too unpredictable for brand-sensitive work, so they use **Human-in-the-loop (HITL)** for every social media post the agent generates. The agent researches and drafts (Plan -> Act), but the "Send" action is gated by a human "Observe" step.
+
 ## Connections
 
 - [[RAG Architecture]] — RAG is the retrieval component that many agents use for knowledge access

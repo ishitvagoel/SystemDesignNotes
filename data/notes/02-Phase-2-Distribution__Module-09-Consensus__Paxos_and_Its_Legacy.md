@@ -89,6 +89,43 @@ Lamport himself acknowledged: "The Paxos algorithm, when presented in plain Engl
 
 **Implementation divergence**: Because Lamport's Paxos paper doesn't specify many practical details (log management, snapshotting, membership changes), every implementation fills in the gaps differently. This makes implementations hard to verify and prone to subtle bugs that only manifest under specific failure sequences. Google's Chubby paper noted that the Paxos implementation was the hardest distributed systems code they ever wrote. Solution: use Raft, which specifies all these details, or use a well-tested Paxos library rather than implementing from scratch.
 
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant P as Proposer
+    participant A1 as Acceptor 1
+    participant A2 as Acceptor 2
+    participant A3 as Acceptor 3
+
+    Note over P, A3: Phase 1: Prepare
+    P->>A1: 1a. Prepare(n=101)
+    P->>A2: 1a. Prepare(n=101)
+    A1-->>P: 1b. Promise(n=101, prev=None)
+    A2-->>P: 1b. Promise(n=101, prev=None)
+
+    Note over P, A3: Phase 2: Accept
+    P->>A1: 2a. Accept(n=101, v="Value X")
+    P->>A2: 2a. Accept(n=101, v="Value X")
+    A1-->>P: 2b. Accepted(n=101, v="Value X")
+    A2-->>P: 2b. Accepted(n=101, v="Value X")
+    
+    Note over P: Majority reached. Value X is chosen.
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Decision Latency**: Basic Paxos requires **2 RTTs** per value. Multi-Paxos (with a stable leader) reduces this to **1 RTT**.
+- **Message Complexity**: In a cluster of N nodes, each decision requires **O(N)** messages. For 5 nodes, that's roughly 10-15 messages per value.
+- **Quorum Requirement**: A majority of **(N/2)+1** nodes is required for any progress. A 3-node cluster can handle 1 failure; 5 nodes can handle 2.
+- **Stable Storage**: Every Paxos acceptor **MUST** fsync its promise/acceptance to a persistent WAL (Write-Ahead Log) before responding, adding **~1-10ms** disk latency to every round.
+
+## Real-World Case Studies
+
+- **Google (Chubby)**: Chubby is a distributed lock service that powers almost everything at Google (BigTable, Spanner, etc.). It was one of the first major systems to use Paxos for its core consensus engine. Google engineers famously wrote that implementing Paxos for Chubby was the most difficult engineering task they ever faced, leading them to warn others against implementing it from scratch.
+- **Apache ZooKeeper (ZAB)**: ZooKeeper uses **ZAB (ZooKeeper Atomic Broadcast)**, which is a Paxos-derived protocol optimized for primary-backup replication. While not "pure" Paxos, it shares the same safety foundations. It powers massive clusters at LinkedIn, Twitter, and Pinterest, handling the configuration and coordination of thousands of servers.
+- **Microsoft (Azure Storage)**: Azure's core storage system (XStore) uses a Paxos variant to manage the "Extent Nodes" that store actual data. They use Paxos to maintain consistent metadata about where data is stored, ensuring that even under massive hardware failure, no data is lost and the system remains consistent.
+
 ## Connections
 
 - [[Consensus and Raft]] — Raft was explicitly designed as a more understandable alternative to Paxos

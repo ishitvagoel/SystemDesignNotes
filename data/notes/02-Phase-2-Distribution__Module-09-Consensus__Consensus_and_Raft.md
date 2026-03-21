@@ -117,6 +117,39 @@ Raft's safety guarantee: **if a log entry has been committed, it will be present
 
 - **Disk corruption on leader**: The leader's WAL is corrupted. On restart, it can't recover its log. It must either be rebuilt from peers or replaced. Raft doesn't natively handle Byzantine faults (arbitrary corruption) — it assumes crash-stop failures (nodes either work correctly or stop).
 
+## Architecture Diagram
+
+```mermaid
+stateDiagram-v2
+    [*] --> Follower
+    
+    Follower --> Candidate: Election Timeout
+    Candidate --> Candidate: Split Vote (New Term)
+    Candidate --> Leader: Receives Majority Votes
+    
+    Leader --> Follower: Discovers Higher Term
+    Candidate --> Follower: Discovers Higher Term / New Leader
+    
+    state Leader {
+        [*] --> Heartbeat
+        Heartbeat --> SendEntries: Client Write
+        SendEntries --> Heartbeat: Majority ACK
+    }
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Cluster Size**: Use **3 nodes** to tolerate 1 failure, or **5 nodes** to tolerate 2. Avoid even numbers (4 nodes still only tolerate 1 failure but have higher consensus overhead).
+- **Election Timeout**: Typically **150ms - 300ms**. Shorter timeouts lead to faster recovery but increase the risk of false-positive elections during network blips.
+- **Heartbeat Interval**: Usually **1/10th of the election timeout** (~20ms).
+- **Consensus Latency**: A write requires **1 RTT** to a majority of followers. In a single region, this is **~1-5ms**. Across regions, it's **100ms+**.
+
+## Real-World Case Studies
+
+- **Kubernetes (etcd)**: The "brain" of Kubernetes, **etcd**, uses Raft to store all cluster state (Pods, ConfigMaps, Secrets). Because Raft ensures strong consistency, Kubernetes can guarantee that two controllers never try to manage the same resource simultaneously, preventing race conditions in cluster orchestration.
+- **CockroachDB (Multi-Raft)**: CockroachDB doesn't just run one Raft group; it runs **thousands**. Every 64MB "Range" of data is its own independent Raft group. This allows CockroachDB to scale horizontally—adding more nodes just means more Raft groups can be distributed across the cluster.
+- **HashiCorp Consul**: Consul uses Raft for its highly-available key-value store and service discovery metadata. They famously documented how they use **Leases** on the Raft leader to allow high-performance, linearizable reads without needing a full consensus round-trip for every `GET` request.
+
 ## Connections
 
 - [[Paxos and Its Legacy]] — Raft and Paxos solve the same problem; Raft was designed as an understandable alternative

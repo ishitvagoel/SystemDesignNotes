@@ -119,6 +119,40 @@ CDNs have evolved beyond static caching:
 
 - **CORS and CDN caching conflict**: The CDN caches a response without CORS headers (from a same-origin request). A cross-origin request then gets the cached response without CORS headers and is blocked by the browser. Mitigation: include `Vary: Origin` so the CDN caches separate versions per requesting origin. Or set CORS headers on all responses regardless of the request origin.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    User[Global Users] -->|DNS Anycast| Edge[CDN Edge PoP]
+    
+    subgraph "CDN Infrastructure"
+        Edge -->|Cache Miss| Shield[Origin Shield / Mid-Tier Cache]
+        Shield -->|Cache Miss| Origin[Origin Server / S3]
+    end
+
+    subgraph "Edge Features"
+        Edge --> WAF[Web App Firewall]
+        Edge --> Optimize[Image Optimization]
+        Edge --> Serverless[Edge Workers / Logic]
+    end
+
+    style Edge fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Shield fill:var(--surface),stroke:var(--accent2),stroke-dasharray: 5 5;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Latency Reduction**: Moving from a central origin (e.g., US-East) to a local Edge PoP typically reduces RTT from **150ms+** to **< 20ms**.
+- **Cache Hit Ratio (CHR)**: For static assets, aim for **> 95%**. For dynamic API responses, **50-70%** is often acceptable.
+- **Egress Savings**: CDNs typically charge **~50-70% less** for bandwidth than major cloud providers (AWS/GCP) charge for direct object storage egress.
+- **Purge Propagation**: Modern CDNs (Fastly/Cloudflare) propagate cache purges globally in **< 300ms**.
+
+## Real-World Case Studies
+
+- **Netflix (Open Connect)**: Netflix doesn't use standard third-party CDNs for its video traffic. They built their own called **Open Connect**. They ship physical hardware appliances (filled with popular movies) directly to ISP data centers. This allows Netflix to serve **95% of its traffic** directly from within the user's own ISP network, bypassing the public internet entirely.
+- **Cloudflare (1.1.1.1 Anycast)**: Cloudflare uses its massive CDN network to provide the world's fastest recursive DNS resolver (1.1.1.1). By using Anycast, they ensure that your DNS query always hits the nearest Cloudflare PoP, often resulting in sub-2ms response times.
+- **The Super Bowl (Varnish/Fastly)**: Major live streaming events like the Super Bowl use "Origin Shielding" and massive CDN fan-outs to handle 100M+ concurrent viewers. By layering caches, they ensure that even if millions of users' video players request the same "chunk" at once, only a handful of requests actually reach the origin video encoder.
+
 ## Connections
 
 - [[Cache Patterns and Strategies]] — CDN is the edge layer in the multi-layer caching stack

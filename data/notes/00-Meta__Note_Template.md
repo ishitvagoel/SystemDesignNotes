@@ -19,12 +19,18 @@ The core trade-offs. Use a comparison table when contrasting 3+ options.
 ## Failure Modes & Production Lessons
 What goes wrong in practice. Realistic scenarios.
 
-## Diagram
-Include only when a visual genuinely clarifies.
+## Architecture Diagram
+Include a valid Mermaid.js diagram (sequence or flowchart). Rely on the theme variables defined in the application.
 
 ```mermaid
 (diagram here)
 ```
+
+## Back-of-the-Envelope Heuristics
+Provide concrete, realistic numbers, latencies, or capacities related to this topic. Use a bulleted list.
+
+## Real-World Case Studies
+Briefly describe how 1-2 tech giants (e.g., Netflix, Uber, AWS, Meta) implement or use this pattern.
 
 ## Connections
 Backlinks with explanation of why the connection matters.

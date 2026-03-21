@@ -107,6 +107,40 @@ DNS is the first thing that must work for anything else to work. Failure scenari
 
 **Stale DNS after failover**: You fail over your database to a standby in another AZ. The DNS record is updated, but clients have the old IP cached (application-level caching, JVM DNS cache, OS resolver cache). Clients keep connecting to the dead primary for minutes. Solution: use low TTLs (30-60s) for records that may change during failover, honor TTLs in HTTP clients and connection pools (Java's `networkaddress.cache.ttl`), and use IP-based failover where possible.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Client[Client Browser] -->|1. Cache Check| Local[OS Resolver Cache]
+    Local -->|2. Miss| Recursive[Recursive Resolver 8.8.8.8]
+    
+    subgraph Iterative Resolution
+        Recursive -->|3. Query .com| Root[Root Server .]
+        Root --|4. Referral| Recursive
+        Recursive -->|5. Query example.com| TLD[TLD Server .com]
+        TLD --|6. Referral| Recursive
+        Recursive -->|7. Query api.example.com| Auth[Authoritative NS Route53]
+        Auth --|8. A Record: 93.184.216.34| Recursive
+    end
+    
+    Recursive -->|9. Final Answer| Client
+    
+    style Recursive fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Auth fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **DNS Latency**: A cold resolution (no cache) can take **100ms - 500ms+** depending on the number of hops and network distance.
+- **Cache Hit Rate**: Public resolvers (Google, Cloudflare) typically have a **>95% hit rate** for popular domains.
+- **UDP vs TCP**: Standard DNS queries use UDP port 53. If the response exceeds **512 bytes** (or 4096 bytes with EDNS0), it falls back to TCP.
+- **Negative Caching**: If a domain doesn't exist (NXDOMAIN), resolvers cache this "non-existence" for the duration of the SOA's minimum TTL (usually **1 hour**).
+
+## Real-World Case Studies
+
+- **Facebook (2021 Total Blackout)**: A routine maintenance script accidentally withdrew all BGP routes to Facebook's DNS prefix. Because the DNS servers were unreachable, Facebook's internal tools (which relied on those same DNS names) also failed, locking engineers out of the data centers. It was a "DNS-induced catch-22."
+- **Dyn (2016 DDoS)**: A massive Mirai botnet attack targeted Dyn (a major DNS provider). Because so many giants (Twitter, Spotify, GitHub) used only Dyn for their authoritative DNS, a large portion of the internet "disappeared" despite the services' actual servers being perfectly healthy.
+
 ## Connections
 
 - [[Anycast and GeoDNS]] — How DNS itself gets load-balanced globally

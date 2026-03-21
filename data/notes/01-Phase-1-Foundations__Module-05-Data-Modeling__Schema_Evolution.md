@@ -122,6 +122,47 @@ Compatibility is checked on schema registration — if a new schema version brea
 
 - **Accidental field number reuse (Protobuf)**: A developer deletes field 3, then later adds a new field with number 3. Old data's field 3 (with the old type) is now misinterpreted as the new field's type. Silent data corruption. Mitigation: mark deleted field numbers as `reserved`.
 
+## Architecture Diagram
+
+```mermaid
+graph LR
+    subgraph "Producer (App v2)"
+        P[App Instance] -->|1. Register Schema| SR{Schema Registry}
+        P -->|2. Encode with ID| Msg[Message: {id: 105, data: bin}]
+    end
+
+    subgraph "Event Stream"
+        Msg --> Kafka[(Kafka Topic)]
+    end
+
+    subgraph "Consumers"
+        Kafka --> C1[Consumer App v1]
+        Kafka --> C2[Consumer App v2]
+        
+        C1 -->|3. Fetch ID 105| SR
+        C1 -->|4. Resolve: Skip Unknown| Read1[Old Logic]
+        
+        C2 -->|3. Fetch ID 105| SR
+        C2 -->|4. Resolve: All Fields| Read2[New Logic]
+    end
+
+    style SR fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Kafka fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Cardinal Rule**: Never reuse a field number (Protobuf) or rename a field without an alias (Avro).
+- **Additive by Default**: 90% of schema changes should be **adding** new nullable/optional fields. This is always safe.
+- **Breaking Change Detection**: If you MUST change a field's type or remove a required field, treat it as a **Major Version** change (e.g., move from `topic_v1` to `topic_v2`).
+- **Binary Size**: Protobuf/Avro are typically **5x - 10x smaller** than JSON for the same data, primarily due to removing redundant field names.
+
+## Real-World Case Studies
+
+- **LinkedIn (Avro/Schema Registry)**: LinkedIn created the first **Schema Registry** because they hit a wall with JSON-over-Kafka. They found that without an enforced schema, their downstream data warehouse (Hadoop) was constantly breaking because a developer would change a field name in a microservice without telling the data team.
+- **Google (Protobuf Tag Reuse)**: Google has internal stories of "Production Outages of the Week" caused by reusing a Protobuf tag number that had been deleted years earlier. This led to the creation of the `reserved` keyword, which is now a standard practice in all Protobuf definitions to prevent "zombie tags."
+- **Stripe (API Mapping)**: Stripe handles schema evolution differently. They maintain **API Versions** by date. When they change their internal schema, they use a "Transformation Layer" that maps the current internal format back to every previous version's format, ensuring that a request using a 2015 schema still works perfectly in 2025.
+
 ## Connections
 
 - [[API Versioning and Compatibility]] — Schema evolution is the data-layer parallel of API evolution

@@ -140,6 +140,45 @@ This supports queries like `WHERE lower(email) = 'alice@example.com'` — withou
 
 - **Statistics staleness**: The query planner uses table statistics (column value distributions, correlation, NDV) to decide whether to use an index. If stats are stale (after a large data change), the planner may choose a sequential scan over an available index. Mitigation: `ANALYZE` runs automatically in Postgres, but can lag after bulk operations. Run it manually after large imports.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Query: WHERE age = 25"
+        Scan[Sequential Scan] -->|Read 1M Rows| Result1[Slow Result]
+        Index[B-Tree Index Lookup] -->|Read 3 Pages| Result2[Fast Result]
+    end
+
+    subgraph "B-Tree Index Structure"
+        Root[Root Page] --> Branch[Branch Pages]
+        Branch --> Leaf[Leaf Pages]
+        Leaf -->|Pointer| Heap[Table Data / Heap]
+    end
+
+    subgraph "Composite Index (City, Age)"
+        C1[New York, 20]
+        C2[New York, 25]
+        C3[Tokyo, 22]
+        Note over C1, C3: Sorted by City, then Age
+    end
+
+    style Root fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Heap fill:var(--surface),stroke:var(--border),stroke-dasharray: 5 5;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Index Selectivity**: An index is most effective when it returns **< 5%** of the table's rows. If a query returns 50% of the table, the database will likely ignore the index and perform a sequential scan.
+- **Index Size**: A B-tree index on a single 8-byte integer column consumes **~12-15 bytes** per row (including pointers and page overhead).
+- **Write Penalty**: Each additional index typically slows down `INSERT` operations by **10-20%** due to the extra disk I/O and tree rebalancing.
+- **Leftmost Prefix**: For a composite index `(A, B, C)`, you can search by `(A)`, `(A, B)`, or `(A, B, C)`, but you **cannot** efficiently search by `(B)` or `(C)` alone.
+
+## Real-World Case Studies
+
+- **GitLab (GIN Index Migration)**: GitLab uses Postgres for its massive metadata store. They famously struggled with searching through millions of project names and paths. By using **trigram GIN indexes**, they enabled fast fuzzy searching across the entire platform, reducing search latency from seconds to milliseconds.
+- **Uber (Secondary Indexing)**: When Uber built its "Schemaless" store on top of MySQL, they realized that global secondary indexes were too expensive to maintain across shards. They moved to a system where indexes are **local to the shard**, requiring the application to aggregate results but drastically improving write throughput and availability.
+- **Pinterest (BRIN for Time-Series)**: Pinterest uses **BRIN (Block Range Index)** for its massive log tables. Since logs are naturally inserted in timestamp order, a BRIN index allows them to skip millions of irrelevant rows during time-range queries while taking up **99% less space** than a standard B-tree index.
+
 ## Connections
 
 - [[B-Tree vs LSM-Tree]] — B-tree indexes are literally B-trees; understanding their structure explains index behavior

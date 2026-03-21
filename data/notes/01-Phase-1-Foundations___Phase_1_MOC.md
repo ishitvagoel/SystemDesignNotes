@@ -4,6 +4,29 @@
 
 This phase covers the primitives: how machines communicate, how data is stored and retrieved, how APIs are designed, and how entities are identified. Every concept in Phases 2–4 builds on these foundations.
 
+## Foundation Architecture
+
+```mermaid
+graph TD
+    subgraph "Phase 1: The Request Path"
+        M1[M1: Networking] --> M2[M2: API Design]
+        M2 --> M6[M6: Caching / CDN]
+        M6 --> M3[M3: Storage Engines]
+        M3 --> M4[M4: Databases]
+        M4 --> M5[M5: Data Modeling]
+        M1 & M2 & M4 --> M7[M7: ID Gen & Ordering]
+    end
+
+    style M1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style M3 fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Senior Engineer's Foundation Heuristic
+
+- **Master the Primitives**: You cannot design a distributed system (Phase 2) if you don't understand how a B-Tree works or why TCP head-of-line blocking happens. 
+- **Identify the Bottleneck**: In this phase, always ask: "Is this bounded by CPU, RAM, or Disk I/O?"
+- **Stability First**: Foundations are about reliability. Performance is a feature; correctness is a requirement.
+
 ## Modules
 
 | Module | Focus | Key Question Answered |

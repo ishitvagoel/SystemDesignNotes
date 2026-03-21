@@ -113,6 +113,40 @@ This is the framework that makes B-tree vs LSM-tree reasoning precise. Every sto
 
 - **Write stalls in RocksDB**: When Level 0 has too many SSTables (compaction can't keep up), RocksDB throttles or stalls writes to prevent read degradation. This manifests as sudden write latency spikes. Tuning: increase Level 0 file count limits, increase compaction parallelism, use faster storage.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "B-Tree (In-Place Updates)"
+        B_Root[Root Page] --> B_Internal[Internal Pages]
+        B_Internal --> B_Leaf[Leaf Pages - Data]
+        Note over B_Leaf: Writes: Find page -> Update in place
+    end
+
+    subgraph "LSM-Tree (Append-Only)"
+        L_Write[Write Op] --> L_Mem[Memtable - RAM]
+        L_Mem -->|Flush| L0[SSTables Level 0]
+        L0 -->|Compact| L1[SSTables Level 1]
+        Note over L1: Writes: Sequential append to L0
+    end
+
+    style B_Root fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style L_Mem fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Write Throughput**: LSM-trees can handle **5-10x higher** write throughput than B-trees on the same hardware due to sequential I/O.
+- **Read Latency**: B-trees provide **O(log N)** predictable read latency (usually 3-4 disk seeks). LSM-trees are **O(L * log N)** where L is the number of levels (reduced to ~1 with Bloom filters).
+- **Write Amplification**: B-trees are typically **2x - 4x**. LSM-trees (leveled) can be **10x - 30x** due to repeated compaction.
+- **Storage Efficiency**: B-trees often have **30-50% fragmentation** (empty space in pages). LSM-trees have **<10% fragmentation** because SSTables are packed tight.
+
+## Real-World Case Studies
+
+- **PostgreSQL / MySQL (B-Tree)**: These classic relational databases use B-trees (specifically B+ trees) because they prioritize read performance and predictable latency for OLTP workloads. The B-tree's in-place updates are manageable because most web apps are read-heavy (90% reads, 10% writes).
+- **Cassandra / RocksDB (LSM-Tree)**: Built for write-heavy workloads. Cassandra uses LSM-trees to handle massive ingestion rates (millions of writes/sec) across distributed clusters. Facebook created RocksDB (based on LevelDB) specifically to be an embeddable, high-performance LSM-tree engine for its internal services.
+- **CockroachDB (RocksDB to Pebble)**: CockroachDB originally used RocksDB as its storage engine. They later wrote "Pebble" (a Go-based LSM engine) to avoid the overhead of CGO calls and to better tune compaction for their specific distributed SQL needs.
+
 ## Connections
 
 - [[Write-Ahead Log]] — Both B-trees and LSM-trees use WAL for durability; the WAL is the sequential write that makes crash recovery possible

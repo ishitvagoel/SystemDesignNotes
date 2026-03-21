@@ -104,6 +104,48 @@ In March 2024, a sophisticated supply chain attack was discovered in xz Utils, a
 
 - **Stale vulnerability data**: Your SBOM scanner uses a vulnerability database that's 48 hours old. A critical zero-day was published 24 hours ago. Mitigation: use real-time vulnerability feeds (OSV.dev), scan continuously (not just at build time), and enable GitHub/GitLab security alerts for repositories.
 
+## Architecture Diagram
+
+```mermaid
+graph LR
+    subgraph "Source (Trust Boundary 1)"
+        Git[Signed Git Commits] --> CI[Hardened CI: GitHub Actions]
+    end
+
+    subgraph "Build (Trust Boundary 2 - SLSA)"
+        CI --> Build[Build Artifact / Image]
+        Build --> Sign[Cosign: Identity-based Sign]
+        Build --> SBOM[Generate SBOM: syft]
+    end
+
+    subgraph "Registry (Durable Evidence)"
+        Sign --> Log[Rekor: Transparency Log]
+        Build --> Reg[(Secure Image Registry)]
+        SBOM --> Reg
+    end
+
+    subgraph "Deploy (Enforcement)"
+        Reg --> Gate[Admission Controller]
+        Gate -->|Verify Signature| K8s[Production Cluster]
+    end
+
+    style Sign fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Gate fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Transitive Depth**: The average modern application has **~10-50 direct** dependencies but **~500-1,000 transitive** ones. 90% of your vulnerabilities will come from transitive dependencies.
+- **Vulnerability Response**: A mature team should be able to identify if they are affected by a new CVE across all services in **< 15 minutes** using SBOMs.
+- **Signing Speed**: Identity-based signing (Sigstore) takes **< 2 seconds** in a CI pipeline and requires zero manual key management.
+- **Audit Cadence**: Scan your production container images for new vulnerabilities **every 24 hours**, even if no new code is deployed.
+
+## Real-World Case Studies
+
+- **SolarWinds (2020)**: This was the ultimate "Build Pipeline" compromise. Attackers injected a backdoor into the **build system** itself, not the source code. The malicious code was then compiled and signed with SolarWinds' legitimate certificate, making it look perfectly valid to 18,000 customers. This incident was the primary driver for the **SLSA** framework.
+- **Log4Shell (2021)**: This exposed the "Transitive Dependency" problem. A vulnerability in a common Java logging library allowed remote code execution. Thousands of companies didn't even know they were using Log4j because it was buried several levels deep in other vendors' software, leading to the global mandate for **SBOMs**.
+- **xz Utils (2024)**: A sophisticated actor spent **2 years** gaining trust as a maintainer of a low-level library to eventually inject a backdoor. This showed that even "Social Trust" is a part of the supply chain. It proved that **Hermetic Builds** (no network access during build) and **Reproducible Builds** are critical for the highest security tiers.
+
 ## Connections
 
 - [[Threat Modeling for Distributed Systems]] — Supply chain attacks are a top threat vector (Tampering in STRIDE)

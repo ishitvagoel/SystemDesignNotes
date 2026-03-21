@@ -1,4 +1,34 @@
-# Glossary
+## Concept Map
+
+```mermaid
+graph TD
+    subgraph "External"
+        User -->|Anycast| LB[Load Balancer]
+        LB -->|TLS 1.3| GW[API Gateway]
+    end
+
+    subgraph "Logic Layer"
+        GW -->|mTLS| App[App Service]
+        App -->|Saga| App
+        App -->|Idempotency| App
+    end
+
+    subgraph "Data & Coordination"
+        App -->|WAL| DB[(Postgres / LSM)]
+        App -->|Raft| Coord[etcd / ZK]
+        App -->|Vector| VDB[(Pinecone / pgvector)]
+    end
+
+    subgraph "Operations"
+        App -->|SLO/SLI| Obs[Observability]
+        Obs -->|Error Budget| Obs
+    end
+
+    style App fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style DB fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+# Core Terms
 
 Core terms used across this vault. For deeper treatment, follow the backlink to the relevant note.
 

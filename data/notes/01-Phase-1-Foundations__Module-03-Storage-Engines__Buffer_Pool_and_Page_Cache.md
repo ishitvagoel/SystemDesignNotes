@@ -79,6 +79,41 @@ Smart buffer pool management goes beyond caching — it anticipates what data wi
 
 - **Dirty page flush storms**: A checkpoint flushes thousands of dirty pages at once, saturating disk I/O. Concurrent query latency spikes. Mitigation: fuzzy checkpoints, background writer with rate limiting, InnoDB's adaptive flushing.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Query[SQL Query Engine] -->|1. Request Page 42| BP[Buffer Pool Manager]
+    
+    subgraph "In-Memory Cache"
+        BP -->|2. Check Hash Table| HT{Page Table}
+        HT --|Hit| Return[Return Buffer Pointer]
+        HT --|Miss| Evict[Choose Victim Page]
+    end
+    
+    subgraph "Disk I/O"
+        Evict -->|3. If Dirty| Flush[Write to Disk]
+        BP -->|4. Read Page 42| Disk[(Data Files)]
+        Disk -->|5. Load into Buffer| BP
+    end
+
+    style BP fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style HT fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Cache Hit Ratio**: A healthy production database should have a **>99%** hit ratio for its working set. Below 95% indicates severe memory pressure.
+- **Sizing (Postgres)**: Set `shared_buffers` to **~25%** of system RAM.
+- **Sizing (MySQL/InnoDB)**: Set `innodb_buffer_pool_size` to **~75%** of system RAM on a dedicated DB server.
+- **Random vs Sequential**: Reading from the buffer pool is **~1,000x - 10,000x faster** than reading from an SSD (100ns vs 100µs - 1ms).
+
+## Real-World Case Studies
+
+- **PostgreSQL (The "Two-Cache" Strategy)**: Postgres famously uses a smaller `shared_buffers` and relies heavily on the **OS Page Cache** for the rest. This simplifies the database code but can lead to "double-caching" (the same page in both caches). However, it makes Postgres remarkably resilient to OS-level reboots, as the page cache warms up quickly.
+- **MySQL/InnoDB (Direct I/O)**: InnoDB prefers `O_DIRECT`, which bypasses the OS page cache entirely. This gives it "exclusive" control over its memory, preventing double-caching and allowing for more predictable eviction policies (like the "Midpoint Insertion" strategy to prevent sequential scans from wiping out the cache).
+- **LinkedIn (RocksDB Tuning)**: LinkedIn uses RocksDB for many of its internal key-value stores. They've written extensively about tuning the "Block Cache" (the LSM equivalent of a buffer pool) to balance between caching data, indexes, and Bloom filters, highlighting that for LSM-trees, caching the index is often more important than caching the data itself.
+
 ## Connections
 
 - [[B-Tree vs LSM-Tree]] — B-trees depend heavily on the buffer pool for caching internal nodes; LSM-trees rely more on the block cache and OS page cache

@@ -137,6 +137,44 @@ Elasticsearch implements faceting via **aggregations**: bucket aggregations (gro
 
 - **Cluster state bottleneck**: Cluster state (index metadata, mappings, shard allocation) is stored in memory on every node and must be synchronized. With thousands of indices and tens of thousands of shards, cluster state updates become slow and consume memory. Mitigation: reduce index/shard count (ILM deletes old indices), use data streams instead of per-day indices.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Indexing Pipeline"
+        Doc[Raw Document] --> Filter[Char Filter: Strip HTML]
+        Filter --> Token[Tokenizer: Split Words]
+        Token --> Normalize[Token Filter: Lowercase/Stem]
+        Normalize --> Index[(Inverted Index)]
+    end
+
+    subgraph "Query Path (Scatter-Gather)"
+        User[Search Query] --> Coord[Coordinating Node]
+        Coord --> Shard1[Shard 1 - Lucene]
+        Coord --> Shard2[Shard 2 - Lucene]
+        Coord --> Shard3[Shard 3 - Lucene]
+        
+        Shard1 & Shard2 & Shard3 -->|Top N Results| Coord
+        Coord -->|Merge & Rank| Final[Ranked Results]
+    end
+
+    style Index fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Shard1 fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Shard Size**: Aim for **10GB - 50GB** per shard. Shards smaller than 1GB waste resources; shards larger than 50GB make rebalancing and recovery slow.
+- **Refresh Interval**: The default `index.refresh_interval` is **1 second**. Increasing this to 30s can improve indexing throughput by **~20%** at the cost of "near real-time" visibility.
+- **Memory (JVM Heap)**: Limit the Elasticsearch JVM heap to **50% of available RAM** (max 32GB to keep compressed pointers). The remaining 50% is used by the OS Page Cache for Lucene segments.
+- **Search Latency**: A well-tuned cluster should achieve **p99 < 200ms** for simple keyword queries. Aggregations on high-cardinality fields can easily push this into seconds.
+
+## Real-World Case Studies
+
+- **Wikipedia (Elasticsearch)**: Wikipedia uses Elasticsearch to power search for millions of articles in hundreds of languages. They rely heavily on **Stemming** and **Language-specific Analyzers** to ensure that a search for "learning" matches articles containing "learn" or "learned" across different linguistic contexts.
+- **Uber (Marketplace Search)**: Uber uses search architecture not just for text, but for **Geo-Spatial Search**. They index driver locations as documents and use Elasticsearch's BKD-tree based geo-indexes to find the "nearest available drivers" to a user in sub-100ms, effectively treating the city as a searchable document.
+- **Slack (Search at Scale)**: Slack built a custom search architecture called **SolrCloud** (and later moved toward specialized services). They face a unique challenge: every user has a different "View" of the data (only messages in channels they are in). They use **Routing** to ensure that a user's query only hits the shards containing their specific workspace's data, avoiding a global scatter-gather.
+
 ## Connections
 
 - [[Vector Search and Hybrid Retrieval]] — Combining BM25 keyword search with vector similarity for better relevance

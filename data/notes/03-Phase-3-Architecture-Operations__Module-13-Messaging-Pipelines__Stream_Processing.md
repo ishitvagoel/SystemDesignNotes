@@ -97,6 +97,45 @@ Flink's checkpointing is based on the Chandy-Lamport distributed snapshot algori
 
 - **Backpressure cascading**: A slow operator in the pipeline backs up the entire dataflow. Upstream operators buffer, consume memory, and eventually fail. Mitigation: Flink's credit-based flow control manages backpressure natively. Monitor operator utilization and scale slow operators.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Event Sources"
+        App[App Events] --> Kafka[(Kafka Topic)]
+        IoT[IoT Sensors] --> Kinesis[(Kinesis)]
+    end
+
+    subgraph "Stream Processor (Flink/Spark)"
+        Kafka & Kinesis --> Ingest[Source Connector]
+        Ingest --> Window[Windowing: Tumbling/Sliding]
+        Window --> Logic[Stateful Logic: Aggregate/Join]
+        Logic --> Checkpoint[State Checkpoint: RocksDB/S3]
+    end
+
+    subgraph "Real-Time Sinks"
+        Logic --> Dash[Grafana Dashboard]
+        Logic --> Alert[Fraud Alert Engine]
+        Logic --> DB[(OLAP DB: ClickHouse)]
+    end
+
+    style Window fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Checkpoint fill:var(--surface),stroke:var(--border),stroke-dasharray: 5 5;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **End-to-End Latency**: True streaming (Flink) typically achieves **50ms - 200ms**. Micro-batching (Spark) is typically **1s - 5s**.
+- **Window State Size**: For 1 million active users and a 1-hour sliding window (updated every 1 min), you are maintaining **~60 concurrent window states** per user. If each state is 100 bytes, that's **~6GB of state** in RAM/RocksDB.
+- **Watermark Delay**: A common default is **1 - 5 seconds**. This is the amount of time the system "waits" for late data before closing a window.
+- **Throughput**: A single Flink TaskManager can often process **~10k - 50k events/sec** per CPU core, depending on state complexity.
+
+## Real-World Case Studies
+
+- **Uber (Apache Flink for Marketplace)**: Uber uses Flink to power its real-time "Marketplace" logic, including dynamic surge pricing and driver-rider matching. They process billions of events per day with millisecond latency, ensuring that price changes respond to a sudden rainstorm or a stadium clearing out almost instantly.
+- **Netflix (Keystone Pipeline)**: Netflix built the Keystone pipeline to handle all of its event data. It uses **Apache Flink** for real-time stream processing, allowing them to detect playback issues or anomalies in their global CDN in seconds, rather than waiting for hourly batch jobs.
+- **LinkedIn (Samza/Kafka Streams)**: LinkedIn, where Kafka was born, uses stream processing for features like "Who viewed your profile" and real-time job recommendations. They pioneered many stateful streaming concepts, using local state stores (like RocksDB) inside their stream processors to handle high-cardinality joins (e.g., joining a click event with user profile metadata) without hitting a central database.
+
 ## Connections
 
 - [[Message Queues vs Event Streams]] — Kafka is the standard input/output for stream processing

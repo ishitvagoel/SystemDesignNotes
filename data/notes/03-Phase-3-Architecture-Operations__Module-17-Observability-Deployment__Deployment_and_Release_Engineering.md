@@ -79,6 +79,43 @@ Store the desired state of infrastructure and deployments in Git. A GitOps contr
 
 **Rolling update partial failure**: During a rolling update, 3 of 10 instances are updated. The new version has a memory leak that manifests after 30 minutes. The rolling update completed "successfully," but 30 minutes later, the 3 new instances start crashing. Solution: extend canary observation windows beyond the deploy duration, monitor for delayed failure modes (memory leaks, connection leaks, thread leaks), and use progressive delivery with automated rollback.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Deployment Pipeline"
+        Merge[Merge to Main] --> Build[Build & Test]
+        Build --> Deploy_C[Deploy Canary: 1%]
+    end
+
+    subgraph "Automated Canary Analysis"
+        Deploy_C --> Monitor{Monitor SLIs}
+        Monitor -- "Latency/Error spike" --> Rollback[Auto-Rollback]
+        Monitor -- "Healthy" --> Expand[Expand: 10% -> 50% -> 100%]
+    end
+
+    subgraph "Feature Lifecycle"
+        Expand --> Release[Release: Toggle Feature Flag]
+        Release --> Cleanup[Cleanup: Remove Flag]
+    end
+
+    style Monitor fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Rollback fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Deployment Frequency**: Top-performing teams (Elite) deploy **multiple times per day**. Low performers deploy once per month.
+- **Canary Bake Time**: Wait at least **15 - 30 minutes** at the 1% stage to catch memory leaks or slow-burning regressions.
+- **Rollback SLA**: Aim for a **< 2 minute** rollback time. This is why Blue-Green (instant traffic switch) or Feature Flags (Boolean toggle) are preferred for high-risk changes.
+- **Flag Density**: Limit yourself to **< 20 concurrent active feature flags** per team. Any more creates a testing nightmare of combinatorial states.
+
+## Real-World Case Studies
+
+- **Knight Capital (The $440M Deploy Failure)**: In 2012, Knight Capital went bankrupt in 45 minutes because of a bad deployment. They repurposed an old flag but forgot to update one of their 8 servers. That single server started executing a discontinued algorithm, causing a massive financial loss. This incident is the industry's strongest warning for **automated configuration management** and **decommissioning old code**.
+- **Netflix (Kayenta)**: Netflix built **Kayenta**, an automated canary analysis tool. It uses statistical tests (like the Mann-Whitney U test) to compare thousands of metrics from a canary group vs. a baseline group. If the canary is statistically worse, Kayenta kills the deployment automatically, allowing Netflix to deploy thousands of times a day with extreme confidence.
+- **Facebook (Gatekeeper)**: Facebook uses **Gatekeeper** to manage feature releases. They can enable a feature for just "employees in the London office" or "10% of users in Brazil." This extreme granularity allows them to "Dark Launch" massive features (like the original Facebook Chat) to production months before they are visible to users, ensuring the infrastructure can handle the load.
+
 ## Connections
 
 - [[Observability and Alerting]] — Canary analysis requires observability; SLI monitoring drives promotion/rollback

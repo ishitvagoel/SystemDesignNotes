@@ -86,6 +86,45 @@ CREATE TABLE outbox (
 
 - **Ordering guarantees**: If the relay publishes events from multiple transactions, the publishing order may not match the transaction commit order (especially with parallel relay workers). Mitigation: use a single-threaded relay per aggregate, or include a sequence number per aggregate to allow consumers to reorder.
 
+## Architecture Diagram
+
+```mermaid
+graph LR
+    subgraph "Service A (Trust Boundary)"
+        App[Application Logic] -->|1. Atomic TX| DB[(Primary DB)]
+        subgraph "Database Transaction"
+            DB --- Biz[Biz Data: orders]
+            DB --- Out[Outbox Table: events]
+        end
+    end
+
+    subgraph "Reliable Relay"
+        DB -.->|2. Tail WAL| CDC[CDC: Debezium]
+        CDC -->|3. Publish| Kafka[(Message Broker)]
+    end
+
+    subgraph "Service B (Consumer)"
+        Kafka -->|4. Deliver| SvcB[Consumer Logic]
+        SvcB -->|5. Check Dedup| SvcB_DB[(Consumer DB)]
+    end
+
+    style App fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style CDC fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Relay Latency**: Polling adds **~1s - 5s** latency. CDC (Debezium) adds **~50ms - 200ms**.
+- **Table Size**: Keep only **~24-48 hours** of history in the outbox table. Delete published rows aggressively to keep indexes small and fast.
+- **CDC Overhead**: Tailing the WAL for CDC typically adds **< 3% CPU** load to the source database.
+- **Availability**: The outbox pattern decouples your database's availability from the message broker's availability. Your app can still accept orders even if Kafka is down.
+
+## Real-World Case Studies
+
+- **LinkedIn (Databus)**: LinkedIn pioneered the CDC-based outbox pattern with **Databus**. They found that dual-writes were the leading cause of data inconsistency between their primary databases and their search indexes (Lucene). By moving to a WAL-tailing approach, they ensured that search results always eventually matched the source of truth without slowing down the write path.
+- **Salesforce (The Event Bus)**: Salesforce uses a specialized outbox pattern to power their "Change Data Capture" product. Every time a user modifies a record in the UI, Salesforce writes the change to an internal system table. A background fleet of relays then streams these changes to a global event bus, allowing customers to build reactive integrations without triggers or polling.
+- **Wix (Managing 2000+ Services)**: Wix uses the outbox pattern as the foundation for their entire microservices ecosystem. They developed an internal library called **Greyhound** that abstracts the outbox table and relay, ensuring that every one of their thousands of services can publish reliable events to Kafka without developers having to write boilerplate transaction code.
+
 ## Connections
 
 - [[Saga Pattern]] — The outbox pattern is the mechanism for reliable event publishing in choreography-based sagas

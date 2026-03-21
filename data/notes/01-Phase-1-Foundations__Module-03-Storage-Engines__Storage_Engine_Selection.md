@@ -113,6 +113,41 @@ Signals that you might need to re-evaluate:
 
 **In-memory engine data loss**: An in-memory engine (Redis without persistence, Memcached) loses all data on crash or restart. Teams forget to enable persistence or configure it incorrectly (RDB snapshots too infrequent, AOF not fsynced). Solution: always enable AOF with `appendfsync everysec` for Redis if data matters, or treat in-memory stores as caches only — never the single source of truth.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Workload[New Application Workload] --> Q1{Read vs Write Ratio?}
+    
+    Q1 -- "Read-Heavy (90/10)" --> BTree[B-Tree Engine]
+    Q1 -- "Write-Heavy (20/80)" --> LSM[LSM-Tree Engine]
+    
+    BTree --> Q2{Point vs Range?}
+    LSM --> Q3{Latency Critical?}
+    
+    Q2 -- "Point Lookups" --> Postgres[PostgreSQL / MySQL]
+    Q2 -- "Analytics Scans" --> Columnar[DuckDB / ClickHouse]
+    
+    Q3 -- "Yes (No Spikes)" --> WiredTiger[MongoDB WiredTiger]
+    Q3 -- "No (High Throughput)" --> Cassandra[Cassandra / RocksDB]
+
+    style BTree fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style LSM fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Write-Heavy Threshold**: If your application does **> 10,000 writes/sec** on a single node, consider moving from B-Tree (Postgres) to LSM (RocksDB/Cassandra).
+- **Read-Heavy Threshold**: If your working set fits in RAM, B-Tree reads are almost always faster due to fewer pointer indirections.
+- **SSD Longevity**: LSM-trees have high **Write Amplification (10x-30x)**. Monitor your SSD's TBW (Total Bytes Written) to ensure you don't wear out the drive in < 3 years.
+- **Compaction Headroom**: Always leave **~30-50% free disk space** for LSM-tree engines to allow for background compaction without running out of space.
+
+## Real-World Case Studies
+
+- **Instagram (Postgres/B-Tree)**: Instagram stores billions of photos and user relationships in Postgres. Because their workload is heavily read-biased (users looking at feeds), the B-tree's predictable read performance is more valuable than LSM's write throughput. They scale writes by sharding across hundreds of Postgres instances.
+- **WhatsApp (Mnesia/LSM-like)**: WhatsApp's messaging backend (built on Erlang/Ejabberd) uses storage engines optimized for high-concurrency writes. In a chat app, every message is a write, making the append-only nature of LSM-like structures ideal for their "firehose" of messages.
+- **Discord (Cassandra to ScyllaDB)**: Discord originally used Cassandra (LSM) for their message storage. As they grew, they hit "compaction storms" that caused massive latency spikes. They switched to ScyllaDB (a C++ rewrite of Cassandra) which offers better compaction scheduling and lower tail latency while keeping the LSM architecture for high write volume.
+
 ## Connections
 
 - [[B-Tree vs LSM-Tree]] — The foundational comparison this framework is built on

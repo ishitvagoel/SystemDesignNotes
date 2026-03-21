@@ -103,6 +103,52 @@ This is a first-class architectural pattern, not a niche technique. Netflix's St
 
 **REST versioning fragmentation**: Running multiple API versions (/v1, /v2, /v3) simultaneously means maintaining multiple codepaths, test suites, and documentation sets. Old versions accumulate technical debt but can't be retired because clients depend on them. Solution: evolution-based versioning (additive changes, deprecation headers), or GraphQL's intrinsic evolution (add fields, deprecate old ones, no versions).
 
+## Architecture Diagram
+
+```mermaid
+graph LR
+    subgraph Client Tier
+        Mobile[Mobile App]
+        Web[Web Dashboard]
+    end
+
+    subgraph API Gateway / BFF
+        Gateway[GraphQL Federation Gateway]
+    end
+
+    subgraph Internal Services (Mesh)
+        User[User Service]
+        Order[Order Service]
+        Inv[Inventory Service]
+    end
+
+    Mobile -- "GraphQL Query" --> Gateway
+    Web -- "GraphQL Query" --> Gateway
+    
+    Gateway -- "gRPC / Proto" --> User
+    Gateway -- "gRPC / Proto" --> Order
+    Gateway -- "gRPC / Proto" --> Inv
+    
+    Order -- "gRPC (Unary)" --> User
+    Order -- "gRPC (Streaming)" --> Inv
+
+    style Gateway fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Order fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Payload Size**: gRPC (Protobuf) payloads are typically **30-50% smaller** than equivalent JSON (REST/GraphQL).
+- **Serialization Speed**: Protobuf is **5-10x faster** to serialize/deserialize than JSON in most languages (C++, Go, Java).
+- **N+1 overhead**: In REST, fetching a list of 10 items with nested details requires **1 + 10 = 11 requests**. In GraphQL, this is **1 request**.
+- **Multiplexing**: A single gRPC connection (HTTP/2) can handle **hundreds** of concurrent streams, avoiding the "head-of-line blocking" seen in HTTP/1.1.
+
+## Real-World Case Studies
+
+- **Netflix (REST -> GraphQL Federation)**: Netflix moved from a "one-size-fits-all" REST API to GraphQL Federation. This allowed their UI teams (TV, Mobile, Web) to fetch exactly what they needed for specific screens without requiring backend teams to constantly create new endpoints.
+- **Uber (gRPC for Internal Mesh)**: Uber uses gRPC for almost all internal service-to-service communication. They built "TChannel" (and later transitioned to standard gRPC) to handle the massive scale of their microservices, relying on gRPC's strict schemas and performance to keep latency low in a complex call graph.
+- **GitHub (REST & GraphQL)**: GitHub provides both a mature REST API (v3) and a GraphQL API (v4). They use REST for simple integrations and GraphQL for their own frontend and complex data-heavy integrations, demonstrating that the two can coexist effectively.
+
 ## Connections
 
 - [[HTTP Evolution — 1.1 to 2 to 3]] — gRPC requires HTTP/2; understanding multiplexing explains gRPC's streaming performance

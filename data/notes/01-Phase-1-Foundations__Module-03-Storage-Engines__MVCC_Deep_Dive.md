@@ -101,6 +101,42 @@ MVCC enables multiple isolation levels by controlling *which snapshot* a transac
 
 **Transaction ID wraparound (PostgreSQL)**: PostgreSQL uses 32-bit transaction IDs that wrap around after ~4 billion transactions. If VACUUM doesn't freeze old tuples before wraparound, the database shuts down to prevent data corruption. Solution: monitor `age(datfrozenxid)`, ensure autovacuum runs aggressively on high-transaction databases, and set up alerting well before the wraparound threshold.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Transaction A (Start: T10)"
+        ReadA[Read Row 1] --> Version1[Version T8]
+    end
+
+    subgraph "Transaction B (Start: T12)"
+        WriteB[Update Row 1] --> Version2[Create Version T12]
+        Version2 --> CommitB[Commit T13]
+    end
+
+    subgraph "Storage (Multi-Version Heap)"
+        V8[Row 1: Value=A, xmin=T8, xmax=T12]
+        V12[Row 1: Value=B, xmin=T12, xmax=0]
+    end
+
+    ReadA -.->|Snapshot T10| V8
+    Note over ReadA: T10 < T12, so T8 is visible
+    Note over WriteB: Creates new version instead of overwriting V8
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Row Overhead**: In Postgres, each row version (tuple) adds **~23 bytes** of metadata (`xmin`, `xmax`, etc.). In InnoDB, it's **~13 bytes**.
+- **VACUUM Frequency**: On a write-heavy Postgres DB, `autovacuum` should be triggered when dead tuples reach **~10-20%** of the table.
+- **Undo Log Size**: In MySQL, the undo log can grow to **2x-5x** the size of the actual data during a long-running transaction with heavy concurrent updates.
+- **Transaction ID Limit**: 32-bit IDs (Postgres) wrap around at **~4 billion**. At 10k TPS, you'll wrap in **~4.6 days**.
+
+## Real-World Case Studies
+
+- **PostgreSQL (The VACUUM Problem)**: Postgres stores versions "inline" in the main table. This leads to **bloat**. In 2016, Uber famously switched from Postgres to MySQL, citing Postgres's MVCC implementation (and the resulting write amplification and VACUUM issues) as a primary reason for their scaling difficulties with high-update workloads.
+- **MySQL/InnoDB (Undo Logs)**: InnoDB keeps only the current version in the B-tree and moves old versions to an **Undo Log**. This prevents table bloat but makes long-running reads slower, as they must "reconstruct" the old version by following a chain of undo pointers.
+- **Google Spanner (TrueTime)**: Spanner uses atomic clocks and GPS to provide **TrueTime**, allowing it to assign globally synchronized timestamps to every version. This enables "External Consistency" (the strongest possible isolation) across continents, which is impossible with standard logical clocks or transaction IDs.
+
 ## Connections
 
 - [[B-Tree vs LSM-Tree]] — MVCC interacts with the storage engine: B-trees update pages in place (with undo for old versions); LSM-trees naturally store multiple versions (different SSTables at different levels)

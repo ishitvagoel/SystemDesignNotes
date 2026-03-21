@@ -101,6 +101,40 @@ The WAL has become a versatile building block:
 
 - **Recovery time explosion**: After a crash, the database replays all WAL since the last checkpoint. If checkpoints are infrequent and write volume is high, recovery can take tens of minutes. During this time, the database is unavailable. Mitigation: frequent checkpoints, monitor `recovery_target_timeline`, consider maxing out `checkpoint_completion_target`.
 
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant App as Application
+    participant BP as Buffer Pool (RAM)
+    participant WAL as WAL File (Sequential Disk)
+    participant Data as Data Files (Random Disk)
+
+    App->>BP: 1. Update Row (In Memory)
+    Note over BP: Page marked as "Dirty"
+    App->>WAL: 2. Append Change Log
+    WAL-->>App: 3. fsync (Confirm Flush)
+    Note over App: Transaction Commits
+    
+    Note over BP, Data: Background Checkpoint
+    BP->>Data: 4. Flush Dirty Pages (Random Write)
+    Data-->>BP: 5. Success
+    Note over WAL: 6. Old WAL entries can be recycled
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Write Speed**: Sequential WAL writes are **10x-50x faster** than random data page writes on HDDs, and **2x-5x faster** on SSDs.
+- **Commit Latency**: With `fsync` on every commit, latency is bounded by **disk rotation/flash sync speed** (usually 1ms-10ms).
+- **WAL Size**: A busy database can generate **10GB - 100GB of WAL per hour**. Plan your disk space accordingly.
+- **Recovery Time**: Replaying WAL typically takes **~1 second per 100MB** of log data (highly dependent on the complexity of changes).
+
+## Real-World Case Studies
+
+- **PostgreSQL (WAL Shipping)**: Postgres uses the WAL as the primary mechanism for **Streaming Replication**. The primary node streams the WAL bytes directly to the replica, which "replays" them in real-time. This ensures the replica stays within milliseconds of the primary without any additional application logic.
+- **MySQL (Redo vs Binlog)**: InnoDB has its own "Redo Log" (WAL) for internal crash recovery. MySQL also has a "Binary Log" (Binlog) for replication. This means every write is actually recorded **twice** (once in Redo, once in Binlog), a phenomenon known as "Double-Write Buffering" that ensures data integrity at the cost of some performance.
+- **Apache Kafka (The WAL as a Service)**: Kafka is essentially a distributed WAL turned into a product. It takes the "append-only log" concept of a database and makes it the primary interface, allowing multiple consumers to "replay" the log independently at their own pace.
+
 ## Connections
 
 - [[B-Tree vs LSM-Tree]] — Both use WAL for durability; LSM-trees' memtable is backed by WAL

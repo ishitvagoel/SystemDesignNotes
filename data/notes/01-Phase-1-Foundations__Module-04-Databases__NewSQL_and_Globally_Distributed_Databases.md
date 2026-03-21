@@ -134,6 +134,45 @@ An open-source, MySQL-compatible distributed database from PingCAP.
 
 - **Clock skew incidents (CockroachDB)**: If NTP misconfiguration causes a node's clock to drift beyond the max offset, the node is ejected from the cluster. Mitigation: monitor NTP sync, use multiple NTP sources, configure `chrony` rather than `ntpd` (more robust).
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Global SQL Layer"
+        User[User] -->|SQL Query| Gateway[SQL Processor]
+    end
+
+    subgraph "Distributed Storage (Raft Groups)"
+        Gateway -->|Route by Key Range| R1[Range A-M: Leader US-East]
+        Gateway -->|Route by Key Range| R2[Range N-Z: Leader EU-West]
+    end
+
+    subgraph "Consensus & Replication"
+        R1 -.->|Raft| R1_Replica[US-West Replica]
+        R2 -.->|Raft| R2_Replica[Asia-East Replica]
+    end
+
+    subgraph "Time Synchronization"
+        TrueTime[TrueTime / HLC] -.-> Gateway
+    end
+
+    style R1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style R2 fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Cross-Region Latency**: A globally distributed transaction requires at least **1 RTT** (Round Trip Time) between regions. Expect **100ms - 300ms** minimum for inter-continental commits.
+- **Range Size**: NewSQL databases typically split data into "ranges" or "tablets" of **64MB - 512MB**.
+- **Clock Uncertainty (TrueTime)**: Google Spanner's TrueTime has an uncertainty window of **~7ms**. Transactions must "wait out" this window to ensure external consistency.
+- **Clock Skew (HLC)**: CockroachDB typically allows a maximum clock offset of **500ms** before a node self-quarantines.
+
+## Real-World Case Studies
+
+- **Google (Spanner for Adwords)**: Google originally built Spanner to replace a massive, manually sharded MySQL cluster that powered Adwords. The manual sharding was becoming an operational nightmare, and Spanner allowed them to move back to a single "global" database with ACID transactions, saving thousands of engineering hours.
+- **DoorDash (CockroachDB Migration)**: DoorDash migrated its core logistics and order services from Aurora Postgres to CockroachDB. As they scaled, the single-writer bottleneck of Aurora became a risk. CockroachDB allowed them to distribute writes across multiple nodes and survive the failure of an entire AWS Availability Zone without downtime.
+- **PingCAP (TiDB for Shopee)**: Shopee, a massive e-commerce platform in SE Asia, uses TiDB to handle its peak "11.11" shopping festivals. TiDB's MySQL compatibility made the migration from sharded MySQL easier, and its ability to scale compute and storage independently allowed Shopee to handle 10x traffic spikes seamlessly.
+
 ## Connections
 
 - [[Database Replication]] — NewSQL databases use Raft-based replication instead of traditional leader-follower replication

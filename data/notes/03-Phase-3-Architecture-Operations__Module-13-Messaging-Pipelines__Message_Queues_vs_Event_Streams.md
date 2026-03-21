@@ -81,6 +81,45 @@ When consumers can't keep up with producers:
 
 **Queue depth growth masking upstream issues**: A queue absorbs traffic spikes, hiding the fact that a downstream service is degraded. The queue depth grows to millions. When the downstream recovers, it's overwhelmed by the backlog. Solution: monitor queue depth and age as first-class metrics, alert on depth thresholds, and implement back-pressure (reject new messages when the queue is too deep) rather than unbounded buffering.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Message Queue (Task Distribution)"
+        P1[Producer] --> Q[Queue: RabbitMQ/SQS]
+        Q --> C1[Consumer A]
+        Q --> C2[Consumer B]
+        Note over Q: Message deleted after ACK
+    end
+
+    subgraph "Event Stream (Log/History)"
+        P2[Producer] --> L[Log: Kafka/Redpanda]
+        subgraph "Consumer Group 1"
+            L --> G1_C1[Service A.1]
+        end
+        subgraph "Consumer Group 2"
+            L --> G2_C1[Service B.1]
+        end
+        Note over L: Immutable Log. Messages retained.
+    end
+
+    style Q fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style L fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Throughput**: Kafka can handle **millions of events/sec** per cluster. RabbitMQ typically caps out at **tens of thousands/sec** due to the overhead of complex routing and per-message ACKs.
+- **Retention**: Queues are for **now** (transient). Streams are for **history** (configurable retention from hours to years).
+- **Fan-out Cost**: In a queue, sending one event to 10 consumers requires **10x storage** (10 messages). In a stream, it's **1x storage** (1 message read by 10 pointers).
+- **Latency**: RabbitMQ provides lower "end-to-end" latency (**< 1ms**) for simple task passing. Kafka has higher overhead due to batching and disk fsyncs (**5ms - 50ms**).
+
+## Real-World Case Studies
+
+- **Uber (Kafka for Everything)**: Uber uses Kafka as the backbone of their data infrastructure, processing **trillions of messages** per day. They use it for everything from real-time driver locations to financial auditing. Because Kafka is an immutable log, they can "replay" events to debug what happened during a specific trip days after it occurred.
+- **Instagram (RabbitMQ for Tasks)**: Instagram uses RabbitMQ to manage background tasks like photo resizing and notification delivery. For these use cases, they don't need a history of every photo ever resized—they just need to ensure that *someone* resizes the photo once and deletes the task from the queue.
+- **LinkedIn (The Origins of Kafka)**: LinkedIn created Kafka because they needed a way to ingest massive amounts of "tracking" data (clicks, page views) and make it available to both real-time dashboards and offline Hadoop jobs. Traditional message queues failed because they couldn't handle the volume or the multiple independent readers.
+
 ## Connections
 
 - [[Event-Driven Architecture Patterns]] — Message queues and event streams are the transport for different EDA patterns

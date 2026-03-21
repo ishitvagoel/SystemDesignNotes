@@ -107,6 +107,46 @@ Every alert must be actionable. If the on-call engineer reads an alert and think
 
 **Log aggregation lag during incidents**: When an incident occurs, engineers rush to the logging system (ELK, Loki) to investigate. But under the same load spike that caused the incident, log ingestion is lagging. Recent logs aren't available. Engineers are debugging blind. Solution: size log infrastructure for peak load (not average), implement priority ingestion for error-level logs, and maintain a real-time tail capability that bypasses the aggregation pipeline.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Production Fleet (App Instances)"
+        S1[Service A] -->|1. Push Spans| OTel[OTel Collector]
+        S2[Service B] -->|1. Push Spans| OTel
+        S3[Legacy Svc] -.->|2. eBPF Agent| eBPF[eBPF Telemetry]
+    end
+
+    subgraph "Observability Pipeline"
+        OTel -->|Traces| Tempo[Grafana Tempo / Jaeger]
+        OTel -->|Metrics| Prom[Prometheus / VictoriaMetrics]
+        OTel -->|Logs| Loki[Grafana Loki / ELK]
+        eBPF --> Prom
+    end
+
+    subgraph "Action Layer"
+        Prom -->|3. Burn Rate| Alert[AlertManager]
+        Alert -->|4. Pager| OnCall[SRE Engineer]
+        Tempo & Loki & Prom --> Dash[Grafana Unified Dashboard]
+    end
+
+    style OTel fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Dash fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Observability Budget**: Allocate **~10% - 20%** of your total infrastructure spend to observability (storage, ingestion, licenses). If it's < 5%, you're likely flying blind; > 30%, you're over-logging.
+- **Trace Sampling**: For high-volume services (> 1k RPS), start with **1% head-based sampling**. For errors, use **100% tail-based sampling** to ensure every failure is captured.
+- **Log Retention**: Keep structured logs for **7 - 14 days** in hot storage (Elasticsearch) and **1 - 3 years** in cold storage (S3) for compliance and long-term trend analysis.
+- **Metric Resolution**: Use **10s - 15s** scraping intervals for critical production metrics. 1-minute intervals are too coarse to catch micro-bursts or rapid flapping.
+
+## Real-World Case Studies
+
+- **Honeycomb (High-Cardinality Events)**: Honeycomb was built by former Facebook engineers who realized that traditional metrics couldn't solve "unknown-unknowns." They pioneered the use of **Wide Events**—a single log entry with 500+ fields (user_id, build_id, browser, region, etc.). This allows them to "group by" any dimension in seconds, identifying that a latency spike is only affecting "Users on Chrome v112 in South Carolina using the Dark Theme."
+- **Meta (Scuba)**: Meta uses an internal tool called **Scuba** for real-time monitoring. Scuba ingests millions of events per second and stores them in-memory across thousands of servers. It allows engineers to run arbitrary ad-hoc queries on live traffic data with sub-second response times, which was critical for diagnosing the "Cascading Failure" outages of the mid-2010s.
+- **Cloudflare (eBPF for Flow Tracking)**: Cloudflare uses eBPF to track every packet flowing through their network. Instead of traditional sampling (which misses DDoS attacks), eBPF allows them to perform line-rate analysis of billions of packets, identifying malicious patterns at the kernel level and dropping them before they even reach the application layer.
+
 ## Connections
 
 - [[SLOs SLIs and Error Budgets]] — SLI measurement is the core observability requirement; burn-rate alerts are the alerting mechanism

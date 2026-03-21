@@ -110,23 +110,26 @@ A special case of event-carried state transfer where the events are generated fr
 
 ```mermaid
 graph TD
-    User[User Checkout] --> API[Order API]
-    
-    subgraph Event-Carried State Transfer
-        API -- "Publish: OrderCreated (Full State)" --> Kafka[Event Stream / Kafka]
+    subgraph "Event Notification (Thin)"
+        P1[Producer] -->|1. notify: ID=123| B1[Broker]
+        B1 --> C1[Consumer]
+        C1 -->|2. GET /data/123| P1
     end
-    
-    Kafka --> Inv[Inventory Service]
-    Kafka --> Notif[Notification Service]
-    Kafka --> Search[Search Indexer]
-    
-    Inv -- "Consume & Update" --> InvDB[(Local Inv DB)]
-    Search -- "Consume & Upsert" --> Elastic[(Elasticsearch)]
-    
-    classDef primary fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    classDef secondary fill:var(--bg2),stroke:var(--border),stroke-width:1px;
-    class Kafka,API primary;
-    class Inv,Notif,Search secondary;
+
+    subgraph "Event-Carried State Transfer (Fat)"
+        P2[Producer] -->|1. publish: Full Data| B2[Broker]
+        B2 --> C2[Consumer]
+        C2 -->|2. Update Local View| C2_DB[(Local DB)]
+    end
+
+    subgraph "CDC / Outbox (Reliable)"
+        P3[Producer] -->|1. Write| P3_DB[(Outbox Table)]
+        P3_DB -.->|2. Tail WAL| Relay[Relay]
+        Relay -->|3. publish| B3[Broker]
+    end
+
+    style B2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style P3_DB fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics
@@ -138,9 +141,9 @@ graph TD
 
 ## Real-World Case Studies
 
-- **Uber (Event-Driven Pricing)**: Uses an event-driven architecture built on Kafka to calculate surge pricing. Geospatial events, ride requests, and driver availability are streamed and aggregated in real-time.
-- **LinkedIn (Event-Carried State Transfer)**: Databus (and later Kafka) is used to capture database changes and distribute them as full-state events to downstream systems like the search index and cache invalidation services.
-- **Netflix (Event Notification)**: Uses events to trigger complex asynchronous media encoding pipelines. When a video is uploaded, an event kicks off parallel processing across hundreds of microservices.
+- **Uber (Event-Driven Pricing)**: Uses an event-driven architecture built on Kafka to calculate surge pricing. Geospatial events (driver locations), ride requests, and driver availability are streamed and aggregated in real-time. This is a mix of **Event-Carried State Transfer** (for locations) and **Event Notification** (for pricing triggers).
+- **LinkedIn (Databus)**: LinkedIn created Databus to solve the search index sync problem. They used **CDC** to capture changes from Oracle/MySQL and distribute them as full-state events to downstream systems like the search index and cache invalidation services, ensuring eventual consistency across their entire data stack.
+- **Netflix (Workflow Triggers)**: Netflix uses **Event Notification** to trigger complex asynchronous media encoding pipelines. When a video is uploaded, a tiny event kicks off parallel processing across hundreds of microservices. Each microservice then calls back to the "Source of Truth" to get the specific bits of metadata it needs.
 
 ## Connections
 

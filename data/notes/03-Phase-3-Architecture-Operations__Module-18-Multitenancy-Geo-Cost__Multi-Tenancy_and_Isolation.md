@@ -85,6 +85,47 @@ Global metrics hide per-tenant problems. A global p99 of 200ms might conceal one
 
 - **Schema migration across tenants**: In schema-per-tenant, a database migration runs 10,000 times (once per schema). If migration #5,000 fails, you have 5,000 tenants on the new schema and 5,000 on the old. Mitigation: idempotent migrations, per-tenant migration tracking, and the ability to skip/retry individual tenants.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "External Traffic"
+        T1[Tenant A - Free] --> GW[API Gateway]
+        T2[Tenant B - Enterprise] --> GW
+    end
+
+    subgraph "Compute Layer (Cell-Based)"
+        GW --> Pool_Shared[Shared Pool: Free Tier]
+        GW --> Pool_VIP[Enterprise Pool: Isolated]
+    end
+
+    subgraph "Data Layer (Postgres RLS)"
+        Pool_Shared & Pool_VIP --> DB[(Shared Database)]
+        
+        subgraph "Row Level Security"
+            DB --- R1[Row: Tenant A]
+            DB --- R2[Row: Tenant B]
+            Note right of DB: Policy: WHERE tenant_id = session.id
+        end
+    end
+
+    style Pool_VIP fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style R2 fill:var(--surface),stroke:var(--accent),stroke-dasharray: 5 5;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Isolation Efficiency**: Shared-everything can support **10x - 100x more** tenants per dollar of infrastructure than dedicated "silo" models.
+- **RLS Overhead**: Enabling Postgres Row-Level Security typically adds **~1% - 5%** latency to queries. This is almost always a worthwhile trade-off for the security safety net.
+- **Noisy Neighbor Trigger**: Start isolating a tenant if they consistently consume **> 20%** of total shared cluster resources.
+- **Schema Limits**: Most relational databases start struggling with metadata operations (e.g., migrations) once you exceed **~1,000 - 2,000 schemas** on a single instance.
+
+## Real-World Case Studies
+
+- **Salesforce (The Shared-Everything Pioneer)**: Salesforce was one of the first companies to scale using a shared-everything architecture. They store data for thousands of different companies in the same massive tables, using a `TenantId` column on every single index. Their entire engineering culture is built around "The Governor," a set of strict, per-tenant runtime limits that kill any query or process that exceeds its quota.
+- **Slack (Cell-Based Isolation)**: Slack groups its tenants into "Cells." A cell is a complete, self-contained set of infrastructure (app servers, databases, caches). If a cell fails, only the teams assigned to that cell are affected. This limits the "Blast Radius" of an outage and allows Slack to scale by simply adding more cells as they grow.
+- **Stripe (Cryptographic Isolation)**: Stripe ensures tenant isolation not just at the database level, but at the encryption level. They use **Envelope Encryption** where each merchant has their own unique Master Key. Even if an attacker gained access to the database and the application code, they still couldn't read Merchant A's data without Merchant A's specific key, providing a layer of "Zero Trust" isolation.
+
 ## Connections
 
 - [[Cell-Based Architecture]] — The strongest isolation: each cell serves a subset of tenants

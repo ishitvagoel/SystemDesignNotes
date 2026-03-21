@@ -137,6 +137,44 @@ Extending CRDTs to JSON documents: each field is independently a CRDT (counter, 
 
 **Semantic conflict in application logic**: CRDTs guarantee convergence — all replicas reach the same state — but not semantic correctness. Two users concurrently set a meeting time to 2 PM and 3 PM respectively. LWW-Register converges to one value, but neither user knows their choice was overridden. Solution: CRDTs handle syntactic convergence; application-level conflict resolution (notification to users, manual merge UI) is still needed for semantic conflicts.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Replica A (New York)"
+        StateA[State: {A:5, B:2}]
+        OpA[Increment A] --> StateA
+    end
+
+    subgraph "Replica B (London)"
+        StateB[State: {A:4, B:3}]
+        OpB[Increment B] --> StateB
+    end
+
+    StateA -- "Gossip: {A:5, B:2}" --> MergeB
+    StateB -- "Gossip: {A:4, B:3}" --> MergeA
+
+    subgraph "Merge Logic (Join Semi-Lattice)"
+        MergeA["Merge: max(A), max(B)"] --> FinalA[Final: {A:5, B:3}]
+        MergeB["Merge: max(A), max(B)"] --> FinalB[Final: {A:5, B:3}]
+    end
+
+    Note over FinalA, FinalB: Both converge to 8 without a leader
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Metadata Overhead**: For a simple text editor, CRDT metadata (IDs, tombstones) can be **2x-10x larger** than the actual text content.
+- **Merge Complexity**: Most state-based CRDT merges are **O(N)** where N is the number of replicas or elements.
+- **Network Traffic**: Operation-based CRDTs send small deltas (bytes), whereas State-based CRDTs send the full object (KB/MB) unless using **Delta-CRDTs**.
+- **Conflict Rate**: CRDTs are ideal when concurrent writes are frequent (**> 1% of operations**). If conflicts are rare, simpler LWW (Last Writer Wins) is usually more efficient.
+
+## Real-World Case Studies
+
+- **Figma (Design Multi-player)**: Figma famously uses a specialized CRDT for its collaborative design tool. They found that standard CRDTs were too memory-intensive for complex vector graphics, so they built a hybrid system that treats the design tree as a CRDT, allowing thousands of concurrent edits to merge smoothly without ever showing a "Conflict" dialog.
+- **Apple Notes (Sync)**: Apple Notes uses a CRDT-based approach to sync notes across iPhone, iPad, and Mac. This allows you to edit a note offline on your phone and have it merge cleanly with changes made on your Mac, even if you edited the same paragraph.
+- **Redis (Active-Active)**: Redis Enterprise offers **CRDT-based Conflict-free Replicated Data Types**. This allows a developer to have a Redis instance in US-East and another in EU-West, both accepting writes to the same Set or Counter. Redis handles the background merging using CRDT math, ensuring both regions eventually see the same total.
+
 ## Connections
 
 - [[Multi-Leader and Conflict Resolution]] — CRDTs are the conflict-free alternative to LWW and manual resolution

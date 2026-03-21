@@ -2,6 +2,24 @@
 
 Check off each module when you can explain its core concepts, trade-offs, and connections from memory.
 
+## The "Mastery" Bar (Heuristics)
+
+You have mastered a topic when you can:
+1. **Explain it to a Junior**: Define the concept without using jargon.
+2. **The "Trade-off" Test**: Name at least two pros and two cons of the approach.
+3. **The "At Scale" Test**: Explain exactly how the approach breaks when traffic increases by 100x.
+4. **The "Alternative" Test**: Name the primary alternative and when you would choose it instead.
+
+## Progress Overview
+
+```mermaid
+pie title Knowledge Distribution
+    "Phase 1: Foundations" : 33
+    "Phase 2: Distribution" : 19
+    "Phase 3: Architecture" : 29
+    "Phase 4: Modern AI" : 19
+```
+
 ## Phase 1: Foundations
 - [ ] M1: Networking — DNS chain, TCP congestion control, HTTP/2 vs HTTP/3, L4 vs L7 LB, gRPC vs REST vs GraphQL
 - [ ] M2: API Design — REST principles, versioning strategies, rate limiting algorithms, idempotency keys, gateway patterns

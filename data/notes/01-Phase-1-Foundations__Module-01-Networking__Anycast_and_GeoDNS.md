@@ -78,6 +78,38 @@ sequenceDiagram
 - **GeoDNS misroute**: The IP geolocation database is wrong (this happens — VPN users, mobile carriers with centralized NAT, corporate proxies). A user in London gets sent to a Singapore server. Mitigation: offer latency-based routing as a supplement to geo routing; let the client measure and report actual latency.
 - **Cache inconsistency during failover**: You withdraw a region via GeoDNS, but cached DNS responses with the old TTL keep sending traffic to the downed region for minutes. Mitigation: keep TTLs low for records that participate in failover, and combine with health-check-driven DNS updates.
 
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant User as User (London)
+    participant DNS as Route 53 (Anycast DNS)
+    participant Edge as Cloudfront Edge (Anycast IP)
+    participant Origin as App Origin (Dublin)
+
+    User->>DNS: Resolve api.example.com
+    Note over DNS: Anycast routing sends query to nearest DNS node
+    DNS-->>User: Return 192.0.2.1 (Anycast IP)
+    
+    User->>Edge: HTTPS GET (192.0.2.1)
+    Note over Edge: BGP directs packet to London PoP
+    Edge->>Origin: Forward request (if miss)
+    Origin-->>Edge: Response
+    Edge-->>User: Response (cached or proxied)
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Speed of Light in Fiber**: ~200,000 km/s. Round-trip time (RTT) across the Atlantic (~6,000 km) is **~60ms** minimum.
+- **DNS Propagation**: Standard TTL for GeoDNS records is often **60s - 300s**. Shorter TTLs allow faster failover but increase DNS query load.
+- **BGP Convergence**: Route changes in Anycast (withdrawing a prefix) can take **30 seconds to several minutes** to propagate globally.
+- **IP Geolocation Accuracy**: Country-level accuracy is **~99%**, but city-level accuracy drops to **~80-90%**, especially for mobile users.
+
+## Real-World Case Studies
+
+- **Cloudflare (Anycast Everywhere)**: Cloudflare uses a single Anycast IP range for all its customers globally. This simplifies setup and allows them to absorb massive DDoS attacks by spreading the load across 300+ data centers.
+- **Netflix (GeoDNS + Open Connect)**: Netflix uses GeoDNS via Route 53 to point users to the nearest "Open Connect" appliance (their custom CDN nodes) installed directly inside ISP networks. This ensures the 4K video traffic stays within the ISP's network, reducing costs and latency.
+
 ## Connections
 
 - [[DNS Resolution Chain]] — Anycast and GeoDNS are strategies built on top of the DNS resolution process

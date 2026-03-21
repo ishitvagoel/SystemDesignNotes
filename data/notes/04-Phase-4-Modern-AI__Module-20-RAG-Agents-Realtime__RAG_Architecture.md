@@ -158,6 +158,47 @@ RAG evaluation is multi-dimensional — you must evaluate retrieval quality AND 
 
 - **Stale index**: Documents are updated but the vector index isn't re-embedded. Users get answers based on outdated information. Mitigation: incremental indexing with CDC, monitor index freshness as an SLI.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Ingestion (Offline)"
+        Doc[Source Docs] --> Chunk[Chunker: 512 tokens]
+        Chunk --> Embed[Embedding Model]
+        Embed --> VDB[(Vector DB)]
+    end
+
+    subgraph "Retrieval (Online)"
+        User[Query] --> Q_Embed[Query Embed]
+        Q_Embed --> Search[Vector Search]
+        User --> Keyword[BM25 Search]
+        Search & Keyword --> Fusion[RRF Fusion]
+        Fusion --> Rerank[Cross-Encoder Reranker]
+    end
+
+    subgraph "Generation"
+        Rerank --> Prompt[Assemble Prompt + Context]
+        Prompt --> LLM[LLM: GPT-4 / Claude]
+        LLM --> Response[Grounded Response]
+    end
+
+    style VDB fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Rerank fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **The 80/20 Rule**: 80% of RAG quality is determined by **Retrieval and Chunking**, not the prompt. Focus on getting the right context into the window first.
+- **Chunk Overlap**: Use a **10% - 20% overlap** between chunks (e.g., 500 tokens with 50-token overlap) to ensure semantic continuity at boundaries.
+- **Retrieval Top-K**: Start with **k=20** for the initial retrieval, then use a re-ranker to narrow down to the **top 5** chunks for the LLM prompt.
+- **Cost vs Quality**: Re-ranking the top 20 results typically adds **~100ms - 200ms** of latency but can improve answer accuracy by **15% - 30%**.
+
+## Real-World Case Studies
+
+- **Microsoft (GraphRAG)**: Microsoft developed **GraphRAG** to solve the "Global Summarization" problem. Standard RAG is great at finding a needle in a haystack (local facts), but GraphRAG builds a knowledge graph of the entire corpus first. This allows it to answer high-level questions like "What are the main themes across all 1,000 documents?" by traversing the graph rather than just matching vectors.
+- **Intercom (Fin AI)**: Intercom's customer support bot uses RAG to answer tickets. They found that **Formatting Matters**: the LLM performs significantly better when retrieved context is provided as clean Markdown rather than raw text or HTML, as the structural cues help the model distinguish between headings, lists, and body text.
+- **Pinecone (Serverless Vector DB)**: Pinecone moved to a serverless architecture to handle the "Spiky Ingestion" problem of RAG. Many companies have static docs that change once a month—paying for a 24/7 provisioned vector database was inefficient. Their serverless model separates storage from compute, allowing companies to store millions of vectors for dollars a month while only paying for search when users actually ask questions.
+
 ## Connections
 
 - [[Vector Search and Hybrid Retrieval]] — The retrieval backbone of RAG

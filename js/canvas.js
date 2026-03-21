@@ -4,7 +4,8 @@
  */
 
 class CanvasEngine {
-  constructor(svgId) {
+  constructor(svgId, stateKey = 'system-design-canvas-state') {
+    this.stateKey = stateKey;
     this.svg = d3.select(svgId);
     this.container = this.svg.append('g').attr('class', 'canvas-container');
     this.nodes = [];
@@ -42,14 +43,12 @@ class CanvasEngine {
     // Initial render
     this.render();
 
-    // Palette setup
-    this.initPalette();
-
     // Load persisted state
     this.loadState();
     
     // Global click to deselect
     this.svg.on('click', (e) => {
+      activePlayground = this;
       if (e.target.tagName === 'svg') {
         this.selectedNode = null;
         this.connectingNode = null;
@@ -57,34 +56,6 @@ class CanvasEngine {
         this.render();
       }
     });
-
-    // Toolbar
-    document.getElementById('canvas-clear').onclick = () => {
-      this.nodes = [];
-      this.links = [];
-      this.selectedNode = null;
-      this.render();
-      this.saveState();
-    };
-
-    document.getElementById('canvas-simulate').onclick = () => {
-      this.isSimulating = !this.isSimulating;
-      document.getElementById('canvas-simulate').classList.toggle('active', this.isSimulating);
-      if (this.isSimulating) {
-        this.startSimulation();
-      } else {
-        if (this.simTimeout) clearTimeout(this.simTimeout);
-      }
-    };
-
-    // Scale slider
-    const slider = document.getElementById('canvas-scale-slider');
-    const label = document.getElementById('canvas-scale-label');
-    slider.oninput = (e) => {
-      this.scaleIndex = Number(e.target.value);
-      label.textContent = this.scaleOptions[this.scaleIndex].label + (this.scaleIndex > 0 ? ' Users' : '');
-    };
-
     this.initQuests();
     this.initScenarios();
   }
@@ -262,7 +233,7 @@ class CanvasEngine {
         transition: all 0.15s;
       `;
       el.innerHTML = `<span>${c.icon}</span><span>${c.label}</span>`;
-      el.onclick = () => this.addComponent(c.type, c.label);
+      el.onclick = () => this.activePlayground.addComponent(c.type, c.label);
       el.onmouseenter = () => el.style.borderColor = 'var(--accent)';
       el.onmouseleave = () => el.style.borderColor = 'var(--border)';
       list.appendChild(el);
@@ -356,6 +327,7 @@ class CanvasEngine {
       });
 
     nodeMerge.on('click', (e, d) => {
+      activePlayground = this;
       e.stopPropagation();
       
       if (e.shiftKey || this.connectingNode) {
@@ -458,12 +430,12 @@ class CanvasEngine {
         nodes: this.nodes.map(n => ({ ...n, load: 0 })),
         links: this.links.map(l => ({ source: l.source.id, target: l.target.id }))
       };
-      localStorage.setItem('system-design-canvas-state', JSON.stringify(state));
+      localStorage.setItem(this.stateKey, JSON.stringify(state));
     }
   }
 
   loadState() {
-    const raw = localStorage.getItem('system-design-canvas-state');
+    const raw = localStorage.getItem(this.stateKey);
     if (!raw) return;
     try {
       const state = JSON.parse(raw);
@@ -476,8 +448,13 @@ class CanvasEngine {
     } catch (e) { console.error('Failed to load state', e); }
   }
 
+  stopSimulation() {
+    this.isSimulating = false;
+    if (this.simTimeout) clearTimeout(this.simTimeout);
+  }
+
   startSimulation() {
-    if (!this.isSimulating) return;
+    if (!globalIsSimulating) return;
 
     // Reset loads
     this.nodes.forEach(n => n.load = 0);
@@ -564,6 +541,32 @@ class CanvasEngine {
       }
     }
 
+    if (q.id === 'q3' && !this.junctionsTriggered?.chat_reliability_bottleneck) {
+      const app = this.nodes.find(n => n.type === 'app');
+      if (app && app.load > app.capacity * 0.8) {
+        if (!this.junctionsTriggered) this.junctionsTriggered = {};
+        this.junctionsTriggered.chat_reliability_bottleneck = true;
+        this.showDecisionModal('chat_reliability_bottleneck');
+      }
+    }
+
+    if (q.id === 'q4' && !this.junctionsTriggered?.newsfeed_fanout_conflict) {
+      if (this.scaleIndex >= 5) { // At 1M+ users
+        if (!this.junctionsTriggered) this.junctionsTriggered = {};
+        this.junctionsTriggered.newsfeed_fanout_conflict = true;
+        this.showDecisionModal('newsfeed_fanout_conflict');
+      }
+    }
+
+    if (q.id === 'q5' && !this.junctionsTriggered?.distributed_lock_contention) {
+      const db = this.nodes.find(n => n.type === 'db');
+      if (db && db.load > db.capacity * 0.5) { // Earlier trigger for contention
+        if (!this.junctionsTriggered) this.junctionsTriggered = {};
+        this.junctionsTriggered.distributed_lock_contention = true;
+        this.showDecisionModal('distributed_lock_contention');
+      }
+    }
+
     if (satisfied && !this.questWon) {
       this.questWon = true;
       this.showWinMessage();
@@ -608,9 +611,77 @@ class CanvasEngine {
   }
 }
 
-let playground = null;
+
+let playgroundA = null;
+let playgroundB = null;
+let activePlayground = null;
+let isCompareMode = false;
+let globalIsSimulating = false;
+let globalScaleIndex = 0;
+let globalSimTimeout = null;
+
+function initCanvasControls() {
+  document.getElementById('canvas-clear').onclick = () => {
+    if (activePlayground) {
+      activePlayground.nodes = [];
+      activePlayground.links = [];
+      activePlayground.selectedNode = null;
+      activePlayground.render();
+      activePlayground.saveState();
+    }
+  };
+
+  document.getElementById('canvas-simulate').onclick = () => {
+    globalIsSimulating = !globalIsSimulating;
+    document.getElementById('canvas-simulate').classList.toggle('active', globalIsSimulating);
+    if (globalIsSimulating) {
+      if (playgroundA) playgroundA.startSimulation();
+      if (playgroundB && isCompareMode) playgroundB.startSimulation();
+    } else {
+      if (playgroundA) playgroundA.stopSimulation();
+      if (playgroundB) playgroundB.stopSimulation();
+    }
+  };
+
+  document.getElementById('canvas-compare').onclick = () => {
+    isCompareMode = !isCompareMode;
+    const btn = document.getElementById('canvas-compare');
+    const wrapB = document.getElementById('canvas-stage-wrap-b');
+    const labelA = document.getElementById('label-a');
+    
+    if (isCompareMode) {
+      btn.classList.add('active');
+      wrapB.style.display = 'block';
+      labelA.style.display = 'block';
+      if (!playgroundB) {
+        playgroundB = new CanvasEngine('#canvas-svg-b', 'system-design-canvas-state-b');
+      }
+      activePlayground = playgroundB;
+    } else {
+      btn.classList.remove('active');
+      wrapB.style.display = 'none';
+      labelA.style.display = 'none';
+      activePlayground = playgroundA;
+    }
+  };
+
+  const slider = document.getElementById('canvas-scale-slider');
+  const label = document.getElementById('canvas-scale-label');
+  slider.oninput = (e) => {
+    globalScaleIndex = Number(e.target.value);
+    if (playgroundA) {
+      playgroundA.scaleIndex = globalScaleIndex;
+      label.textContent = playgroundA.scaleOptions[globalScaleIndex].label + (globalScaleIndex > 0 ? ' Users' : '');
+    }
+    if (playgroundB) playgroundB.scaleIndex = globalScaleIndex;
+  };
+}
+
 function initCanvas() {
-  if (!playground) {
-    playground = new CanvasEngine('#canvas-svg');
+  if (!playgroundA) {
+    playgroundA = new CanvasEngine('#canvas-svg', 'system-design-canvas-state');
+    activePlayground = playgroundA;
+    playgroundA.initPalette();
+    initCanvasControls();
   }
 }

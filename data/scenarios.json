@@ -38,5 +38,56 @@
         "component": { "type": "app", "label": "Asia App Server", "capacity": 1000 }
       }
     ]
+  },
+  "chat_reliability_bottleneck": {
+    "text": "Your real-time chat service is dropping messages during peak usage. How do you handle the surge?",
+    "choices": [
+      {
+        "text": "Message Queue (Kafka)",
+        "id": "add_queue",
+        "impact": "Decouples producers from consumers. Great for reliability and async processing.",
+        "component": { "type": "queue", "label": "Message Queue", "capacity": 20000 }
+      },
+      {
+        "text": "Push via WebSockets",
+        "id": "add_websockets",
+        "impact": "Direct push is fast but requires more connection management on the server.",
+        "component": { "type": "app", "label": "WebSocket Server", "capacity": 5000 }
+      }
+    ]
+  },
+  "newsfeed_fanout_conflict": {
+    "text": "Your 'Write-time Fanout' is slowing down for celebrities with 1M followers. What's the better feed strategy?",
+    "choices": [
+      {
+        "text": "Hybrid Pull (Read-time)",
+        "id": "hybrid_pull",
+        "impact": "Fan out for normal users, but pull for 'mega-users' at read-time. Saves write-amplification.",
+        "component": { "type": "cache", "label": "Hybrid Cache", "capacity": 15000 }
+      },
+      {
+        "text": "Pre-computed Feed Sharding",
+        "id": "shard_feeds",
+        "impact": "Distribute feed writes across more shards. Faster reads but more complex writes.",
+        "component": { "type": "db", "label": "Feed Shard", "capacity": 3000 }
+      }
+    ]
+  },
+  "distributed_lock_contention": {
+    "text": "Multiple servers are trying to update the same user balance simultaneously, causing race conditions. How will you coordinate?",
+    "choices": [
+      {
+        "text": "Distributed Lock (Redis/Redlock)",
+        "id": "add_lock",
+        "impact": "Simple, high-performance locking. But beware of clock-skew issues.",
+        "component": { "type": "cache", "label": "Redlock Master", "capacity": 8000 }
+      },
+      {
+        "text": "Consensus Service (Zookeeper)",
+        "id": "add_zookeeper",
+        "impact": "Strongly consistent and reliable, but slower and more operationally complex.",
+        "component": { "type": "db", "label": "Zookeeper Ensemble", "capacity": 2000 }
+      }
+    ]
   }
 }

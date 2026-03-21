@@ -110,6 +110,45 @@ The most general implementation:
 
 - **Cross-device sessions**: User writes on their phone, then reads on their laptop. Different devices, different sessions, different session tokens. The laptop doesn't have the phone's session token, so RYW isn't guaranteed. Mitigation: store session tokens server-side (per user, not per device) or sync tokens across devices.
 
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant User as User Browser
+    participant LB as Load Balancer (Session Aware)
+    participant R1 as Replica A (Lag: 5ms)
+    participant R2 as Replica B (Lag: 200ms)
+    participant DB as Primary DB
+
+    User->>DB: 1. POST /profile (Update Name)
+    DB-->>User: 2. 200 OK + VersionToken: 105
+    
+    Note over User: User refreshes page
+    
+    alt Sticky Sessions (LB directed)
+        User->>LB: 3. GET /profile (Cookie: Server=R1)
+        LB->>R1: Forward to R1
+        R1-->>User: 4. New Name (RYW satisfied)
+    else Random Routing (Violation)
+        User->>LB: 3. GET /profile
+        LB->>R2: Forward to R2 (Lagging)
+        R2-->>User: 4. Old Name (Violation!)
+    end
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Staleness Tolerance**: Most web users won't notice staleness of **< 1 second**. However, for "Action-Feedback" loops (e.g., clicking 'Like'), anything **> 200ms** feels broken.
+- **Session Token Size**: A simple Version Token (e.g., a 64-bit LSN) is only **8 bytes**. Even a complex Vector Clock for 10 nodes is only **~80 bytes**, easily fitting in a cookie.
+- **Cache TTL vs. Lag**: If your average replication lag is 500ms, set your local session cache TTL to **1 second** to mask the lag during transitions.
+- **Leader Read Penalty**: Falling back to the leader for "Read-Your-Writes" typically increases read latency by **5x-10x** if the leader is in a different region.
+
+## Real-World Case Studies
+
+- **YouTube (View Counts)**: YouTube is famously eventually consistent with view counts. You might see 1,000 views, refresh, and see 950. This is a violation of **Monotonic Reads**, but YouTube allows it because the cost of linearizable view counts across billions of videos is too high.
+- **Facebook (Web-to-Cache Consistency)**: When you post a comment on Facebook, your browser receives a "Last Write Timestamp." All your subsequent reads include this timestamp. If you hit a cache node that hasn't seen that timestamp yet, the cache node will proxy the request to a more up-to-date node or the primary database to ensure **Read-Your-Writes**.
+- **Stripe (API Idempotency)**: Stripe uses session-like keys (Idempotency Keys) to ensure that if a client retries a payment request, they always get the same result. This is a specialized form of **Read-Your-Writes** where the "write" is the payment and the "read" is the retry response.
+
 ## Connections
 
 - [[Consistency Spectrum]] — Session guarantees sit between eventual consistency and linearizability on the spectrum

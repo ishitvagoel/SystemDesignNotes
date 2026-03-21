@@ -104,6 +104,49 @@ Multi-region multiplies every cost:
 
 Multi-region e-commerce is the ultimate synthesis: it requires classifying data by consistency/sovereignty/latency requirements and applying different strategies per class. The system isn't one architecture — it's a composed set of strategies, each tuned for its data type. The discipline of data classification — asking "what does this data need?" before choosing an architecture — is the transferable skill.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Global Traffic Management"
+        User[User] --> DNS[GeoDNS / Anycast]
+    end
+
+    subgraph "Primary Region (US-East)"
+        DNS -->|Route US| LB_US[Load Balancer]
+        LB_US --> App_US[E-Comm Svc]
+        App_US --> DB_US_W[(Master DB: Catalog)]
+        App_US --> DB_US_Inv[(Auth Inventory: SKU A-M)]
+    end
+
+    subgraph "Secondary Region (EU-West)"
+        DNS -->|Route EU| LB_EU[Load Balancer]
+        LB_EU --> App_EU[E-Comm Svc]
+        App_EU --> DB_EU_R[(Replica DB: Catalog)]
+        App_EU --> DB_EU_Inv[(Auth Inventory: SKU N-Z)]
+    end
+
+    DB_US_W -.->|Async Replication| DB_EU_R
+    App_EU -- "Cross-Region Check" --> DB_US_Inv
+    App_US -- "Cross-Region Check" --> DB_EU_Inv
+
+    style DB_US_Inv fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style DB_EU_Inv fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Write vs. Read Latency**: Users tolerate **~200ms - 500ms** for "Place Order" (Write) but expect **< 100ms** for "Product Page" (Read). Design for local reads and global (but reliable) writes.
+- **Egress Budget**: Cross-region data replication can easily consume **15% - 20%** of total infrastructure cost. Use **Delta-Replication** and compression to minimize traffic.
+- **Inventory Sharding**: Shard inventory by **Warehouse Location** rather than User Location. It's better to have strong consistency where the physical item is located.
+- **Catalog TTL**: Set CDN TTL for product prices to **60 seconds**. A price that is 60 seconds stale is rarely a business-breaker, but it saves millions of origin requests.
+
+## Real-World Case Studies
+
+- **Amazon (The Global SKU)**: Amazon uses a **Single Region of Authority** for every physical item. When you view an item in the UK that's stocked in Germany, the UK frontend makes a cross-region call to the German inventory service to ensure accuracy. They prioritize "No Overselling" over absolute low latency for that specific checkout step.
+- **DoorDash (Migration to Multi-Region)**: DoorDash migrated from a single-region monolith to a multi-region architecture using **CockroachDB**. They used "Locality-Aware Replication" to keep US West orders in US West data centers and US East orders in US East, satisfying both latency and high-availability requirements without manual sharding.
+- **Shopify (Pod-based Architecture)**: Shopify scales by grouping merchants into **Pods** (essentially Cells). Each Pod is a self-contained environment with its own database and app servers. They can move a Pod from one region to another (e.g., during a region outage) by re-pointing DNS and initiating a database failover, providing a highly resilient multi-region strategy.
+
 ## Connections
 
 **Core concepts applied:**

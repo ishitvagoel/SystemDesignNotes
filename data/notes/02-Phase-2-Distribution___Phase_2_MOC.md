@@ -4,6 +4,26 @@
 
 This is the theoretical core of the vault. Consistency models define what "correct" means. Consensus protocols achieve it. Distributed transactions span it. Replication and conflict resolution cope when you can't (or choose not to) achieve it.
 
+## Distribution Topology
+
+```mermaid
+graph LR
+    subgraph "Phase 2: The Multi-Node Problem"
+        M11[M11: Replication] --> M8[M8: Consistency Models]
+        M8 --> M9[M9: Consensus]
+        M9 --> M10[M10: Distributed TX]
+    end
+
+    style M9 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style M10 fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
+```
+
+## Senior Engineer's Distribution Heuristic
+
+- **Assume Partition (The P in CAP)**: Network partitions *will* happen. Your design must proactively choose between Availability and Consistency.
+- **The Quorum Rule**: When in doubt, aim for $R + W > N$.
+- **Coordination is Expensive**: The most scalable systems are those that coordinate the least. Avoid distributed transactions unless absolutely necessary.
+
 ## Modules
 
 | Module | Focus | Key Question Answered |

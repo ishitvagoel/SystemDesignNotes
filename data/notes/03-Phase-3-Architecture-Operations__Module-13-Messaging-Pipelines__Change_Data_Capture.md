@@ -113,6 +113,43 @@ CDC enables migrating from one database to another without downtime: set up CDC 
 
 **Consumer lag**: If a consumer falls behind, events accumulate in Kafka. This is generally fine (Kafka retains data), but the consumer must be designed to catch up without overwhelming downstream systems.
 
+## Architecture Diagram
+
+```mermaid
+graph LR
+    subgraph "Source Database"
+        App[Application] -->|SQL Write| DB[(Primary DB)]
+        DB -.->|WAL / Binlog| Log[Write-Ahead Log]
+    end
+
+    subgraph "CDC Pipeline"
+        Log -->|Tail| Connector[Debezium / CDC Connector]
+        Connector -->|Event Stream| Kafka[Kafka / Redpanda]
+    end
+
+    subgraph "Downstream Sinks"
+        Kafka -->|Sync| Search[Elasticsearch]
+        Kafka -->|Invalidate| Cache[Redis]
+        Kafka -->|Process| Analytics[Data Warehouse]
+    end
+
+    style Log fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Connector fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Capture Latency**: Log-based CDC typically has an end-to-end latency of **50ms - 200ms**.
+- **DB Overhead**: Tailing the WAL adds **< 3% CPU overhead** to the source database, which is significantly lower than trigger-based or polling approaches.
+- **Log Retention**: Ensure your DB log retention (e.g., `binlog_expire_logs_seconds` in MySQL) is long enough to handle CDC connector downtime. A safe default is **24 - 48 hours**.
+- **Message Size**: CDC events for a single row are typically **1KB - 5KB** (including 'before' and 'after' images).
+
+## Real-World Case Studies
+
+- **Netflix (DB Sync)**: Netflix uses CDC to synchronize data between their primary persistence stores (Cassandra/Postgres) and their search indexes (Elasticsearch). They built a tool called **Delta** to ensure that any change in a movie's metadata is reflected in the search bar within milliseconds, without burdening the application developers with "dual-write" logic.
+- **Shopify (Kafka Connect)**: Shopify uses Debezium and Kafka to stream changes from their massive sharded MySQL fleet into their data warehouse (Snowflake). This allows their data scientists to run complex analytical queries on near-real-time data without ever touching the production transactional databases.
+- **Zillow (Cache Invalidation)**: Zillow uses CDC to invalidate property price caches. When a house price is updated in their database, a CDC event triggers a cache invalidation in Redis. This ensures that users always see the correct price, even if the price was updated by a background batch job or an admin tool rather than the main application.
+
 ## Connections
 
 **Prerequisites:**

@@ -107,6 +107,44 @@ Use multi-window: alert only if BOTH a short window AND a long window exceed the
 - **SLO too lenient**: The error budget is never used. No incentive to maintain reliability. When a real incident occurs, the team has no practice responding. Fix: tighten the SLO to create a meaningful budget.
 - **Wrong SLI**: The SLI measures server-side success rate, but users experience client-side timeouts (load balancer drops requests before they reach the server). The SLI says 99.99%; users experience 99.5%. Fix: measure at the user-facing boundary (load balancer, client RUM).
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    User[User Experience] --> SLI[SLI: Ratio of Good Events]
+    SLI --> Dashboard[Grafana / Monitoring]
+    
+    subgraph "Error Budget Loop"
+        Dashboard --> SLO{SLO Target: e.g. 99.9%}
+        SLO -->|Remaining > 0| Velocity[Velocity: Ship Features]
+        SLO -->|Remaining <= 0| Reliability[Freeze Deploys: Focus on Stability]
+    end
+
+    subgraph "Alerting"
+        Dashboard --> Burn[Burn Rate Alerting]
+        Burn --> OnCall[PagerDuty / SRE]
+    end
+
+    style SLO fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Reliability fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **The "Nines" Table**: 
+    - 99% = 7.2 hours downtime/month.
+    - 99.9% = 43.2 minutes downtime/month.
+    - 99.99% = 4.3 minutes downtime/month.
+- **Latency SLIs**: Always use percentiles (**p50, p90, p99**), never averages. A p99 of 1s means 1 in 100 users is having a terrible experience, even if the average is 50ms.
+- **Burn Rate**: A 14.4x burn rate means you will consume your **entire monthly error budget in 48 hours**. This should trigger an immediate critical alert.
+- **Budget Buffer**: Set your internal SLOs **10x stricter** than your external SLA (e.g., 99.9% internal for a 99% SLA) to give yourself room to react before paying penalties.
+
+## Real-World Case Studies
+
+- **Google (Error Budget Policy)**: Google SRE teams have a strict policy: if a service's error budget is exhausted, the product team **cannot launch any new features** until the budget resets or the reliability issues are fixed. This perfectly aligns the incentives of product (velocity) and engineering (stability).
+- **LinkedIn (In-House SLO Tooling)**: LinkedIn built an internal platform called **Iris** to track SLOs across thousands of microservices. They found that before Iris, teams were over-alerting on transient spikes. By switching to **Burn-Rate Alerting**, they reduced "pager fatigue" by **60%** while catching real outages faster.
+- **Amazon (Availability SLIs)**: Amazon retail doesn't just measure "HTTP 200s" as availability. They measure **"Revenue per Minute" (RPM)**. If RPM drops below a seasonal baseline, it's treated as a critical availability incident, even if all servers are reporting healthy, because the only thing that matters is: "Can the user buy something?"
+
 ## Connections
 
 - [[Resilience Patterns]] — Circuit breakers, bulkheads, and degradation are the mechanisms for staying within SLO

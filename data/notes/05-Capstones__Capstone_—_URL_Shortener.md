@@ -251,6 +251,46 @@ This design is intentionally simple — the best designs for simple problems sta
 
 The genuinely interesting decisions are: short code generation strategy (counter + shuffle vs random), 301 vs 302 redirect (analytics vs performance), and the analytics pipeline separation (keeping click events out of the primary database).
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    User[Client] -->|GET /abc123| Edge[CDN / Edge Worker]
+    Edge -- "Cache Hit" --> User
+    
+    subgraph "Origin Cluster"
+        Edge -- "Cache Miss" --> API[API Service]
+        API -->|1. Lookup| Cache{Redis Cache}
+        Cache -- "Hit" --> API
+        Cache -- "Miss" --> DB[(Read Replica)]
+        
+        API -.->|2. Async Log| Kafka[Kafka: Click Events]
+    end
+
+    subgraph "Analytics Stack"
+        Kafka --> Flink[Flink / Enrichment]
+        Flink --> CH[(ClickHouse)]
+        Flink --> S3[(S3 Archive)]
+    end
+
+    style Edge fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Cache fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style CH fill:var(--surface),stroke:var(--border),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Write vs Read Ratio**: Typically **1:100** or higher. Design for massive read throughput.
+- **Base62 Capacity**: A 7-character code provides **~3.5 Trillion** unique IDs (62^7).
+- **Latency Target**: Redirects must be **< 50ms**. A "Fast" redirect is essential because the user hasn't even reached the destination site yet.
+- **Cache Sizing**: Use the **80/20 Rule**. Caching the top 20% of URLs typically handles 80% of redirect traffic. For 100M active URLs, 20M entries @ 250 bytes = **~5GB Redis**.
+
+## Real-World Case Studies
+
+- **Bitly (Custom Sharding)**: Bitly handles over 25 billion clicks per month. They use a custom sharding strategy based on the short-code prefix. They also heavily utilize **Redis** not just for caching, but for real-time click counters, which are then asynchronously persisted to a permanent store.
+- **Twitter (t.co)**: Twitter created `t.co` to protect users from malicious links and to save space. Unlike Bitly, Twitter uses **301 (Permanent) Redirects** for most links. This reduces their server load (browsers cache the result), but it makes their analytics less granular for repeat clicks from the same user.
+- **TinyURL (The OG)**: TinyURL was the first major shortener. Their original design was simple sequential IDs. This led to "Security by Obscurity" issues where users could easily guess other people's private short links by just incrementing the ID (enumeration attack). Modern shorteners use non-sequential or hashed IDs to prevent this.
+
 ## Connections
 
 **Core concepts applied:**

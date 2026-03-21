@@ -159,6 +159,42 @@ graph TD
 - **Twitter / X (Redis)**: Uses Redis heavily for timeline generation. When a user tweets, it is fanned out to the Redis lists of their followers (for users with < 100k followers), blending push (write-time) and pull (read-time) caching strategies.
 - **Discord (ScyllaDB + Redis)**: Uses Redis as an L1 cache in front of ScyllaDB to handle the massive read volume of chat messages, specifically protecting the database from "hot chat" channels with thousands of active participants.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Client[Client Request] --> LB[Load Balancer]
+    LB --> App1[App Server 1]
+    LB --> App2[App Server 2]
+    
+    subgraph "Distributed Cache Cluster (Redis Cluster)"
+        App1 -- "Slot 450 (MOVED -> Node B)" --> CacheA
+        App1 -- "Slot 8000" --> CacheB[(Node B: Master)]
+        App2 -- "Slot 12000" --> CacheC[(Node C: Master)]
+        
+        CacheB --- CacheB_Rep[(Node B: Replica)]
+        CacheC --- CacheC_Rep[(Node C: Replica)]
+    end
+    
+    CacheB -- "Miss" --> DB[(Primary DB)]
+    
+    style CacheB fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style CacheC fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Latency**: Redis/Memcached local network reads take **~0.5ms to 1ms**.
+- **Throughput**: A single Redis node can comfortably handle **50k - 100k+ ops/sec** (depending on command complexity and payload size).
+- **Memory**: A general rule of thumb is to size the cache to hold **10% to 20% of your total dataset** (aiming for the "hot" working set).
+- **Hit Rate**: Aim for a **90%+ cache hit rate**. If it drops below 80%, you are either under-provisioned (cache churn) or experiencing a shift in access patterns.
+
+## Real-World Case Studies
+
+- **Facebook (Memcached)**: Scaled Memcached to thousands of servers holding hundreds of terabytes. They pioneered the "McRouter" architecture to solve connection pooling and scaling limits of massive Memcached clusters.
+- **Twitter / X (Redis)**: Uses Redis heavily for timeline generation. When a user tweets, it is fanned out to the Redis lists of their followers (for users with < 100k followers), blending push (write-time) and pull (read-time) caching strategies.
+- **Discord (ScyllaDB + Redis)**: Uses Redis as an L1 cache in front of ScyllaDB to handle the massive read volume of chat messages, specifically protecting the database from "hot chat" channels with thousands of active participants.
+
 ## Connections
 
 - [[Cache Patterns and Strategies]] — The caching patterns that this infrastructure supports

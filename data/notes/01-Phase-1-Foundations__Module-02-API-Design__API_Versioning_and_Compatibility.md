@@ -120,6 +120,47 @@ This pattern avoids big-bang version bumps and lets consumers migrate at their o
 - **Version sprawl**: v1, v2, v3, v4 all running in production, each with subtly different behavior. Bug fixes must be applied to all versions. Testing matrix explodes. Prevention: aggressive sunset policies, date-based versioning (Stripe model) to consolidate the maintenance burden.
 - **Silent semantic change**: The field `status` used to return `"active"` or `"inactive"`. A new deploy adds `"suspended"` without updating the version. Consumers with `if status == "active"` treat suspended users as inactive. Prevention: treat new enum values as potentially breaking, document them as such.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Clients"
+        C1[Legacy Client - v1]
+        C2[Modern Client - v2]
+    end
+
+    subgraph "API Gateway / Version Router"
+        Gateway[Envoy / Nginx]
+    end
+
+    subgraph "Backend Services"
+        V1[User Service - v1 Legacy]
+        V2[User Service - v2 Multi-Tenant]
+    end
+
+    C1 -- "GET /v1/users/123" --> Gateway
+    C2 -- "GET /v2/users/123" --> Gateway
+    
+    Gateway -- "Route to" --> V1
+    Gateway -- "Route to" --> V2
+
+    style Gateway fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style V1 fill:var(--surface),stroke:var(--border),stroke-dasharray: 5 5;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Deprecation Period**: Public APIs typically require **6-12 months** of deprecation notice. Internal APIs can move faster (**1-3 months**) if consumers are well-monitored.
+- **Sunset Threshold**: Do not shut down an old version until traffic is **< 1%** of total requests, or you have identified and contacted every remaining consumer.
+- **Header vs URL**: URL versioning is **~2x easier** to debug in logs and browser tools compared to header-based versioning.
+- **Maintenance Cost**: Each active major version (`v1`, `v2`, `v3`) roughly **doubles** the testing and documentation surface area.
+
+## Real-World Case Studies
+
+- **Stripe (Date-Based Versioning)**: Stripe is the industry leader in "painless" versioning. Every user is pinned to a specific API date (e.g., `2023-10-16`). Internally, Stripe uses a "transformation chain" that converts the latest data format back into the format the user's version expects. This allows them to iterate daily without breaking 10-year-old integrations.
+- **GitHub (REST v3 vs GraphQL v4)**: GitHub famously shifted from a versioned REST API (`api.github.com/v3`) to a "versionless" GraphQL API for its next generation. By allowing clients to request exactly the fields they need, they eliminated the need for `v4`, `v5`, etc., as new features are simply additive fields.
+- **Salesforce (Massive Version Support)**: Salesforce is known for supporting dozens of API versions simultaneously (sometimes dating back 15+ years). This is a massive operational burden but a key reason why enterprise customers trust them — their integrations almost never break.
+
 ## Connections
 
 - [[RESTful Design Principles]] — Versioning is about evolving the REST contract

@@ -10,22 +10,16 @@
 ### 1. Batch Enrichment of Remaining Notes
 **Goal:** Apply the "Senior Engineer" standard to the remaining ~120 Markdown notes in `data/notes/` without altering their original core content.
 
-**Action Required:**
-- Write an automated script (Node.js/Python) that utilizes an LLM API to process the remaining notes.
-- For each note, the script should analyze the content and **append** the following sections just above the `## Connections` header:
-  - `## Architecture Diagram` (Mermaid.js sequence or flow diagram)
-  - `## Back-of-the-Envelope Heuristics` (Concrete numbers, latencies, capacities)
-  - `## Real-World Case Studies` (How tech giants use the pattern)
-- The script should save the enriched content back to `data/notes/`.
+**Status:** [x] All 123 notes enriched with Architecture Diagrams, Heuristics, and Case Studies. Verified Mermaid rendering fixes and theme-aware initialization.
 
 ### 2. Canvas Playground Polish
 **Goal:** Enhance the newly added interactive canvas features.
-- Add more branching scenarios to `data/scenarios.json`.
-- Implement a true "Split-View" comparator for side-by-side architectural analysis (Design A vs. Design B).
+- [x] Add more branching scenarios to `data/scenarios.json`.
+- [x] Implement a true "Split-View" comparator for side-by-side architectural analysis (Design A vs. Design B).
 
-### 3. Build & CI Pipeline (Optional)
+### 3. Build & CI Pipeline
 **Goal:** Automate the data generation steps.
-- Create a GitHub Action or build script that ensures `data/search-index.json`, `data/graph-edges.json`, and `data/study-prompts.json` are automatically regenerated if any `.md` file in `data/notes/` is modified.
+- [x] Created `scripts/rebuild-data.js` to ensure `data/search-index.json`, `data/graph-edges.json`, and `data/study-prompts.json` are automatically regenerated. Verified via manual execution.
 
 ---
 **Next Session Instructions:**

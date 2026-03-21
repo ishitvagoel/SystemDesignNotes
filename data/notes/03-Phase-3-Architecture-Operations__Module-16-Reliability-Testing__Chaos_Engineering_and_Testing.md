@@ -100,6 +100,44 @@ For critical algorithms (consensus protocols, distributed lock implementations),
 - **Staging-only chaos**: "We run chaos in staging." Staging doesn't reproduce production's traffic patterns, data volumes, or infrastructure quirks. Chaos in staging gives false confidence. Mitigation: run in production with strict blast radius controls.
 - **Testing the happy path of failure**: Chaos experiments always kill the same pod type. Real outages are correlated failures (an AZ goes down, a shared dependency fails, a config change breaks everything). Mitigation: design multi-failure experiments and simulate cascading failures.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Production Cluster"
+        S1[Service A]
+        S2[Service B]
+        S3[Service C]
+    end
+
+    subgraph "Chaos Control Plane"
+        Engine[Chaos Engine] -->|1. Inject Fault| Agent[Chaos Agent]
+        Agent -->|2. Kill/Lag| S2
+    end
+
+    subgraph "Observability Guardrail"
+        Metrics[Prometheus/Grafana] -->|3. Monitor SLIs| Engine
+        Engine -->|4. Auto-Abort if| SLO{Error Budget Breached?}
+        SLO -->|Yes| Halt[Stop & Rollback]
+    end
+
+    style Engine fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style S2 fill:var(--surface),stroke:#ff4d4d,stroke-dasharray: 5 5;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Blast Radius**: Start by injecting faults into **< 1% of total traffic** or a single instance.
+- **Abort Threshold**: Define an automated "Stop" condition if **Error Rate > 5%** or **p99 Latency > 2x Baseline** for more than 30 seconds.
+- **Experiment Frequency**: Run "Known-Failure" tests (e.g., instance kills) **daily**. Run "New-Hypothesis" tests (e.g., partial network partitions) **monthly or quarterly**.
+- **Discovery Rate**: In a new chaos program, expect **~30% of experiments** to reveal a previously unknown architectural weakness.
+
+## Real-World Case Studies
+
+- **Netflix (Chaos Monkey)**: Netflix pioneered this field when they moved to AWS in 2010. They created **Chaos Monkey** to randomly terminate EC2 instances in production. This forced their engineers to build services that could handle instance loss gracefully, eventually leading to a system that survived the total failure of entire AWS regions.
+- **Amazon (TLA+ for S3)**: Amazon uses formal verification (**TLA+**) to test their core distributed algorithms. They found a subtle bug in the S3 replication protocol that would have taken **27 years of random testing** to trigger, but was identified by TLA+ in seconds of model checking.
+- **Google (DiRT - Disaster Recovery Training)**: Google runs annual multi-day "Game Days" where they simulate catastrophic failures (e.g., an entire data center being wiped out by a simulated earthquake). These exercises test not just the software, but the "Human-in-the-loop" response, ensuring that SREs know exactly which runbooks to follow during a real crisis.
+
 ## Connections
 
 - [[Resilience Patterns]] — Chaos engineering verifies that circuit breakers, bulkheads, and retries work

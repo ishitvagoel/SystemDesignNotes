@@ -79,6 +79,47 @@ Google's 2017 paper introduced consistent hashing with bounded loads: if a node 
 
 **Hash function collisions**: Two nodes hashing to nearby positions creates an unbalanced arc. Vnodes make this statistically unlikely but not impossible.
 
+## Architecture Diagram
+
+```mermaid
+graph LR
+    subgraph "The Hash Ring (0 to 2^32-1)"
+        NodeA["Node A (10°)"] --- Key1["Key: 'user:1' (45°)"]
+        Key1 --- NodeB["Node B (120°)"]
+        NodeB --- Key2["Key: 'user:2' (150°)"]
+        Key2 --- NodeC["Node C (240°)"]
+        NodeC --- NodeA
+    end
+
+    subgraph "Ownership Logic"
+        Key1 -.->|Clockwise| NodeB
+        Key2 -.->|Clockwise| NodeC
+    end
+
+    subgraph "Node Addition (Node D @ 200°)"
+        NodeD["Node D (200°)"]
+        NodeB --- NodeD
+        NodeD --- Key2
+        Note over NodeD: Takes 'Key 2' from Node C
+    end
+
+    style NodeA fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style NodeB fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Re-hash Penalty**: With modular hashing (`hash % N`), adding a node remaps **~99%** of keys. With consistent hashing, it remaps only **1/N** keys (e.g., **~10%** for a 10-node cluster).
+- **Vnode Default**: Most production systems (Cassandra, DynamoDB) use **128 - 256 virtual nodes** per physical node to ensure uniform data distribution.
+- **Memory Overhead**: Storing the hash ring (sorted list of vnode positions) is trivial—typically **< 1MB** for clusters with thousands of nodes.
+- **Lookup Complexity**: Finding the owning node for a key takes **O(log(N * V))** time using binary search on the ring, where N is nodes and V is vnodes.
+
+## Real-World Case Studies
+
+- **Amazon (Dynamo)**: Amazon's Dynamo paper made consistent hashing famous. They used it to partition data across a decentralized cluster, ensuring that adding or removing storage nodes (common in their massive data centers) didn't cause a global data reshuffle or downtime.
+- **Discord (Consistent Hash for Routing)**: Discord uses consistent hashing to route users to specific "gateway" servers. When you connect, your user ID is hashed onto a ring of available servers. This ensures that if a server restarts, only its users are disconnected, while the rest of the millions of connected users are unaffected.
+- **Vimeo (Maglev Hashing)**: Vimeo implemented Google's "Maglev" hashing variant for their load balancers. Maglev is a specialized consistent hashing algorithm that provides even better balance and faster lookup times for extremely high-throughput network traffic (millions of packets per second).
+
 ## Connections
 
 **Prerequisites:**

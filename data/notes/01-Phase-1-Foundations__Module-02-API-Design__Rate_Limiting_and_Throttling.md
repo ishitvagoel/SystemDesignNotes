@@ -146,6 +146,38 @@ Good clients use `Retry-After` for backoff. Bad clients ignore it and hammer eve
 
 - **Rate limiting the wrong thing**: Limiting by IP when your biggest consumers are behind a corporate NAT (all appear as one IP). Or limiting by user ID when a bot attack uses thousands of stolen API keys. The limiting dimension must match the abuse vector.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Client[Client Request] --> Gateway[API Gateway / Envoy]
+    
+    subgraph "Rate Limiter Logic"
+        Gateway -- "1. Check Limit (Key: UserID)" --> Redis{Redis Cluster}
+        Redis -- "2. Increment & TTL" --> Counter[Counter / Token Bucket]
+        Counter -- "3. Allowed / Rejected" --> Gateway
+    end
+
+    Gateway -- "4. Forward (Success)" --> Service[Backend Service]
+    Gateway -- "5. 429 Too Many Requests" --> Client
+
+    style Gateway fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Redis fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Redis Latency**: Checking a rate limit in a local Redis cluster adds **1ms - 2ms**. Global Redis (cross-region) adds **50ms - 150ms**.
+- **Token Bucket Size**: A common default is `Burst = 2 * Rate`. For 100 req/sec, allow a burst of **200**.
+- **Storage Overhead**: 1 million active users * 64 bytes per Redis key = **~64 MB** of RAM. Rate limiting is very memory-efficient.
+- **Retry-After**: For 429 errors, a `Retry-After` header of **1 - 5 seconds** is a safe starting point for most APIs.
+
+## Real-World Case Studies
+
+- **GitHub (API Rate Limits)**: GitHub uses a sophisticated rate-limiting system where unauthenticated requests are limited by IP (**60/hr**), while authenticated requests are limited by user/app (**5,000/hr**). They return detailed `X-RateLimit-*` headers to help developers manage their quotas.
+- **Stripe (Layered Throttling)**: Stripe uses multiple layers: 1) **Request Rate Limiter** (prevents floods), 2) **Concurrent Request Limiter** (prevents long-running requests from tying up threads), and 3) **Fleet-wide Load Shedder** (drops low-priority traffic when the entire system is healthy but overloaded).
+- **Google (Quotas & Throttling)**: Google Cloud APIs use complex "quotas" that are often enforced at the global level. They famously use a "Leaky Bucket" variant to smooth out traffic spikes, ensuring that their underlying infrastructure isn't hit by sudden "thundering herds" of requests.
+
 ## Connections
 
 - [[API Gateway Patterns]] — Rate limiting is one of the core responsibilities of an API gateway

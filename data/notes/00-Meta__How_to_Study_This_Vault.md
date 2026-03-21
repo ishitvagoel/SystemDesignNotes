@@ -1,5 +1,24 @@
 # How to Study This Vault
 
+## The Knowledge Journey
+
+```mermaid
+graph LR
+    S1[1. Why it exists] --> S2[2. Mental Model]
+    S2 --> S3[3. Trade-offs]
+    S3 --> S4[4. Connections]
+    S4 --> S5[5. Mastery: Can you explain it?]
+    
+    style S1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style S5 fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Deep Learning Heuristics
+
+- **The "Blank Sheet" Test**: After reading a module, can you sketch its architecture on a blank sheet of paper?
+- **The "Cross-Module" Challenge**: Find two modules that seem unrelated (e.g., M1: Networking and M19: AI Inference). Find at least one point where they connect.
+- **The "Case Study" Drill**: Take any case study from the vault and explain which 3 modules were most critical to that company's success.
+
 ## Recommended 20-Week Study Plan
 
 This vault is designed for one module per week, with capstones spread across the final weeks. Adjust pace to your schedule — there's no penalty for going slower.

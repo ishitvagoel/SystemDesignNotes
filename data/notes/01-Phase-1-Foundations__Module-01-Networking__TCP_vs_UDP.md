@@ -49,6 +49,42 @@ The key insight: UDP isn't "unreliable TCP." It's a *minimal foundation* that le
 - **UDP and NAT**: NAT devices track TCP connections by the handshake. UDP has no connection, so NAT entries for UDP are timer-based and expire quickly. Long-lived UDP "connections" (like WebRTC) need periodic keepalive packets to keep the NAT mapping alive.
 - **Building reliability wrong**: Teams that build their own UDP-based protocol often get congestion control wrong — either omitting it entirely (creating an aggressive flow that starves TCP traffic) or implementing it poorly (worse than TCP's well-tested algorithms). Unless you have a specific, well-understood reason to control reliability yourself, TCP is the safer choice.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "TCP: Reliable Byte Stream"
+        C1[Client] -- "1. SYN" --> S1[Server]
+        S1 -- "2. SYN-ACK" --> C1
+        C1 -- "3. ACK + Data" --> S1
+        Note over C1, S1: 1 RTT Handshake before data
+        S1 -- "4. ACK for Data" --> C1
+    end
+
+    subgraph "UDP: Unreliable Datagram"
+        C2[Client] -- "1. Data (Postcard)" --> S2[Server]
+        C2 -- "2. Data (Postcard)" --> S2
+        Note over C2, S2: 0 RTT. Just send it.
+        S2 --x C2: No ACK back
+    end
+
+    style S1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style S2 fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Header Size**: TCP is **20 bytes** minimum. UDP is only **8 bytes**.
+- **Handshake Latency**: TCP is **1 RTT** (minimum). UDP is **0 RTT**.
+- **Statelessness**: A single UDP server can handle **millions of PPS** (packets per second) because it doesn't need to store connection state (TCB) for each client.
+- **Retransmission Penalty**: In TCP, a single lost packet can double the latency for an entire block of data. In UDP, the application decides (often just ignoring the loss).
+
+## Real-World Case Studies
+
+- **Discord (Voice over UDP)**: Discord uses UDP for all voice and video traffic via the WebRTC standard. They found that TCP's head-of-line blocking made voice chat unusable on slightly unstable WiFi, as a single lost packet would cause the audio to "stall" for hundreds of milliseconds while TCP retransmitted.
+- **StatsD (Metrics over UDP)**: Etsy's StatsD popularized sending application metrics over UDP. The reasoning was simple: your monitoring system should never take down your application. If the StatsD server is slow or down, the app just "fires and forgets" UDP packets into the void, incurring zero performance penalty.
+- **QUIC (Google/Meta/Cloudflare)**: Almost all traffic to Google and Meta services now runs over QUIC (HTTP/3), which is a custom reliability layer built on top of UDP. This allows them to avoid TCP's "handshake tax" and improve performance on mobile networks.
+
 ## Connections
 
 - [[TCP Deep Dive]] — The full mechanics of what TCP provides (and what it costs)

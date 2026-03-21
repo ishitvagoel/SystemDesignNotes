@@ -94,6 +94,47 @@ HTTP/3 replaces TCP with **QUIC**, a transport protocol built on UDP that provid
 
 **Server push abuse**: HTTP/2 server push proactively sends resources before the client requests them. Overly aggressive push wastes bandwidth (client already has resources cached) or causes contention with client-initiated requests. Solution: most implementations have disabled server push — Chrome removed support in 2022. Use `103 Early Hints` instead.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "HTTP/1.1 (Sequential)"
+        C1[Client] -- "Req 1" --> S1[Server]
+        S1 -- "Res 1" --> C1
+        C1 -- "Req 2 (Wait for 1)" --> S1
+        S1 -- "Res 2" --> C1
+    end
+
+    subgraph "HTTP/2 (TCP Multiplexing)"
+        C2[Client] -- "Stream 1 (Req 1)" --> S2[Server]
+        C2 -- "Stream 3 (Req 2)" --> S2
+        S2 -- "Stream 3 (Res 2)" --> C2
+        S2 -- "Stream 1 (Res 1)" --> C2
+        Note over C2, S2: One TCP Conn: Loss blocks ALL
+    end
+
+    subgraph "HTTP/3 (QUIC Multiplexing)"
+        C3[Client] -- "Stream 1" --> S3[Server]
+        C3 -- "Stream 2" --> S3
+        Note over C3, S3: UDP/QUIC: Loss in Stream 1 only blocks 1
+    end
+
+    style S2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style S3 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **TCP Setup Latency**: 1.5 RTTs for TCP + 1-2 RTTs for TLS 1.2 = **~3 RTTs** before data.
+- **QUIC Setup Latency**: 1 RTT (TLS 1.3 integrated) for new connections, **0 RTT** for resumed connections.
+- **Header Savings**: HTTP/2 (HPACK) can reduce header size from **~500-800 bytes** to **~20-50 bytes** per request.
+- **Parallelism**: Browsers limit HTTP/1.1 to **6 connections** per domain. HTTP/2 and HTTP/3 have no such limit (standard is **100 concurrent streams**).
+
+## Real-World Case Studies
+
+- **Google (QUIC/HTTP/3 Origins)**: Google developed QUIC originally to improve search and YouTube performance on Chrome. They found that 0-RTT handshakes and improved congestion control reduced YouTube's "rebuffer" rate by **15-18%** on lossy networks.
+- **Cloudflare (HTTP/3 Adoption)**: Cloudflare was an early adopter of HTTP/3 at the edge. They observed that for heavy pages with many small assets (JS, CSS, images), HTTP/3 provides a **10-15% improvement** in "Time to Interactive" for users on mobile networks compared to HTTP/2.
+
 ## Connections
 
 - [[TCP Deep Dive]] — HTTP/1.1 and HTTP/2 run over TCP; understanding TCP's congestion control and HOL blocking explains why HTTP/3 needed to move to UDP

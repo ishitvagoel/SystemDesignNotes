@@ -83,6 +83,45 @@ Most production setups use TLS termination at the L7 load balancer, with mTLS be
 
 - **Sticky sessions gone wrong**: You configured IP-hash or cookie-based session affinity for a stateful app. One backend gets disproportionate traffic because a corporate NAT makes thousands of users appear as one IP. Mitigation: migrate session state to an external store (Redis), eliminate the need for stickiness, or use finer-grained affinity (cookie per user, not per IP).
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Client[Global Traffic] --> DNS[Route 53 GeoDNS]
+    DNS --> LB_L4[Network Load Balancer - L4 Anycast]
+    
+    subgraph "Regional Edge"
+        LB_L4 --> LB_L7_1[Application LB - L7]
+        LB_L4 --> LB_L7_2[Application LB - L7]
+    end
+    
+    subgraph "Service Fleet"
+        LB_L7_1 --> S1[App Instance A]
+        LB_L7_1 --> S2[App Instance B]
+        LB_L7_2 --> S3[App Instance C]
+    end
+    
+    S1 -- "Health Check: /health" --> LB_L7_1
+    S2 -- "Health Check: /health" --> LB_L7_1
+
+    style LB_L4 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style LB_L7_1 fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **L4 Latency**: Adding an L4 LB (NLB) typically adds **< 1ms** of latency.
+- **L7 Latency**: An L7 LB (ALB/Nginx) adds **5ms - 15ms** due to TLS termination and header parsing.
+- **Health Check Traffic**: Probing 100 instances every 10s from 3 LB nodes = **30 requests/sec** overhead. Small but non-zero.
+- **Max Connections**: A single Nginx/Envoy instance can handle **50k - 100k** concurrent active connections (depending on memory/FD limits).
+- **Draining Timeout**: Set connection draining to **30s - 60s** for standard web traffic, but **up to 1 hour** for long-lived WebSockets.
+
+## Real-World Case Studies
+
+- **Google (Maglev)**: Google's Maglev is a massive software L4 load balancer that runs on standard commodity servers. It uses a specialized form of consistent hashing to ensure that even if a Maglev node fails, existing connections are not reset, achieving "connection longevity" at incredible scale.
+- **GitHub (HAProxy)**: GitHub uses HAProxy extensively for its L7 routing. They famously wrote about their migration to "GLB" (GitHub Load Balancer), which combines Anycast, a custom L4 layer, and HAProxy to handle billions of git and web requests with high availability.
+- **Netflix (Zuul/Envoy)**: Netflix originally built Zuul as their edge gateway (L7). They've since transitioned much of their internal mesh traffic to Envoy, using it as a "sidecar" load balancer to handle service-to-service communication, retries, and circuit breaking.
+
 ## Connections
 
 - [[DNS Resolution Chain]] — DNS-based load balancing (multiple A records) is the coarsest level; it lacks health checks and has TTL-based update delays

@@ -88,6 +88,43 @@ CQRS doesn't require event sourcing. You can have a traditional database for wri
 
 **Compensation event complexity explosion**: In event sourcing, you can't "undo" an event — you append a compensating event. But compensating events can trigger further downstream effects. Canceling an order might trigger: refund event, inventory restore event, notification event, loyalty points reversal event. Each of these might trigger further compensations in other services. Solution: design compensation as a coordinated saga, not a cascade of independent events. Model the compensation flow explicitly.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Write Side (Commands)"
+        User[User] -->|1. Submit Order| API[Command API]
+        API -->|2. Validate| Agg[Order Aggregate]
+        Agg -->|3. Append| Store[(Event Store)]
+    end
+
+    subgraph "Async Projection"
+        Store -.->|4. Stream Events| Proj[Projection Engine]
+        Proj -->|5. Update| ReadDB[(Read DB: Postgres/Elastic)]
+    end
+
+    subgraph "Read Side (Queries)"
+        User2[User] -->|6. View Orders| Q_API[Query API]
+        Q_API -->|7. Fetch| ReadDB
+    end
+
+    style Store fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style ReadDB fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Write Performance**: Appending to an event log is an **O(1)** sequential write. It can handle **10x-100x higher write volume** than traditional B-tree updates.
+- **Read Lag**: Standard projection lag is **< 100ms** under normal load. If lag exceeds **5 seconds**, user-facing UIs usually require "loading" indicators or polling.
+- **Storage Multiplier**: Event sourcing can consume **5x-20x more storage** than CRUD because it stores every version of every record forever.
+- **Replay Speed**: Replaying 1 million events to rebuild a read model typically takes **1 - 10 minutes** depending on the complexity of the projection logic.
+
+## Real-World Case Studies
+
+- **LMAX Exchange (Mechanical Sympathy)**: LMAX, a high-performance retail financial exchange, pioneered many event sourcing concepts. They needed to process **6 million orders/sec** with sub-millisecond latency. They used an in-memory event store and the "Disruptor" pattern to ensure that the sequential processing of events was the only way to maintain the speed required for high-frequency trading.
+- **Microsoft (Halo Leaderboards)**: The game Halo uses CQRS to manage its global leaderboards. Player matches (writes) generate millions of events per hour. These are processed into various "read models" (global rank, friend rank, regional rank). By separating the match-processing from the ranking-queries, they ensure that a spike in players doesn't slow down someone trying to check their score.
+- **The New York Times (The Publishing Pipeline)**: The NYT uses Kafka as its "Event Store" for all published content. Every article edit, image upload, and metadata change is an event. This allows them to rebuild their entire website or mobile app search index from scratch by just "rewinding" the Kafka log and re-playing all article events into a new database.
+
 ## Connections
 
 - [[Write-Ahead Log]] — The WAL is conceptually an event log; event sourcing makes this explicit at the application level

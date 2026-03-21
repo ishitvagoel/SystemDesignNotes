@@ -104,6 +104,49 @@ Traditional security: a hard perimeter (firewall) with a trusted interior ("cast
 - **Threat model staleness**: The system evolves (new services, new dependencies) but the threat model isn't updated. New attack surfaces go unanalyzed. Mitigation: re-run threat modeling on every significant architecture change. Integrate threat modeling into design review.
 - **Checkbox security**: Mitigations are documented but not implemented or tested. "We have mTLS" but half the services use plaintext internally. Mitigation: automated security testing in CI (mTLS verification, network policy enforcement checks).
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "External (Untrusted)"
+        User[Public Internet]
+    end
+
+    subgraph "Public DMZ"
+        GW[API Gateway / WAF]
+    end
+
+    subgraph "Internal Network (Zero Trust)"
+        S1[Service A]
+        S2[Service B]
+        DB[(Private DB)]
+    end
+
+    User -- "1. Spoofing / DoS" --> GW
+    GW -- "2. Tampering / Info Leak" --> S1
+    S1 -- "3. Elevation of Privilege" --> S2
+    S2 -- "4. Info Disclosure" --> DB
+
+    style GW fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
+    style DB fill:var(--surface),stroke:#2d8a4e,stroke-width:2px;
+    
+    Note over User, GW: Trust Boundary 1
+    Note over GW, S1: Trust Boundary 2
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Risk Score**: Use `Impact (1-5) * Likelihood (1-5)`. Focus on anything with a score **> 15**.
+- **Blast Radius**: Every service should be limited to its own data. A compromise of Service A should have a **0% chance** of leading to data leakage from Service B's database.
+- **Review Frequency**: Threat model every major feature (e.g., new API endpoint, new storage engine) and perform a full-system review **annually**.
+- **Mitigation Cost**: Security features added at design time are **10x cheaper** than those added in production and **100x cheaper** than those added after a breach.
+
+## Real-World Case Studies
+
+- **Google (BeyondCorp)**: Google moved away from the "Castle and Moat" security model after the "Operation Aurora" attack in 2009. They implemented **BeyondCorp**, a Zero-Trust architecture where the network location (internal vs external) doesn't grant any trust. Every user and device must be explicitly authenticated and authorized for every single request, regardless of where they are connecting from.
+- **Equifax (2017 Breach)**: This was a classic **Information Disclosure** and **Elevation of Privilege** failure. Attackers exploited a known vulnerability in Apache Struts to gain entry, then found unencrypted database credentials on the web server, which allowed them to move laterally and exfiltrate data for 147 million people. A simple threat model of the "Web to DB" trust boundary would have highlighted the lack of credential isolation.
+- **Microsoft (STRIDE Origins)**: Microsoft developed the **STRIDE** framework in the late 90s to standardize security reviews across their massive software portfolio. It was famously used to harden Windows against the "worm era" of the early 2000s and has since become the industry standard for mapping threats to technical mitigations.
+
 ## Connections
 
 - [[Authentication and Authorization]] — Identity verification and access control

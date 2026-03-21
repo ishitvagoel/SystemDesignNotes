@@ -107,6 +107,47 @@ Created by HashiCorp (2014). Uses Raft for consensus but adds a gossip protocol 
 
 **Watch notification storm**: Thousands of clients watch the same key (a configuration value). When it changes, ZooKeeper or etcd sends a notification to every watcher simultaneously. The burst of reconnections and re-reads overwhelms the ensemble. Solution: stagger watch registrations with jitter, use a fanout layer between the coordination service and clients, or push configuration via a different mechanism (config server with polling).
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Coordination Ensemble (Quorum)"
+        L[(Leader)]
+        F1[(Follower A)]
+        F2[(Follower B)]
+        L --- F1
+        L --- F2
+    end
+
+    subgraph "Clients"
+        S1[App Service 1]
+        S2[App Service 2]
+        K8s[K8s API Server]
+    end
+
+    S1 -- "1. Create Ephemeral Key /lock" --> L
+    S2 -- "2. Watch Key /lock" --> L
+    K8s -- "3. Store Cluster State" --> L
+    
+    L -.->|4. Notify Change| S2
+    
+    style L fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style F1 fill:var(--surface),stroke:var(--border),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Cluster Size**: Stick to **3, 5, or 7 nodes**. 5 is the "Sweet Spot" (tolerates 2 failures with moderate consensus overhead).
+- **Data Limit**: Individual keys should be **< 1MB**. The entire dataset should typically be **< 1GB** (etcd) to **< 10GB** (ZooKeeper).
+- **Watch Latency**: Notifications are typically delivered in **< 10ms** after a write is committed.
+- **Session Timeout**: Set to **2x - 3x your max expected GC pause** (e.g., if GC is 500ms, set timeout to 1.5s) to avoid "flapping" leader elections.
+
+## Real-World Case Studies
+
+- **Kubernetes (etcd)**: Kubernetes uses **etcd** as its single source of truth. Every Pod, Service, and ConfigMap is stored in etcd. If etcd is slow or unavailable, the entire Kubernetes control plane grinds to a halt. This is why etcd performance (especially disk IOPS) is the most critical metric for Kubernetes stability.
+- **Yahoo! (ZooKeeper Origins)**: Yahoo! originally built ZooKeeper to solve the "configuration nightmare" of its massive Hadoop and HBase clusters. Before ZooKeeper, every team was building their own fragile coordination logic. ZooKeeper provided a standardized, Paxos-backed API that allowed them to manage thousands of nodes with a simple hierarchical data model.
+- **HashiCorp (Consul at Robinhood)**: Robinhood uses **Consul** for service discovery across their massive microservices fleet. Because Consul provides a DNS interface, their services can find each other using standard lookups (e.g., `orders.service.consul`) without needing specialized client libraries, simplifying their polyglot environment (Python, Go, etc.).
+
 ## Connections
 
 - [[Consensus and Raft]] — etcd and Consul use Raft; ZooKeeper uses ZAB

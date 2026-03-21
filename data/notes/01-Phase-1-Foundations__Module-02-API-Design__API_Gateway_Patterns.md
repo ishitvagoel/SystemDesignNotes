@@ -117,6 +117,43 @@ The most consequential design decision is how much logic the gateway owns:
 
 - **Configuration drift**: The gateway's routing table says `/orders` → order-service-v2, but order-service-v2 was decommissioned last week. Requests fail. Mitigation: service discovery integration (the gateway automatically discovers backends from Consul, Kubernetes, etc.), health check → automatic removal, GitOps with drift detection.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "External Traffic"
+        Client[Mobile / Web] -->|HTTPS| Gateway[API Gateway / Envoy]
+    end
+
+    subgraph "Gateway Cross-Cutting Concerns"
+        Gateway --> Auth[JWT Auth Service]
+        Gateway --> RL[Redis Rate Limiter]
+        Gateway --> Logger[ELK / Datadog]
+    end
+
+    subgraph "Internal Microservices (Mesh)"
+        Gateway -->|gRPC| Users[User Service]
+        Gateway -->|gRPC| Orders[Order Service]
+        Gateway -->|gRPC| Payments[Payment Service]
+    end
+
+    style Gateway fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Users fill:var(--surface),stroke:var(--border),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Gateway Latency Overhead**: A thin gateway (Envoy/Nginx) adds **1ms - 5ms**. A thick gateway (aggregating 3+ services) adds **20ms - 100ms+**.
+- **Auth Cache TTL**: Cache validated JWTs for **~60 seconds** to avoid hitting the Auth Service on every single request.
+- **Fan-out Limit**: Avoid more than **3-5 parallel service calls** from a single gateway request to prevent thread pool exhaustion and high tail latency.
+- **Payload Transformation**: Converting JSON to Protobuf at the gateway consumes **~5-10% CPU overhead** per request.
+
+## Real-World Case Studies
+
+- **Netflix (Zuul to Envoy)**: Netflix famously built Zuul as their edge gateway to handle billions of requests per day. They later transitioned to Zuul 2 (asynchronous/non-blocking) and eventually integrated Envoy to handle the complex routing and resiliency needs of their global streaming infrastructure.
+- **Amazon (AWS API Gateway)**: AWS uses its own managed API Gateway to power thousands of public APIs. It provides a "zero-ops" experience but is often criticized for its higher latency compared to a self-hosted Envoy/Nginx setup, demonstrating the classic "ease-of-use vs performance" trade-off.
+- **SoundCloud (BFF Pattern)**: SoundCloud was an early pioneer of the "Backend for Frontend" (BFF) pattern. They moved away from a single monolithic gateway to dedicated gateways for iOS, Android, and Web, allowing each team to optimize their specific API responses independently.
+
 ## Connections
 
 - [[Load Balancing Fundamentals]] — The gateway is effectively an L7 load balancer with extra capabilities

@@ -53,6 +53,44 @@ Cold start mitigation: provisioned concurrency (keep N instances warm — you pa
 
 **The split**: The edge handles the "fast path" (read-heavy, low-state) and forwards "slow path" requests to the origin. This hybrid reduces origin load and improves latency for the majority of requests.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "The Edge (Global PoPs)"
+        User[Client: London] --> Edge[Edge Worker: V8 Isolate]
+        Edge -->|1. Fast Path| EdgeStore[(Edge KV / D1)]
+        Edge -- "2. Auth / A-B Routing" --> Edge
+    end
+
+    subgraph "Regional Serverless (Event-Driven)"
+        Edge -->|3. Slow Path| Gateway[API Gateway]
+        Gateway --> Function[AWS Lambda / Cloud Run]
+        Function -->|4. Trigger| S3[(S3 Bucket)]
+        S3 -.->|5. Async Job| Lambda2[Image Resizer]
+    end
+
+    subgraph "Origin Cluster (Core State)"
+        Function --> DB[(Aurora / DynamoDB)]
+    end
+
+    style Edge fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Function fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Cost Crossover**: Serverless is cheaper for **< 1 - 5 million requests/month**. Above this, the overhead of "pay-per-invocation" exceeds the cost of a reserved, right-sized container cluster.
+- **Cold Start Threshold**: Expect **100ms - 2s** for a cold start in Node/Python, and **up to 5s - 10s** for Java/C#. Use Go or Rust for sub-100ms cold starts if performance is critical.
+- **Edge Latency**: Edge compute (Cloudflare Workers) typically responds in **< 10ms - 20ms** total RTT. Regional serverless (AWS Lambda) is **~50ms - 150ms**.
+- **Execution Limits**: Most serverless functions cap out at **15 minutes** (AWS) or **30 seconds** (Edge). If your task takes longer, use a persistent container or a background job worker.
+
+## Real-World Case Studies
+
+- **Figma (Wasm for Performance)**: Figma uses **WebAssembly** to run its C++ design engine in the browser. By compiling their core logic to Wasm, they achieved near-native performance on the web, allowing users to collaborate on massive, complex design files with sub-10ms input latency, something that was impossible with pure JavaScript.
+- **Coca-Cola (Serverless Migration)**: Coca-Cola moved their vending machine loyalty program to AWS Lambda. They found that their traffic was highly variable (peaks during lunch/events, zero at night). By switching to serverless, they reduced their infrastructure costs by **65%** and eliminated the need for a 24/7 operations team to manage scaling.
+- **Discord (Edge for Routing)**: Discord uses edge compute to route users to the nearest voice server. When you join a voice channel, an edge worker calculates the lowest-latency path based on your IP and the available regional clusters, ensuring that your "Push-to-Talk" delay is as low as physically possible.
+
 ## Connections
 
 - [[CDN Architecture]] — Edge compute runs at CDN PoPs

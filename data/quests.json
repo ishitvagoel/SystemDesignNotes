@@ -26,5 +26,46 @@
     "winCondition": {
       "requiredTypes": ["cdn"]
     }
+  },
+  {
+    "id": "q3",
+    "title": "Real-Time Chat Scaling",
+    "description": "Your chat app is blowing up! Users are losing messages when the servers are under heavy load. Implement a Message Queue to improve reliability and decoupling.",
+    "objectives": [
+      "Wait for peak traffic to see message drops",
+      "Introduce an asynchronous messaging layer",
+      "Process 5,000 requests per second reliably"
+    ],
+    "winCondition": {
+      "minRps": 5000,
+      "requiredTypes": ["queue"]
+    }
+  },
+  {
+    "id": "q4",
+    "title": "News Feed Optimization",
+    "description": "Celebrities with millions of followers are breaking your write-time fanout. You need to implement a more efficient feed strategy for high-fanout users.",
+    "objectives": [
+      "Reach 1,000,000 users scale",
+      "Decide on a push-vs-pull strategy for hot users",
+      "Ensure the Feed Shard handles the load"
+    ],
+    "winCondition": {
+      "minRps": 10000,
+      "maxNodeLoad": 0.8
+    }
+  },
+  {
+    "id": "q5",
+    "title": "The Double Spend Problem",
+    "description": "Concurrent transactions are causing race conditions and negative balances. Implement a distributed coordination mechanism to ensure transaction integrity.",
+    "objectives": [
+      "Wait for race condition alerts",
+      "Deploy a distributed lock or consensus service",
+      "Handle high-concurrency transactions safely"
+    ],
+    "winCondition": {
+      "requiredTypes": ["db", "cache"]
+    }
   }
 ]

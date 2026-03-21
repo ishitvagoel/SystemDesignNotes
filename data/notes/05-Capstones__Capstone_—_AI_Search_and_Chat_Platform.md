@@ -139,6 +139,48 @@ LLM inference is 88% of cost. The primary optimization levers:
 
 This capstone shows that an AI platform is built from the same distributed systems primitives as any other system — caching (semantic cache), load balancing (multi-provider routing), pipeline processing (embedding → indexing → retrieval → generation), and multi-tenancy (isolated knowledge bases). The AI-specific challenges (chunking quality, re-ranking, hallucination detection, cost management) layer on top of familiar infrastructure patterns.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Query Layer"
+        User[User Query] --> GW[AI Gateway]
+        GW --> Cache{Semantic Cache}
+        Cache -- "Hit" --> User
+    end
+
+    subgraph "Retrieval Pipeline (RAG)"
+        Cache -- "Miss" --> Hybrid[Hybrid Search: Vector + BM25]
+        Hybrid --> Rerank[Cross-Encoder Reranker]
+        Rerank --> Context[Top 5 Chunks]
+    end
+
+    subgraph "Generation Layer"
+        Context --> LLM[LLM Router]
+        LLM --> Provider1[GPT-4o]
+        LLM --> Provider2[Claude 3.5]
+        Provider1 & Provider2 --> Stream[Streaming Response]
+        Stream --> User
+    end
+
+    style GW fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Hybrid fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style LLM fill:var(--surface),stroke:var(--border),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Semantic Cache Ratio**: Aim for **30% - 60%** hit rate in enterprise environments (internal users often ask the same questions).
+- **Chunk Size Overhead**: 512-token chunks with 10% overlap is a standard starting point. A 10M document corpus @ 512 tokens/doc requires **~100GB - 200GB** of vector storage.
+- **Retrieval Latency**: Hybrid search (Vector + BM25) takes **~100ms - 300ms**. Re-ranking adds **~100ms - 500ms**. Total RAG context assembly should be **< 1s**.
+- **TTFT (Time to First Token)**: Target **< 800ms** for a responsive chat experience. Streaming allows the user to start reading while the rest of the response is generated.
+
+## Real-World Case Studies
+
+- **Perplexity AI (Hybrid Search)**: Perplexity uses a massive hybrid search engine that combines traditional web indexing with real-time vector retrieval. They famously use **Multi-Step Reasoning**: if the first search doesn't provide a clear answer, the agent generates new search queries to fill the gaps, mimicking a human researcher.
+- **Notion (RAG at Scale)**: Notion AI uses RAG across billions of private blocks. They solve the **Multi-Tenancy** problem by including the user's workspace ID in the vector metadata. Every search query is hard-filtered by `workspace_id`, ensuring that an LLM can never accidentally "see" data from another company's private pages.
+- **Klarna (AI Customer Service)**: Klarna replaced large portions of their customer support with an AI chat platform. In their first month, the AI handled **2/3 of all support chats** (equivalent to 700 full-time agents) while maintaining the same customer satisfaction scores, proving that a well-designed tool-use and RAG architecture can handle complex, real-world business logic.
+
 ## Connections
 
 **Core concepts applied:**

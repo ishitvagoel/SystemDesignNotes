@@ -97,6 +97,44 @@ Re-ranking is the standard pattern in production search and RAG — the initial 
 
 **Hybrid retrieval fusion score calibration**: BM25 scores and vector similarity scores are on different scales. Naive score combination (add them) over-weights one retrieval method. Reciprocal Rank Fusion (RRF) is more robust but can still produce poor results if one method returns entirely irrelevant results (its top-ranked results drag down fusion quality). Solution: use RRF or learned score fusion, tune the weighting based on evaluation metrics, and filter out low-confidence results from each method before fusion.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Ingestion Path"
+        Doc[Document Chunk] --> Model[Embedding Model]
+        Model --> Vector[1536-dim Vector]
+        Vector --> VDB[(Vector DB: pgvector/Pinecone)]
+    end
+
+    subgraph "Hybrid Query Path"
+        Query[User Query] --> Embed[Embed Query]
+        Query --> Keyword[Extract Keywords]
+        
+        Embed -->|k-NN| VectorSearch[Vector Results]
+        Keyword -->|BM25| KeywordSearch[Keyword Results]
+        
+        VectorSearch & KeywordSearch --> Fusion[RRF / Re-ranker]
+        Fusion --> TopN[Final Top N]
+    end
+
+    style VDB fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Fusion fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Embedding Latency**: Local models (like BERT/E5) take **10ms - 50ms**. Remote APIs (OpenAI) can take **200ms - 500ms**.
+- **Memory Usage**: An HNSW index for 1 million vectors (1536 dimensions, float32) requires **~6GB - 8GB of RAM** (vectors + graph pointers).
+- **Brute-Force Limit**: Use flat (exact) search for **< 100,000 vectors**. Switch to HNSW/ANN past this point.
+- **Chunk Size**: For RAG, the "Sweet Spot" is typically **256 - 512 tokens**. Too small loses context; too large dilutes the embedding signal.
+
+## Real-World Case Studies
+
+- **Instacart (Product Embeddings)**: Instacart uses vector search to power their "Search by Meaning" feature. They embed both user queries and product descriptions into the same vector space. This ensures that a search for "comfort food" can retrieve items like "mac and cheese" even if those words aren't in the product title.
+- **Notion (Q&A / RAG)**: Notion uses hybrid search for their AI assistant. They first retrieve candidate blocks using a combination of **BM25** (for exact title/tag matches) and **Vector Search** (for conceptual matching). They then use a cross-encoder model to re-rank the top 50 results to find the most relevant context for the LLM.
+- **Spotify (Discovery Weekly)**: Spotify uses vector embeddings not just for text, but for songs and users. By representing every song as a high-dimensional vector based on listening patterns, they can find "nearby" songs to create highly personalized recommendations, effectively using vector search as a global-scale collaborative filtering engine.
+
 ## Connections
 
 - [[Full-Text Search Architecture]] — BM25 keyword search, the complement to vector search in hybrid systems

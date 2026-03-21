@@ -133,6 +133,50 @@ Route a percentage of traffic to a new model version. Compare quality metrics, l
 
 - **Model version regression**: The provider silently updates the model. Quality drops. Users complain. The team doesn't know what changed because there's no baseline comparison. Mitigation: pin model versions, run evaluation suites on every version change, monitor drift metrics continuously.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Application Fleet"
+        S1[Service A] -->|1. Standard API| GW[AI Gateway]
+        S2[Service B] -->|1. Standard API| GW
+    end
+
+    subgraph "AI Gateway Control Plane"
+        GW --> Cache{Semantic Cache}
+        Cache -- "Hit" --> GW
+        GW --> Classify{Query Classifier}
+        Classify --> Router{Model Router}
+    end
+
+    subgraph "External Providers"
+        Router -->|Simple| Mini[GPT-4o-mini / Claude Haiku]
+        Router -->|Complex| Large[GPT-4o / Claude Opus]
+        Router -->|Failover| Backup[Gemini Pro]
+    end
+
+    subgraph "Observability & Billing"
+        GW --> TokenLog[Token Usage DB]
+        GW --> Eval[Eval Engine: Grounding Check]
+    end
+
+    style GW fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Router fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Model Tiering Savings**: Routing 70% of traffic to "Mini" models instead of "Large" models typically reduces LLM costs by **60% - 80%**.
+- **Semantic Cache Hit Rate**: Expect **20% - 40%** hit rate for common customer support or internal tool queries.
+- **Latency Overhead**: A gateway adds **~10ms - 50ms** of overhead (mostly embedding for cache). This is negligible compared to the **~1s - 5s** LLM generation time.
+- **Guardrail Latency**: PII detection and grounding checks can add **~100ms - 300ms**. Run these in parallel with the LLM call if possible (for output streaming).
+
+## Real-World Case Studies
+
+- **LinkedIn (Semantic Caching for Search)**: LinkedIn uses a sophisticated semantic cache for their AI-powered search features. They found that thousands of users ask the same "trending" questions every day. By caching these answers, they reduced their LLM bill by **30%** and improved response time for those queries from **3s to < 200ms**.
+- **Klarna (Multi-Provider Resilience)**: During a major outage of a leading LLM provider in 2024, Klarna's AI assistant remained online. Their gateway detected the 5xx errors and automatically routed all traffic to a backup provider within seconds. Most users never even noticed the switch, proving the value of **Provider-Agnostic Gateways**.
+- **Notion (Per-Tenant Quotas)**: Notion AI uses their gateway to enforce strict token budgets per workspace. By attributing every token to a specific `workspace_id`, they ensure that a single viral document or a buggy integration in one company doesn't consume their entire global API quota, protecting their margins and system stability.
+
 ## Connections
 
 - [[Inference Serving Architecture]] — The serving layer that the gateway routes to (for self-hosted models)

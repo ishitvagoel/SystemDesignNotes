@@ -75,6 +75,47 @@ When many application instances share a database, each running its own pool, the
 
 - **DNS caching vs connection reuse**: You're pooling connections to `api.dependency.com`. DNS TTL expires and the IP changes (the dependency deployed new instances). But your pooled connections still go to the old IP. This is fine for rolling deploys (old instances drain gracefully), but dangerous if the old IP is dead. Mitigation: honor DNS TTL in your HTTP client (many don't by default), and set `max_lifetime` on pooled connections.
 
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant App as App Instance
+    participant Pool as Connection Pool
+    participant DB as Database Server
+
+    Note over App, Pool: Warm-up phase
+    App->>Pool: Request Connection
+    Pool->>DB: TCP Syn
+    DB-->>Pool: TCP Syn-Ack
+    Pool->>DB: TCP Ack + TLS Handshake
+    Pool-->>App: Connection Handed
+
+    Note over App, DB: Transaction 1
+    App->>DB: SELECT * FROM users...
+    DB-->>App: Results
+    App->>Pool: Release Connection (Keep-Alive)
+
+    Note over App, Pool: Transaction 2 (Instant)
+    App->>Pool: Request Connection
+    Pool-->>App: Existing Connection (No Handshake)
+    App->>DB: UPDATE orders...
+    DB-->>App: Success
+    App->>Pool: Release Connection
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **TCP Handshake Cost**: 1 RTT (~1ms in DC, ~20-50ms regional).
+- **TLS 1.2 Handshake Cost**: 2 RTTs. TLS 1.3 reduces this to 1 RTT.
+- **Connection Memory Overhead**: PostgreSQL allocates **~10MB per connection**. MySQL is lighter at **~1MB per connection**.
+- **Pool Sizing Rule**: `connections = ((core_count * 2) + effective_spindle_count)`. For a 4-core DB with SSD, a pool size of **10** is often more performant than a pool of 100 due to reduced context switching.
+- **Max Lifetime**: Set `max_lifetime` to **~30-60 minutes** to gracefully recycle connections and avoid memory leaks or stale DNS issues.
+
+## Real-World Case Studies
+
+- **Instagram (PgBouncer)**: As Instagram scaled its Django monolith, the thousands of application workers quickly overwhelmed PostgreSQL's connection limit. They deployed PgBouncer in "transaction pooling" mode, allowing 10,000+ app workers to share only a few hundred actual database connections.
+- **eBay (ProxySQL)**: eBay uses ProxySQL to manage its massive MySQL fleet. ProxySQL handles connection pooling, read/write splitting, and "query mirroring" (sending the same query to two versions of a DB for testing), all while keeping the application-side connection count low.
+
 ## Connections
 
 - [[TCP Deep Dive]] — Connection pooling exists because TCP handshakes and slow start are expensive; understanding these costs explains why pooling matters

@@ -158,6 +158,41 @@ Each layer is closer to the user but further from the source of truth:
 
 - **Cache inconsistency on race conditions**: Thread A reads a stale value from the database. Thread B updates the database and invalidates the cache. Thread A writes the stale value to the cache. The cache is now stale even though it was just invalidated. Mitigation: use `cache.delete` on write (not `cache.set` with the old value), or use versioned cache entries.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Read Path (Cache-Aside)"
+        User[Client] -->|1. Get User:123| App[Application]
+        App -->|2. Check Cache| Cache{Redis}
+        Cache --|Hit| Return[Return Value]
+        Cache --|Miss| DB[(Primary DB)]
+        DB -->|3. Fetch| App
+        App -->|4. Populate| Cache
+    end
+
+    subgraph "Write Path"
+        App2[Application] -->|1. Update DB| DB2[(Primary DB)]
+        App2 -->|2. Invalidate| Cache2{Redis}
+    end
+
+    style Cache fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style DB fill:var(--surface),stroke:var(--border),stroke-dasharray: 5 5;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Cache Latency**: Redis point lookup is typically **< 1ms**. Database lookup is **10ms - 100ms**.
+- **Cache Hit Ratio**: Aim for **> 80%**. A hit ratio below 50% often means the cache is providing little value for the added complexity.
+- **TTL Defaults**: Use **short TTLs (1-5 mins)** for rapidly changing data and **long TTLs (24h+)** for static configuration or media metadata.
+- **Object Size**: Keep cached objects **< 100KB**. Large objects in Redis can cause network saturation and increased garbage collection pauses in the app.
+
+## Real-World Case Studies
+
+- **Facebook (Memcached at Scale)**: Facebook uses one of the world's largest Memcached deployments. They famously use **Leases** to solve the "Thundering Herd" and "Stale Set" problems, ensuring that only one client recomputes a cache miss at a time.
+- **Netflix (EVCache)**: Netflix built **EVCache** (based on Memcached) to handle their massive global scale. They use a sidecar architecture to handle cross-region replication of cache data, allowing a user to move between AWS regions without losing their "continue watching" state.
+- **Twitter (Redis for Timelines)**: Twitter uses Redis to store the pre-computed timelines for every active user. When you tweet, Twitter's "fan-out" service pushes your tweet ID into the Redis lists of all your millions of followers, enabling sub-millisecond timeline loads.
+
 ## Connections
 
 - [[Distributed Caching]] — Redis Cluster and Memcached: the infrastructure for application-level caching

@@ -105,6 +105,44 @@ Most applications end up with a **mixed strategy**: strong consistency for a sma
 
 **Network partition misdiagnosis**: A service appears to be experiencing a network partition (one replica is unreachable). The team triggers partition-mode behavior (degraded service, stale reads). In reality, the replica's disk is full or its process crashed — a non-partition failure that should trigger failover, not partition handling. Solution: implement proper failure detection that distinguishes network partitions from node failures.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Network Partition (The 'P')"
+        Leader[Leader - Region A] -.X.- Follower[Follower - Region B]
+    end
+
+    subgraph "CP Choice: Consistency"
+        User1[User 1] -->|Write| Leader
+        User2[User 2] -->|Read| Follower
+        Follower -- "503 Unavailable" --> User2
+        Note right of Follower: Blocks to avoid stale data
+    end
+
+    subgraph "AP Choice: Availability"
+        User3[User 3] -->|Write| Leader
+        User4[User 4] -->|Read| Follower
+        Follower -- "200 OK (Stale Data)" --> User4
+        Note right of Follower: Returns what it has
+    end
+
+    style Leader fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Follower fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Availability Target**: A system targeting "Five Nines" (99.999%) can only be down for **~5 minutes per year**. Achieving this typically requires an **AP (Available/Partition-Tolerant)** design or very fast automated failover.
+- **Consistency Latency**: Enforcing strong consistency (EC in PACELC) usually adds **1 RTT** to every read/write. If nodes are in different regions, this adds **100ms - 200ms** to every operation.
+- **Partition Frequency**: In a single cloud region, major network partitions are rare (estimated **< 1 major event per year**). The trade-off between **Latency and Consistency (EL/EC)** is 1000x more frequent than the trade-off between **Availability and Consistency (PA/PC)**.
+
+## Real-World Case Studies
+
+- **Amazon (Shopping Cart - AP)**: Amazon's original shopping cart was the classic use case for an **AP** system. They decided it was better to let a user add an item to their cart even if the network was partitioned (leading to potentially two versions of the cart that must be merged later) than to show an error message and lose a sale.
+- **Google Spanner (Financial Records - CP)**: Google Spanner provides **External Consistency** (the strongest form of consistency). When there is a network partition that prevents a majority of replicas from communicating, Spanner chooses to become **Unavailable** for that portion of the data rather than risk a stale read or a double-spend, making it ideal for financial transactions.
+- **LinkedIn (Feed vs. Profile - PACELC)**: LinkedIn uses different strategies for different data. For your **Social Feed**, they use **PA/EL** (Available and Low Latency), as a stale post is harmless. For your **User Profile/Settings**, they lean toward **PC/EC** (Consistent), ensuring that when you change your password or privacy settings, the change is reflected immediately and globally.
+
 ## Connections
 
 - [[Consistency Spectrum]] — The detailed definitions of each consistency level that CAP and PACELC reference

@@ -108,6 +108,46 @@ The layering order matters: Retry → Circuit Breaker → Bulkhead → Timeout �
 
 **Wrong fallback for the context**: Returning cached data when the dependency is the payment service would be dangerous. Fallbacks must be designed per dependency with business-context awareness.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Service A (Caller)"
+        A_Main[App Logic] --> B_BH[Bulkhead: Pool B]
+        A_Main --> C_BH[Bulkhead: Pool C]
+        
+        subgraph "Resilience Layer"
+            B_BH --> B_CB{Circuit Breaker B}
+            C_BH --> C_CB{Circuit Breaker C}
+        end
+    end
+
+    subgraph "External Services"
+        B_CB -->|Request| SvcB[Service B - SLOW]
+        C_CB -->|Request| SvcC[Service C - OK]
+    end
+
+    Note over B_CB: B is slow -> Pool B exhausts.
+    Note over C_CB: C is OK -> Pool C unaffected.
+    Note over B_CB: CB trips to OPEN.
+    
+    style B_CB fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
+    style C_CB fill:var(--surface),stroke:#2d8a4e,stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Failure Threshold**: A common default is **50% failure rate** over a **60-second sliding window**.
+- **Min Requests**: Don't trip the breaker until at least **10-20 requests** have been made in the current window to avoid noise.
+- **Bulkhead Sizing**: Set thread pool size to `(Peak RPS * 99th percentile latency) + safety_margin`. For a service with 100 RPS and 100ms p99, a pool of **15-20 threads** is usually sufficient.
+- **CB Open Duration**: The "Sleep Window" should be long enough for the dependency to recover (e.g., **30s - 60s**).
+
+## Real-World Case Studies
+
+- **Netflix (Hystrix Origins)**: Netflix created the **Hystrix** library after realizing that a single misbehaving service (like a recommendation engine) could take down their entire streaming API by exhausting the edge gateway's thread pools. They used thread-isolated bulkheads to ensure that even if "Similar Movies" was down, you could still "Watch Now."
+- **Microsoft Azure (Service Bus)**: Azure Service Bus uses circuit breakers to protect their infrastructure from "poison messages" that cause consumer crashes. If a message fails processing multiple times, the breaker opens for that specific message stream, preventing a single bad message from causing an infinite loop of crashes across the fleet.
+- **Amazon (Load Shedding)**: During massive traffic events like Prime Day, Amazon services use a combination of bulkheads and **Load Shedding**. If a non-critical bulkhead (like "Related Products") becomes saturated, the system "sheds" that load entirely (tripping the circuit breaker with a null fallback) to preserve capacity for the "Checkout" flow.
+
 ## Connections
 
 **Prerequisites:**

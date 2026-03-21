@@ -92,6 +92,38 @@
 
 **What changed**: NIST finalized post-quantum cryptography standards in August 2024 (ML-KEM for key encapsulation, ML-DSA for digital signatures), starting the industry transition timeline. Major cloud providers began offering PQC-ready TLS endpoints. The xz Utils backdoor (March 2024) — where a sophisticated attacker spent years gaining maintainer trust to insert a backdoor into a critical Linux compression library — became the canonical example of supply chain attacks and accelerated adoption of SLSA, Sigstore, and reproducible builds. Passkeys (FIDO2/WebAuthn) reached mainstream adoption, supported by Apple, Google, and Microsoft, offering phishing-resistant authentication that eliminates passwords entirely.
 
----
+## Architecture Diagram
 
-> This note should be updated as new editions of DDIA are published and as the field continues to evolve. Kleppmann has discussed a second edition — when released, this note should be reconciled against it.
+```mermaid
+graph TD
+    subgraph "Legacy Stack (DDIA 2017)"
+        L_Svc[Monolith/Microservice] --> L_DB[(Postgres/MySQL)]
+        L_Svc --> L_Search[Solr/Elastic]
+        L_Svc --> L_Queue[RabbitMQ/ZK-Kafka]
+    end
+
+    subgraph "Modern Stack (2025+)"
+        M_Svc[Cloud Native / Wasm] --> M_DB[(Distributed SQL / pgvector)]
+        M_Svc --> M_RAG[RAG Pipeline / Vector DB]
+        M_Svc --> M_Stream[KRaft-Kafka / Flink]
+        M_Svc --> M_AI[LLM / Agent Gateway]
+    end
+
+    style M_AI fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style M_DB fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Consensus**: Paxos is for academics; Raft is for engineers. If building a new distributed system, **100% of the time** use Raft or a library like `etcd`.
+- **Consistency**: Default to **Strong Consistency** unless you have a proven latency bottleneck. The "eventual consistency" era of the 2010s was largely driven by hardware limits that modern distributed SQL (Spanner/Cockroach) has overcome.
+- **Search**: If your vector corpus is **< 1M documents**, don't buy a new Vector DB. Use `pgvector` in your existing Postgres.
+- **Security**: Assumptions of a "trusted internal network" are dead. Budget **~5-10% CPU** for mTLS and encryption-at-rest overhead—it's now non-negotiable.
+
+## Real-World Case Studies
+
+- **Amazon S3 (Strong Consistency)**: S3's move to strong consistency in 2020 is the most significant "re-write" of distributed systems history. They managed to switch the consistency model of the world's largest object store without downtime, proving that the industry's tolerance for stale data is rapidly shrinking.
+- **Cloudflare (Edge Compute)**: Cloudflare Workers proved that the "Data Center" is no longer the smallest unit of deployment. By running V8 isolates at the edge, they moved the "Compute" to the user, effectively turning the CDN into a distributed application server.
+- **Kafka (KRaft Migration)**: Kafka's multi-year effort to remove ZooKeeper (KRaft) showed that even the most successful distributed systems eventually buckle under the operational complexity of "coordination sprawl." Modern systems strive for self-contained consensus.
+
+## Connections

@@ -140,6 +140,42 @@ This is the formal foundation. Every consistency model, every conflict resolutio
 
 **Causal delivery violation in event systems**: An event broker delivers events out of causal order — a reply appears before the original message, or a delete arrives before the create. Consumers that assume causal ordering produce incorrect state. Solution: vector clock-based causal delivery (buffer out-of-order events until dependencies arrive), or per-entity total ordering (all events for entity X go to the same partition).
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Logical Time (Causality)"
+        Lamport[Lamport Timestamps] -->|Total Order| Raft[Raft Log Indices]
+        Vector[Vector Clocks] -->|Partial Order| Conflicts[Conflict Detection]
+    end
+
+    subgraph "Physical Time (Wall Clock)"
+        NTP[NTP Sync] -->|Approximate| Snowflake[Snowflake IDs]
+        GPS[Atomic Clocks] -->|Bounded Uncertainty| TrueTime[Google Spanner]
+    end
+
+    subgraph "Hybrid Models"
+        HLC[Hybrid Logical Clocks] -->|Wall Time + Logical| Cockroach[CockroachDB]
+    end
+
+    style Lamport fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Vector fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style HLC fill:var(--surface),stroke:var(--border),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Clock Drift**: Standard NTP keeps servers within **~10ms - 50ms** of each other on the public internet, and **< 1ms** within a well-tuned data center.
+- **Lamport Cost**: O(1) space. It only adds **4 - 8 bytes** to each message.
+- **Vector Clock Cost**: O(N) space. For a 100-node cluster, adding a vector clock to every message adds **~400 - 800 bytes**.
+- **HLC Precision**: HLCs typically maintain "physical" time accuracy within **1ms - 5ms** of the real wall clock while providing strict causal ordering.
+
+## Real-World Case Studies
+
+- **Google Spanner (TrueTime)**: Google solved the "clock drift" problem by throwing hardware at it. Every Spanner data center has atomic clocks and GPS receivers. Their **TrueTime API** returns a time *interval* `[earliest, latest]`. Spanner ensures consistency by "waiting out the uncertainty"—a transaction won't commit until the system is 100% sure that the current real-time is past the transaction's commit time.
+- **Amazon (Dynamo Vector Clocks)**: The original Dynamo database used vector clocks per key to handle concurrent writes. If two people updated the same shopping cart while the network was partitioned, Dynamo would store *both* versions. When the partition resolved, the next read would return both versions, and the application (the cart service) would merge them, ensuring no items were ever lost.
+- **CockroachDB (Hybrid Logical Clocks)**: CockroachDB uses **HLCs** to provide serializable transactions without requiring specialized hardware like Spanner. They rely on standard NTP for approximate synchronization but use the logical counter to ensure that if Event A caused Event B, Event B always has a higher HLC, even if the physical clocks were slightly off.
+
 ## Connections
 
 - [[ID Generation Strategies]] — Time-sorted IDs (Snowflake, UUIDv7) use wall clocks for approximate ordering; logical clocks provide causal ordering

@@ -143,6 +143,40 @@ No option is perfect. The shared approach is most common because it's simple, de
 
 **EAV (Entity-Attribute-Value) anti-pattern**: To avoid schema changes, a team stores everything as (entity_id, attribute_name, attribute_value) rows. Queries become impossible without multiple self-joins, there's no type safety, and indexing is useless. Solution: use JSONB columns for flexible attributes within a relational schema, or use a document database for truly schema-free entities.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Normalized Model (Write-Optimized)"
+        Users[Users Table] --- Orders[Orders Table]
+        Orders --- OrderItems[OrderItems Table]
+        OrderItems --- Products[Products Table]
+        Note right of Users: 3NF: No redundancy
+    end
+
+    subgraph "Denormalization Patterns (Read-Optimized)"
+        Orders -->|1. Snapshot| Orders_D[Orders Table + ShippingAddr JSON]
+        OrderItems -->|2. Aggregate| Products_D[Products Table + TotalSold]
+        Users & Orders & OrderItems -->|3. View| MV[Materialized View: RevenueReport]
+    end
+
+    style Users fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style MV fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **The Join Limit**: If a critical path query requires **> 3 joins**, consider denormalizing the specific fields needed into the parent table.
+- **Normalization Rule**: Normalize until it hurts, then denormalize until it works. Start at **3NF** by default.
+- **Storage vs. CPU**: Denormalization trades **Disk Space** (redundant data) for **CPU/Latency** (fewer joins). In 2025, Disk is cheap; Latency is expensive.
+- **Update Frequency**: If a field changes **< 1%** as often as it is read, it is a prime candidate for denormalization.
+
+## Real-World Case Studies
+
+- **Instagram (The `count` Denormalization)**: Instagram doesn't run `SELECT COUNT(*) FROM likes WHERE photo_id = 123` every time you view a photo. That would be catastrophic for performance. Instead, they denormalize the like count directly into the `photos` table. They use an asynchronous task to increment this counter, accepting that the count might be slightly stale in exchange for millisecond read times.
+- **Stack Overflow (SQL Server Vertical Scale)**: Stack Overflow is a famous example of a highly normalized schema that scales massively. They prove that with enough RAM and expert indexing, a normalized relational model can handle millions of users on a single primary database, only denormalizing for extremely expensive "hot" paths like the home page feed.
+- **Uber (Schemaless on MySQL)**: Uber found that as their schema grew, migrations on highly normalized tables became too risky. They moved to "Schemaless," a key-value store built on top of MySQL where they store most data as denormalized JSON blobs. This allowed them to trade the strictness of 3NF for the operational simplicity of a schema-on-read approach.
+
 ## Connections
 
 - [[Data Model Selection]] — This note assumes a relational model; that note covers when to choose document or graph instead

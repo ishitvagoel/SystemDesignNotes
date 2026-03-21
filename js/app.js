@@ -1,18 +1,30 @@
 // ── MERMAID INIT ──
-mermaid.initialize({
-  startOnLoad: false,
-  theme: 'dark',
-  themeVariables: {
-    primaryColor: '#1c201b',
-    primaryBorderColor: '#6bde8c',
-    primaryTextColor: '#d4d8d3',
-    lineColor: '#4ab86a',
-    secondaryColor: '#222622',
-    tertiaryColor: '#171a16',
-    fontFamily: 'IBM Plex Mono, monospace',
-    fontSize: '13px'
-  }
-});
+function initMermaid(isLight = false) {
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: isLight ? 'default' : 'dark',
+    themeVariables: isLight ? {
+      primaryColor: '#ffffff',
+      primaryBorderColor: '#2d8a4e',
+      primaryTextColor: '#1a1c1a',
+      lineColor: '#1e6334',
+      secondaryColor: '#f0f0ed',
+      tertiaryColor: '#efefec',
+      fontFamily: 'IBM Plex Mono, monospace',
+      fontSize: '13px'
+    } : {
+      primaryColor: '#1c201b',
+      primaryBorderColor: '#6bde8c',
+      primaryTextColor: '#d4d8d3',
+      lineColor: '#4ab86a',
+      secondaryColor: '#222622',
+      tertiaryColor: '#171a16',
+      fontFamily: 'IBM Plex Mono, monospace',
+      fontSize: '13px'
+    }
+  });
+}
+initMermaid(localStorage.getItem('theme') === 'light');
 
 // Custom marked renderer for mermaid code blocks
 const renderer = new marked.Renderer();
@@ -384,13 +396,17 @@ function renderNote(id) {
   const body = document.getElementById('note-body');
   body.innerHTML = marked.parse(content);
 
-  // Add Copy Buttons to code blocks
-  body.querySelectorAll('pre').forEach(block => {
+  // Add Copy Buttons to code blocks (excluding mermaid blocks)
+  body.querySelectorAll('pre:not(.mermaid)').forEach(block => {
+    // Only process if it has a code child (standard markdown code blocks)
+    const codeEl = block.querySelector('code');
+    if (!codeEl) return;
+
     const btn = document.createElement('button');
     btn.className = 'copy-code-btn';
     btn.innerHTML = 'Copy';
     btn.onclick = () => {
-      const code = block.querySelector('code').innerText;
+      const code = codeEl.innerText;
       navigator.clipboard.writeText(code);
       btn.innerHTML = 'Copied!';
       setTimeout(() => btn.innerHTML = 'Copy', 2000);
@@ -399,8 +415,7 @@ function renderNote(id) {
     block.appendChild(btn);
     // Syntax highlighting
     if (typeof hljs !== 'undefined') {
-      const code = block.querySelector('code');
-      if (code) hljs.highlightElement(code);
+      hljs.highlightElement(codeEl);
     }
   });
 
@@ -706,8 +721,14 @@ async function init() {
   }
 
   themeToggle.addEventListener('click', () => {
-    body.classList.toggle('light-mode');
-    localStorage.setItem('theme', body.classList.contains('light-mode') ? 'light' : 'dark');
+    const isLight = body.classList.toggle('light-mode');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    
+    // Re-init mermaid and re-render current note if open
+    initMermaid(isLight);
+    if (activeTabId) {
+      renderNote(activeTabId);
+    }
   });
 
   // Scroll Tracking

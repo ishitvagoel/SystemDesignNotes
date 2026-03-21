@@ -109,6 +109,43 @@ Certificate expiry is the #1 avoidable cause of TLS-related outages:
 
 - **Intermediate certificate chain missing**: The server presents its leaf certificate but not the intermediate certificates. Some clients (which have the intermediates cached) work; others fail. Debugging is maddening because it works "on my machine." Mitigation: always configure the full certificate chain (leaf + intermediates).
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "External Traffic (TLS 1.3)"
+        User[Client Browser] -->|1. HTTPS Handshake| LB[Cloud Load Balancer]
+        LB -->|2. SSL Termination| App[App Gateway]
+    end
+
+    subgraph "Internal Mesh (mTLS)"
+        App -->|3. mTLS: Client Cert| S1[Service A]
+        S1 -->|4. mTLS: Client Cert| S2[Service B]
+    end
+
+    subgraph "Control Plane (SPIRE / cert-manager)"
+        CA[(Internal CA / Vault)]
+        CA -->|5. Issue Short-lived Certs| S1
+        CA -->|5. Issue Short-lived Certs| S2
+    end
+
+    style CA fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style LB fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Handshake Latency**: TLS 1.3 reduces the handshake from **2 RTTs** to **1 RTT**, saving **50ms - 200ms** on new connections globally.
+- **Certificate TTL**: Modern security standard is **< 90 days** for public certs (Let's Encrypt) and **< 24 hours** for internal mTLS certs (SPIRE).
+- **Renewal Window**: Automate renewals when **1/3 of the lifetime** remains (e.g., renew a 90-day cert at 60 days).
+- **CPU Overhead**: Modern AES-NI hardware makes TLS overhead negligible (**< 1% CPU**). The primary cost is the memory for concurrent connection state.
+
+## Real-World Case Studies
+
+- **Spotify (2020 Outage)**: Spotify suffered a global outage because a single TLS certificate for their internal service-to-service communication expired. Because they lacked automated monitoring and renewal for that specific internal CA, it took hours to identify the "expired ID card" as the root cause of the system-wide failure.
+- **Cloudflare (Keyless SSL)**: Cloudflare pioneered **Keyless SSL**, allowing customers to use Cloudflare's CDN without giving Cloudflare their private keys. When a TLS handshake happens, Cloudflare proxies the "signing" step back to the customer's on-prem hardware security module (HSM), proving that you can have both edge performance and central key control.
+- **Google (ALTS)**: Google doesn't use standard X.509 certificates for most of its internal service-to-service traffic. They built **ALTS (Application Layer Transport Security)**, which is a specialized, high-performance protocol similar to mTLS but optimized for their massive data center scale, using simpler identities and faster handshakes.
+
 ## Connections
 
 - [[Encryption at Rest and in Transit]] — TLS is encryption in transit; this note covers the certificate infrastructure

@@ -102,6 +102,46 @@ Partitioning creates boundaries that queries must respect. Operations that cross
 
 - **Cascade failure during rebalancing**: A node fails, its partitions are redistributed to surviving nodes. The surviving nodes are now overloaded, causing them to fail too. Domino effect. Prevention: N+2 redundancy (survive two simultaneous failures), rebalancing rate limits, circuit breakers.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Request Routing"
+        User[User Request] --> LB[Load Balancer / Proxy]
+        LB --> Router{Shard Router}
+    end
+
+    subgraph "Sharded Database Cluster"
+        Router -->|hash(user_id) % 3 = 0| Shard1[Shard 1: Users A-G]
+        Router -->|hash(user_id) % 3 = 1| Shard2[Shard 2: Users H-P]
+        Router -->|hash(user_id) % 3 = 2| Shard3[Shard 3: Users Q-Z]
+    end
+
+    subgraph "Cross-Shard Query (Anti-Pattern)"
+        Router -.->|Scatter-Gather| Shard1
+        Router -.->|Scatter-Gather| Shard2
+        Router -.->|Scatter-Gather| Shard3
+        Shard1 & Shard2 & Shard3 --> Merge[Merge Results]
+    end
+
+    style Shard1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Shard2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Shard3 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Shard Size**: Aim for **100GB - 500GB** per shard. Larger shards make backups, restores, and rebalancing operationally painful.
+- **Shard Key Cardinality**: Your shard key should have **high cardinality** (millions of values). Sharding by `country` (low cardinality) leads to massive, un-splittable hotspots.
+- **Scatter-Gather Penalty**: A query that hits all shards is limited by the **slowest shard (p99 of p99)**. If you have 100 shards, the probability of one being slow is nearly 100%.
+- **Rebalancing Overhead**: Moving 1TB of data over a 10Gbps network takes **~15-20 minutes** under ideal conditions, but realistically **1-2 hours** due to disk I/O and application traffic.
+
+## Real-World Case Studies
+
+- **Instagram (Manual Sharding)**: Instagram famously shards its Postgres database using a custom logic in the application layer. They use a **Logical Sharding** approach where 1,000s of logical shards are mapped to a smaller number of physical database instances, allowing them to move shards between servers easily as they grow.
+- **Pinterest (MySQL Sharding)**: Pinterest sharded its MySQL fleet early on. They use a **64-bit ID** where the first few bits represent the shard ID. This allows the application to know exactly which database to query just by looking at the object ID, eliminating the need for a centralized lookup table or router.
+- **Vitess (YouTube's Sharding)**: YouTube built **Vitess** to manage the sharding of its massive MySQL deployment. Vitess provides a SQL proxy that handles sharding, routing, and even cross-shard transactions, allowing developers to write SQL as if they were targeting a single database while Vitess handles the complexity of 100s of shards under the hood.
+
 ## Connections
 
 - [[Database Replication]] — Replication and partitioning are orthogonal; each partition is typically replicated for fault tolerance

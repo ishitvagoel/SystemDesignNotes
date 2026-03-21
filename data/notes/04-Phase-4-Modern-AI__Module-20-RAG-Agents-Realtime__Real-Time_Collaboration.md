@@ -156,6 +156,48 @@ The CRDT ecosystem has matured significantly since Yjs and Automerge first prove
 
 **Large document performance**: CRDTs and OT both have metadata overhead that grows with document history. A document with 100K edits may have a metadata payload larger than the visible content. Solution: periodic snapshotting — compress the document state and discard old operation history.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Client Layer (Local-First)"
+        C1[Editor A: Yjs/Automerge]
+        C2[Editor B: Yjs/Automerge]
+    end
+
+    subgraph "Transport Layer (Edge)"
+        C1 <-->|Op Delta: WebSocket| WS1[Cloudflare Durable Object]
+        C2 <-->|Op Delta: WebSocket| WS1
+    end
+
+    subgraph "Persistence & Sync"
+        WS1 -->|1. Auth Check| Auth[Auth Svc]
+        WS1 -->|2. Snapshot| S3[(Document Snapshots)]
+        WS1 -.->|3. Real-time Presence| Redis{Redis: Cursors}
+    end
+
+    subgraph "Media Layer"
+        C1 <-->|WebRTC: Voice| SFU[LiveKit SFU]
+        C2 <-->|WebRTC: Voice| SFU
+    end
+
+    style WS1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style SFU fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **WebSocket Memory**: Budget **~30KB - 50KB** of RAM per concurrent WebSocket connection on the server. A 64GB server can comfortably handle **~1 million** idle connections, but only **~100k - 200k** active ones.
+- **Latency Budget**: For "Google Docs" feel, the **Round-Trip Time (RTT)** from local edit to remote visibility must be **< 200ms**.
+- **Broadcast Fan-out**: If 100 people are in one document and 1 person types, the server must send **99 messages**. If everyone types at 5 chars/sec, that's **~50,000 messages/sec** per room.
+- **CRDT Overhead**: Expect document size to grow by **~2x - 5x** compared to raw text to store character IDs and tombstones for conflict resolution.
+
+## Real-World Case Studies
+
+- **Figma (The CRDT Shift)**: Figma is the primary reason CRDTs became mainstream. They found that traditional Operational Transformation (OT) was too complex for their design tool (where you're not just editing text, but moving rectangles, changing colors, and layering objects). They built a specialized CRDT where every design property is an independent register, ensuring that two users changing the color and the position of the same object never conflict.
+- **Google Docs (The OT Pioneer)**: Google Docs is the world's most successful implementation of **Operational Transformation**. They use a central sequencer to "transform" every keystroke. This allows them to support complex features like "Suggesting Mode" and "Version History" more easily than a pure CRDT approach, but it makes offline editing and peer-to-peer sync significantly harder.
+- **Discord (WebSockets at Scale)**: Discord maintains over **15 million concurrent WebSocket connections** at any given time. They famously moved from Python to Elixir (and later added Rust) to handle the massive concurrency requirements of their gateway servers. They use a "pub/sub" model where your client only receives messages for the specific channels you are currently looking at, minimizing unnecessary bandwidth.
+
 ## Connections
 
 - [[CRDTs]] — The data structures enabling conflict-free collaborative editing

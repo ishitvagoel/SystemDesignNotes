@@ -118,6 +118,44 @@ Redlock is an algorithm proposed by Redis's creator (Salvatore Sanfilippo) for d
 
 **Herd effect on lock release**: A lock is released and all waiting processes simultaneously try to acquire it. One wins, the rest retry, creating a thundering herd of lock acquisition attempts. Solution: implement a queue or use sequential/fair locks (ZooKeeper's sequential ephemeral nodes provide FIFO ordering for lock waiters).
 
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant C1 as Client A
+    participant L as Lock Service (etcd)
+    participant S as Storage (S3/DB)
+    participant C2 as Client B
+
+    C1->>L: 1. Acquire Lock
+    L-->>C1: 2. OK (Fencing Token: 33)
+    Note over C1: Client A Paused (GC)
+    
+    Note over L: Lock Expires (TTL)
+    
+    C2->>L: 3. Acquire Lock
+    L-->>C2: 4. OK (Fencing Token: 34)
+    C2->>S: 5. Write (Token: 34)
+    S-->>C2: 6. Success (34 > 0)
+
+    Note over C1: Client A Wakes Up
+    C1->>S: 7. Write (Token: 33)
+    S-->>C1: 8. REJECTED (33 < 34)
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Lock TTL Default**: Typically **10s - 30s**. Short enough to recover quickly from crashes, long enough to cover typical GC pauses (< 1s).
+- **Renewal (Heartbeat)**: Renew the lock at **1/3rd of the TTL** (e.g., every 10s for a 30s TTL) to ensure the lock doesn't expire during normal operation.
+- **Clock Drift Tolerance**: Assume **~10ms - 100ms** of clock drift between servers unless using specialized hardware (PTP).
+- **Safety Level**: Redis `SET NX` is for **Efficiency** (avoiding double work). etcd/ZooKeeper is for **Correctness** (avoiding data corruption).
+
+## Real-World Case Studies
+
+- **Google (Chubby)**: Google's **Chubby** lock service is the grandparent of all modern distributed lock systems. They famously documented that the vast majority of their internal outages were caused by developers misunderstanding the semantics of distributed locks, leading to the creation of the "Fencing Token" concept.
+- **Hadoop (HDFS Failover)**: Hadoop uses ZooKeeper for leader election of its NameNode. To prevent "Split-Brain" (where two NameNodes both think they are active), the standby node uses a **Fencing** mechanism to power down the old node's network interface or revoke its access to the storage disks before taking over.
+- **Netflix (Fenzo)**: Netflix built Fenzo, a cluster autoscaling scheduler. It uses distributed locks to ensure that multiple scheduler instances don't try to place the same task on the same EC2 instance simultaneously, avoiding resource over-subscription.
+
 ## Connections
 
 - [[Consensus and Raft]] — Consensus-based lock services (etcd, ZooKeeper) derive their safety from consensus

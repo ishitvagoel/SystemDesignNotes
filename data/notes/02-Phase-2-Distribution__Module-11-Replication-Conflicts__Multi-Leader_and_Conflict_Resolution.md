@@ -119,6 +119,47 @@ Store all conflicting versions ("siblings" in Riak terminology). Present them to
 
 **Conflict storm during network heal**: After a long partition, two leaders have accumulated thousands of conflicting updates. When the partition heals, the conflict resolution process runs for all of them simultaneously, potentially overwhelming the system. Solution: throttle conflict resolution, process conflicts in batches with back-pressure, and prioritize newer conflicts over older ones.
 
+## Architecture Diagram
+
+```mermaid
+graph LR
+    subgraph "Region: US-East"
+        U1[User A] --> L1[Leader A]
+        L1[(US Data)]
+    end
+
+    subgraph "Region: EU-West"
+        U2[User B] --> L2[Leader B]
+        L2[(EU Data)]
+    end
+
+    L1 <-->|Bi-Directional Async Sync| L2
+
+    subgraph "Conflict Resolution (Version Vectors)"
+        Note over L1, L2: Write X: US Leader [A:1, B:0]
+        Note over L1, L2: Write Y: EU Leader [A:0, B:1]
+        L1 -- "Sync Y" --> L1
+        L2 -- "Sync X" --> L2
+        Note over L1, L2: Conflict Detected: [A:1, B:1]
+    end
+
+    style L1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style L2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Write Latency**: Multi-leader provides **Local RTT** writes (~1ms-5ms) in all regions, vs. **Cross-Region RTT** (~100ms-300ms) for single-leader.
+- **Conflict Probability**: In most social/collaborative apps, concurrent writes to the *same record* occur in **< 0.01%** of cases.
+- **LWW Clock Skew**: If using Last-Writer-Wins, assume a clock drift of **~10ms-50ms**. Any writes within this window are effectively "randomly ordered."
+- **Topology Overhead**: An All-to-All topology with N leaders requires **N * (N-1)** replication links. For 10 regions, that's 90 links—too complex for most. Stick to 3-5 regions.
+
+## Real-World Case Studies
+
+- **Amazon (DynamoDB Global Tables)**: DynamoDB provides a managed multi-leader service. It uses **Last-Writer-Wins (LWW)** based on the timestamp when the write reaches the regional endpoint. This makes it incredibly fast and easy to use, but Amazon warns developers that if two regions update the same item concurrently, only one will persist.
+- **CouchDB (Multi-Version Document)**: CouchDB is a multi-leader database that never throws away data during a conflict. Instead, it creates **Siblings** (multiple versions of the same document). When you read the document, CouchDB returns all siblings, and the *application* must decide how to merge them and write back a resolved version.
+- **Facebook (Cassandra for Inbox Search)**: Facebook used Cassandra (leaderless/multi-leader) for their original Inbox Search. They found that for a search index, LWW was acceptable because a slightly out-of-order index update wouldn't break the user experience, but the high write availability across regions was critical for real-time indexing.
+
 ## Connections
 
 - [[Replication Deep Dive]] — Single-leader replication avoids conflicts entirely by funneling all writes through one node

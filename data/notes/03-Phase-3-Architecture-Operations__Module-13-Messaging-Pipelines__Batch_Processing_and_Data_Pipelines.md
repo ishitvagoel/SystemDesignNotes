@@ -94,6 +94,49 @@ Data contracts are the data pipeline equivalent of [[API Versioning and Compatib
 
 **Schema drift between pipeline stages**: The upstream system adds a column to the source data. The ETL pipeline doesn't expect it and either crashes (strict schema) or silently drops it (permissive schema). Downstream consumers who need the new column don't get it. Solution: schema registry with compatibility checking, schema evolution testing in CI, and explicit schema contracts between pipeline stages.
 
+## Architecture Diagram
+
+```mermaid
+graph LR
+    subgraph "Data Sources"
+        App[App Logs]
+        DB[(OLTP DB)]
+        S3[S3 Events]
+    end
+
+    subgraph "Ingestion & Storage"
+        App & DB & S3 --> Ingest[Kafka / Airbyte]
+        Ingest --> Lake[(Data Lake: S3/GCS)]
+    end
+
+    subgraph "Processing (Spark/dbt)"
+        Lake --> Bronze[Bronze: Raw]
+        Bronze --> Silver[Silver: Filtered/Joined]
+        Silver --> Gold[Gold: Aggregated/Business Ready]
+    end
+
+    subgraph "Serving"
+        Gold --> Warehouse[(Snowflake / BigQuery)]
+        Warehouse --> Dashboard[BI Tool / ML Model]
+    end
+
+    style Lake fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Warehouse fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Batch Size vs Frequency**: For most ETL, **Hourly or Daily** is the standard. If you need data fresher than 15 minutes, switch to **Micro-batching (Spark Streaming)** or **Streaming (Flink)**.
+- **Compute Sizing**: A single modern server can process **~100GB - 500GB** of data using DuckDB or Polars. Only reach for Spark Clusters when your data exceeds **1TB per job**.
+- **Data Compression**: Using **Parquet/ORC** (columnar) instead of CSV/JSON can reduce storage and query I/O by **10x - 50x**.
+- **Transformation Cost**: ELT (Transforming inside the warehouse) is usually **2x - 5x more expensive** than ETL (Transforming in Spark/EC2) but saves months of engineering time due to SQL simplicity.
+
+## Real-World Case Studies
+
+- **Uber (Apache Hudi)**: Uber created **Hudi** (Hadoop Upserts Deletes and Incrementals) to solve the "upsert" problem in data lakes. Before Hudi, updating a single user record in a 100PB data lake required rewriting massive files. Hudi allowed them to perform record-level updates and deletes on S3, enabling GDPR compliance and near-real-time analytics at exabyte scale.
+- **Netflix (Iceberg)**: Netflix developed **Apache Iceberg** to solve the performance and correctness issues of the Hive table format. They found that listing files in S3 was too slow for their 10,000+ table warehouse. Iceberg uses a manifest-based metadata layer that allows Netflix to query billions of rows without ever performing an expensive `S3 LIST` operation.
+- **Airbnb (Airflow)**: Airbnb built and open-sourced **Apache Airflow** to manage their complex data pipeline dependencies. They needed a way to visualize, schedule, and monitor thousands of interconnected batch jobs (e.g., "don't run the revenue report until the payment ingestion and exchange rate updates are finished"). Airflow's "DAG" (Directed Acyclic Graph) model became the industry standard for workflow orchestration.
+
 ## Connections
 
 - [[Stream Processing]] — Stream processing is converging with batch (Flink, Spark Structured Streaming)

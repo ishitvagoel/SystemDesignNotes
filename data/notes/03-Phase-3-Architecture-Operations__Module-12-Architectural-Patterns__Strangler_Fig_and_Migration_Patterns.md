@@ -76,6 +76,53 @@ A sidecar that acts as an outbound proxy for the main container. The application
 
 **Underestimating legacy system complexity**: The old system has undocumented behaviors, implicit business rules in stored procedures, and edge cases that nobody remembers. The new system reproduces the documented 80% of behavior but misses the critical 20%. Solution: parallel run (shadow mode) that compares outputs of both systems before routing real traffic, comprehensive integration tests derived from production traffic, and involve people who built the old system.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "External Clients"
+        Client[User App / Web]
+    end
+
+    subgraph "Routing Layer (Strangler Facade)"
+        Router{API Gateway}
+    end
+
+    subgraph "Legacy Monolith"
+        Mono[Monolith]
+        Mono_DB[(Legacy DB)]
+        Mono --- Mono_DB
+    end
+
+    subgraph "New Microservices"
+        Svc1[Auth Service]
+        Svc1_DB[(Auth DB)]
+        Svc1 --- Svc1_DB
+    end
+
+    Client --> Router
+    Router -->|1. Default / Legacy| Mono
+    Router -->|2. Migrated: /v1/auth| Svc1
+    
+    Mono -.->|3. Async Data Sync (CDC)| Svc1_DB
+
+    style Router fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Svc1 fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Migration Duration**: Expect a complete strangler-fig migration of a large monolith to take **12 - 36 months**. Any estimate < 6 months for a non-trivial system is likely over-optimistic.
+- **Service Size**: Aim to extract services that represent **5% - 10%** of the total monolith functionality at a time. Too large increases risk; too small increases coordination overhead.
+- **Verification Window**: Run new services in "Shadow Mode" (receive traffic, compare output, but don't return to user) for **1 - 2 weeks** before switching the live routing.
+- **Feature Freeze**: Once a domain extraction begins, implement a **100% feature freeze** on that domain in the monolith. New features must be built in the new service.
+
+## Real-World Case Studies
+
+- **Netflix (The Cloud Migration)**: Netflix is the most famous user of the Strangler Fig pattern. Starting in 2008, they gradually moved features out of their data center monolith and into AWS microservices. They didn't do a big bang cutover; instead, they moved one function at a time (e.g., "Movie Catalog" first, then "Member Sign-up"), taking **seven years** to complete the transition.
+- **Stripe (API Versioning Facade)**: Stripe uses a variant of the Strangler pattern to manage their API. Their "Facade" (routing layer) is extremely sophisticated; it intercepts requests from old API versions and transforms them into the format expected by their modern internal services. This allows them to "strangle" old internal implementations without ever breaking external client contracts.
+- **Shopify (Modular Monolith Extraction)**: Shopify used the Strangler pattern to extract their "Storefront" and "Checkout" flows into specialized services. They found that for their scale, the primary benefit wasn't just technical isolation, but **Team Velocity**. By strangling the most contested parts of the monolith, they allowed those specific teams to deploy 10x faster than the rest of the company.
+
 ## Connections
 
 - [[Monolith vs Microservices]] — The strangler fig is the migration path from monolith to microservices

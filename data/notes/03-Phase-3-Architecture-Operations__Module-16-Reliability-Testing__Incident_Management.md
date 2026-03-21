@@ -125,6 +125,44 @@ If the same alert fires repeatedly and the same manual remediation is performed,
 
 **Runbook rot**: Runbooks written 2 years ago reference systems, URLs, and procedures that no longer exist. During an incident, the on-call follows the runbook and makes things worse. Solution: review runbooks as part of game days, attach runbooks to alerts (so they're tested whenever the alert fires), and date-stamp runbooks with a "last verified" field.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Alert[1. Alert Fires: SLI Breach] --> Page[2. On-Call Paged]
+    Page --> Triage{3. Severity?}
+    
+    subgraph "Incident Command Center"
+        Triage -- "P1/P2" --> IC[Incident Commander: Orchestrate]
+        IC --> Ops[Ops Lead: Debug/Mitigate]
+        IC --> Comm[Comm Lead: Stakeholders]
+    end
+
+    Ops -->|Mitigation| Prod[Production System]
+    Ops -->|Status| IC
+    Comm -->|Update| Status[Status Page / Slack]
+    
+    Prod --> Resolve[4. Incident Resolved]
+    Resolve --> PM[5. Blameless Postmortem]
+    PM --> Actions[6. Action Items / Fixes]
+
+    style IC fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style PM fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Triage Speed**: Target **< 5 minutes** to acknowledge a P1/P2 page and **< 15 minutes** to identify the initial mitigation (e.g., rollback).
+- **Communication Cadence**: During a P1, provide internal updates every **15 - 20 minutes**, even if there is "No new information." Silence creates panic.
+- **Postmortem Window**: Conduct the postmortem meeting within **48 hours** of the incident. Memory fades quickly.
+- **Action Item Ratio**: A good postmortem should result in **at least 2-3 technical action items** for every 1 procedural action item.
+
+## Real-World Case Studies
+
+- **PagerDuty (Incident Command)**: PagerDuty open-sourced their internal incident response training. They pioneered the rigid separation of roles—especially the **Incident Commander**—who has absolute authority during the incident but does zero technical work. This model is now the gold standard for high-growth tech companies.
+- **Etsy (Blameless Culture)**: Etsy is famous for its "Just Culture" and blameless postmortems. They once gave a "Three-Armed Sweater" award to an engineer who accidentally took down the entire site. Instead of firing them, they celebrated the learning opportunity and the fact that the engineer felt safe enough to immediately flag exactly what they had done.
+- **GitLab (The 2017 DB Incident)**: GitLab suffered a major data loss incident where an engineer accidentally deleted the production database. They were praised for their **extreme transparency**, live-streaming the restoration process on YouTube and publishing a brutally honest postmortem. This turned a potential PR disaster into a masterclass in community trust and engineering integrity.
+
 ## Connections
 
 - [[SLOs SLIs and Error Budgets]] — Error budget exhaustion triggers reliability focus

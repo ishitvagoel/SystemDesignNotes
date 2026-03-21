@@ -101,6 +101,47 @@ All regions advertise the same IP. BGP routes to the nearest. Natural, automatic
 
 - **Cross-region latency during active-active**: A transaction requires data from both EU and US regions (a US admin viewing an EU user's record). Cross-region read latency (~150ms) is added. Mitigation: cache frequently accessed cross-region data with appropriate staleness tolerance, or accept the latency for admin operations.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Geo-Routing Layer (Route 53 / Anycast)"
+        User_US[User: New York] -->|Latency-based| Region_US[Region: US-East]
+        User_EU[User: Berlin] -->|Geo-Fencing| Region_EU[Region: EU-West]
+    end
+
+    subgraph "Region: US-East (Primary)"
+        Region_US --> App_US[App Fleet US]
+        App_US --> DB_US[(US Data Partition)]
+    end
+
+    subgraph "Region: EU-West (Sovereign)"
+        Region_EU --> App_EU[App Fleet EU]
+        App_EU --> DB_EU[(EU Data Partition)]
+    end
+
+    subgraph "Global Sync"
+        DB_US -.->|Filtered Replication| DB_EU
+        Note over Global Sync: Only non-PII data shared globally
+    end
+
+    style Region_EU fill:var(--surface),stroke:#2d8a4e,stroke-width:2px;
+    style DB_EU fill:var(--surface),stroke:#2d8a4e,stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Speed of Light**: Light in fiber travels at **~200km/ms**. A round-trip New York to Singapore (~15,000km) is at least **150ms** pure physics latency.
+- **Write Penalty**: For Active-Passive, writes from Singapore to US-East typically see **250ms - 400ms** latency including application overhead.
+- **Egress Cost**: Cross-region data transfer is often **3x - 5x more expensive** than in-region transfer. Minimizing global replication saves significant budget.
+- **Failover SLA**: Regional failover (Active-Passive) typically takes **2 - 10 minutes**. Active-Active failover takes **< 30 seconds** (just DNS/Routing change).
+
+## Real-World Case Studies
+
+- **Google Spanner (Placement Policies)**: Google Spanner allows developers to set "Placement Policies" at the row level. You can tag a row with `country=Germany`, and Spanner will ensure that the majority of replicas for that specific row are physically located in German data centers, satisfying both GDPR and low-latency requirements.
+- **Apple (iCloud in China)**: To comply with China's PIPL, Apple moved all Chinese user iCloud data to a domestic partner (Guizhou on the Cloud Big Data). This effectively created a "China Island"—a completely separate physical deployment with its own encryption keys and physical security, isolated from the rest of the global iCloud infrastructure.
+- **Slack (Migration to Cell-Based)**: Slack moved to a multi-region, cell-based architecture to reduce latency for international users. They found that for users in Japan, moving their "Cell" (all their data and app servers) to an AWS region in Tokyo reduced message send latency by **over 300ms**, dramatically improving the "snappiness" of the UI.
+
 ## Connections
 
 - [[Multi-Tenancy and Isolation]] — Tenant location determines data residency requirements

@@ -113,6 +113,48 @@ Postgres exposes `pg_last_wal_replay_lsn()` and `pg_last_xact_replay_timestamp()
 
 **Binary replication version incompatibility**: Physical replication (WAL shipping) requires identical major versions between primary and replica. A major version upgrade requires taking replicas offline, upgrading them, and rebuilding. During this window, you have no standby for failover. Solution: use logical replication for cross-version replication during upgrade windows, or use a blue-green upgrade approach with a new replica set.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "High Availability Control Plane"
+        Consensus[etcd / ZooKeeper]
+        Manager[Failover Manager: Patroni/Orchestrator]
+        Manager <--> Consensus
+    end
+
+    subgraph "Database Cluster"
+        Primary[(Primary)] -->|1. Sync ACK| Replica1[(Sync Replica)]
+        Primary -.->|2. Async Stream| Replica2[(Async Replica)]
+        
+        Manager -- "Heartbeat" --> Primary
+        Manager -- "Promote" --> Replica1
+    end
+
+    subgraph "Client Routing"
+        User[Client] --> Proxy[HAProxy / PgBouncer]
+        Proxy -->|RW| Primary
+        Proxy -->|RO| Replica2
+        Consensus -.->|Update| Proxy
+    end
+
+    style Primary fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Manager fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Failover Budget**: Aim for **< 30 seconds** for automated failover. Most of this time is spent on "Failure Detection" (timeout) to avoid false positives.
+- **Sync Replica Limit**: Don't use more than **1 - 2 synchronous replicas**. Each sync replica adds latency and increases the probability that a single node failure blocks all writes.
+- **Lag Alerting**: Alert on replication lag if it exceeds **2x your average cross-region RTT** (e.g., alert at 200ms for a 100ms link).
+- **Read Scalability**: A single primary can comfortably ship logs to **~5-10 replicas** before the network egress or CPU overhead of the WAL sender process becomes a bottleneck.
+
+## Real-World Case Studies
+
+- **GitHub (Orchestrator)**: GitHub uses **Orchestrator** to manage its massive MySQL fleet. They famously documented an incident where a network partition caused Orchestrator to promote a new leader while the old one was still alive. Because they used **consul-template** to update their load balancer configs, the split-brain was resolved in seconds by the control plane, minimizing data divergence.
+- **GitLab (The 2017 Data Loss)**: GitLab suffered a major outage when a developer accidentally deleted the production database. The failover mechanism failed because the replicas were out of sync or misconfigured. This incident highlighted that **Replication is not Backup**—you need both asynchronous secondaries for HA and point-in-time snapshots for recovery.
+- **Zalando (Patroni)**: Zalando created **Patroni** to solve the "Postgres HA" problem. They used etcd as the source of truth for the leader's identity. If a Postgres node can't maintain its lease in etcd, it automatically steps down and shuts itself off, providing a robust software-based **STONITH** mechanism that works in any cloud environment.
+
 ## Connections
 
 - [[Database Replication]] — Module 4's introduction to replication topologies

@@ -143,6 +143,41 @@ The reality: almost nobody does this for internal APIs. It adds verbosity, clien
 - **Overloaded POST**: Using POST for everything (reads, updates, deletes) because "it's easier." You lose cacheability, retry safety, and semantic clarity. If the API is truly RPC-style, consider gRPC instead of pretending it's REST.
 - **Leaking internal models**: Your API response mirrors your database schema 1:1 — including internal IDs, column names, and data that shouldn't be exposed. API resources should be a deliberate public contract, not a database dump.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Client[Client Browser / App] -->|GET /books/123| LB[Load Balancer]
+    LB -->|Forward| API[API Service]
+    
+    subgraph "REST Resource Handling"
+        API -->|Check Cache| Cache{Redis Cache}
+        Cache --|Hit| Return[Return 200 OK + JSON]
+        Cache --|Miss| DB[(Database)]
+        DB -->|Fetch Noun| Result[Book Object]
+        Result -->|Transform| JSON[JSON Representation]
+        JSON -->|Store| Cache
+    end
+    
+    API --|201 Created| Client2[POST /books]
+    API --|404 Not Found| Client3[GET /missing]
+
+    style API fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Endpoint Naming**: Use **plural nouns** (`/users`, not `/user`).
+- **Response Size**: A typical REST response should be **< 10KB** for mobile performance. Use pagination for anything larger.
+- **Status Code Usage**: Use **~10-15 standard codes**. Don't over-complicate (e.g., 418 I'm a teapot is fun but useless).
+- **Pagination Defaults**: Default to **20-50 items** per page. Never return "all" by default.
+
+## Real-World Case Studies
+
+- **Stripe (The Gold Standard)**: Stripe is widely cited as the best example of a "Pragmatic REST" API. They use plural nouns, standard HTTP verbs, and consistent error objects. Most importantly, they use **expanded resources** (`/charges?expand[]=customer`) to solve the N+1 problem without moving to GraphQL.
+- **GitHub (API v3)**: GitHub's REST API is famous for its use of **Hypermedia (HATEOAS)**. Their responses include `url` fields pointing to related resources (e.g., a repository response contains a `commits_url`). While technically "pure," many developers find the extra links verbose and ignore them.
+- **PayPal (HATEOAS and Links)**: PayPal's API makes heavy use of the `links` array in responses to guide the client through state transitions (e.g., after creating a payment, the response includes a link to "execute" the payment). This is a rare example of HATEOAS being used effectively in a complex financial workflow.
+
 ## Connections
 
 - [[gRPC vs REST vs GraphQL]] — REST in context with the other major paradigms

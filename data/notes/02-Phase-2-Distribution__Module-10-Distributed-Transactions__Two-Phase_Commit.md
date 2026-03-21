@@ -107,6 +107,46 @@ This violates the core principle of microservice architecture: independent deplo
 
 **Network partition splitting participants**: During the COMMIT phase, the coordinator sends COMMIT to 3 of 5 participants, then a partition isolates it from the remaining 2. The 2 unreached participants stay in PREPARED state. They can't know whether to commit or abort. Solution: the coordinator retries COMMIT to unreached participants after the partition heals. Participants must store the PREPARED state durably and wait. There's no timeout-based resolution that's safe.
 
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant C as Coordinator
+    participant P1 as Participant A
+    participant P2 as Participant B
+
+    Note over C, P2: Phase 1: Prepare
+    C->>P1: 1. PREPARE (Can you commit?)
+    C->>P2: 1. PREPARE (Can you commit?)
+    P1->>P1: Lock resource & log WAL
+    P2->>P2: Lock resource & log WAL
+    P1-->>C: 2. VOTE YES
+    P2-->>C: 2. VOTE YES
+
+    Note over C: All YES -> Decision: COMMIT
+    
+    Note over C, P2: Phase 2: Commit
+    C->>P1: 3. COMMIT
+    C->>P2: 3. COMMIT
+    P1->>P1: Finalize & Release Lock
+    P2->>P2: Finalize & Release Lock
+    P1-->>C: 4. ACK
+    P2-->>C: 4. ACK
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Write Latency**: Minimum **2 RTTs** (Round Trip Times) between the coordinator and the furthest participant.
+- **Lock Duration**: Locks are held for the entire duration of the 2PC process. If a participant is 100ms away, resources are locked for at least **200ms**, dramatically reducing concurrency.
+- **Throughput Penalty**: 2PC can reduce a database's transaction throughput by **50% - 90%** compared to local transactions due to coordination overhead and lock contention.
+- **Failure Probability**: The risk of a transaction being "blocked" (stuck in prepared state) increases linearly with the number of participants. `P(blocked) = 1 - (1 - p)^n`, where `p` is the probability of a single node/link failure.
+
+## Real-World Case Studies
+
+- **Google Spanner (Optimized 2PC)**: Spanner uses 2PC for transactions that span multiple "Directory" ranges. However, each participant in the 2PC is not a single server, but a **Raft Group**. This means even if a server fails, the Raft Group stays alive and can continue the 2PC, effectively solving the "blocking participant" problem.
+- **Java EE (JTA/XA)**: In the early 2000s, Java Enterprise Edition relied heavily on **XA Transactions** (distributed 2PC) to coordinate between an App Server, a Message Queue (JMS), and a Database. This was notoriously brittle; a single network blip would leave "in-doubt" transactions in the database that had to be manually cleared by DBAs.
+- **CockroachDB (Parallel Commits)**: CockroachDB implements an optimization called **Parallel Commits**. By cleverly structuring the transaction record, they can return "Success" to the client as soon as the participants have finished Phase 1 (Prepare), while the actual Commit (Phase 2) happens asynchronously in the background, reducing user-visible latency to 1 RTT.
+
 ## Connections
 
 - [[Saga Pattern]] — The alternative to 2PC for multi-service transactions

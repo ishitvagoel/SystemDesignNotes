@@ -106,6 +106,40 @@ No designated leader. Any node accepts reads and writes. The client sends writes
 
 **Circular replication conflicts (multi-leader)**: In multi-leader setups, an update replicates from A to B, then B's replication sends it back to A. Without origin tracking, the update loops forever. Or worse, two leaders apply conflicting updates and replicate them to each other. Solution: origin-based filtering (skip events from your own server ID), conflict resolution strategy (LWW, custom merge), and monitoring for replication loops.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Primary Region (Leader)"
+        App[App Instance] -->|Writes| Primary[(Primary DB)]
+        Primary -->|1. WAL Stream| SyncReplica[(Sync Replica)]
+        Primary -->|2. WAL Stream| AsyncReplica[(Async Replica)]
+    end
+
+    subgraph "Secondary Region (Follower)"
+        AsyncReplica -->|3. Cross-Region Log| RemoteReplica[(Remote Replica)]
+    end
+
+    User[User] -->|Read| AsyncReplica
+    User -->|Read| RemoteReplica
+    
+    style Primary fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style SyncReplica fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Replication Lag**: In-region async replication is typically **< 10ms**. Cross-region replication is limited by light speed, typically **50ms - 200ms**.
+- **Sync Replication Penalty**: Every write pays the **RTT (Round Trip Time)** to the replica. For a cross-region sync replica, this can turn a 1ms local write into a **100ms+** write.
+- **Failover Time**: Automatic failover (e.g., Patroni/RDS) typically takes **30s - 60s** to detect a failure and promote a new leader.
+- **Read Scalability**: A single primary can often support **5-10 read replicas** before the overhead of shipping logs becomes a bottleneck on the primary's CPU/Network.
+
+## Real-World Case Studies
+
+- **GitHub (MySQL Orchstrator)**: GitHub uses **Orchestrator** to manage its massive MySQL fleet. It handles automated failover by detecting leader failure and re-routing replication topologies in seconds, ensuring that a single DB crash doesn't take down the entire site.
+- **Uber (Postgres to MySQL Migration)**: Uber famously moved from Postgres to MySQL, partly because of how MySQL handles replication. MySQL's **Logical Replication** (Binlog) allowed them to replicate across different versions and perform zero-downtime upgrades more easily than Postgres's physical replication at the time.
+- **Amazon (DynamoDB Leaderless)**: Amazon's DynamoDB uses leaderless, quorum-based replication across three Availability Zones. This allows it to survive the total loss of an entire data center with **zero downtime** and **zero data loss**, a level of availability that is extremely difficult to achieve with traditional leader-based databases.
+
 ## Connections
 
 - [[Write-Ahead Log]] — WAL shipping is the mechanism behind physical replication

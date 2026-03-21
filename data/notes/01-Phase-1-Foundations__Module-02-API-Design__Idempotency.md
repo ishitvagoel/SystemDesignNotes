@@ -113,6 +113,45 @@ This is the key insight: **exactly-once semantics = at-least-once delivery + ide
 
 - **Clock-based expiration races**: An idempotency key expires after 24 hours. A client retries at the 24-hour boundary — the original key has expired, and the retry creates a duplicate. Prevention: make the expiration window generous, and ensure clients generate a new key if their session has been idle longer than the expiration window.
 
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API as API Gateway
+    participant Store as Redis (Idemp Store)
+    participant DB as Main Database
+
+    Client->>API: POST /orders (Key: uuid-123)
+    API->>Store: SETNX uuid-123 "PROCESSING" (TTL 24h)
+    
+    alt New Key
+        Store-->>API: OK (Lock acquired)
+        API->>DB: Create Order & Process Payment
+        DB-->>API: Success (Order #555)
+        API->>Store: SET uuid-123 "SUCCESS: Order #555"
+        API-->>Client: 201 Created (Order #555)
+    else Duplicate Key (Retry)
+        Store-->>API: EXISTS (Lock failed)
+        API->>Store: GET uuid-123
+        Store-->>API: "SUCCESS: Order #555"
+        API-->>Client: 200 OK (Order #555 - Cached)
+    end
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Key Length**: A UUIDv4 is **36 characters** (string) or **16 bytes** (binary).
+- **Storage Overhead**: Storing 1M keys in Redis (key + status + TTL) consumes **~100MB - 200MB** of RAM.
+- **Key TTL**: Standard expiration for idempotency keys is **24 - 48 hours**. Long enough for any retry loop, short enough to prune the store.
+- **Deduplication Latency**: Checking a key in Redis adds **< 1ms**. Checking in a SQL table with an index adds **1ms - 5ms**.
+
+## Real-World Case Studies
+
+- **Stripe (Idempotency-Key Header)**: Stripe popularized the `Idempotency-Key` HTTP header. They use a sophisticated "VCR-like" recording system where the *entire* original response (including status code and body) is saved and replayed for duplicate keys, making the retry indistinguishable from the original success.
+- **AWS Lambda (Event Deduplication)**: AWS Lambda functions triggered by SQS or SNS are "at-least-once." AWS provides a `messageId` that developers must use to implement their own idempotency logic (e.g., in DynamoDB) to avoid processing the same event twice during a retry or rebalance.
+- **Kafka (Transactional Producer)**: Kafka's "Exactly-Once Semantics" (EOS) uses an internal `producerId` and `sequenceNumber` for every batch of messages. The broker tracks these and silently discards any duplicates, providing transparent idempotency at the infrastructure level.
+
 ## Connections
 
 - [[RESTful Design Principles]] — HTTP method semantics (idempotent methods vs non-idempotent POST)

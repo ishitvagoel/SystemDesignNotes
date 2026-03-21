@@ -71,6 +71,51 @@ Amazon uses shuffle sharding extensively in Route 53 and other services. With 2,
 
 **Cross-cell operation complexity**: A feature requires aggregating data across all cells (global search, admin dashboard, analytics). Each cell must be queried individually, results merged. One slow cell delays the entire operation. Solution: maintain a read-only aggregated view outside the cell boundary (fed by CDC from each cell), implement timeouts per cell with partial results, and design features to work within a single cell whenever possible.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Global Routing Layer"
+        User[Global User] --> LB[Intelligent Load Balancer]
+        LB -- "hash(tenant_id)" --> Router{Cell Router}
+    end
+
+    subgraph "Cell 1 (US-East-1a)"
+        Router --> C1_API[App Service]
+        C1_API --> C1_DB[(Postgres)]
+        C1_API --> C1_Cache[Redis]
+    end
+
+    subgraph "Cell 2 (US-East-1b)"
+        Router --> C2_API[App Service]
+        C2_API --> C2_DB[(Postgres)]
+        C2_API --> C2_Cache[Redis]
+    end
+
+    subgraph "Cell 3 (US-East-1c)"
+        Router --> C3_API[App Service]
+        C3_API --> C3_DB[(Postgres)]
+        C3_API --> C3_Cache[Redis]
+    end
+
+    style C1_API fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style C2_API fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Router fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Cell Size Limit**: Aim for each cell to handle **~5,000 - 10,000 requests/second**. Beyond this, the cell becomes a "big monolith" again, increasing the internal blast radius.
+- **Blast Radius Target**: Design your cell count so that a total cell failure affects **< 5%** of your total user base. For 100k users, this means at least 20 cells.
+- **Infrastructure Overhead**: Expect **~20% - 30% higher infrastructure costs** due to duplicated fixed overhead (e.g., base DB instances, load balancers) compared to a single shared pool.
+- **Routing Latency**: An intelligent cell router adds **~1ms - 5ms** to each request.
+
+## Real-World Case Studies
+
+- **Amazon (The Origin)**: Amazon's retail site is partitioned into hundreds of cells. They famously use this to prevent a bad deployment of the "Order Service" from breaking checkouts globally. If a new version of the code is buggy, it's detected in the first cell (affecting a tiny fraction of users) and rolled back before it ever touches the rest of the fleet.
+- **Slack (Migration from Monolith)**: Slack moved to a cell-based architecture after experiencing several major global outages. By grouping "Workspaces" into cells, they ensured that a database lock-up or a network blip in one AWS availability zone would only disconnect a small number of companies, rather than the entire global Slack user base.
+- **DoorDash (Cell-Based Routing)**: DoorDash uses cells to manage their complex logistics network. They partition traffic based on **Geographic Region**. A cell handles all orders, dashers, and merchants for a specific city. This isolation is critical because delivery patterns in New York are fundamentally different from those in Los Angeles, and a regional surge shouldn't destabilize the whole platform.
+
 ## Connections
 
 - [[Partitioning and Sharding]] — Cell architecture is sharding at the infrastructure level, not just the data level

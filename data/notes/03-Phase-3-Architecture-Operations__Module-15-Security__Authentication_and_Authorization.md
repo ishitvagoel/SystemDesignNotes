@@ -121,6 +121,41 @@ Passwords are the #1 attack vector (phishing, credential stuffing, reuse). Passk
 
 - **Refresh token theft**: An attacker steals a refresh token and generates new access tokens indefinitely. Mitigation: rotate refresh tokens on every use (each use invalidates the old token and issues a new one), detect anomalous refresh patterns (same token used from two IPs).
 
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant User as User / SPA
+    participant Auth as Auth Server (OIDC)
+    participant GW as API Gateway
+    participant Svc as Internal Service
+
+    User->>Auth: 1. Login (OAuth2 Code + PKCE)
+    Auth-->>User: 2. ID Token + Access Token (JWT)
+    
+    User->>GW: 3. API Request (Bearer JWT)
+    Note over GW: Validate Signature & Expiry
+    GW->>GW: Extract Claims (UserID, Roles)
+    
+    GW->>Svc: 4. Forwarded Request + X-User-Id
+    Note over Svc: Local Authorization (RBAC/OPA)
+    Svc-->>GW: 5. 200 OK
+    GW-->>User: 6. Response
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **JWT Expiry**: Set Access Token TTL to **5 - 15 minutes**. Long enough to avoid constant refreshing, short enough to limit the window of a stolen token.
+- **Refresh Token TTL**: Typically **7 - 30 days**. Use "Refresh Token Rotation" to invalidate old ones on every use.
+- **Token Size**: A typical JWT with 5-10 claims is **~500 bytes - 1KB**. Be careful with large claim sets (e.g., hundreds of groups) as they can hit header size limits (usually 8KB or 16KB).
+- **Validation Latency**: Cryptographic validation of a JWT signature takes **< 1ms**. This is why stateless auth scales so well.
+
+## Real-World Case Studies
+
+- **Google (Zanzibar)**: Google built a global, consistent authorization system called **Zanzibar**. It handles trillions of relationship-based permissions (e.g., "Can User A view Document B?") across all Google services. It uses a specialized graph-based storage and a consistency protocol called "Zookies" to ensure sub-10ms authorization checks globally.
+- **GitHub (Token Scanning)**: GitHub implemented a massive security feature that scans every public commit for accidental leaks of authentication tokens. They partner with dozens of service providers (AWS, Slack, Stripe) to automatically revoke leaked tokens within seconds of them being committed to a public repo.
+- **Netflix (Passport Pattern)**: Netflix uses a concept called **MSL (Message Security Layer)** and "Passports." The edge gateway authenticates the user and creates a "Passport" (a secure, internal-only identity object). This passport is passed through the entire microservice call chain, ensuring that every service down the line knows exactly who the original user was without re-authenticating.
+
 ## Connections
 
 - [[TLS and Certificate Management]] — mTLS for service identity

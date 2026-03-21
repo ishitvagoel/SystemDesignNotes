@@ -2,6 +2,26 @@
 
 Canonical sources organized by the modules they inform. Every reference listed in this vault is one the author is confident exists.
 
+## Source Hierarchy
+
+```mermaid
+graph TD
+    P1[Primary: Papers & Specs] -->|Formal Foundations| P2[Secondary: Books]
+    P2 -->|Structural Guidance| P3[Tertiary: Engineering Blogs]
+    P3 -->|Real-world implementation| P4[Tactical: Docs & Tutorials]
+    
+    style P1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style P3 fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+```
+
+## Vetting Heuristics (The "Senior" Standard)
+
+When reading a new technical resource, check:
+1. **The "Why" Test**: Does the author explain the failure mode that motivated the design?
+2. **The "Anti-Pattern" Test**: Does the resource list when *not* to use the technology?
+3. **The "Scale" Test**: Is the advice applicable to 100 users, or 100 million?
+4. **The "Vendor" Test**: Is the source biased toward a specific tool? Always cross-reference vendor blogs with independent papers.
+
 ## Books
 
 ### Martin Kleppmann — *Designing Data-Intensive Applications* (2017)

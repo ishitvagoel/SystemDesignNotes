@@ -102,6 +102,43 @@ Key kernel parameters that matter in production:
 - **Bufferbloat**: Oversized network buffers absorb packets instead of dropping them, masking congestion from TCP's detection algorithms. Latency spikes to seconds while throughput stays stable. BBR is more resistant to this than loss-based algorithms.
 - **Idle connection death**: A connection sits idle, a middlebox (NAT, firewall, cloud load balancer) silently drops the connection state after its timeout, and the next request on that "dead" connection fails. Mitigation: application-level keepalives (not just TCP keepalives), which many middleboxes also track.
 
+## Architecture Diagram
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant N as Network (Lossy)
+    participant S as Server
+
+    Note over C, S: Slow Start Phase (cwnd=10)
+    C->>S: Send 10 Segments (~14KB)
+    S-->>C: ACKs received
+    Note over C: cwnd doubles to 20
+    
+    C->>S: Send 20 Segments (~28KB)
+    N--xS: Packet 15 Lost!
+    S-->>C: Duplicate ACKs for 14
+    
+    Note over C: Congestion Detected
+    C->>S: Retransmit 15 (Fast Retransmit)
+    Note over C: cwnd reduced (Cubic/Reno)
+    
+    Note over C, S: Congestion Avoidance Phase
+    C->>S: Linear growth (1 segment per RTT)
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Handshake RTT**: **1 RTT** for TCP, **+1-2 RTTs** for TLS.
+- **Initial Congestion Window (initcwnd)**: Modern Linux kernels use **10 segments** (~14.6 KB). Older kernels used 2-4.
+- **BDP (Bandwidth-Delay Product)**: The maximum "data in flight" = `Bandwidth * RTT`. For a 1Gbps link with 100ms RTT, BDP is **~12.5 MB**. If your TCP buffer is smaller than this, you cannot saturate the link.
+- **TIME_WAIT Duration**: Typically **60 seconds** (2 * MSL). A server can only have ~65k concurrent connections per unique client IP/port due to port exhaustion in TIME_WAIT.
+
+## Real-World Case Studies
+
+- **Google (BBR Implementation)**: Google developed BBR (Bottleneck Bandwidth and RTT) to move away from loss-based congestion control. By deploying BBR on YouTube, they saw a **33% reduction** in mean RTT and a **14% increase** in throughput on high-loss networks, significantly improving video quality for mobile users.
+- **Microsoft (Windows TCP Stack)**: Microsoft famously "fixed" the initial congestion window in Windows by increasing it to 10 (matching Google/Linux), which resulted in a measurable speedup for the entire web, as most initial HTTP responses (CSS, JS) finally fit into the first "burst" of packets.
+
 ## Connections
 
 - [[TCP vs UDP]] — When TCP's guarantees cost more than they're worth

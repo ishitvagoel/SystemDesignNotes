@@ -154,6 +154,41 @@ The insight: by encoding time and machine identity in the ID, you eliminate the 
 
 **ID leaking business information**: Sequential IDs expose your growth rate (competitor creates account #1000, then #1005 a week later — you gained 5 customers). They also enable enumeration attacks (scrape all users by incrementing the ID). Solution: use UUIDs or opaque encoded IDs for external-facing identifiers. Keep sequential IDs for internal use (database performance) but never expose them in APIs.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Centralized (Coordination)"
+        DB[Database Sequence] -->|Nextval| App1[App Instance A]
+        DB -->|Nextval| App2[App Instance B]
+    end
+
+    subgraph "Decentralized (Snowflake)"
+        Snowflake1[Snowflake Gen: Machine 1] -->|Time+M1+Seq| ID1[ID: 1582...]
+        Snowflake2[Snowflake Gen: Machine 2] -->|Time+M2+Seq| ID2[ID: 1582...]
+    end
+
+    subgraph "Random (No Coordination)"
+        UUID[UUID v4 Generator] -->|Random 128-bit| ID3[ID: 550e...]
+    end
+
+    style Snowflake1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style DB fill:var(--surface),stroke:var(--border),stroke-dasharray: 5 5;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Storage Cost**: BIGINT (8 bytes) vs UUID (16 bytes). In a 1-billion row table, UUIDs consume **~8GB more** for the primary key index alone.
+- **Collision Risk (UUID v4)**: To have a 50% chance of a collision, you would need to generate **~100 billion IDs per second** for 100 years. For most apps, the risk is effectively zero.
+- **Snowflake Throughput**: A single Snowflake worker can typically generate **4,096 IDs per millisecond** (over 4 million per second).
+- **B-Tree Fragmentation**: Using random UUID v4 as a primary key can increase write amplification by **3x-5x** on large tables compared to sequential IDs.
+
+## Real-World Case Studies
+
+- **Twitter (Snowflake)**: Twitter created **Snowflake** because they needed to generate unique IDs for billions of tweets across thousands of distributed processes. They needed the IDs to be roughly time-ordered so that search results could be sorted by ID rather than having to load and sort by a separate `created_at` timestamp.
+- **Instagram (Sharded Postgres Sequences)**: Instagram uses a clever variant of Snowflake inside Postgres. They use a **PL/pgSQL function** that combines a custom epoch timestamp, a shard ID (from the database schema name), and a local auto-increment sequence to generate 64-bit IDs without needing an external service.
+- **Shopify (UUID v7 Adoption)**: Many modern SaaS platforms like Shopify are moving toward **UUID v7**. It allows their globally distributed checkout services to generate IDs independently (no central bottleneck) while keeping database indexes efficient (time-sorted) and maintaining compatibility with standard UUID fields.
+
 ## Connections
 
 - [[Logical Clocks and Ordering]] — Time-sorted IDs use wall-clock time, which is unreliable across nodes. Logical clocks provide ordering guarantees that wall clocks can't.

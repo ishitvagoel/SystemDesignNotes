@@ -115,6 +115,43 @@ Sagas do NOT provide isolation. Between steps, other transactions can see interm
 
 - **Concurrent sagas on the same entity**: Two sagas both try to reserve the same inventory item. Without isolation, both might succeed, over-reserving. Mitigation: use optimistic concurrency control (version numbers) or application-level semantic locks on the shared resource.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Orchestration Saga"
+        Orch[Saga Manager] -->|1. Create| Order[Order Service]
+        Orch -->|2. Reserve| Stock[Inventory Service]
+        Orch -->|3. Charge| Pay[Payment Service]
+        
+        Pay -- "FAIL" --> Orch
+        Orch -.->|Compensate: Release| Stock
+        Orch -.->|Compensate: Cancel| Order
+    end
+
+    subgraph "Choreography Saga"
+        C_Order[Order Created] --> C_Stock[Reserve Stock]
+        C_Stock --> C_Pay[Charge Payment]
+        C_Pay -- "Failed Event" --> C_Stock_Comp[Release Stock]
+    end
+
+    style Orch fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Pay fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Complexity Threshold**: Use **Choreography** (event-based) for sagas with **< 3 steps**. Use **Orchestration** for **4+ steps** or complex branching logic.
+- **Saga Duration**: Sagas can last from **milliseconds to weeks** (e.g., a "Customer Onboarding" saga).
+- **Storage for Orchestrator**: The orchestrator must persist its state. A 5-step saga might generate **1KB - 5KB** of state data.
+- **Retry Strategy**: Compensating transactions must be **retried until success**. They cannot fail permanently, or the system remains in an inconsistent state.
+
+## Real-World Case Studies
+
+- **Uber (Cadence/Temporal)**: Uber built **Cadence** (and later the community created **Temporal**) specifically to handle massive sagas like "Trip Lifecycle." A single trip involves dozens of services (pricing, matching, routing, payments, safety). They found that choreography was impossible to debug at their scale, so they moved to a centralized orchestrator that persists the state of every trip saga.
+- **Booking.com (Hotel Reservations)**: Booking a hotel is a classic saga. You "reserve" a room (Step 1), then "pay" (Step 2). If the payment fails, the system must "release" the room. Because hotel systems are often slow or offline, these sagas can stay in a "Pending" state for minutes, requiring a robust orchestrator to handle timeouts and retries.
+- **Amazon (Order Fulfillment)**: When you click "Buy Now," Amazon kicks off a massive saga. If a warehouse discovers an item is damaged while packing (Step 3), the system must compensate by either finding another warehouse (Retry Step 3) or refunding the customer (Compensate Step 2).
+
 ## Connections
 
 - [[Two-Phase Commit]] — Sagas are the alternative to 2PC; they trade atomicity for availability and decoupling

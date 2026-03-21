@@ -142,6 +142,43 @@ The most dangerous moment in a migration is when the database schema and the app
 
 - **Ghost table migration divergence**: The original table receives writes faster than the ghost table can apply them. The migration never completes. Mitigation: monitor the gap between original and ghost. If it's growing, reduce write load or increase migration throughput.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph "Phase 1: Expand (Dual Write)"
+        App1[App v1] -->|1. Write| Col_Old[Column: amount]
+        App1 -.->|2. Trigger / App Logic| Col_New[Column: total]
+    end
+
+    subgraph "Phase 2: Migrate (Verify)"
+        App2[App v2] -->|3. Read| Col_New
+        App2 -->|4. Write| Col_New
+        App2 -->|5. Write| Col_Old
+    end
+
+    subgraph "Phase 3: Contract (Cleanup)"
+        App3[App v3] -->|6. Read/Write| Col_New
+        Note over App3: Old Column & Trigger Dropped
+    end
+
+    style Col_New fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Col_Old fill:var(--surface),stroke:var(--border),stroke-dasharray: 5 5;
+```
+
+## Back-of-the-Envelope Heuristics
+
+- **Batch Size for Backfills**: Use batches of **1,000 - 5,000 rows**. Larger batches increase lock duration and WAL bloat; smaller batches increase total overhead.
+- **Sleep Between Batches**: A **50ms - 100ms sleep** between batches allows the database's background processes (autovacuum, replication) to catch up.
+- **Lock Timeout**: Set a `lock_timeout` of **~100ms - 500ms** for DDL. It's better for the migration to fail and retry than to block the entire application's connection pool.
+- **Storage Buffer**: Staged migrations (like ghost tables) temporarily **double the disk space** needed for the affected table. Ensure you have > 50% free disk before starting.
+
+## Real-World Case Studies
+
+- **GitHub (gh-ost)**: GitHub built **gh-ost** because they found that trigger-based migration tools (like pt-online-schema-change) were causing too much load on their primary MySQL clusters. gh-ost uses the binary log to stream changes to a shadow table, allowing them to perform multi-terabyte migrations with zero impact on application latency.
+- **Stripe (Online Schema Migrations)**: Stripe documented a system where they use **Postgres Views** to manage migrations. They create a view that presents the "New" schema to the application, while the underlying tables are still being migrated. This allows them to decouple code deployment from the actual database state.
+- **Facebook (The OSC Tooling)**: Facebook runs one of the world's largest MySQL deployments. They use an internal "Online Schema Change" (OSC) tool that is integrated with their automation. It automatically throttles migrations based on replica lag and global database health, ensuring that a migration in one region doesn't cause a cascading failure across their global infrastructure.
+
 ## Connections
 
 - [[Schema Evolution]] — Zero-downtime migrations are the operational implementation of schema evolution principles
