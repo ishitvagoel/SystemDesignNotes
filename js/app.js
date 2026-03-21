@@ -448,10 +448,20 @@ function renderNote(id) {
     const id = `mermaid-diag-${Math.random().toString(36).substring(2, 11)}-${i}`;
     
     // 1. Fix common syntax errors in memory
-    // Change --|Label| to -->|Label|
-    rawText = rawText.replace(/ --\|/g, ' -->|');
+    if (rawText.startsWith('graph ') || rawText.startsWith('flowchart ')) {
+      // Change --|Label| to -->|Label|
+      rawText = rawText.replace(/ --\|/g, ' -->|');
+      // Change -- "Label" --> to -->|Label|
+      rawText = rawText.replace(/ -- "([^"]+)" -->/g, ' -->|$1|');
+      // Change -- Label --> to -->|Label|
+      rawText = rawText.replace(/ -- ([^ \-\->\n]+) -->/g, ' -->|$1|');
+      // Change --x to -->x
+      rawText = rawText.replace(/ --x /g, ' -->x ');
+      // Change --o to -->o
+      rawText = rawText.replace(/ --o /g, ' -->o ');
+    }
     
-    // 2. Replace CSS variables with actual values because mermaid parser doesn't like var(--...)
+    // 2. Replace CSS variables with actual values
     const isLight = document.body.classList.contains('light-mode');
     const themeVars = {
       '--bg': isLight ? '#fdfdfc' : '#0d0f0e',
@@ -468,7 +478,6 @@ function renderNote(id) {
       '--accent2': isLight ? '#1e6334' : '#4ab86a'
     };
     
-    // More robust replacement using a single pass
     rawText = rawText.replace(/var\(\s*(--[a-zA-Z0-9-]+)\s*\)/g, (match, varName) => {
       return themeVars[varName] || match;
     });
@@ -476,17 +485,7 @@ function renderNote(id) {
     try {
       mermaid.render(id, rawText).then(({svg}) => {
         el.innerHTML = svg;
-        
-        // Add click listener to show in modal
-        const wrapper = el.closest('.mermaid-wrapper');
-        if (wrapper) {
-          wrapper.onclick = () => {
-            const modal = document.getElementById('mermaid-modal');
-            const modalSvg = document.getElementById('mermaid-modal-svg');
-            modalSvg.innerHTML = svg;
-            modal.style.display = 'flex';
-          };
-        }
+        // The click listener is now handled by delegation on #note-body
       }).catch(err => {
         console.error('Mermaid render error:', err);
         el.innerHTML = `<pre style="color:var(--pink);font-size:12px;white-space:pre-wrap;border:1px solid var(--pink);padding:10px;border-radius:4px;">Mermaid Syntax Error:\n${err.message}\n\nRaw Text:\n${rawText}</pre>`;
@@ -495,6 +494,23 @@ function renderNote(id) {
       console.error('Mermaid sync error:', e);
     }
   });
+
+  // Global click delegation for mermaid modal (more reliable than per-element)
+  if (!body.dataset.mermaidListener) {
+    body.addEventListener('click', (e) => {
+      const wrapper = e.target.closest('.mermaid-wrapper');
+      if (wrapper) {
+        const svg = wrapper.querySelector('svg');
+        if (svg) {
+          const modal = document.getElementById('mermaid-modal');
+          const modalSvg = document.getElementById('mermaid-modal-svg');
+          modalSvg.innerHTML = svg.outerHTML;
+          modal.style.display = 'flex';
+        }
+      }
+    });
+    body.dataset.mermaidListener = 'true';
+  }
 
   body.classList.add('animate-in');
   setTimeout(() => body.classList.remove('animate-in'), 300);
