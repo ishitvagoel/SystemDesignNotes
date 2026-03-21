@@ -1021,17 +1021,37 @@ document.getElementById('view-graph').addEventListener('click', () => {
   document.getElementById('search-screen').style.display = 'none';
   document.getElementById('outline-screen').style.display = 'none';
   document.getElementById('study-screen').style.display = 'none';
+  document.getElementById('canvas-screen').style.display = 'none';
   document.getElementById('graph-screen').style.display = 'flex';
 
   initGraph();
 });
 
-// Update Files and Outline buttons to hide graph
-const origFilesClick = document.getElementById('view-files').onclick;
+// ── CANVAS VIEW BUTTON ──
+document.getElementById('view-canvas').addEventListener('click', () => {
+  document.querySelectorAll('.header-pills .pill').forEach(p => p.classList.remove('active'));
+  document.getElementById('view-canvas').classList.add('active');
+  outlineActive = false;
+
+  document.getElementById('sidebar').style.display = 'none';
+  document.getElementById('welcome-screen').style.display = 'none';
+  document.getElementById('note-screen').style.display = 'none';
+  document.getElementById('search-screen').style.display = 'none';
+  document.getElementById('outline-screen').style.display = 'none';
+  document.getElementById('study-screen').style.display = 'none';
+  document.getElementById('graph-screen').style.display = 'none';
+  document.getElementById('canvas-screen').style.display = 'flex';
+
+  if (typeof initCanvas === 'function') initCanvas();
+});
+
+// Update Files and Outline buttons to hide graph and canvas
 document.getElementById('view-files').addEventListener('click', () => {
   document.getElementById('view-graph').classList.remove('active');
+  document.getElementById('view-canvas').classList.remove('active');
   document.getElementById('view-study')?.classList.remove('active');
   document.getElementById('graph-screen').style.display = 'none';
+  document.getElementById('canvas-screen').style.display = 'none';
   document.getElementById('study-screen').style.display = 'none';
   document.getElementById('sidebar').style.display = '';
   if (activeTabId) {
@@ -1043,7 +1063,9 @@ document.getElementById('view-files').addEventListener('click', () => {
 
 document.getElementById('view-outline').addEventListener('click', () => {
   document.getElementById('view-graph').classList.remove('active');
+  document.getElementById('view-canvas').classList.remove('active');
   document.getElementById('graph-screen').style.display = 'none';
+  document.getElementById('canvas-screen').style.display = 'none';
 });
 
 // ── STUDY MODE ──

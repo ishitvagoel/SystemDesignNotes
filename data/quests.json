@@ -1,0 +1,29 @@
+[
+  {
+    "id": "q1",
+    "title": "Flash Sale Scaling",
+    "description": "A high-traffic flash sale is coming! Your application server is currently connected directly to the database. Add a Load Balancer and a Cache to handle 2,000 requests per second.",
+    "objectives": [
+      "Add a Load Balancer between Client and App Server",
+      "Add a Cache connected to the App Server",
+      "Successfully handle 2,000 RPS simulation without bottlenecks"
+    ],
+    "winCondition": {
+      "minRps": 2000,
+      "maxNodeLoad": 0.9,
+      "requiredTypes": ["lb", "cache"]
+    }
+  },
+  {
+    "id": "q2",
+    "title": "Global Latency",
+    "description": "Users are reporting slow load times from the other side of the world. Add a Content Delivery Network (CDN) to serve static assets.",
+    "objectives": [
+      "Add a CDN node",
+      "Connect Client to CDN"
+    ],
+    "winCondition": {
+      "requiredTypes": ["cdn"]
+    }
+  }
+]
