@@ -75,7 +75,8 @@ const PHASE_CONFIG = {
   '02-Phase-2-Distribution':          { label: 'Phase 2 — Distribution', cls: 'phase-2', short: 'P2' },
   '03-Phase-3-Architecture-Operations': { label: 'Phase 3 — Architecture', cls: 'phase-3', short: 'P3' },
   '04-Phase-4-Modern-AI':             { label: 'Phase 4 — Modern AI', cls: 'phase-4', short: 'P4' },
-  '05-Capstones':                     { label: 'Capstones', cls: 'phase-cap', short: 'CAP' },
+  '05-Phase-5-Modern-Operations':     { label: 'Phase 5 — Modern Operations', cls: 'phase-5', short: 'P5' },
+  '06-Phase-6-Capstones':             { label: 'Phase 6 — Capstones', cls: 'phase-cap', short: 'CAP' },
 };
 
 // ── BUILD SIDEBAR ──
@@ -278,7 +279,16 @@ async function openNote(id) {
   // Lazy load content
   if (!NOTE_CACHE[id]) {
     try {
-      const res = await fetch(`data/notes/${id}.md`);
+      let path = `data/notes/${id}.md`;
+      if (note.folder) {
+        if (note.subfolder) {
+          path = `data/notes/${note.folder}/${note.subfolder}/${note.filename}`;
+        } else {
+          // Check if it's in a phase folder but not subfolder (like new Phase 6)
+          path = `data/notes/${note.folder}/${note.filename}`;
+        }
+      }
+      const res = await fetch(path);
       NOTE_CACHE[id] = await res.text();
     } catch (err) {
       console.error('Failed to load note:', err);
