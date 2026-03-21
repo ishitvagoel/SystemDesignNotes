@@ -120,14 +120,12 @@ graph TD
     subgraph "B-Tree (In-Place Updates)"
         B_Root[Root Page] --> B_Internal[Internal Pages]
         B_Internal --> B_Leaf[Leaf Pages - Data]
-        Note over B_Leaf: Writes: Find page -> Update in place
     end
 
     subgraph "LSM-Tree (Append-Only)"
         L_Write[Write Op] --> L_Mem[Memtable - RAM]
         L_Mem -->|Flush| L0[SSTables Level 0]
         L0 -->|Compact| L1[SSTables Level 1]
-        Note over L1: Writes: Sequential append to L0
     end
 
     style B_Root fill:var(--surface),stroke:var(--accent),stroke-width:2px;

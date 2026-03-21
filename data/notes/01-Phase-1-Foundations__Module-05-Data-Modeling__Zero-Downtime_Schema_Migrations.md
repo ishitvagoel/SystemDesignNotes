@@ -159,7 +159,6 @@ graph TD
 
     subgraph "Phase 3: Contract (Cleanup)"
         App3[App v3] -->|6. Read/Write| Col_New
-        Note over App3: Old Column & Trigger Dropped
     end
 
     style Col_New fill:var(--surface),stroke:var(--accent),stroke-width:2px;

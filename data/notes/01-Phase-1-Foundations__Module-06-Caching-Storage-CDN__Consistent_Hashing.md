@@ -100,7 +100,6 @@ graph LR
         NodeD["Node D (200°)"]
         NodeB --- NodeD
         NodeD --- Key2
-        Note over NodeD: Takes 'Key 2' from Node C
     end
 
     style NodeA fill:var(--surface),stroke:var(--accent),stroke-width:2px;

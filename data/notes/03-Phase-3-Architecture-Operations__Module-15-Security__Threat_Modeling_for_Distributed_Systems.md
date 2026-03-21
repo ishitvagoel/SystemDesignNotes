@@ -129,9 +129,6 @@ graph TD
 
     style GW fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
     style DB fill:var(--surface),stroke:#2d8a4e,stroke-width:2px;
-    
-    Note over User, GW: Trust Boundary 1
-    Note over GW, S1: Trust Boundary 2
 ```
 
 ## Back-of-the-Envelope Heuristics

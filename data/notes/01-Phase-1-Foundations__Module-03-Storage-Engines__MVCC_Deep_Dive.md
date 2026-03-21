@@ -120,8 +120,6 @@ graph TD
     end
 
     ReadA -.->|Snapshot T10| V8
-    Note over ReadA: T10 < T12, so T8 is visible
-    Note over WriteB: Creates new version instead of overwriting V8
 ```
 
 ## Back-of-the-Envelope Heuristics

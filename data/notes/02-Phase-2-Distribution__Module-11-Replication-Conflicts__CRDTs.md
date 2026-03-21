@@ -158,8 +158,6 @@ graph TD
         MergeA["Merge: max(A), max(B)"] --> FinalA[Final: {A:5, B:3}]
         MergeB["Merge: max(A), max(B)"] --> FinalB[Final: {A:5, B:3}]
     end
-
-    Note over FinalA, FinalB: Both converge to 8 without a leader
 ```
 
 ## Back-of-the-Envelope Heuristics

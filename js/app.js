@@ -40,7 +40,9 @@ renderer.code = function(code, language) {
     lang = language;
   }
   if (lang === 'mermaid') {
-    return `<div class="mermaid-wrapper"><pre class="mermaid">${text}</pre></div>`;
+    // Escape for HTML pre tag
+    const escaped = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<div class="mermaid-wrapper"><pre class="mermaid">${escaped}</pre></div>`;
   }
   // fallback to default
   const escaped = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -442,14 +444,19 @@ function renderNote(id) {
 
   // Render mermaid diagrams
   body.querySelectorAll('.mermaid').forEach((el, i) => {
+    const rawText = el.textContent.trim();
+    const id = `mermaid-diag-${Math.random().toString(36).substring(2, 11)}-${i}`;
+    
     try {
-      const id = `mermaid-${Date.now()}-${i}`;
-      mermaid.render(id, el.textContent.trim()).then(({svg}) => {
+      mermaid.render(id, rawText).then(({svg}) => {
         el.innerHTML = svg;
       }).catch(err => {
-        el.innerHTML = `<pre style="color:var(--pink);font-size:12px;">Diagram render error: ${err.message}</pre>`;
+        console.error('Mermaid render error:', err);
+        el.innerHTML = `<pre style="color:var(--pink);font-size:12px;white-space:pre-wrap;border:1px solid var(--pink);padding:10px;border-radius:4px;">Mermaid Syntax Error:\n${err.message}</pre>`;
       });
-    } catch(e) { /* ignore */ }
+    } catch(e) { 
+      console.error('Mermaid sync error:', e);
+    }
   });
 
   body.classList.add('animate-in');

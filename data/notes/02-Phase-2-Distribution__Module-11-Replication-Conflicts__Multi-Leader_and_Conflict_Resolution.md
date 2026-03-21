@@ -136,11 +136,8 @@ graph LR
     L1 <-->|Bi-Directional Async Sync| L2
 
     subgraph "Conflict Resolution (Version Vectors)"
-        Note over L1, L2: Write X: US Leader [A:1, B:0]
-        Note over L1, L2: Write Y: EU Leader [A:0, B:1]
         L1 -- "Sync Y" --> L1
         L2 -- "Sync X" --> L2
-        Note over L1, L2: Conflict Detected: [A:1, B:1]
     end
 
     style L1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;

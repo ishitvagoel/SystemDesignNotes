@@ -84,13 +84,11 @@ graph TD
         ClientW[Client] -->|Write| Node1[(Node 1: OK)]
         ClientW -->|Write| Node2[(Node 2: OK)]
         ClientW -.->|Write| Node3[(Node 3: Offline)]
-        Note over ClientW: 2 ACKs >= W. SUCCESS!
     end
 
     subgraph "Quorum Read (R=2, N=3)"
         ClientR[Client] -->|Read v2| Node1
         ClientR -->|Read v1| Node2
-        Note over ClientR: Compare v2 vs v1. Return v2.
         ClientR -->|Read Repair: Write v2| Node2
     end
 

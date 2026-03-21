@@ -57,14 +57,12 @@ graph TD
         C1[Client] -- "1. SYN" --> S1[Server]
         S1 -- "2. SYN-ACK" --> C1
         C1 -- "3. ACK + Data" --> S1
-        Note over C1, S1: 1 RTT Handshake before data
         S1 -- "4. ACK for Data" --> C1
     end
 
     subgraph "UDP: Unreliable Datagram"
         C2[Client] -- "1. Data (Postcard)" --> S2[Server]
         C2 -- "2. Data (Postcard)" --> S2
-        Note over C2, S2: 0 RTT. Just send it.
         S2 --x C2: No ACK back
     end
 

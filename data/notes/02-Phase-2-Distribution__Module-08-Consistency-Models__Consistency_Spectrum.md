@@ -119,7 +119,6 @@ graph LR
         Leader -->|2. Sync| F1[(Follower A)]
         Leader -->|3. Sync| F2[(Follower B)]
         Leader -- "Success" --> C1
-        Note over C1, Leader: Read-after-Write guaranteed
     end
 
     subgraph "Eventual Consistency"
@@ -127,7 +126,6 @@ graph LR
         P1 -- "Success" --> C2
         P1 -.->|2. Async Replication| R1[(Replica)]
         C3[Other Client] -->|3. Read| R1
-        Note over C3, R1: May see stale data for 100ms
     end
 
     style Leader fill:var(--surface),stroke:var(--accent),stroke-width:2px;

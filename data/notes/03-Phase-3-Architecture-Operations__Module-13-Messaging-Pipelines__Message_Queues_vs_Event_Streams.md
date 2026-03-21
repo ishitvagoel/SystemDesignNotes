@@ -89,7 +89,6 @@ graph TD
         P1[Producer] --> Q[Queue: RabbitMQ/SQS]
         Q --> C1[Consumer A]
         Q --> C2[Consumer B]
-        Note over Q: Message deleted after ACK
     end
 
     subgraph "Event Stream (Log/History)"
@@ -100,7 +99,6 @@ graph TD
         subgraph "Consumer Group 2"
             L --> G2_C1[Service B.1]
         end
-        Note over L: Immutable Log. Messages retained.
     end
 
     style Q fill:var(--surface),stroke:var(--accent),stroke-width:2px;

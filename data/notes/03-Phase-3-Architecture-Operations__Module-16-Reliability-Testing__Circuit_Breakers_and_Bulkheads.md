@@ -127,10 +127,6 @@ graph TD
         C_CB -->|Request| SvcC[Service C - OK]
     end
 
-    Note over B_CB: B is slow -> Pool B exhausts.
-    Note over C_CB: C is OK -> Pool C unaffected.
-    Note over B_CB: CB trips to OPEN.
-    
     style B_CB fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
     style C_CB fill:var(--surface),stroke:#2d8a4e,stroke-width:2px;
 ```

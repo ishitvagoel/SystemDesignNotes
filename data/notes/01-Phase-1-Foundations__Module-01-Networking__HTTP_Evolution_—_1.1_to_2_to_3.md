@@ -110,13 +110,11 @@ graph TD
         C2 -- "Stream 3 (Req 2)" --> S2
         S2 -- "Stream 3 (Res 2)" --> C2
         S2 -- "Stream 1 (Res 1)" --> C2
-        Note over C2, S2: One TCP Conn: Loss blocks ALL
     end
 
     subgraph "HTTP/3 (QUIC Multiplexing)"
         C3[Client] -- "Stream 1" --> S3[Server]
         C3 -- "Stream 2" --> S3
-        Note over C3, S3: UDP/QUIC: Loss in Stream 1 only blocks 1
     end
 
     style S2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;

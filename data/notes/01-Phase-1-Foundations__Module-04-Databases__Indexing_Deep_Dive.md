@@ -159,7 +159,6 @@ graph TD
         C1[New York, 20]
         C2[New York, 25]
         C3[Tokyo, 22]
-        Note over C1, C3: Sorted by City, then Age
     end
 
     style Root fill:var(--surface),stroke:var(--accent),stroke-width:2px;

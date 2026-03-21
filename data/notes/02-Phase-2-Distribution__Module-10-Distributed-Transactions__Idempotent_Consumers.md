@@ -119,7 +119,6 @@ graph TD
 
     subgraph "External Side Effects"
         BizLogic -->|4. Call with ID| Notify[Email/Payment Svc]
-        Note over Notify: Downstream uses ID as Idemp Key
     end
 
     style Consumer fill:var(--surface),stroke:var(--accent),stroke-width:2px;

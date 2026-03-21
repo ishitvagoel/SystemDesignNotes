@@ -95,16 +95,11 @@ graph TD
         
         NodeA -- "Message Delayed 1hr" --> NodeC
         NodeA -- "Check Node B" --> NodeB
-        Note over NodeB: Is B crashed or just slow?
-        Note over NodeA: FLP says you CAN'T know.
     end
 
     subgraph "Practical Solution (Partial Synchrony)"
         RaftL[Raft Leader] -->|Heartbeat| F1[Follower 1]
         RaftL -->|Heartbeat| F2[Follower 2]
-        
-        Note over RaftL: Timeout = 150ms.
-        Note over RaftL: If no ACK in 150ms, ASSUME crash.
     end
 
     style NodeB fill:var(--surface),stroke:#ff4d4d,stroke-dasharray: 5 5;

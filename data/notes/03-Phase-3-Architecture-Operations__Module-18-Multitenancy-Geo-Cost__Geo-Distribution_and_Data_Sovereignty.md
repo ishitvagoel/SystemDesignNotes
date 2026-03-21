@@ -122,7 +122,6 @@ graph TD
 
     subgraph "Global Sync"
         DB_US -.->|Filtered Replication| DB_EU
-        Note over Global Sync: Only non-PII data shared globally
     end
 
     style Region_EU fill:var(--surface),stroke:#2d8a4e,stroke-width:2px;
