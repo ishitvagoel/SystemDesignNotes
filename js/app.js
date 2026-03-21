@@ -764,7 +764,7 @@ function renderWelcomeStats() {
 
 // ── INIT ──
 async function init() {
-  const indexRes = await fetch('data/vault-index.json');
+  const indexRes = await fetch(`data/vault-index.json?v=${Date.now()}`);
   VAULT_INDEX = await indexRes.json();
   FILTERED_INDEX = VAULT_INDEX.filter(n => !n.title.includes('{{title}}') && !n.id.includes('Note_Template'));
 
