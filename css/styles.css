@@ -870,6 +870,15 @@
       height: auto;
       max-width: none;
     }
+    #mermaid-modal-close:hover {
+      background: var(--surface);
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: scale(1.1);
+    }
+    #mermaid-modal-close:active {
+      transform: scale(0.95);
+    }
 
     /* mobile hamburger */
     #mobile-toggle {

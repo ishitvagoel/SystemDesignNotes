@@ -1437,22 +1437,17 @@ document.getElementById('btn-export').addEventListener('click', async function()
 });
 
 // ── MERMAID MODAL HANDLERS ──
-document.getElementById('mermaid-modal-close').addEventListener('click', (e) => {
-  e.stopPropagation();
-  document.getElementById('mermaid-modal').style.display = 'none';
-});
-
-document.getElementById('mermaid-modal').addEventListener('click', (e) => {
-  if (e.target.id === 'mermaid-modal') {
-    document.getElementById('mermaid-modal').style.display = 'none';
+const mermaidModal = document.getElementById('mermaid-modal');
+mermaidModal.addEventListener('click', (e) => {
+  const isCloseButton = e.target.id === 'mermaid-modal-close' || e.target.closest('#mermaid-modal-close');
+  const isBackground = e.target === mermaidModal;
+  if (isCloseButton || isBackground) {
+    mermaidModal.style.display = 'none';
   }
 });
 
 window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    const modal = document.getElementById('mermaid-modal');
-    if (modal.style.display === 'flex') {
-      modal.style.display = 'none';
-    }
+  if (e.key === 'Escape' && mermaidModal.style.display === 'flex') {
+    mermaidModal.style.display = 'none';
   }
 });
