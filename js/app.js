@@ -66,7 +66,7 @@ let outlineActive = false;
 let dragState = null;
 let ghostEl = null;
 let customOrder = {}; // folder -> [id, ...]
-let sectionCollapsed = {};
+let sectionCollapsed = JSON.parse(localStorage.getItem('section-collapsed') || '{}');
 
 // ── PHASE CONFIG ──
 const PHASE_CONFIG = {
@@ -177,6 +177,7 @@ function buildSidebar() {
 function toggleSection(folder, sectionEl) {
   sectionCollapsed[folder] = !sectionCollapsed[folder];
   sectionEl.classList.toggle('collapsed', sectionCollapsed[folder]);
+  localStorage.setItem('section-collapsed', JSON.stringify(sectionCollapsed));
 }
 
 // ── DRAG & DROP ──

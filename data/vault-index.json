@@ -1,11 +1,83 @@
 [
   {
+    "id": "00-Meta__Glossary",
+    "title": "Core Terms",
+    "folder": "00-Meta",
+    "subfolder": null,
+    "filename": "00-Meta__Glossary.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Meta__How_to_Study_This_Vault",
+    "title": "How to Study This Vault",
+    "folder": "00-Meta",
+    "subfolder": null,
+    "filename": "00-Meta__How_to_Study_This_Vault.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Meta__Knowledge_Graph_Overview",
+    "title": "Knowledge Graph Overview",
+    "folder": "00-Meta",
+    "subfolder": null,
+    "filename": "00-Meta__Knowledge_Graph_Overview.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Meta__Mastery_Checklist",
+    "title": "Mastery Checklist",
+    "folder": "00-Meta",
+    "subfolder": null,
+    "filename": "00-Meta__Mastery_Checklist.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Meta__Note_Template",
+    "title": "{{title}}",
+    "folder": "00-Meta",
+    "subfolder": null,
+    "filename": "00-Meta__Note_Template.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Meta__References_Hub",
+    "title": "References Hub",
+    "folder": "00-Meta",
+    "subfolder": null,
+    "filename": "00-Meta__References_Hub.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Meta__What_Changed_Since_DDIA",
+    "title": "What Changed Since DDIA",
+    "folder": "00-Meta",
+    "subfolder": null,
+    "filename": "00-Meta__What_Changed_Since_DDIA.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
     "id": "01-Phase-1-Foundations__Module-01-Networking__Anycast_and_GeoDNS",
     "title": "Anycast and GeoDNS",
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-01-Networking",
     "filename": "01-Phase-1-Foundations__Module-01-Networking__Anycast_and_GeoDNS.md",
-    "is_moc": false, "phase": 1, "module": 1
+    "is_moc": false,
+    "phase": 1,
+    "module": 1
   },
   {
     "id": "01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive",
@@ -13,7 +85,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-01-Networking",
     "filename": "01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive.md",
-    "is_moc": false, "phase": 1, "module": 1
+    "is_moc": false,
+    "phase": 1,
+    "module": 1
   },
   {
     "id": "01-Phase-1-Foundations__Module-01-Networking__DNS_Resolution_Chain",
@@ -21,7 +95,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-01-Networking",
     "filename": "01-Phase-1-Foundations__Module-01-Networking__DNS_Resolution_Chain.md",
-    "is_moc": false, "phase": 1, "module": 1
+    "is_moc": false,
+    "phase": 1,
+    "module": 1
   },
   {
     "id": "01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3",
@@ -29,7 +105,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-01-Networking",
     "filename": "01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3.md",
-    "is_moc": false, "phase": 1, "module": 1
+    "is_moc": false,
+    "phase": 1,
+    "module": 1
   },
   {
     "id": "01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals",
@@ -37,7 +115,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-01-Networking",
     "filename": "01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals.md",
-    "is_moc": false, "phase": 1, "module": 1
+    "is_moc": false,
+    "phase": 1,
+    "module": 1
   },
   {
     "id": "01-Phase-1-Foundations__Module-01-Networking__TCP_Deep_Dive",
@@ -45,7 +125,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-01-Networking",
     "filename": "01-Phase-1-Foundations__Module-01-Networking__TCP_Deep_Dive.md",
-    "is_moc": false, "phase": 1, "module": 1
+    "is_moc": false,
+    "phase": 1,
+    "module": 1
   },
   {
     "id": "01-Phase-1-Foundations__Module-01-Networking__TCP_vs_UDP",
@@ -53,7 +135,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-01-Networking",
     "filename": "01-Phase-1-Foundations__Module-01-Networking__TCP_vs_UDP.md",
-    "is_moc": false, "phase": 1, "module": 1
+    "is_moc": false,
+    "phase": 1,
+    "module": 1
   },
   {
     "id": "01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL",
@@ -61,15 +145,19 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-01-Networking",
     "filename": "01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL.md",
-    "is_moc": false, "phase": 1, "module": 1
+    "is_moc": false,
+    "phase": 1,
+    "module": 1
   },
   {
-    "id": "01-Phase-1-Foundations__Module-01-Networking___Module_01_MOC",
-    "title": "Module 01 MOC — Networking",
+    "id": "Module_Module_01_MOC",
+    "title": "Module 01: Networking & Communication Protocols",
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-01-Networking",
-    "filename": "Module_01_MOC.md",
-    "is_moc": true, "phase": 1, "module": 1
+    "filename": "Module_Module_01_MOC.md",
+    "is_moc": true,
+    "phase": 1,
+    "module": 1
   },
   {
     "id": "01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns",
@@ -77,7 +165,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-02-API-Design",
     "filename": "01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns.md",
-    "is_moc": false, "phase": 1, "module": 2
+    "is_moc": false,
+    "phase": 1,
+    "module": 2
   },
   {
     "id": "01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility",
@@ -85,7 +175,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-02-API-Design",
     "filename": "01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility.md",
-    "is_moc": false, "phase": 1, "module": 2
+    "is_moc": false,
+    "phase": 1,
+    "module": 2
   },
   {
     "id": "01-Phase-1-Foundations__Module-02-API-Design__Idempotency",
@@ -93,7 +185,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-02-API-Design",
     "filename": "01-Phase-1-Foundations__Module-02-API-Design__Idempotency.md",
-    "is_moc": false, "phase": 1, "module": 2
+    "is_moc": false,
+    "phase": 1,
+    "module": 2
   },
   {
     "id": "01-Phase-1-Foundations__Module-02-API-Design__RESTful_Design_Principles",
@@ -101,7 +195,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-02-API-Design",
     "filename": "01-Phase-1-Foundations__Module-02-API-Design__RESTful_Design_Principles.md",
-    "is_moc": false, "phase": 1, "module": 2
+    "is_moc": false,
+    "phase": 1,
+    "module": 2
   },
   {
     "id": "01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling",
@@ -109,15 +205,19 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-02-API-Design",
     "filename": "01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling.md",
-    "is_moc": false, "phase": 1, "module": 2
+    "is_moc": false,
+    "phase": 1,
+    "module": 2
   },
   {
-    "id": "01-Phase-1-Foundations__Module-02-API-Design___Module_02_MOC",
-    "title": "Module 02 MOC — API Design",
+    "id": "Module_Module_02_MOC",
+    "title": "Module 02: API Design & Contracts",
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-02-API-Design",
-    "filename": "Module_02_MOC.md",
-    "is_moc": true, "phase": 1, "module": 2
+    "filename": "Module_Module_02_MOC.md",
+    "is_moc": true,
+    "phase": 1,
+    "module": 2
   },
   {
     "id": "01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree",
@@ -125,7 +225,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-03-Storage-Engines",
     "filename": "01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree.md",
-    "is_moc": false, "phase": 1, "module": 3
+    "is_moc": false,
+    "phase": 1,
+    "module": 3
   },
   {
     "id": "01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache",
@@ -133,7 +235,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-03-Storage-Engines",
     "filename": "01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache.md",
-    "is_moc": false, "phase": 1, "module": 3
+    "is_moc": false,
+    "phase": 1,
+    "module": 3
   },
   {
     "id": "01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive",
@@ -141,7 +245,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-03-Storage-Engines",
     "filename": "01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive.md",
-    "is_moc": false, "phase": 1, "module": 3
+    "is_moc": false,
+    "phase": 1,
+    "module": 3
   },
   {
     "id": "01-Phase-1-Foundations__Module-03-Storage-Engines__Storage_Engine_Selection",
@@ -149,7 +255,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-03-Storage-Engines",
     "filename": "01-Phase-1-Foundations__Module-03-Storage-Engines__Storage_Engine_Selection.md",
-    "is_moc": false, "phase": 1, "module": 3
+    "is_moc": false,
+    "phase": 1,
+    "module": 3
   },
   {
     "id": "01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log",
@@ -157,15 +265,19 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-03-Storage-Engines",
     "filename": "01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log.md",
-    "is_moc": false, "phase": 1, "module": 3
+    "is_moc": false,
+    "phase": 1,
+    "module": 3
   },
   {
-    "id": "01-Phase-1-Foundations__Module-03-Storage-Engines___Module_03_MOC",
-    "title": "Module 03 MOC — Storage Engines",
+    "id": "Module_Module_03_MOC",
+    "title": "Module 03: Storage Engines & Database Internals",
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-03-Storage-Engines",
-    "filename": "Module_03_MOC.md",
-    "is_moc": true, "phase": 1, "module": 3
+    "filename": "Module_Module_03_MOC.md",
+    "is_moc": true,
+    "phase": 1,
+    "module": 3
   },
   {
     "id": "01-Phase-1-Foundations__Module-04-Databases__Database_Replication",
@@ -173,7 +285,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-04-Databases",
     "filename": "01-Phase-1-Foundations__Module-04-Databases__Database_Replication.md",
-    "is_moc": false, "phase": 1, "module": 4
+    "is_moc": false,
+    "phase": 1,
+    "module": 4
   },
   {
     "id": "01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive",
@@ -181,7 +295,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-04-Databases",
     "filename": "01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive.md",
-    "is_moc": false, "phase": 1, "module": 4
+    "is_moc": false,
+    "phase": 1,
+    "module": 4
   },
   {
     "id": "01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases",
@@ -189,7 +305,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-04-Databases",
     "filename": "01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases.md",
-    "is_moc": false, "phase": 1, "module": 4
+    "is_moc": false,
+    "phase": 1,
+    "module": 4
   },
   {
     "id": "01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding",
@@ -197,7 +315,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-04-Databases",
     "filename": "01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding.md",
-    "is_moc": false, "phase": 1, "module": 4
+    "is_moc": false,
+    "phase": 1,
+    "module": 4
   },
   {
     "id": "01-Phase-1-Foundations__Module-04-Databases__SQL_vs_NoSQL_Decision_Framework",
@@ -205,15 +325,19 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-04-Databases",
     "filename": "01-Phase-1-Foundations__Module-04-Databases__SQL_vs_NoSQL_Decision_Framework.md",
-    "is_moc": false, "phase": 1, "module": 4
+    "is_moc": false,
+    "phase": 1,
+    "module": 4
   },
   {
-    "id": "01-Phase-1-Foundations__Module-04-Databases___Module_04_MOC",
-    "title": "Module 04 MOC — Databases",
+    "id": "Module_Module_04_MOC",
+    "title": "Module 04: Databases — Selection, Scaling & Operations",
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-04-Databases",
-    "filename": "Module_04_MOC.md",
-    "is_moc": true, "phase": 1, "module": 4
+    "filename": "Module_Module_04_MOC.md",
+    "is_moc": true,
+    "phase": 1,
+    "module": 4
   },
   {
     "id": "01-Phase-1-Foundations__Module-05-Data-Modeling__Data_Model_Selection",
@@ -221,7 +345,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-05-Data-Modeling",
     "filename": "01-Phase-1-Foundations__Module-05-Data-Modeling__Data_Model_Selection.md",
-    "is_moc": false, "phase": 1, "module": 5
+    "is_moc": false,
+    "phase": 1,
+    "module": 5
   },
   {
     "id": "01-Phase-1-Foundations__Module-05-Data-Modeling__Relational_Modeling_and_Normalization",
@@ -229,7 +355,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-05-Data-Modeling",
     "filename": "01-Phase-1-Foundations__Module-05-Data-Modeling__Relational_Modeling_and_Normalization.md",
-    "is_moc": false, "phase": 1, "module": 5
+    "is_moc": false,
+    "phase": 1,
+    "module": 5
   },
   {
     "id": "01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution",
@@ -237,7 +365,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-05-Data-Modeling",
     "filename": "01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution.md",
-    "is_moc": false, "phase": 1, "module": 5
+    "is_moc": false,
+    "phase": 1,
+    "module": 5
   },
   {
     "id": "01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations",
@@ -245,15 +375,19 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-05-Data-Modeling",
     "filename": "01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations.md",
-    "is_moc": false, "phase": 1, "module": 5
+    "is_moc": false,
+    "phase": 1,
+    "module": 5
   },
   {
-    "id": "01-Phase-1-Foundations__Module-05-Data-Modeling___Module_05_MOC",
-    "title": "Module 05 MOC — Data Modeling",
+    "id": "Module_Module_05_MOC",
+    "title": "Module 05: Data Modeling & Schema Evolution",
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-05-Data-Modeling",
-    "filename": "Module_05_MOC.md",
-    "is_moc": true, "phase": 1, "module": 5
+    "filename": "Module_Module_05_MOC.md",
+    "is_moc": true,
+    "phase": 1,
+    "module": 5
   },
   {
     "id": "01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture",
@@ -261,7 +395,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-06-Caching-Storage-CDN",
     "filename": "01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture.md",
-    "is_moc": false, "phase": 1, "module": 6
+    "is_moc": false,
+    "phase": 1,
+    "module": 6
   },
   {
     "id": "01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies",
@@ -269,7 +405,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-06-Caching-Storage-CDN",
     "filename": "01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies.md",
-    "is_moc": false, "phase": 1, "module": 6
+    "is_moc": false,
+    "phase": 1,
+    "module": 6
   },
   {
     "id": "01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing",
@@ -277,7 +415,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-06-Caching-Storage-CDN",
     "filename": "01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing.md",
-    "is_moc": false, "phase": 1, "module": 6
+    "is_moc": false,
+    "phase": 1,
+    "module": 6
   },
   {
     "id": "01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Distributed_Caching",
@@ -285,7 +425,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-06-Caching-Storage-CDN",
     "filename": "01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Distributed_Caching.md",
-    "is_moc": false, "phase": 1, "module": 6
+    "is_moc": false,
+    "phase": 1,
+    "module": 6
   },
   {
     "id": "01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals",
@@ -293,15 +435,19 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-06-Caching-Storage-CDN",
     "filename": "01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals.md",
-    "is_moc": false, "phase": 1, "module": 6
+    "is_moc": false,
+    "phase": 1,
+    "module": 6
   },
   {
-    "id": "01-Phase-1-Foundations__Module-06-Caching-Storage-CDN___Module_06_MOC",
-    "title": "Module 06 MOC — Caching & Storage",
+    "id": "Module_Module_06_MOC",
+    "title": "Module 06: Object Storage, Caching & Content Delivery",
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-06-Caching-Storage-CDN",
-    "filename": "Module_06_MOC.md",
-    "is_moc": true, "phase": 1, "module": 6
+    "filename": "Module_Module_06_MOC.md",
+    "is_moc": true,
+    "phase": 1,
+    "module": 6
   },
   {
     "id": "01-Phase-1-Foundations__Module-07-ID-Generation__ID_Generation_Strategies",
@@ -309,7 +455,9 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-07-ID-Generation",
     "filename": "01-Phase-1-Foundations__Module-07-ID-Generation__ID_Generation_Strategies.md",
-    "is_moc": false, "phase": 1, "module": 7
+    "is_moc": false,
+    "phase": 1,
+    "module": 7
   },
   {
     "id": "01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering",
@@ -317,15 +465,19 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-07-ID-Generation",
     "filename": "01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering.md",
-    "is_moc": false, "phase": 1, "module": 7
+    "is_moc": false,
+    "phase": 1,
+    "module": 7
   },
   {
-    "id": "01-Phase-1-Foundations__Module-07-ID-Generation___Module_07_MOC",
-    "title": "Module 07 MOC — ID Generation",
+    "id": "Module_Module_07_MOC",
+    "title": "Module 07: Unique ID Generation & Ordering",
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-07-ID-Generation",
-    "filename": "Module_07_MOC.md",
-    "is_moc": true, "phase": 1, "module": 7
+    "filename": "Module_Module_07_MOC.md",
+    "is_moc": true,
+    "phase": 1,
+    "module": 7
   },
   {
     "id": "02-Phase-2-Distribution__Module-08-Consistency-Models__CAP_Theorem_and_PACELC",
@@ -333,7 +485,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-08-Consistency-Models",
     "filename": "02-Phase-2-Distribution__Module-08-Consistency-Models__CAP_Theorem_and_PACELC.md",
-    "is_moc": false, "phase": 2, "module": 8
+    "is_moc": false,
+    "phase": 2,
+    "module": 8
   },
   {
     "id": "02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum",
@@ -341,7 +495,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-08-Consistency-Models",
     "filename": "02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum.md",
-    "is_moc": false, "phase": 2, "module": 8
+    "is_moc": false,
+    "phase": 2,
+    "module": 8
   },
   {
     "id": "02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees",
@@ -349,15 +505,19 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-08-Consistency-Models",
     "filename": "02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees.md",
-    "is_moc": false, "phase": 2, "module": 8
+    "is_moc": false,
+    "phase": 2,
+    "module": 8
   },
   {
-    "id": "02-Phase-2-Distribution__Module-08-Consistency-Models___Module_08_MOC",
-    "title": "Module 08 MOC — Consistency Models",
+    "id": "Module_Module_08_MOC",
+    "title": "Module 08: Consistency Models & Distributed Systems Theory",
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-08-Consistency-Models",
-    "filename": "Module_08_MOC.md",
-    "is_moc": true, "phase": 2, "module": 8
+    "filename": "Module_Module_08_MOC.md",
+    "is_moc": true,
+    "phase": 2,
+    "module": 8
   },
   {
     "id": "02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft",
@@ -365,7 +525,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-09-Consensus",
     "filename": "02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft.md",
-    "is_moc": false, "phase": 2, "module": 9
+    "is_moc": false,
+    "phase": 2,
+    "module": 9
   },
   {
     "id": "02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services",
@@ -373,7 +535,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-09-Consensus",
     "filename": "02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services.md",
-    "is_moc": false, "phase": 2, "module": 9
+    "is_moc": false,
+    "phase": 2,
+    "module": 9
   },
   {
     "id": "02-Phase-2-Distribution__Module-09-Consensus__Distributed_Locks_and_Fencing",
@@ -381,7 +545,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-09-Consensus",
     "filename": "02-Phase-2-Distribution__Module-09-Consensus__Distributed_Locks_and_Fencing.md",
-    "is_moc": false, "phase": 2, "module": 9
+    "is_moc": false,
+    "phase": 2,
+    "module": 9
   },
   {
     "id": "02-Phase-2-Distribution__Module-09-Consensus__FLP_Impossibility",
@@ -389,7 +555,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-09-Consensus",
     "filename": "02-Phase-2-Distribution__Module-09-Consensus__FLP_Impossibility.md",
-    "is_moc": false, "phase": 2, "module": 9
+    "is_moc": false,
+    "phase": 2,
+    "module": 9
   },
   {
     "id": "02-Phase-2-Distribution__Module-09-Consensus__Paxos_and_Its_Legacy",
@@ -397,15 +565,19 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-09-Consensus",
     "filename": "02-Phase-2-Distribution__Module-09-Consensus__Paxos_and_Its_Legacy.md",
-    "is_moc": false, "phase": 2, "module": 9
+    "is_moc": false,
+    "phase": 2,
+    "module": 9
   },
   {
-    "id": "02-Phase-2-Distribution__Module-09-Consensus___Module_09_MOC",
-    "title": "Module 09 MOC — Consensus",
+    "id": "Module_Module_09_MOC",
+    "title": "Module 09: Consensus & Coordination",
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-09-Consensus",
-    "filename": "Module_09_MOC.md",
-    "is_moc": true, "phase": 2, "module": 9
+    "filename": "Module_Module_09_MOC.md",
+    "is_moc": true,
+    "phase": 2,
+    "module": 9
   },
   {
     "id": "02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers",
@@ -413,7 +585,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-10-Distributed-Transactions",
     "filename": "02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers.md",
-    "is_moc": false, "phase": 2, "module": 10
+    "is_moc": false,
+    "phase": 2,
+    "module": 10
   },
   {
     "id": "02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern",
@@ -421,7 +595,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-10-Distributed-Transactions",
     "filename": "02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern.md",
-    "is_moc": false, "phase": 2, "module": 10
+    "is_moc": false,
+    "phase": 2,
+    "module": 10
   },
   {
     "id": "02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern",
@@ -429,7 +605,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-10-Distributed-Transactions",
     "filename": "02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern.md",
-    "is_moc": false, "phase": 2, "module": 10
+    "is_moc": false,
+    "phase": 2,
+    "module": 10
   },
   {
     "id": "02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit",
@@ -437,15 +615,19 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-10-Distributed-Transactions",
     "filename": "02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit.md",
-    "is_moc": false, "phase": 2, "module": 10
+    "is_moc": false,
+    "phase": 2,
+    "module": 10
   },
   {
-    "id": "02-Phase-2-Distribution__Module-10-Distributed-Transactions___Module_10_MOC",
-    "title": "Module 10 MOC — Transactions",
+    "id": "Module_Module_10_MOC",
+    "title": "Module 10: Distributed Transactions & Reliable Messaging",
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-10-Distributed-Transactions",
-    "filename": "Module_10_MOC.md",
-    "is_moc": true, "phase": 2, "module": 10
+    "filename": "Module_Module_10_MOC.md",
+    "is_moc": true,
+    "phase": 2,
+    "module": 10
   },
   {
     "id": "02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs",
@@ -453,7 +635,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-11-Replication-Conflicts",
     "filename": "02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs.md",
-    "is_moc": false, "phase": 2, "module": 11
+    "is_moc": false,
+    "phase": 2,
+    "module": 11
   },
   {
     "id": "02-Phase-2-Distribution__Module-11-Replication-Conflicts__Leaderless_Replication",
@@ -461,7 +645,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-11-Replication-Conflicts",
     "filename": "02-Phase-2-Distribution__Module-11-Replication-Conflicts__Leaderless_Replication.md",
-    "is_moc": false, "phase": 2, "module": 11
+    "is_moc": false,
+    "phase": 2,
+    "module": 11
   },
   {
     "id": "02-Phase-2-Distribution__Module-11-Replication-Conflicts__Multi-Leader_and_Conflict_Resolution",
@@ -469,7 +655,9 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-11-Replication-Conflicts",
     "filename": "02-Phase-2-Distribution__Module-11-Replication-Conflicts__Multi-Leader_and_Conflict_Resolution.md",
-    "is_moc": false, "phase": 2, "module": 11
+    "is_moc": false,
+    "phase": 2,
+    "module": 11
   },
   {
     "id": "02-Phase-2-Distribution__Module-11-Replication-Conflicts__Replication_Deep_Dive",
@@ -477,15 +665,19 @@
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-11-Replication-Conflicts",
     "filename": "02-Phase-2-Distribution__Module-11-Replication-Conflicts__Replication_Deep_Dive.md",
-    "is_moc": false, "phase": 2, "module": 11
+    "is_moc": false,
+    "phase": 2,
+    "module": 11
   },
   {
-    "id": "02-Phase-2-Distribution__Module-11-Replication-Conflicts___Module_11_MOC",
-    "title": "Module 11 MOC — Replication",
+    "id": "Module_Module_11_MOC",
+    "title": "Module 11: Replication & Conflict Resolution",
     "folder": "02-Phase-2-Distribution",
     "subfolder": "Module-11-Replication-Conflicts",
-    "filename": "Module_11_MOC.md",
-    "is_moc": true, "phase": 2, "module": 11
+    "filename": "Module_Module_11_MOC.md",
+    "is_moc": true,
+    "phase": 2,
+    "module": 11
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture",
@@ -493,7 +685,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-12-Architectural-Patterns",
     "filename": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture.md",
-    "is_moc": false, "phase": 3, "module": 12
+    "is_moc": false,
+    "phase": 3,
+    "module": 12
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS",
@@ -501,7 +695,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-12-Architectural-Patterns",
     "filename": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS.md",
-    "is_moc": false, "phase": 3, "module": 12
+    "is_moc": false,
+    "phase": 3,
+    "module": 12
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Monolith_vs_Microservices",
@@ -509,7 +705,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-12-Architectural-Patterns",
     "filename": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Monolith_vs_Microservices.md",
-    "is_moc": false, "phase": 3, "module": 12
+    "is_moc": false,
+    "phase": 3,
+    "module": 12
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Service_Decomposition_and_Bounded_Contexts",
@@ -517,7 +715,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-12-Architectural-Patterns",
     "filename": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Service_Decomposition_and_Bounded_Contexts.md",
-    "is_moc": false, "phase": 3, "module": 12
+    "is_moc": false,
+    "phase": 3,
+    "module": 12
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Strangler_Fig_and_Migration_Patterns",
@@ -525,15 +725,19 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-12-Architectural-Patterns",
     "filename": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Strangler_Fig_and_Migration_Patterns.md",
-    "is_moc": false, "phase": 3, "module": 12
+    "is_moc": false,
+    "phase": 3,
+    "module": 12
   },
   {
-    "id": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns___Module_12_MOC",
-    "title": "Module 12 MOC — Architecture",
+    "id": "Module_Module_12_MOC",
+    "title": "Module 12: Architectural Patterns & Service Decomposition",
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-12-Architectural-Patterns",
-    "filename": "Module_12_MOC.md",
-    "is_moc": true, "phase": 3, "module": 12
+    "filename": "Module_Module_12_MOC.md",
+    "is_moc": true,
+    "phase": 3,
+    "module": 12
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Batch_Processing_and_Data_Pipelines",
@@ -541,7 +745,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-13-Messaging-Pipelines",
     "filename": "03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Batch_Processing_and_Data_Pipelines.md",
-    "is_moc": false, "phase": 3, "module": 13
+    "is_moc": false,
+    "phase": 3,
+    "module": 13
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Change_Data_Capture",
@@ -549,7 +755,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-13-Messaging-Pipelines",
     "filename": "03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Change_Data_Capture.md",
-    "is_moc": false, "phase": 3, "module": 13
+    "is_moc": false,
+    "phase": 3,
+    "module": 13
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns",
@@ -557,7 +765,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-13-Messaging-Pipelines",
     "filename": "03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns.md",
-    "is_moc": false, "phase": 3, "module": 13
+    "is_moc": false,
+    "phase": 3,
+    "module": 13
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams",
@@ -565,7 +775,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-13-Messaging-Pipelines",
     "filename": "03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams.md",
-    "is_moc": false, "phase": 3, "module": 13
+    "is_moc": false,
+    "phase": 3,
+    "module": 13
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Stream_Processing",
@@ -573,15 +785,19 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-13-Messaging-Pipelines",
     "filename": "03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Stream_Processing.md",
-    "is_moc": false, "phase": 3, "module": 13
+    "is_moc": false,
+    "phase": 3,
+    "module": 13
   },
   {
-    "id": "03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines___Module_13_MOC",
-    "title": "Module 13 MOC — Messaging",
+    "id": "Module_Module_13_MOC",
+    "title": "Module 13: Message Queues, Event Streaming & Data Pipelines",
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-13-Messaging-Pipelines",
-    "filename": "Module_13_MOC.md",
-    "is_moc": true, "phase": 3, "module": 13
+    "filename": "Module_Module_13_MOC.md",
+    "is_moc": true,
+    "phase": 3,
+    "module": 13
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Full-Text_Search_Architecture",
@@ -589,7 +805,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-14-Search-Systems",
     "filename": "03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Full-Text_Search_Architecture.md",
-    "is_moc": false, "phase": 3, "module": 14
+    "is_moc": false,
+    "phase": 3,
+    "module": 14
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval",
@@ -597,15 +815,19 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-14-Search-Systems",
     "filename": "03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval.md",
-    "is_moc": false, "phase": 3, "module": 14
+    "is_moc": false,
+    "phase": 3,
+    "module": 14
   },
   {
-    "id": "03-Phase-3-Architecture-Operations__Module-14-Search-Systems___Module_14_MOC",
-    "title": "Module 14 MOC — Search",
+    "id": "Module_Module_14_MOC",
+    "title": "Module 14: Search Systems",
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-14-Search-Systems",
-    "filename": "Module_14_MOC.md",
-    "is_moc": true, "phase": 3, "module": 14
+    "filename": "Module_Module_14_MOC.md",
+    "is_moc": true,
+    "phase": 3,
+    "module": 14
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization",
@@ -613,7 +835,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-15-Security",
     "filename": "03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization.md",
-    "is_moc": false, "phase": 3, "module": 15
+    "is_moc": false,
+    "phase": 3,
+    "module": 15
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-15-Security__Encryption_at_Rest_and_in_Transit",
@@ -621,7 +845,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-15-Security",
     "filename": "03-Phase-3-Architecture-Operations__Module-15-Security__Encryption_at_Rest_and_in_Transit.md",
-    "is_moc": false, "phase": 3, "module": 15
+    "is_moc": false,
+    "phase": 3,
+    "module": 15
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-15-Security__Software_Supply_Chain_Security",
@@ -629,7 +855,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-15-Security",
     "filename": "03-Phase-3-Architecture-Operations__Module-15-Security__Software_Supply_Chain_Security.md",
-    "is_moc": false, "phase": 3, "module": 15
+    "is_moc": false,
+    "phase": 3,
+    "module": 15
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management",
@@ -637,7 +865,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-15-Security",
     "filename": "03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management.md",
-    "is_moc": false, "phase": 3, "module": 15
+    "is_moc": false,
+    "phase": 3,
+    "module": 15
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-15-Security__Threat_Modeling_for_Distributed_Systems",
@@ -645,15 +875,19 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-15-Security",
     "filename": "03-Phase-3-Architecture-Operations__Module-15-Security__Threat_Modeling_for_Distributed_Systems.md",
-    "is_moc": false, "phase": 3, "module": 15
+    "is_moc": false,
+    "phase": 3,
+    "module": 15
   },
   {
-    "id": "03-Phase-3-Architecture-Operations__Module-15-Security___Module_15_MOC",
-    "title": "Module 15 MOC — Security",
+    "id": "Module_Module_15_MOC",
+    "title": "Module 15: Security & Zero-Trust Architecture",
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-15-Security",
-    "filename": "Module_15_MOC.md",
-    "is_moc": true, "phase": 3, "module": 15
+    "filename": "Module_Module_15_MOC.md",
+    "is_moc": true,
+    "phase": 3,
+    "module": 15
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Chaos_Engineering_and_Testing",
@@ -661,7 +895,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-16-Reliability-Testing",
     "filename": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Chaos_Engineering_and_Testing.md",
-    "is_moc": false, "phase": 3, "module": 16
+    "is_moc": false,
+    "phase": 3,
+    "module": 16
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads",
@@ -669,7 +905,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-16-Reliability-Testing",
     "filename": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads.md",
-    "is_moc": false, "phase": 3, "module": 16
+    "is_moc": false,
+    "phase": 3,
+    "module": 16
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Incident_Management",
@@ -677,7 +915,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-16-Reliability-Testing",
     "filename": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Incident_Management.md",
-    "is_moc": false, "phase": 3, "module": 16
+    "is_moc": false,
+    "phase": 3,
+    "module": 16
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns",
@@ -685,7 +925,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-16-Reliability-Testing",
     "filename": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns.md",
-    "is_moc": false, "phase": 3, "module": 16
+    "is_moc": false,
+    "phase": 3,
+    "module": 16
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets",
@@ -693,15 +935,19 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-16-Reliability-Testing",
     "filename": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets.md",
-    "is_moc": false, "phase": 3, "module": 16
+    "is_moc": false,
+    "phase": 3,
+    "module": 16
   },
   {
-    "id": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing___Module_16_MOC",
-    "title": "Module 16 MOC — Reliability",
+    "id": "Module_Module_16_MOC",
+    "title": "Module 16: Reliability Engineering & Testing",
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-16-Reliability-Testing",
-    "filename": "Module_16_MOC.md",
-    "is_moc": true, "phase": 3, "module": 16
+    "filename": "Module_Module_16_MOC.md",
+    "is_moc": true,
+    "phase": 3,
+    "module": 16
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering",
@@ -709,7 +955,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-17-Observability-Deployment",
     "filename": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering.md",
-    "is_moc": false, "phase": 3, "module": 17
+    "is_moc": false,
+    "phase": 3,
+    "module": 17
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting",
@@ -717,15 +965,19 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-17-Observability-Deployment",
     "filename": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting.md",
-    "is_moc": false, "phase": 3, "module": 17
+    "is_moc": false,
+    "phase": 3,
+    "module": 17
   },
   {
-    "id": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment___Module_17_MOC",
-    "title": "Module 17 MOC — Observability",
+    "id": "Module_Module_17_MOC",
+    "title": "Module 17: Observability, Deployment & Release Engineering",
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-17-Observability-Deployment",
-    "filename": "Module_17_MOC.md",
-    "is_moc": true, "phase": 3, "module": 17
+    "filename": "Module_Module_17_MOC.md",
+    "is_moc": true,
+    "phase": 3,
+    "module": 17
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps",
@@ -733,7 +985,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-18-Multitenancy-Geo-Cost",
     "filename": "03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps.md",
-    "is_moc": false, "phase": 3, "module": 18
+    "is_moc": false,
+    "phase": 3,
+    "module": 18
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty",
@@ -741,7 +995,9 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-18-Multitenancy-Geo-Cost",
     "filename": "03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty.md",
-    "is_moc": false, "phase": 3, "module": 18
+    "is_moc": false,
+    "phase": 3,
+    "module": 18
   },
   {
     "id": "03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation",
@@ -749,15 +1005,19 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-18-Multitenancy-Geo-Cost",
     "filename": "03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation.md",
-    "is_moc": false, "phase": 3, "module": 18
+    "is_moc": false,
+    "phase": 3,
+    "module": 18
   },
   {
-    "id": "03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost___Module_18_MOC",
-    "title": "Module 18 MOC — Multi-Tenancy",
+    "id": "Module_Module_18_MOC",
+    "title": "Module 18: Multi-Tenancy, Geo-Distribution & Cost Engineering",
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-18-Multitenancy-Geo-Cost",
-    "filename": "Module_18_MOC.md",
-    "is_moc": true, "phase": 3, "module": 18
+    "filename": "Module_Module_18_MOC.md",
+    "is_moc": true,
+    "phase": 3,
+    "module": 18
   },
   {
     "id": "04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__AI_Gateway_and_LLM_Operations",
@@ -765,7 +1025,9 @@
     "folder": "04-Phase-4-Modern-AI",
     "subfolder": "Module-19-AI-Inference-LLMOps",
     "filename": "04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__AI_Gateway_and_LLM_Operations.md",
-    "is_moc": false, "phase": 4, "module": 19
+    "is_moc": false,
+    "phase": 4,
+    "module": 19
   },
   {
     "id": "04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture",
@@ -773,15 +1035,19 @@
     "folder": "04-Phase-4-Modern-AI",
     "subfolder": "Module-19-AI-Inference-LLMOps",
     "filename": "04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture.md",
-    "is_moc": false, "phase": 4, "module": 19
+    "is_moc": false,
+    "phase": 4,
+    "module": 19
   },
   {
-    "id": "04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps___Module_19_MOC",
-    "title": "Module 19 MOC — AI Inference",
+    "id": "Module_Module_19_MOC",
+    "title": "Module 19: AI/ML Inference Serving & LLM Operations",
     "folder": "04-Phase-4-Modern-AI",
     "subfolder": "Module-19-AI-Inference-LLMOps",
-    "filename": "Module_19_MOC.md",
-    "is_moc": true, "phase": 4, "module": 19
+    "filename": "Module_Module_19_MOC.md",
+    "is_moc": true,
+    "phase": 4,
+    "module": 19
   },
   {
     "id": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agentic_System_Architecture",
@@ -789,7 +1055,9 @@
     "folder": "04-Phase-4-Modern-AI",
     "subfolder": "Module-20-RAG-Agents-Realtime",
     "filename": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agentic_System_Architecture.md",
-    "is_moc": false, "phase": 4, "module": 20
+    "is_moc": false,
+    "phase": 4,
+    "module": 20
   },
   {
     "id": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__RAG_Architecture",
@@ -797,7 +1065,9 @@
     "folder": "04-Phase-4-Modern-AI",
     "subfolder": "Module-20-RAG-Agents-Realtime",
     "filename": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__RAG_Architecture.md",
-    "is_moc": false, "phase": 4, "module": 20
+    "is_moc": false,
+    "phase": 4,
+    "module": 20
   },
   {
     "id": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Real-Time_Collaboration",
@@ -805,15 +1075,19 @@
     "folder": "04-Phase-4-Modern-AI",
     "subfolder": "Module-20-RAG-Agents-Realtime",
     "filename": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Real-Time_Collaboration.md",
-    "is_moc": false, "phase": 4, "module": 20
+    "is_moc": false,
+    "phase": 4,
+    "module": 20
   },
   {
-    "id": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime___Module_20_MOC",
-    "title": "Module 20 MOC — RAG & Agents",
+    "id": "Module_Module_20_MOC",
+    "title": "Module 20: RAG, Agentic Systems & Real-Time Collaboration",
     "folder": "04-Phase-4-Modern-AI",
     "subfolder": "Module-20-RAG-Agents-Realtime",
-    "filename": "Module_20_MOC.md",
-    "is_moc": true, "phase": 4, "module": 20
+    "filename": "Module_Module_20_MOC.md",
+    "is_moc": true,
+    "phase": 4,
+    "module": 20
   },
   {
     "id": "04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering",
@@ -821,7 +1095,9 @@
     "folder": "04-Phase-4-Modern-AI",
     "subfolder": "Module-21-Serverless-Edge-Platform",
     "filename": "04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering.md",
-    "is_moc": false, "phase": 4, "module": 21
+    "is_moc": false,
+    "phase": 4,
+    "module": 21
   },
   {
     "id": "04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing",
@@ -829,47 +1105,59 @@
     "folder": "04-Phase-4-Modern-AI",
     "subfolder": "Module-21-Serverless-Edge-Platform",
     "filename": "04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing.md",
-    "is_moc": false, "phase": 4, "module": 21
+    "is_moc": false,
+    "phase": 4,
+    "module": 21
   },
   {
-    "id": "04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform___Module_21_MOC",
-    "title": "Module 21 MOC — Serverless & Edge",
+    "id": "Module_Module_21_MOC",
+    "title": "Module 21: Serverless, Edge & Platform Engineering",
     "folder": "04-Phase-4-Modern-AI",
     "subfolder": "Module-21-Serverless-Edge-Platform",
-    "filename": "Module_21_MOC.md",
-    "is_moc": true, "phase": 4, "module": 21
+    "filename": "Module_Module_21_MOC.md",
+    "is_moc": true,
+    "phase": 4,
+    "module": 21
   },
   {
-    "id": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering__Cost_Engineering_and_FinOps",
-    "title": "Cost Engineering and FinOps",
-    "folder": "05-Phase-5-Modern-Operations",
-    "subfolder": "Module-22-FinOps-Cost-Engineering",
+    "id": "Cost_Engineering_and_FinOps",
+    "title": "FinOps and Cost Engineering",
+    "folder": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering",
+    "subfolder": null,
     "filename": "Cost_Engineering_and_FinOps.md",
-    "is_moc": false, "phase": 5, "module": 22
+    "is_moc": false,
+    "phase": 5,
+    "module": 0
   },
   {
-    "id": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering___Module_22_MOC",
-    "title": "Module 22 MOC — FinOps",
-    "folder": "05-Phase-5-Modern-Operations",
-    "subfolder": "Module-22-FinOps-Cost-Engineering",
+    "id": "Module_22_MOC",
+    "title": "Module 22: FinOps & Cost Engineering",
+    "folder": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering",
+    "subfolder": null,
     "filename": "Module_22_MOC.md",
-    "is_moc": true, "phase": 5, "module": 22
+    "is_moc": true,
+    "phase": 5,
+    "module": 0
   },
   {
-    "id": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance__Data_Privacy_and_Compliance",
+    "id": "Data_Privacy_and_Compliance",
     "title": "Data Privacy and Compliance",
-    "folder": "05-Phase-5-Modern-Operations",
-    "subfolder": "Module-23-Data-Privacy-Compliance",
+    "folder": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance",
+    "subfolder": null,
     "filename": "Data_Privacy_and_Compliance.md",
-    "is_moc": false, "phase": 5, "module": 23
+    "is_moc": false,
+    "phase": 5,
+    "module": 0
   },
   {
-    "id": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance___Module_23_MOC",
-    "title": "Module 23 MOC — Privacy",
-    "folder": "05-Phase-5-Modern-Operations",
-    "subfolder": "Module-23-Data-Privacy-Compliance",
+    "id": "Module_23_MOC",
+    "title": "Module 23: Data Privacy & Compliance",
+    "folder": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance",
+    "subfolder": null,
     "filename": "Module_23_MOC.md",
-    "is_moc": true, "phase": 5, "module": 23
+    "is_moc": true,
+    "phase": 5,
+    "module": 0
   },
   {
     "id": "06-Phase-6-Capstones__Capstone_—_AI_Search_and_Chat_Platform",
@@ -877,7 +1165,9 @@
     "folder": "06-Phase-6-Capstones",
     "subfolder": null,
     "filename": "06-Phase-6-Capstones__Capstone_—_AI_Search_and_Chat_Platform.md",
-    "is_moc": false, "phase": 6, "module": "capstone"
+    "is_moc": false,
+    "phase": 6,
+    "module": 0
   },
   {
     "id": "06-Phase-6-Capstones__Capstone_—_Collaborative_Editor",
@@ -885,7 +1175,9 @@
     "folder": "06-Phase-6-Capstones",
     "subfolder": null,
     "filename": "06-Phase-6-Capstones__Capstone_—_Collaborative_Editor.md",
-    "is_moc": false, "phase": 6, "module": "capstone"
+    "is_moc": false,
+    "phase": 6,
+    "module": 0
   },
   {
     "id": "06-Phase-6-Capstones__Capstone_—_Multi-Region_E-Commerce",
@@ -893,7 +1185,9 @@
     "folder": "06-Phase-6-Capstones",
     "subfolder": null,
     "filename": "06-Phase-6-Capstones__Capstone_—_Multi-Region_E-Commerce.md",
-    "is_moc": false, "phase": 6, "module": "capstone"
+    "is_moc": false,
+    "phase": 6,
+    "module": 0
   },
   {
     "id": "06-Phase-6-Capstones__Capstone_—_News_Feed",
@@ -901,7 +1195,9 @@
     "folder": "06-Phase-6-Capstones",
     "subfolder": null,
     "filename": "06-Phase-6-Capstones__Capstone_—_News_Feed.md",
-    "is_moc": false, "phase": 6, "module": "capstone"
+    "is_moc": false,
+    "phase": 6,
+    "module": 0
   },
   {
     "id": "06-Phase-6-Capstones__Capstone_—_Payments_and_Orders",
@@ -909,7 +1205,9 @@
     "folder": "06-Phase-6-Capstones",
     "subfolder": null,
     "filename": "06-Phase-6-Capstones__Capstone_—_Payments_and_Orders.md",
-    "is_moc": false, "phase": 6, "module": "capstone"
+    "is_moc": false,
+    "phase": 6,
+    "module": 0
   },
   {
     "id": "06-Phase-6-Capstones__Capstone_—_URL_Shortener",
@@ -917,14 +1215,18 @@
     "folder": "06-Phase-6-Capstones",
     "subfolder": null,
     "filename": "06-Phase-6-Capstones__Capstone_—_URL_Shortener.md",
-    "is_moc": false, "phase": 6, "module": "capstone"
+    "is_moc": false,
+    "phase": 6,
+    "module": 0
   },
   {
-    "id": "06-Phase-6-Capstones___Phase_6_MOC",
-    "title": "Phase 6 MOC — Capstones",
+    "id": "Phase_6_MOC",
+    "title": "Capstone Projects",
     "folder": "06-Phase-6-Capstones",
     "subfolder": null,
     "filename": "Phase_6_MOC.md",
-    "is_moc": true, "phase": 6, "module": "capstone"
+    "is_moc": true,
+    "phase": 6,
+    "module": 0
   }
 ]

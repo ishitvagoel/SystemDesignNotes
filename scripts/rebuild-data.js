@@ -11,12 +11,69 @@ function normalize(s) {
   return s.replace(/[,;:—–]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
 }
 
+/**
+ * Recursively find all markdown files
+ */
+function getFiles(dir, allFiles = []) {
+  const files = fs.readdirSync(dir);
+  files.forEach(file => {
+    const name = path.join(dir, file);
+    if (fs.statSync(name).isDirectory()) {
+      getFiles(name, allFiles);
+    } else if (file.endsWith('.md')) {
+      allFiles.push(name);
+    }
+  });
+  return allFiles;
+}
+
 async function rebuild() {
   console.log('🚀 Rebuilding data indexes from Markdown notes...');
 
-  const files = fs.readdirSync(NOTES_DIR).filter(f => f.endsWith('.md'));
-  const vaultIndex = JSON.parse(fs.readFileSync(INDEX_FILE, 'utf8'));
+  const fullPaths = getFiles(NOTES_DIR);
+  let vaultIndex = [];
   
+  fullPaths.forEach(fullPath => {
+    const rel = path.relative(NOTES_DIR, fullPath);
+    const filename = path.basename(fullPath);
+    // ID should be the filename without .md for flat lookup
+    const id = filename.replace('.md', '');
+    
+    // Heuristic for folder/subfolder/title
+    const parts = rel.split('/');
+    let folder = null;
+    let subfolder = null;
+    let title = filename.replace('.md', '').replace(/_/g, ' ');
+    
+    // Try to extract title from content if first line is # Title
+    const content = fs.readFileSync(fullPath, 'utf8');
+    const titleMatch = content.match(/^#\s+(.*)/m);
+    if (titleMatch) title = titleMatch[1].trim();
+
+    if (parts.length === 3) {
+      folder = parts[0];
+      subfolder = parts[1];
+    } else if (parts.length === 2) {
+      folder = parts[0];
+    } else {
+      // Root file, check if it's Meta
+      if (id.startsWith('00-Meta')) folder = '00-Meta';
+    }
+
+    vaultIndex.push({
+      id,
+      title,
+      folder,
+      subfolder,
+      filename,
+      is_moc: filename.toLowerCase().includes('moc'),
+      phase: folder ? parseInt(folder.match(/\d+/)) || 0 : 0,
+      module: subfolder ? parseInt(subfolder.match(/\d+/)) || 0 : 0
+    });
+  });
+
+  fs.writeFileSync(INDEX_FILE, JSON.stringify(vaultIndex, null, 2), 'utf8');
+
   const searchIndex = {};
   const graphEdges = [];
   const studyPrompts = [];
@@ -25,14 +82,17 @@ async function rebuild() {
   const notesByTitle = {};
   vaultIndex.forEach(note => {
     notesByTitle[normalize(note.title)] = note.id;
-    notesByTitle[normalize(note.filename.replace('.md', ''))] = note.id;
+    if (note.filename) {
+      notesByTitle[normalize(note.filename.replace('.md', ''))] = note.id;
+    }
   });
 
   let processed = 0;
 
-  files.forEach(file => {
-    const id = file.replace('.md', '');
-    const content = fs.readFileSync(path.join(NOTES_DIR, file), 'utf8');
+  fullPaths.forEach(fullPath => {
+    const filename = path.basename(fullPath);
+    const id = filename.replace('.md', '');
+    const content = fs.readFileSync(fullPath, 'utf8');
     const noteMeta = vaultIndex.find(n => n.id === id);
 
     // 1. Search Index
@@ -92,7 +152,7 @@ async function rebuild() {
   fs.writeFileSync(STUDY_PROMPTS_FILE, JSON.stringify(studyPrompts), 'utf8');
 
   console.log(`✅ Done! Processed ${processed} notes.`);
-  console.log(`Generated ${SEARCH_INDEX_FILE}, ${GRAPH_EDGES_FILE}, and ${STUDY_PROMPTS_FILE}.`);
+  console.log(`Generated ${INDEX_FILE}, ${SEARCH_INDEX_FILE}, ${GRAPH_EDGES_FILE}, and ${STUDY_PROMPTS_FILE}.`);
 }
 
 rebuild().catch(console.error);
