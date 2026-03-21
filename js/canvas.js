@@ -12,6 +12,17 @@ class CanvasEngine {
     this.selectedNode = null;
     this.connectingNode = null;
     this.isSimulating = false;
+    this.scaleIndex = 0;
+    this.scaleOptions = [
+      { label: '1 User', traffic: 1 },
+      { label: '100', traffic: 100 },
+      { label: '1K', traffic: 1000 },
+      { label: '10K', traffic: 10000 },
+      { label: '100K', traffic: 100000 },
+      { label: '1M', traffic: 1000000 },
+      { label: '5M', traffic: 5000000 },
+      { label: '10M', traffic: 10000000 }
+    ];
 
     this.init();
   }
@@ -53,15 +64,95 @@ class CanvasEngine {
       this.links = [];
       this.selectedNode = null;
       this.render();
+      this.saveState();
     };
 
     document.getElementById('canvas-simulate').onclick = () => {
       this.isSimulating = !this.isSimulating;
       document.getElementById('canvas-simulate').classList.toggle('active', this.isSimulating);
-      if (this.isSimulating) this.startSimulation();
+      if (this.isSimulating) {
+        this.startSimulation();
+      } else {
+        if (this.simTimeout) clearTimeout(this.simTimeout);
+      }
+    };
+
+    // Scale slider
+    const slider = document.getElementById('canvas-scale-slider');
+    const label = document.getElementById('canvas-scale-label');
+    slider.oninput = (e) => {
+      this.scaleIndex = Number(e.target.value);
+      label.textContent = this.scaleOptions[this.scaleIndex].label + (this.scaleIndex > 0 ? ' Users' : '');
     };
 
     this.initQuests();
+    this.initScenarios();
+  }
+
+  async initScenarios() {
+    try {
+      const res = await fetch('data/scenarios.json');
+      this.scenarios = await res.json();
+    } catch (e) {
+      console.error('Failed to load scenarios:', e);
+    }
+  }
+
+  showDecisionModal(junctionId) {
+    const scenario = this.scenarios[junctionId];
+    if (!scenario || this.modalActive) return;
+
+    this.modalActive = true;
+    this.isSimulating = false; // Pause simulation
+    if (this.simTimeout) clearTimeout(this.simTimeout);
+
+    const overlay = document.createElement('div');
+    overlay.id = 'decision-overlay';
+    overlay.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:1000; display:flex; align-items:center; justify-content:center; padding:24px;';
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = 'max-width:480px; background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:32px; box-shadow:0 20px 50px rgba(0,0,0,0.5);';
+    modal.innerHTML = `
+      <div style="font-family:\'IBM Plex Mono\',monospace; font-size:11px; color:var(--yellow); text-transform:uppercase; margin-bottom:12px;">Architectural Decision Needed</div>
+      <h2 style="font-size:18px; color:var(--text); line-height:1.4; margin-bottom:24px;">${scenario.text}</h2>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        ${scenario.choices.map(c => `
+          <button class="decision-btn" data-choice="${c.id}" style="text-align:left; padding:16px; background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text2); cursor:pointer; transition:all 0.15s;">
+            <div style="font-weight:600; color:var(--text); margin-bottom:4px;">${c.text}</div>
+            <div style="font-size:11px; opacity:0.8;">${c.impact}</div>
+          </button>
+        `).join('')}
+      </div>
+    `;
+
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    modal.querySelectorAll('.decision-btn').forEach(btn => {
+      btn.onclick = () => {
+        const choice = scenario.choices.find(c => c.id === btn.dataset.choice);
+        this.applyDecision(choice);
+        overlay.remove();
+        this.modalActive = false;
+        // Resume sim after decision
+        this.isSimulating = true;
+        this.startSimulation();
+      };
+      btn.onmouseenter = () => { btn.style.borderColor = 'var(--accent)'; btn.style.background = 'var(--accent-dim2)'; };
+      btn.onmouseleave = () => { btn.style.borderColor = 'var(--border)'; btn.style.background = 'var(--surface)'; };
+    });
+  }
+
+  applyDecision(choice) {
+    if (choice.component) {
+      this.addComponent(choice.component.type, choice.component.label);
+      // find the newly added node and set its capacity
+      this.nodes[this.nodes.length-1].capacity = choice.component.capacity;
+    } else if (choice.modify) {
+      const node = this.nodes.find(n => n.type === choice.modify.type);
+      if (node) node.capacity = choice.modify.capacity;
+    }
+    this.render();
   }
 
   async initQuests() {
@@ -394,8 +485,13 @@ class CanvasEngine {
     // Identify sources (clients)
     const sources = this.nodes.filter(n => n.type === 'client');
     
+    // Calculate total load based on scale slider
+    // rpsPerUser = 0.01 (active users / total users ratio * requests per active user)
+    const totalRps = this.scaleOptions[this.scaleIndex].traffic * 0.01;
+    const perSourceRps = totalRps / (sources.length || 1);
+
     sources.forEach(source => {
-      this.generatePackets(source, 200); // Increased default load
+      this.generatePackets(source, perSourceRps);
     });
 
     // Check quest win condition
@@ -450,10 +546,21 @@ class CanvasEngine {
     const overloaded = this.nodes.find(n => n.load > n.capacity);
     if (overloaded) satisfied = false;
 
-    // Check required components
-    if (win.requiredTypes) {
-      for (const type of win.requiredTypes) {
-        if (!this.nodes.some(n => n.type === type)) satisfied = false;
+    // Trigger branching decisions for specific quests
+    if (q.id === 'q1' && !this.junctionsTriggered?.flash_sale_db_bottleneck) {
+      const db = this.nodes.find(n => n.type === 'db');
+      if (db && db.load > db.capacity * 0.9) {
+        if (!this.junctionsTriggered) this.junctionsTriggered = {};
+        this.junctionsTriggered.flash_sale_db_bottleneck = true;
+        this.showDecisionModal('flash_sale_db_bottleneck');
+      }
+    }
+
+    if (q.id === 'q2' && !this.junctionsTriggered?.global_latency_cdn) {
+      if (this.scaleIndex >= 4) { // At 100k+ users
+        if (!this.junctionsTriggered) this.junctionsTriggered = {};
+        this.junctionsTriggered.global_latency_cdn = true;
+        this.showDecisionModal('global_latency_cdn');
       }
     }
 

@@ -19,8 +19,9 @@
     "title": "Global Latency",
     "description": "Users are reporting slow load times from the other side of the world. Add a Content Delivery Network (CDN) to serve static assets.",
     "objectives": [
-      "Add a CDN node",
-      "Connect Client to CDN"
+      "Wait for users to report latency issues",
+      "Choose a global distribution strategy",
+      "Deploy a CDN to the edge"
     ],
     "winCondition": {
       "requiredTypes": ["cdn"]

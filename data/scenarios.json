@@ -1,0 +1,42 @@
+{
+  "flash_sale_db_bottleneck": {
+    "text": "Your Main DB is hitting 100% CPU. How will you scale?",
+    "choices": [
+      {
+        "text": "Add Cache (Redis)",
+        "id": "add_cache",
+        "impact": "A cache reduces read load by 90%. Great for static or slow-changing data.",
+        "component": { "type": "cache", "label": "Scaling Cache", "capacity": 5000 }
+      },
+      {
+        "text": "Add DB Replica",
+        "id": "add_replica",
+        "impact": "Replica handles read traffic, but increases consistency complexity.",
+        "component": { "type": "db", "label": "Read Replica", "capacity": 1000 }
+      },
+      {
+        "text": "Vertical Scale",
+        "id": "vertical_scale",
+        "impact": "Simple, but expensive and has a hard ceiling.",
+        "modify": { "type": "db", "capacity": 2000 }
+      }
+    ]
+  },
+  "global_latency_cdn": {
+    "text": "Users in Asia are seeing 2s latency. What is your first move?",
+    "choices": [
+      {
+        "text": "Deploy CDN",
+        "id": "add_cdn",
+        "impact": "CDNs serve static assets from the edge, closer to users.",
+        "component": { "type": "cdn", "label": "Edge CDN", "capacity": 10000 }
+      },
+      {
+        "text": "Multi-Region App",
+        "id": "multi_region",
+        "impact": "Lowers latency but vastly increases data replication complexity.",
+        "component": { "type": "app", "label": "Asia App Server", "capacity": 1000 }
+      }
+    ]
+  }
+}

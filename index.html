@@ -114,9 +114,14 @@
           <div id="palette-list" style="flex:1; overflow-y:auto; padding:8px;"></div>
         </div>
         <div id="canvas-stage-wrap" style="flex:1; position:relative; overflow:hidden; background:var(--bg);">
-          <div id="canvas-toolbar" style="position:absolute; top:12px; left:12px; z-index:10; display:flex; gap:8px;">
+          <div id="canvas-toolbar" style="position:absolute; top:12px; left:12px; z-index:10; display:flex; gap:8px; align-items:center;">
             <button class="graph-ctrl-btn" id="canvas-clear">Clear</button>
             <button class="graph-ctrl-btn" id="canvas-simulate">Simulate</button>
+            <div id="canvas-scale-control" style="display:flex; align-items:center; gap:10px; margin-left:12px; background:rgba(13,15,14,0.85); padding:4px 12px; border-radius:20px; border:1px solid var(--border);">
+              <span style="font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace;">SCALE:</span>
+              <input type="range" id="canvas-scale-slider" min="0" max="7" step="1" value="0" style="width:100px; cursor:pointer;">
+              <span id="canvas-scale-label" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent); min-width:70px;">1 User</span>
+            </div>
           </div>
           <svg id="canvas-svg" style="width:100%; height:100%;"></svg>
         </div>
