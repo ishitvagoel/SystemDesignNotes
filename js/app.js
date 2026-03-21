@@ -36,8 +36,10 @@ renderer.code = function(code, language) {
 };
 marked.setOptions({ renderer });
 
-// ── FILTER: remove template note from index ──
-const FILTERED_INDEX = VAULT_INDEX.filter(n => !n.title.includes('{{title}}') && !n.id.includes('Note_Template'));
+// ── DATA (populated by init()) ──
+let VAULT_INDEX = [];
+let VAULT_CONTENT = {};
+let FILTERED_INDEX = [];
 
 // ── STATE ──
 let tabs = [];
@@ -638,8 +640,18 @@ function renderWelcomeStats() {
 }
 
 // ── INIT ──
-buildSidebar();
-renderWelcomeStats();
+async function init() {
+  const [indexRes, contentRes] = await Promise.all([
+    fetch('data/vault-index.json'),
+    fetch('data/vault-content.json')
+  ]);
+  VAULT_INDEX = await indexRes.json();
+  VAULT_CONTENT = await contentRes.json();
+  FILTERED_INDEX = VAULT_INDEX.filter(n => !n.title.includes('{{title}}') && !n.id.includes('Note_Template'));
+  buildSidebar();
+  renderWelcomeStats();
+}
+init();
 
 // ── MOBILE SIDEBAR TOGGLE ──
 const mobileToggle = document.getElementById('mobile-toggle');
