@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>System Design Vault</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- HEADER -->
+<div id="header">
+  <button id="mobile-toggle" aria-label="Toggle sidebar">☰</button>
+  <div class="logo">
+    <div class="logo-icon">SD</div>
+    System Design Vault
+  </div>
+  <div id="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input id="search" type="text" placeholder="Search notes… (Ctrl+K)" autocomplete="off" spellcheck="false" />
+  </div>
+  <div class="header-pills">
+    <button class="pill active" id="view-files" data-tip="File tree view">Files</button>
+    <button class="pill" id="view-outline" data-tip="Current note outline">Outline</button>
+    <button class="pill" id="view-graph" data-tip="Knowledge graph">Graph</button>
+    <button class="pill pill-export" id="btn-export" data-tip="Export to Obsidian">↓ Obsidian</button>
+    <button class="pill pill-study" id="view-study" data-tip="Spaced repetition study">Study</button>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div id="layout">
+  <!-- SIDEBAR -->
+  <div id="sidebar"></div>
+  <div id="sidebar-overlay"></div>
+  <div id="resize-handle"></div>
+  <!-- MAIN -->
+  <div id="main">
+    <div id="tabs-bar"></div>
+    <div id="content-area">
+      <!-- welcome or note content -->
+      <div id="welcome-screen">
+        <div id="welcome">
+          <div class="welcome-logo">⚡</div>
+          <div class="welcome-title">System Design Vault</div>
+          <div class="welcome-sub">
+            Your complete system design knowledge base — 21 modules across 4 phases, 6 capstone projects. Click any note to open it, or search with Ctrl+K.
+          </div>
+          <div class="welcome-stats" id="welcome-stats"></div>
+          <div class="welcome-hint">Drag notes to reorder · Multiple tabs · Full-text search</div>
+        </div>
+      </div>
+      <div id="note-screen" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
+        <div id="content-pane">
+          <div id="note-header">
+            <div class="note-phase-breadcrumb" id="note-breadcrumb"></div>
+            <div class="note-title-h1" id="note-title"></div>
+            <div class="note-meta" id="note-meta"></div>
+          </div>
+          <div id="note-body"></div>
+        </div>
+      </div>
+      <div id="search-screen" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
+        <div id="search-results"></div>
+      </div>
+      <div id="outline-screen" style="display:none; flex:1; overflow:hidden; flex-direction:column; padding:20px 16px;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em;">Outline</div>
+        <div id="outline-list" style="overflow-y:auto;"></div>
+      </div>
+      <div id="graph-screen" style="display:none; flex:1; overflow:hidden; flex-direction:column; position:relative;">
+        <div id="graph-controls" style="position:absolute;top:12px;left:12px;z-index:10;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-start;">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <input id="graph-search" type="text" placeholder="Filter nodes…" style="font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(13,15,14,0.9);border:1px solid var(--border);border-radius:6px;padding:5px 10px;color:var(--text);width:160px;outline:none;" />
+            <div style="display:flex;gap:6px;">
+              <button id="graph-cluster-toggle" class="graph-ctrl-btn" data-tip="Group by module">Cluster</button>
+            </div>
+          </div>
+          <div id="graph-legend" style="display:flex;gap:8px;flex-wrap:wrap;background:rgba(13,15,14,0.85);padding:6px 10px;border-radius:6px;border:1px solid var(--border);"></div>
+        </div>
+        <div id="graph-info" style="position:absolute;bottom:12px;left:12px;z-index:10;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);background:rgba(13,15,14,0.85);padding:6px 10px;border-radius:6px;border:1px solid var(--border);"></div>
+        <div id="graph-minimap" style="position:absolute;bottom:12px;right:12px;z-index:10;width:160px;height:120px;background:rgba(13,15,14,0.9);border:1px solid var(--border);border-radius:6px;overflow:hidden;"></div>
+        <svg id="graph-svg" style="width:100%;height:100%;"></svg>
+      </div>
+      <div id="study-screen" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
+        <div id="study-container">
+          <div id="study-header">
+            <div id="study-progress-bar"><div id="study-progress-fill"></div></div>
+            <div id="study-progress-text"></div>
+          </div>
+          <div id="study-note-label"></div>
+          <div id="study-prompt"></div>
+          <div id="study-answer" style="display:none;"></div>
+          <div id="study-actions">
+            <button id="study-reveal" class="study-btn study-btn-primary">Reveal Answer</button>
+            <button id="study-next" class="study-btn study-btn-primary" style="display:none;">Next Prompt</button>
+            <button id="study-open" class="study-btn study-btn-secondary" style="display:none;">Open Note</button>
+          </div>
+          <div id="study-filters">
+            <span class="study-filter-label">Filter by phase:</span>
+            <div id="study-phase-btns"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="vault-data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
