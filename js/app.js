@@ -1386,14 +1386,27 @@ document.getElementById('btn-export').addEventListener('click', async function()
       '02-Phase-2-Distribution': 'Phase-2-Distribution',
       '03-Phase-3-Architecture-Operations': 'Phase-3-Architecture-Operations',
       '04-Phase-4-Modern-AI': 'Phase-4-Modern-AI',
-      '05-Capstones': 'Capstones'
+      '05-Phase-5-Modern-Operations': 'Phase-5-Modern-Operations',
+      '06-Phase-6-Capstones': 'Capstones'
     };
 
+    let count = 0;
     for (const note of FILTERED_INDEX) {
+      count++;
+      btn.textContent = `↓ ${Math.round((count / FILTERED_INDEX.length) * 100)}%`;
+      
       let content = NOTE_CACHE[note.id];
       if (!content) {
         try {
-          const res = await fetch(`data/notes/${note.id}.md`);
+          let fetchPath = `data/notes/${note.id}.md`;
+          if (note.folder) {
+            if (note.subfolder) {
+              fetchPath = `data/notes/${note.folder}/${note.subfolder}/${note.filename}`;
+            } else {
+              fetchPath = `data/notes/${note.folder}/${note.filename}`;
+            }
+          }
+          const res = await fetch(fetchPath);
           content = await res.text();
           NOTE_CACHE[note.id] = content; // cache it for later
         } catch (e) {
