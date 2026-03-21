@@ -38,8 +38,10 @@ marked.setOptions({ renderer });
 
 // ── DATA (populated by init()) ──
 let VAULT_INDEX = [];
-let VAULT_CONTENT = {};
+let SEARCH_INDEX = {};
+let GRAPH_EDGES = [];
 let FILTERED_INDEX = [];
+let NOTE_CACHE = {};
 
 // ── STATE ──
 let tabs = [];
@@ -247,7 +249,7 @@ function handleDropOnSection(targetFolder) {
 }
 
 // ── TABS ──
-function openNote(id) {
+async function openNote(id) {
   const note = FILTERED_INDEX.find(n => n.id === id);
   if (!note) return;
 
@@ -258,6 +260,18 @@ function openNote(id) {
 
   activeTabId = id;
   renderTabs();
+
+  // Lazy load content
+  if (!NOTE_CACHE[id]) {
+    try {
+      const res = await fetch(`data/notes/${id}.md`);
+      NOTE_CACHE[id] = await res.text();
+    } catch (err) {
+      console.error('Failed to load note:', err);
+      NOTE_CACHE[id] = 'Error loading note content.';
+    }
+  }
+
   renderNote(id);
   updateSidebarActive();
   if (outlineActive) buildOutline(id);
@@ -314,7 +328,7 @@ function updateSidebarActive() {
 // ── RENDER NOTE ──
 function renderNote(id) {
   const note = FILTERED_INDEX.find(n => n.id === id);
-  const content = VAULT_CONTENT[id] || '';
+  const content = NOTE_CACHE[id] || '';
 
   document.getElementById('welcome-screen').style.display = 'none';
   document.getElementById('search-screen').style.display = 'none';
@@ -481,8 +495,7 @@ function doSearch(query) {
 
   for (const note of FILTERED_INDEX) {
     const titleLower = note.title.toLowerCase();
-    const content = VAULT_CONTENT[note.id] || '';
-    const contentLower = content.toLowerCase();
+    const contentLower = SEARCH_INDEX[note.id] || '';
 
     // Multi-term scoring
     let score = 0;
@@ -508,12 +521,10 @@ function doSearch(query) {
     const snippetIdx = bestContentIdx !== -1 ? bestContentIdx : -1;
     if (snippetIdx !== -1) {
       const start = Math.max(0, snippetIdx - 80);
-      const end = Math.min(content.length, snippetIdx + 120);
-      snippet = content.slice(start, end)
-        .replace(/[#*`\[\]]/g, '')
-        .replace(/\s+/g, ' ');
+      const end = Math.min(contentLower.length, snippetIdx + 120);
+      snippet = contentLower.slice(start, end);
       if (start > 0) snippet = '…' + snippet;
-      if (end < content.length) snippet += '…';
+      if (end < contentLower.length) snippet += '…';
       // highlight all terms
       for (const term of terms) {
         const re = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
@@ -553,7 +564,7 @@ function doSearch(query) {
 
 // ── OUTLINE ──
 function buildOutline(id) {
-  const content = VAULT_CONTENT[id] || '';
+  const content = NOTE_CACHE[id] || '';
   const headings = [];
   const lines = content.split('\n');
   for (const line of lines) {
@@ -682,22 +693,18 @@ function renderWelcomeStats() {
 
 // ── INIT ──
 async function init() {
-  const [indexRes, contentRes] = await Promise.all([
-    fetch('data/vault-index.json'),
-    fetch('data/vault-content.json')
-  ]);
+  const indexRes = await fetch('data/vault-index.json');
   VAULT_INDEX = await indexRes.json();
-  VAULT_CONTENT = await contentRes.json();
   FILTERED_INDEX = VAULT_INDEX.filter(n => !n.title.includes('{{title}}') && !n.id.includes('Note_Template'));
-  
+
   // Theme Toggle
   const themeToggle = document.getElementById('theme-toggle');
   const body = document.body;
-  
+
   if (localStorage.getItem('theme') === 'light') {
     body.classList.add('light-mode');
   }
-  
+
   themeToggle.addEventListener('click', () => {
     body.classList.toggle('light-mode');
     localStorage.setItem('theme', body.classList.contains('light-mode') ? 'light' : 'dark');
@@ -716,9 +723,12 @@ async function init() {
 
   buildSidebar();
   renderWelcomeStats();
+
+  // Background loads for heavy features
+  fetch('data/search-index.json').then(r => r.json()).then(data => SEARCH_INDEX = data).catch(console.error);
+  fetch('data/graph-edges.json').then(r => r.json()).then(data => GRAPH_EDGES = data).catch(console.error);
 }
 init();
-
 // ── MOBILE SIDEBAR TOGGLE ──
 const mobileToggle = document.getElementById('mobile-toggle');
 const sidebarOverlay = document.getElementById('sidebar-overlay');
