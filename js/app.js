@@ -853,7 +853,8 @@ const GRAPH_PHASE_COLORS = {
   '02-Phase-2-Distribution': '#6baade',
   '03-Phase-3-Architecture-Operations': '#e8d06b',
   '04-Phase-4-Modern-AI': '#de6b8a',
-  '05-Capstones': '#de956b'
+  '05-Phase-5-Modern-Operations': '#22d3ee',
+  '06-Phase-6-Capstones': '#de956b'
 };
 const GRAPH_PHASE_LABELS = {
   '00-Meta': 'Meta',
@@ -861,7 +862,8 @@ const GRAPH_PHASE_LABELS = {
   '02-Phase-2-Distribution': 'Phase 2',
   '03-Phase-3-Architecture-Operations': 'Phase 3',
   '04-Phase-4-Modern-AI': 'Phase 4',
-  '05-Capstones': 'Capstones'
+  '05-Phase-5-Modern-Operations': 'Phase 5',
+  '06-Phase-6-Capstones': 'Phase 6'
 };
 
 function buildGraphData() {

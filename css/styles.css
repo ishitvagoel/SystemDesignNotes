@@ -164,6 +164,7 @@
     .phase-2 .phase-tag { background: rgba(107,170,222,0.15); color: var(--blue); }
     .phase-3 .phase-tag { background: rgba(232,208,107,0.15); color: var(--yellow); }
     .phase-4 .phase-tag { background: rgba(222,107,138,0.15); color: var(--pink); }
+    .phase-5 .phase-tag { background: rgba(107,213,222,0.15); color: #22d3ee; }
     .phase-cap .phase-tag { background: rgba(222,149,107,0.15); color: var(--orange); }
 
     .sidebar-section-header .section-name {
