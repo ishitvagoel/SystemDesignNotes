@@ -129,7 +129,7 @@ graph TD
         C2[Modern Client - v2]
     end
 
-    subgraph "API Gateway / Version Router"
+    subgraph "API Gateway and Version Router"
         Gateway[Envoy / Nginx]
     end
 

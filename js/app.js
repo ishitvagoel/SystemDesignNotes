@@ -447,7 +447,11 @@ function renderNote(id) {
     let rawText = el.textContent.trim();
     const id = `mermaid-diag-${Math.random().toString(36).substring(2, 11)}-${i}`;
     
-    // Replace CSS variables with actual values because mermaid parser doesn't like var(--...)
+    // 1. Fix common syntax errors in memory
+    // Change --|Label| to -->|Label|
+    rawText = rawText.replace(/ --\|/g, ' -->|');
+    
+    // 2. Replace CSS variables with actual values because mermaid parser doesn't like var(--...)
     const isLight = document.body.classList.contains('light-mode');
     const themeVars = {
       '--bg': isLight ? '#fdfdfc' : '#0d0f0e',
@@ -464,17 +468,17 @@ function renderNote(id) {
       '--accent2': isLight ? '#1e6334' : '#4ab86a'
     };
     
-    for (const [varName, value] of Object.entries(themeVars)) {
-      const regex = new RegExp(`var\\(\\s*${varName}\\s*\\)`, 'g');
-      rawText = rawText.replace(regex, value);
-    }
+    // More robust replacement using a single pass
+    rawText = rawText.replace(/var\(\s*(--[a-zA-Z0-9-]+)\s*\)/g, (match, varName) => {
+      return themeVars[varName] || match;
+    });
 
     try {
       mermaid.render(id, rawText).then(({svg}) => {
         el.innerHTML = svg;
       }).catch(err => {
         console.error('Mermaid render error:', err);
-        el.innerHTML = `<pre style="color:var(--pink);font-size:12px;white-space:pre-wrap;border:1px solid var(--pink);padding:10px;border-radius:4px;">Mermaid Syntax Error:\n${err.message}</pre>`;
+        el.innerHTML = `<pre style="color:var(--pink);font-size:12px;white-space:pre-wrap;border:1px solid var(--pink);padding:10px;border-radius:4px;">Mermaid Syntax Error:\n${err.message}\n\nRaw Text:\n${rawText}</pre>`;
       });
     } catch(e) { 
       console.error('Mermaid sync error:', e);
