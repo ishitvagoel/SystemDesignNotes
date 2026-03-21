@@ -444,9 +444,31 @@ function renderNote(id) {
 
   // Render mermaid diagrams
   body.querySelectorAll('.mermaid').forEach((el, i) => {
-    const rawText = el.textContent.trim();
+    let rawText = el.textContent.trim();
     const id = `mermaid-diag-${Math.random().toString(36).substring(2, 11)}-${i}`;
     
+    // Replace CSS variables with actual values because mermaid parser doesn't like var(--...)
+    const isLight = document.body.classList.contains('light-mode');
+    const themeVars = {
+      '--bg': isLight ? '#fdfdfc' : '#0d0f0e',
+      '--bg2': isLight ? '#f5f5f3' : '#121512',
+      '--bg3': isLight ? '#efefec' : '#171a16',
+      '--surface': isLight ? '#ffffff' : '#1c201b',
+      '--surface2': isLight ? '#f0f0ed' : '#222622',
+      '--border': isLight ? '#e0e0db' : '#2a2e29',
+      '--border2': isLight ? '#d4d4cd' : '#333733',
+      '--text': isLight ? '#1a1c1a' : '#d4d8d3',
+      '--text2': isLight ? '#4a4d4a' : '#8a9088',
+      '--text3': isLight ? '#7a7d7a' : '#5a5f58',
+      '--accent': isLight ? '#2d8a4e' : '#6bde8c',
+      '--accent2': isLight ? '#1e6334' : '#4ab86a'
+    };
+    
+    for (const [varName, value] of Object.entries(themeVars)) {
+      const regex = new RegExp(`var\\(\\s*${varName}\\s*\\)`, 'g');
+      rawText = rawText.replace(regex, value);
+    }
+
     try {
       mermaid.render(id, rawText).then(({svg}) => {
         el.innerHTML = svg;
