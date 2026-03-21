@@ -154,5 +154,14 @@
 
 <script src="js/app.js"></script>
 <script src="js/canvas.js"></script>
+
+<!-- MERMAID MODAL -->
+<div id="mermaid-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:1000; align-items:center; justify-content:center; cursor:zoom-out; padding:40px;">
+  <div id="mermaid-modal-content" style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:32px; max-width:95%; max-height:95%; overflow:auto; position:relative; cursor:default; box-shadow:0 20px 50px rgba(0,0,0,0.5);">
+    <button id="mermaid-modal-close" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--text3); font-size:24px; cursor:pointer; line-height:1; padding:4px;">×</button>
+    <div id="mermaid-modal-svg"></div>
+  </div>
+</div>
+
 </body>
 </html>

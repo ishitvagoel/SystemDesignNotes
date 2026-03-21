@@ -476,6 +476,17 @@ function renderNote(id) {
     try {
       mermaid.render(id, rawText).then(({svg}) => {
         el.innerHTML = svg;
+        
+        // Add click listener to show in modal
+        const wrapper = el.closest('.mermaid-wrapper');
+        if (wrapper) {
+          wrapper.onclick = () => {
+            const modal = document.getElementById('mermaid-modal');
+            const modalSvg = document.getElementById('mermaid-modal-svg');
+            modalSvg.innerHTML = svg;
+            modal.style.display = 'flex';
+          };
+        }
       }).catch(err => {
         console.error('Mermaid render error:', err);
         el.innerHTML = `<pre style="color:var(--pink);font-size:12px;white-space:pre-wrap;border:1px solid var(--pink);padding:10px;border-radius:4px;">Mermaid Syntax Error:\n${err.message}\n\nRaw Text:\n${rawText}</pre>`;
@@ -1422,5 +1433,25 @@ document.getElementById('btn-export').addEventListener('click', async function()
     setTimeout(() => { btn.textContent = '↓ Obsidian'; }, 2000);
   } finally {
     btn.classList.remove('exporting');
+  }
+});
+
+// ── MERMAID MODAL HANDLERS ──
+document.getElementById('mermaid-modal-close').addEventListener('click', () => {
+  document.getElementById('mermaid-modal').style.display = 'none';
+});
+
+document.getElementById('mermaid-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'mermaid-modal') {
+    document.getElementById('mermaid-modal').style.display = 'none';
+  }
+});
+
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('mermaid-modal');
+    if (modal.style.display === 'flex') {
+      modal.style.display = 'none';
+    }
   }
 });

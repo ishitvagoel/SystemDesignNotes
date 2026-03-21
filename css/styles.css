@@ -856,8 +856,20 @@
       overflow-x: auto;
       display: flex;
       justify-content: center;
+      cursor: zoom-in;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .mermaid-wrapper:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     .mermaid-wrapper svg { max-width: 100%; height: auto; }
+    
+    #mermaid-modal-svg svg {
+      width: 100%;
+      height: auto;
+      max-width: none;
+    }
 
     /* mobile hamburger */
     #mobile-toggle {
