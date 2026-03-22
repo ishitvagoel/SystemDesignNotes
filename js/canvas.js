@@ -4,8 +4,9 @@
  */
 
 class CanvasEngine {
-  constructor(svgId, stateKey = 'system-design-canvas-state') {
+  constructor(svgId, stateKey = 'system-design-canvas-state', isPrimary = false) {
     this.stateKey = stateKey;
+    this.isPrimary = isPrimary;
     this.svg = d3.select(svgId);
     this.container = this.svg.append('g').attr('class', 'canvas-container');
     this.nodes = [];
@@ -130,7 +131,7 @@ class CanvasEngine {
     try {
       const res = await fetch('data/quests.json');
       this.quests = await res.json();
-      this.renderQuests();
+      if (this.isPrimary) this.renderQuests();
     } catch (e) {
       console.error('Failed to load quests:', e);
     }
@@ -196,7 +197,7 @@ class CanvasEngine {
       <ul style="font-size:11px; color:var(--text2); padding-left:16px; margin-bottom:16px;">
         ${q.objectives.map(o => `<li>${o}</li>`).join('')}
       </ul>
-      <button class="graph-ctrl-btn" style="width:100%" onclick="playground.activeQuest=null; playground.updateProps()">Exit Quest</button>
+      <button class="graph-ctrl-btn" style="width:100%" onclick="activePlayground.activeQuest=null; activePlayground.updateProps()">Exit Quest</button>
     `;
 
     this.render();
@@ -233,7 +234,7 @@ class CanvasEngine {
         transition: all 0.15s;
       `;
       el.innerHTML = `<span>${c.icon}</span><span>${c.label}</span>`;
-      el.onclick = () => this.activePlayground.addComponent(c.type, c.label);
+      el.onclick = () => activePlayground.addComponent(c.type, c.label);
       el.onmouseenter = () => el.style.borderColor = 'var(--accent)';
       el.onmouseleave = () => el.style.borderColor = 'var(--border)';
       list.appendChild(el);
@@ -241,12 +242,16 @@ class CanvasEngine {
   }
 
   addComponent(type, label) {
+    const svgEl = this.svg.node();
+    const { width, height } = svgEl.getBoundingClientRect();
+    const transform = d3.zoomTransform(svgEl);
+    const [cx, cy] = transform.invert([width / 2, height / 2]);
     const newNode = {
       id: `node-${Date.now()}`,
       type: type,
       label: label,
-      x: 100 + Math.random() * 50,
-      y: 100 + Math.random() * 50,
+      x: cx + (Math.random() - 0.5) * 120,
+      y: cy + (Math.random() - 0.5) * 120,
       capacity: 1000,
       load: 0
     };
@@ -291,28 +296,41 @@ class CanvasEngine {
         .on('end', () => this.saveState())
       );
 
+    const NODE_ICONS = { client: '💻', lb: '⚖️', cdn: '🌐', app: '⚙️', db: '🗄️', cache: '⚡', queue: '📥' };
+
     nodeEnter.append('rect')
       .attr('width', 120)
-      .attr('height', 50)
+      .attr('height', 64)
       .attr('rx', 6)
       .attr('x', -60)
-      .attr('y', -25)
+      .attr('y', -32)
       .attr('fill', 'var(--surface)')
       .attr('stroke', 'var(--border)')
       .attr('stroke-width', 2);
 
     nodeEnter.append('text')
+      .attr('class', 'node-icon')
       .attr('text-anchor', 'middle')
-      .attr('dy', '.35em')
+      .attr('dy', '-0.5em')
       .attr('fill', 'var(--text)')
-      .style('font-size', '12px')
+      .style('font-size', '16px')
+      .style('pointer-events', 'none')
+      .text(d => NODE_ICONS[d.type] || '🔲');
+
+    nodeEnter.append('text')
+      .attr('class', 'node-label')
+      .attr('text-anchor', 'middle')
+      .attr('dy', '1.2em')
+      .attr('fill', 'var(--text)')
+      .style('font-size', '11px')
       .style('pointer-events', 'none')
       .text(d => d.label);
 
     const nodeMerge = nodeEnter.merge(nodes);
     
     nodeMerge.attr('transform', d => `translate(${d.x},${d.y})`);
-    
+    nodeMerge.select('.node-label').text(d => d.label);
+
     nodeMerge.select('rect')
       .attr('fill', d => {
         if (d.load > d.capacity) return 'rgba(222,107,138,0.3)'; // Red
@@ -351,6 +369,61 @@ class CanvasEngine {
       }
       this.render();
     });
+
+    const tooltip = document.getElementById('canvas-tooltip');
+    nodeMerge.on('mouseover', (e, d) => {
+      const util = d.capacity > 0 ? Math.round((d.load / d.capacity) * 100) : 0;
+      const status = d.load > d.capacity ? '🔴 Overloaded' : d.load > d.capacity * 0.7 ? '🟡 High' : '🟢 OK';
+      tooltip.innerHTML = `<strong>${d.label}</strong><br>Capacity: ${d.capacity} RPS<br>Load: ${Math.round(d.load)} RPS (${util}%)<br>Status: ${status}`;
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.pageX + 14) + 'px';
+      tooltip.style.top = (e.pageY - 10) + 'px';
+    });
+    nodeMerge.on('mousemove', (e) => {
+      tooltip.style.left = (e.pageX + 14) + 'px';
+      tooltip.style.top = (e.pageY - 10) + 'px';
+    });
+    nodeMerge.on('mouseout', () => { tooltip.style.display = 'none'; });
+
+    // Update hint overlay (only for primary canvas / active canvas)
+    if (this === activePlayground) {
+      const hint = document.getElementById('canvas-hint');
+      if (hint) {
+        if (this.connectingNode) {
+          hint.textContent = `🔗 Click another node to connect to "${this.connectingNode.label}" — Esc to cancel`;
+          hint.style.display = 'block';
+        } else {
+          hint.style.display = 'none';
+        }
+      }
+    }
+
+    // Live load refresh in props panel
+    if (this.selectedNode) {
+      const loadVal = document.getElementById('prop-load-val');
+      const loadBar = document.getElementById('prop-load-bar');
+      if (loadVal) loadVal.textContent = Math.round(this.selectedNode.load) + ' RPS';
+      if (loadBar) {
+        loadBar.style.width = Math.min(100, (this.selectedNode.load / this.selectedNode.capacity) * 100) + '%';
+        loadBar.style.background = this.selectedNode.load > this.selectedNode.capacity ? 'var(--pink)' : 'var(--accent)';
+      }
+    }
+
+    // Simulation stats overlay (only for primary canvas)
+    if (this === activePlayground) {
+      const stats = document.getElementById('canvas-sim-stats');
+      if (stats) {
+        if (globalIsSimulating && this.nodes.length > 0) {
+          const overloaded = this.nodes.filter(n => n.load > n.capacity).length;
+          const totalRps = this.nodes.filter(n => n.type === 'client').reduce((s, n) => s + n.load, 0);
+          const totalCap = this.nodes.reduce((s, n) => s + n.capacity, 0);
+          stats.innerHTML = `NODES: ${this.nodes.length} &nbsp;|&nbsp; LINKS: ${this.links.length}<br>THROUGHPUT: ${Math.round(totalRps)} RPS<br>CAPACITY: ${totalCap} RPS<br>OVERLOADED: <span style="color:${overloaded > 0 ? 'var(--pink)' : 'var(--accent)'}">${overloaded}</span>`;
+          stats.style.display = 'block';
+        } else {
+          stats.style.display = 'none';
+        }
+      }
+    }
   }
 
   updateProps() {
@@ -373,16 +446,17 @@ class CanvasEngine {
         <input id="prop-cap" type="number" value="${this.selectedNode.capacity}" style="width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:6px; border-radius:4px; font-size:12px; outline:none;">
       </div>
       <div style="font-size:10px; color:var(--text3); line-height:1.4; margin-top:16px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>CURRENT LOAD</span> <span>${Math.round(this.selectedNode.load)} RPS</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>CURRENT LOAD</span> <span id="prop-load-val">${Math.round(this.selectedNode.load)} RPS</span></div>
         <div style="height:4px; background:var(--surface2); border-radius:2px; overflow:hidden;">
-          <div style="width:${Math.min(100, (this.selectedNode.load / this.selectedNode.capacity) * 100)}%; height:100%; background:${this.selectedNode.load > this.selectedNode.capacity ? 'var(--pink)' : 'var(--accent)'};"></div>
+          <div id="prop-load-bar" style="width:${Math.min(100, (this.selectedNode.load / this.selectedNode.capacity) * 100)}%; height:100%; background:${this.selectedNode.load > this.selectedNode.capacity ? 'var(--pink)' : 'var(--accent)'};"></div>
         </div>
       </div>
       <div id="node-links" style="margin-top:16px;">
         <div style="font-size:10px; color:var(--text3); text-transform:uppercase; margin-bottom:8px;">Connections</div>
         <div id="links-list"></div>
       </div>
-      <button id="node-delete" style="width:100%; padding:8px; background:rgba(222,107,138,0.1); border:1px solid var(--pink); color:var(--pink); border-radius:4px; font-size:11px; cursor:pointer; margin-top:20px;">Delete Component</button>
+      <button id="node-duplicate" style="width:100%; padding:8px; background:var(--surface); border:1px solid var(--border); color:var(--text2); border-radius:4px; font-size:11px; cursor:pointer; margin-top:12px;">Duplicate Component</button>
+      <button id="node-delete" style="width:100%; padding:8px; background:rgba(222,107,138,0.1); border:1px solid var(--pink); color:var(--pink); border-radius:4px; font-size:11px; cursor:pointer; margin-top:8px;">Delete Component</button>
     `;
 
     // Render connections
@@ -409,6 +483,16 @@ class CanvasEngine {
     };
     document.getElementById('prop-cap').oninput = (e) => {
       this.selectedNode.capacity = Number(e.target.value);
+      this.render();
+      this.saveState();
+    };
+
+    document.getElementById('node-duplicate').onclick = () => {
+      const src = this.selectedNode;
+      const copy = { ...src, id: `node-${Date.now()}`, x: src.x + 40, y: src.y + 40, load: 0 };
+      this.nodes.push(copy);
+      this.selectedNode = copy;
+      this.updateProps();
       this.render();
       this.saveState();
     };
@@ -665,6 +749,41 @@ function initCanvasControls() {
     }
   };
 
+  document.getElementById('canvas-export').onclick = () => {
+    const pg = activePlayground;
+    if (!pg) return;
+    const state = {
+      nodes: pg.nodes.map(n => ({ ...n, load: 0 })),
+      links: pg.links.map(l => ({ source: l.source.id, target: l.target.id }))
+    };
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'system-design.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  };
+
+  document.addEventListener('keydown', (e) => {
+    const canvasVisible = document.getElementById('canvas-screen').style.display !== 'none';
+    if (!canvasVisible || !activePlayground) return;
+    if (e.target.tagName === 'INPUT') return; // don't interfere with text inputs
+    if ((e.key === 'Delete' || e.key === 'Backspace') && activePlayground.selectedNode) {
+      const n = activePlayground.selectedNode;
+      activePlayground.nodes = activePlayground.nodes.filter(node => node.id !== n.id);
+      activePlayground.links = activePlayground.links.filter(l => l.source.id !== n.id && l.target.id !== n.id);
+      activePlayground.selectedNode = null;
+      activePlayground.updateProps();
+      activePlayground.render();
+      activePlayground.saveState();
+    } else if (e.key === 'Escape') {
+      activePlayground.selectedNode = null;
+      activePlayground.connectingNode = null;
+      activePlayground.updateProps();
+      activePlayground.render();
+    }
+  });
+
   const slider = document.getElementById('canvas-scale-slider');
   const label = document.getElementById('canvas-scale-label');
   slider.oninput = (e) => {
@@ -679,7 +798,7 @@ function initCanvasControls() {
 
 function initCanvas() {
   if (!playgroundA) {
-    playgroundA = new CanvasEngine('#canvas-svg', 'system-design-canvas-state');
+    playgroundA = new CanvasEngine('#canvas-svg', 'system-design-canvas-state', true);
     activePlayground = playgroundA;
     playgroundA.initPalette();
     initCanvasControls();
