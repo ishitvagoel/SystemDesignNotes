@@ -110,21 +110,19 @@ Most applications end up with a **mixed strategy**: strong consistency for a sma
 ```mermaid
 graph TD
     subgraph "Network Partition (The 'P')"
-        Leader[Leader - Region A] -.X.- Follower[Follower - Region B]
+        Leader[Leader - Region A] --x|"✕ Partition"| Follower[Follower - Region B]
     end
 
     subgraph "CP Choice: Consistency"
         User1[User 1] -->|Write| Leader
         User2[User 2] -->|Read| Follower
-        Follower -- "503 Unavailable" --> User2
-        Note right of Follower: Blocks to avoid stale data
+        Follower -- "503 Unavailable\n(Blocks: avoids stale data)" --> User2
     end
 
     subgraph "AP Choice: Availability"
         User3[User 3] -->|Write| Leader
         User4[User 4] -->|Read| Follower
-        Follower -- "200 OK (Stale Data)" --> User4
-        Note right of Follower: Returns what it has
+        Follower -- "200 OK\n(Stale Data: returns what it has)" --> User4
     end
 
     style Leader fill:var(--surface),stroke:var(--accent),stroke-width:2px;

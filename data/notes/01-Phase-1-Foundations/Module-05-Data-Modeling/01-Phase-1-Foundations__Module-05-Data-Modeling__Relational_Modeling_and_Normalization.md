@@ -147,11 +147,10 @@ No option is perfect. The shared approach is most common because it's simple, de
 
 ```mermaid
 graph TD
-    subgraph "Normalized Model (Write-Optimized)"
+    subgraph "Normalized Model (Write-Optimized — 3NF: No redundancy)"
         Users[Users Table] --- Orders[Orders Table]
         Orders --- OrderItems[OrderItems Table]
         OrderItems --- Products[Products Table]
-        Note right of Users: 3NF: No redundancy
     end
 
     subgraph "Denormalization Patterns (Read-Optimized)"

@@ -82,10 +82,13 @@ This is precisely how Twitter/X designed their timeline system: pre-compute feed
 ```mermaid
 graph TD
     Post[New Post] --> Check{Author followers > 10K?}
-    Check -->|No| Push[Fan-out to follower caches]
-    Check -->|Yes| Skip[Don't fan out — post stored in author timeline only]
-    
-    FeedReq[Feed Request] --> ReadCache[Read pre-computed feed]
+    Check -->|No: fan-out on write| Push[Fan-out to follower caches]
+    Check -->|Yes: fan-out on read| Skip[Store in author timeline only]
+    Push --> FeedCache[(Follower Feed Caches)]
+    Skip --> AuthorTimeline[(Author Timeline Store)]
+
+    FeedReq[Feed Request] --> ReadCache[Read pre-computed feed from FeedCache]
+    AuthorTimeline -.->|Merged at read time| ReadCache
     ReadCache --> Merge[Merge with recent posts from high-follower accounts user follows]
     Merge --> Rank[Rank and return]
 ```

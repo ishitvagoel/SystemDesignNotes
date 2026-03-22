@@ -102,10 +102,9 @@ graph TD
     subgraph "Data Layer (Postgres RLS)"
         Pool_Shared & Pool_VIP --> DB[(Shared Database)]
         
-        subgraph "Row Level Security"
+        subgraph "Row Level Security (Policy: WHERE tenant_id = session.id)"
             DB --- R1[Row: Tenant A]
             DB --- R2[Row: Tenant B]
-            Note right of DB: Policy: WHERE tenant_id = session.id
         end
     end
 
