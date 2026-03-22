@@ -1136,3 +1136,148 @@
       #search-wrap { display: none; }
       .header-pills { margin-left: 0; }
     }
+
+    /* ── SIDEBAR FILTER ── */
+    #sidebar-filter-wrap {
+      position: relative;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg2);
+    }
+    #sidebar-filter {
+      flex: 1;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 5px 8px;
+      color: var(--text);
+      outline: none;
+      width: 100%;
+    }
+    #sidebar-filter:focus { border-color: var(--accent); }
+    #sidebar-filter::placeholder { color: var(--text3); }
+    .sidebar-filter-clear {
+      background: none;
+      border: none;
+      color: var(--text3);
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      padding: 0 2px;
+      flex-shrink: 0;
+    }
+    .sidebar-filter-clear:hover { color: var(--text); }
+    .sidebar-filter-empty {
+      padding: 20px 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      text-align: center;
+    }
+
+    /* ── PHASE PROGRESS BADGE ── */
+    .phase-progress {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      color: var(--accent2);
+      background: var(--accent-dim2);
+      border: 1px solid rgba(107,222,140,0.2);
+      border-radius: 10px;
+      padding: 1px 6px;
+      flex-shrink: 0;
+      margin-right: 4px;
+    }
+
+    /* ── STARRED SIDEBAR SECTION ── */
+    .sidebar-section.starred .starred-tag {
+      background: rgba(232,208,107,0.2);
+      color: var(--yellow);
+    }
+
+    /* ── COMPLETED NOTES ── */
+    .sidebar-file.completed .file-name {
+      color: var(--text3);
+    }
+    .sidebar-file.completed .file-icon {
+      color: var(--accent2);
+    }
+    .file-done-dot {
+      font-size: 10px;
+      color: var(--accent2);
+      flex-shrink: 0;
+    }
+    .file-bookmark-dot {
+      font-size: 10px;
+      color: var(--yellow);
+      flex-shrink: 0;
+    }
+
+    /* ── NOTE META ACTION BUTTONS ── */
+    .meta-action-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--text3);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .meta-action-btn:hover { border-color: var(--border2); color: var(--text2); }
+    .btn-bookmark.active { color: var(--yellow); border-color: rgba(232,208,107,0.4); background: rgba(232,208,107,0.08); }
+    .btn-complete.active { color: var(--accent2); border-color: rgba(107,222,140,0.4); background: var(--accent-dim2); }
+
+    /* ── READING TIME TAG ── */
+    .meta-tag.meta-readtime {
+      border-color: rgba(107,170,222,0.3);
+      color: var(--blue);
+    }
+
+    /* ── COMPLETED STAT BOX ── */
+    .stat-box.stat-box-accent .stat-num { color: var(--accent); }
+    .stat-box.stat-box-accent .stat-label { color: var(--accent2); }
+
+    /* ── STUDY RATING BUTTONS ── */
+    .study-rating-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 4px;
+    }
+    .study-btn-again {
+      border-color: rgba(222,107,138,0.5);
+      color: var(--pink);
+    }
+    .study-btn-again:hover { background: rgba(222,107,138,0.1); }
+    .study-btn-hard {
+      border-color: rgba(232,208,107,0.5);
+      color: var(--yellow);
+    }
+    .study-btn-hard:hover { background: rgba(232,208,107,0.1); }
+    .study-btn-easy {
+      border-color: rgba(107,222,140,0.5);
+      color: var(--accent);
+    }
+    .study-btn-easy:hover { background: var(--accent-dim); }
+
+    /* ── STUDY DUE BADGE ── */
+    .study-due-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--pink);
+      color: #fff;
+      border-radius: 8px;
+      font-size: 9px;
+      font-family: 'IBM Plex Mono', monospace;
+      padding: 1px 5px;
+      margin-left: 4px;
+      vertical-align: middle;
+      line-height: 1.4;
+    }
