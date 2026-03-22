@@ -1120,11 +1120,31 @@
     "module": 21
   },
   {
+    "id": "Cloud_Cost_Optimization",
+    "title": "Cloud Cost Optimization",
+    "folder": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering",
+    "subfolder": null,
+    "filename": "Cloud_Cost_Optimization.md",
+    "is_moc": false,
+    "phase": 5,
+    "module": 0
+  },
+  {
     "id": "Cost_Engineering_and_FinOps",
     "title": "FinOps and Cost Engineering",
     "folder": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering",
     "subfolder": null,
     "filename": "Cost_Engineering_and_FinOps.md",
+    "is_moc": false,
+    "phase": 5,
+    "module": 0
+  },
+  {
+    "id": "FinOps_Observability_and_Unit_Economics",
+    "title": "FinOps Observability and Unit Economics",
+    "folder": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering",
+    "subfolder": null,
+    "filename": "FinOps_Observability_and_Unit_Economics.md",
     "is_moc": false,
     "phase": 5,
     "module": 0
@@ -1140,11 +1160,51 @@
     "module": 0
   },
   {
+    "id": "Resource_Right-Sizing_and_Autoscaling",
+    "title": "Resource Right-Sizing and Autoscaling",
+    "folder": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering",
+    "subfolder": null,
+    "filename": "Resource_Right-Sizing_and_Autoscaling.md",
+    "is_moc": false,
+    "phase": 5,
+    "module": 0
+  },
+  {
+    "id": "Audit_Logging_and_Compliance",
+    "title": "Audit Logging and Compliance",
+    "folder": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance",
+    "subfolder": null,
+    "filename": "Audit_Logging_and_Compliance.md",
+    "is_moc": false,
+    "phase": 5,
+    "module": 0
+  },
+  {
+    "id": "Data_Classification_and_Access_Control",
+    "title": "Data Classification and Access Control",
+    "folder": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance",
+    "subfolder": null,
+    "filename": "Data_Classification_and_Access_Control.md",
+    "is_moc": false,
+    "phase": 5,
+    "module": 0
+  },
+  {
     "id": "Data_Privacy_and_Compliance",
     "title": "Data Privacy and Compliance",
     "folder": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance",
     "subfolder": null,
     "filename": "Data_Privacy_and_Compliance.md",
+    "is_moc": false,
+    "phase": 5,
+    "module": 0
+  },
+  {
+    "id": "GDPR_and_Data_Sovereignty",
+    "title": "GDPR and Data Sovereignty",
+    "folder": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance",
+    "subfolder": null,
+    "filename": "GDPR_and_Data_Sovereignty.md",
     "is_moc": false,
     "phase": 5,
     "module": 0

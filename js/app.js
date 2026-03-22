@@ -24,7 +24,23 @@ function initMermaid(isLight = false) {
     }
   });
 }
-initMermaid(localStorage.getItem('theme') === 'light');
+// System theme detection: respect OS preference on first visit
+(function() {
+  const stored = localStorage.getItem('theme');
+  if (!stored && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    document.body.classList.add('light-mode');
+  }
+  // Listen for OS theme changes (only if user hasn't manually set preference)
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+      if (localStorage.getItem('theme')) return; // user set manual preference
+      const isLight = e.matches;
+      document.body.classList.toggle('light-mode', isLight);
+      initMermaid(isLight);
+    });
+  }
+})();
+initMermaid(document.body.classList.contains('light-mode'));
 
 // Custom marked renderer for mermaid code blocks
 const renderer = new marked.Renderer();
@@ -453,21 +469,43 @@ function renderNote(id) {
     tocContainer.style.display = 'none';
   }
 
-  // Render mermaid diagrams
-  body.querySelectorAll('.mermaid').forEach((el, i) => {
-    let rawText = el.textContent.trim();
-    const id = `mermaid-diag-${Math.random().toString(36).substring(2, 11)}-${i}`;
-    
+  // Render mermaid diagrams (lazy via IntersectionObserver)
+  const contentPane = document.getElementById('content-pane');
+  const mermaidObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target.querySelector('.mermaid');
+        if (el && !el.dataset.rendered) {
+          el.dataset.rendered = 'true';
+          renderMermaidElement(el);
+        }
+        mermaidObserver.unobserve(entry.target);
+      }
+    });
+  }, { root: contentPane, rootMargin: '200px' });
+
+  body.querySelectorAll('.mermaid-wrapper').forEach(wrapper => {
+    const el = wrapper.querySelector('.mermaid');
+    if (el) {
+      // Show placeholder text while waiting
+      const raw = el.textContent.trim();
+      el.dataset.rawText = raw;
+      el.innerHTML = '<div class="mermaid-placeholder">Loading diagram...</div>';
+      mermaidObserver.observe(wrapper);
+    }
+  });
+
+  function renderMermaidElement(el) {
+    let rawText = el.dataset.rawText || el.textContent.trim();
+    const id = `mermaid-diag-${Math.random().toString(36).substring(2, 11)}`;
+
     // 1. Fix common syntax errors in memory
     if (rawText.startsWith('graph ') || rawText.startsWith('flowchart ')) {
-      // Change --|Label| to -->|Label|
       rawText = rawText.replace(/ --\|/g, ' -->|');
-      // Change --x to -->x
       rawText = rawText.replace(/ --x /g, ' -->x ');
-      // Change --o to -->o
       rawText = rawText.replace(/ --o /g, ' -->o ');
     }
-    
+
     // 2. Replace CSS variables with actual values
     const isLight = document.body.classList.contains('light-mode');
     const themeVars = {
@@ -484,7 +522,7 @@ function renderNote(id) {
       '--accent': isLight ? '#2d8a4e' : '#6bde8c',
       '--accent2': isLight ? '#1e6334' : '#4ab86a'
     };
-    
+
     rawText = rawText.replace(/var\(\s*(--[a-zA-Z0-9-]+)\s*\)/g, (match, varName) => {
       return themeVars[varName] || match;
     });
@@ -492,27 +530,70 @@ function renderNote(id) {
     try {
       mermaid.render(id, rawText).then(({svg}) => {
         el.innerHTML = svg;
-        // The click listener is now handled by delegation on #note-body
+        // Add copy button to wrapper
+        const wrapper = el.closest('.mermaid-wrapper');
+        if (wrapper && !wrapper.querySelector('.mermaid-copy-btn')) {
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'mermaid-copy-btn';
+          copyBtn.title = 'Copy SVG';
+          copyBtn.textContent = '\u{1F4CB}';
+          copyBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const svgEl = wrapper.querySelector('svg');
+            if (svgEl) {
+              navigator.clipboard.writeText(svgEl.outerHTML).then(() => {
+                copyBtn.classList.add('copied');
+                copyBtn.textContent = '\u2713';
+                setTimeout(() => { copyBtn.textContent = '\u{1F4CB}'; copyBtn.classList.remove('copied'); }, 1500);
+              });
+            }
+          });
+          wrapper.appendChild(copyBtn);
+          // Check for horizontal overflow
+          requestAnimationFrame(() => {
+            if (wrapper.scrollWidth > wrapper.clientWidth) {
+              wrapper.classList.add('has-overflow');
+            }
+          });
+        }
       }).catch(err => {
         console.error('Mermaid render error:', err);
-        el.innerHTML = `<pre style="color:var(--pink);font-size:12px;white-space:pre-wrap;border:1px solid var(--pink);padding:10px;border-radius:4px;">Mermaid Syntax Error:\n${err.message}\n\nRaw Text:\n${rawText}</pre>`;
+        el.innerHTML = buildMermaidError(err.message, rawText);
       });
-    } catch(e) { 
+    } catch(e) {
       console.error('Mermaid sync error:', e);
     }
-  });
+  }
+
+  function buildMermaidError(message, rawText) {
+    let hint = 'Check your diagram syntax for errors.';
+    const msgLower = (message || '').toLowerCase();
+    if (msgLower.includes('parse') || msgLower.includes('syntax') || msgLower.includes('expect')) {
+      hint = 'Check for missing arrows (use <code>--&gt;</code> not <code>--</code>), unclosed brackets, or unescaped special characters.';
+    } else if (msgLower.includes('duplicate')) {
+      hint = 'Two nodes have the same ID &mdash; rename one to make them unique.';
+    } else if (msgLower.includes('unknown diagram') || msgLower.includes('not a valid')) {
+      hint = 'The diagram type is not recognized. Supported types: flowchart, sequence, class, state, er, gantt, pie, journey, etc.';
+    }
+    const escaped = rawText.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<div class="mermaid-error">
+      <div class="mermaid-error-hint">${hint}</div>
+      <button class="mermaid-error-toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">Show raw source \u25BC</button>
+      <div class="mermaid-error-raw">${escaped}\n\n${(message || '').replace(/</g,'&lt;')}</div>
+      <a class="mermaid-error-link" href="https://mermaid.js.org/intro/" target="_blank" rel="noopener">Mermaid syntax reference \u2197</a>
+    </div>`;
+  }
 
   // Global click delegation for mermaid modal (more reliable than per-element)
   if (!body.dataset.mermaidListener) {
     body.addEventListener('click', (e) => {
+      // Ignore clicks on copy button
+      if (e.target.closest('.mermaid-copy-btn')) return;
       const wrapper = e.target.closest('.mermaid-wrapper');
       if (wrapper) {
         const svg = wrapper.querySelector('svg');
         if (svg) {
-          const modal = document.getElementById('mermaid-modal');
-          const modalSvg = document.getElementById('mermaid-modal-svg');
-          modalSvg.innerHTML = svg.outerHTML;
-          modal.style.display = 'flex';
+          openMermaidModal(svg);
         }
       }
     });
@@ -1286,6 +1367,7 @@ function restartStudy() {
     <button id="study-reveal" class="study-btn study-btn-primary">Reveal Answer</button>
     <button id="study-next" class="study-btn study-btn-primary" style="display:none;">Next Prompt</button>
     <button id="study-open" class="study-btn study-btn-secondary" style="display:none;">Open Note</button>
+    <div class="study-keyboard-hints"><kbd>Space</kbd> reveal / next &middot; <kbd>&larr;</kbd><kbd>&rarr;</kbd> navigate &middot; <kbd>Enter</kbd> open note</div>
   `;
   bindStudyButtons();
 }
@@ -1474,18 +1556,134 @@ document.getElementById('btn-export').addEventListener('click', async function()
   }
 });
 
-// ── MERMAID MODAL HANDLERS ──
+// ── MERMAID MODAL WITH ZOOM/PAN/EXPORT ──
 const mermaidModal = document.getElementById('mermaid-modal');
+let mmZoom = 1, mmPanX = 0, mmPanY = 0;
+let mmDragging = false, mmDragStart = { x: 0, y: 0 }, mmPanStart = { x: 0, y: 0 };
+
+function openMermaidModal(svgElement) {
+  const modal = document.getElementById('mermaid-modal');
+  const modalSvg = document.getElementById('mermaid-modal-svg');
+  modalSvg.innerHTML = svgElement.outerHTML;
+  mmZoom = 1; mmPanX = 0; mmPanY = 0;
+  applyMmTransform();
+  modal.style.display = 'flex';
+}
+
+function applyMmTransform() {
+  const container = document.getElementById('mermaid-modal-svg');
+  const svgEl = container.querySelector('svg');
+  if (svgEl) {
+    svgEl.style.transform = `scale(${mmZoom}) translate(${mmPanX}px, ${mmPanY}px)`;
+    svgEl.style.transformOrigin = 'center center';
+  }
+  document.getElementById('mm-zoom-level').textContent = Math.round(mmZoom * 100) + '%';
+}
+
+function mmSetZoom(newZoom) {
+  mmZoom = Math.max(0.25, Math.min(4, newZoom));
+  applyMmTransform();
+}
+
+document.getElementById('mm-zoom-in').addEventListener('click', () => mmSetZoom(mmZoom * 1.25));
+document.getElementById('mm-zoom-out').addEventListener('click', () => mmSetZoom(mmZoom / 1.25));
+document.getElementById('mm-zoom-reset').addEventListener('click', () => {
+  mmZoom = 1; mmPanX = 0; mmPanY = 0;
+  applyMmTransform();
+});
+
+document.getElementById('mm-download').addEventListener('click', () => {
+  const svgEl = document.getElementById('mermaid-modal-svg').querySelector('svg');
+  if (!svgEl) return;
+  const blob = new Blob([svgEl.outerHTML], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'diagram.svg';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Mouse wheel zoom in modal
+document.getElementById('mermaid-modal-svg').addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const factor = e.deltaY < 0 ? 1.1 : 0.9;
+  mmSetZoom(mmZoom * factor);
+}, { passive: false });
+
+// Drag to pan in modal
+document.getElementById('mermaid-modal-svg').addEventListener('mousedown', (e) => {
+  if (e.button !== 0) return;
+  mmDragging = true;
+  mmDragStart = { x: e.clientX, y: e.clientY };
+  mmPanStart = { x: mmPanX, y: mmPanY };
+  e.target.style.cursor = 'grabbing';
+});
+window.addEventListener('mousemove', (e) => {
+  if (!mmDragging) return;
+  mmPanX = mmPanStart.x + (e.clientX - mmDragStart.x) / mmZoom;
+  mmPanY = mmPanStart.y + (e.clientY - mmDragStart.y) / mmZoom;
+  applyMmTransform();
+});
+window.addEventListener('mouseup', () => {
+  if (mmDragging) {
+    mmDragging = false;
+    const svgContainer = document.getElementById('mermaid-modal-svg');
+    if (svgContainer) svgContainer.style.cursor = '';
+  }
+});
+
+function closeMermaidModal() {
+  mermaidModal.style.display = 'none';
+}
+
 mermaidModal.addEventListener('click', (e) => {
   const isCloseButton = e.target.id === 'mermaid-modal-close' || e.target.closest('#mermaid-modal-close');
   const isBackground = e.target === mermaidModal;
   if (isCloseButton || isBackground) {
-    mermaidModal.style.display = 'none';
+    closeMermaidModal();
   }
 });
 
 window.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && mermaidModal.style.display === 'flex') {
-    mermaidModal.style.display = 'none';
+  if (mermaidModal.style.display === 'flex') {
+    if (e.key === 'Escape') { closeMermaidModal(); return; }
+    if (e.key === '+' || e.key === '=') { mmSetZoom(mmZoom * 1.25); return; }
+    if (e.key === '-') { mmSetZoom(mmZoom / 1.25); return; }
+    if (e.key === '0') { mmZoom = 1; mmPanX = 0; mmPanY = 0; applyMmTransform(); return; }
+  }
+});
+
+// ── STUDY MODE KEYBOARD NAVIGATION ──
+window.addEventListener('keydown', (e) => {
+  const studyScreen = document.getElementById('study-screen');
+  if (!studyScreen || studyScreen.style.display !== 'flex') return;
+  // Don't capture if user is typing in an input
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+  const reveal = document.getElementById('study-reveal');
+  const next = document.getElementById('study-next');
+  const openBtn = document.getElementById('study-open');
+
+  if (e.key === ' ' || e.code === 'Space') {
+    e.preventDefault();
+    if (reveal && reveal.style.display !== 'none') {
+      reveal.click();
+    } else if (next && next.style.display !== 'none') {
+      next.click();
+    }
+  } else if (e.key === 'ArrowRight') {
+    if (next && next.style.display !== 'none') {
+      next.click();
+    }
+  } else if (e.key === 'ArrowLeft') {
+    if (studyIndex > 0) {
+      studyIndex--;
+      renderStudyCard();
+    }
+  } else if (e.key === 'Enter') {
+    if (openBtn && openBtn.style.display !== 'none') {
+      openBtn.click();
+    }
   }
 });
