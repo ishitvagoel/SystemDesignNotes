@@ -127,6 +127,7 @@
             <button class="graph-ctrl-btn" id="canvas-clear">Clear</button>
             <button class="graph-ctrl-btn" id="canvas-simulate">Simulate</button>
             <button class="graph-ctrl-btn" id="canvas-compare">Compare</button>
+            <button class="graph-ctrl-btn" id="canvas-export">Export</button>
             <div id="canvas-scale-control" style="display:flex; align-items:center; gap:10px; margin-left:auto; background:rgba(13,15,14,0.85); padding:4px 12px; border-radius:20px; border:1px solid var(--border);">
               <span style="font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace;">SCALE:</span>
               <input type="range" id="canvas-scale-slider" min="0" max="7" step="1" value="0" style="width:100px; cursor:pointer;">
@@ -152,6 +153,9 @@
     </div>
   </div>
 </div>
+
+<!-- CANVAS TOOLTIP -->
+<div id="canvas-tooltip" style="display:none;"></div>
 
 <!-- MERMAID MODAL -->
 <div id="mermaid-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:1000; align-items:center; justify-content:center; cursor:zoom-out; padding:20px;">
