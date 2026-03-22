@@ -106,7 +106,7 @@ graph TD
 - [[Data Privacy and Compliance]] — The broader privacy framework this fits within
 - [[Cell-Based Architecture]] — Cell-based design is the architectural pattern enabling data residency
 - [[Encryption at Rest and in Transit]] — Encryption is a key mechanism for cross-border data transfer compliance
-- [[Multi-Region Strategies]] — Data sovereignty is often the primary driver of multi-region architecture decisions
+- [[Geo-Distribution and Data Sovereignty]] — Data sovereignty is often the primary driver of multi-region architecture decisions; the companion note covers routing, failover, and cross-region replication patterns
 
 ## Reflection Prompts
 

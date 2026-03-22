@@ -95,6 +95,18 @@ Raft's safety guarantee: **if a log entry has been committed, it will be present
 
 **"Leader election causes downtime"**: Election typically completes in 150–500ms (one election timeout + one vote round). In a well-configured cluster, this is sub-second — perceptible but brief.
 
+### When Consensus Is Overkill
+
+Raft's guarantees — linearizability and fault tolerance across N/2 failures — are powerful, and it's tempting to apply them everywhere. But consensus has a real cost: every write requires a majority round-trip. Before reaching for Raft, ask whether a simpler mechanism provides sufficient guarantees.
+
+**For leader election only (not replicated state)**: A heartbeat + TTL lease via Redis `SETNX` is sufficient. If the leader fails to renew its lease, another node acquires it. You don't need Raft unless you also need to replicate state across the leader's transitions. This is the pattern used by many job schedulers (only one instance should run a job at a time).
+
+**For read-heavy config with tolerable brief staleness**: A replicated key-value store with async replication (Redis Sentinel, a Postgres read replica) serves reads at low latency with no consensus overhead. If serving slightly stale config for a few seconds during a leader failover is acceptable, async replication is dramatically simpler and faster.
+
+**For a single-region, single-node (or single-primary) database**: Postgres `SERIALIZABLE` isolation provides the same linearizability guarantee as a Raft-based system — but for a single-database workload, without any of the distributed consensus machinery. If your workload fits on one primary, you don't need Raft; the DBMS already provides it.
+
+**The litmus test**: "If I ran this on a single machine, would `SERIALIZABLE` transactions be sufficient, and do I not need the fault tolerance of N-1 simultaneous failures?" If yes to both — use a simpler mechanism. If you need to survive the loss of 2 out of 5 nodes and still make progress — use Raft.
+
 ## Trade-Off Analysis
 
 | Protocol | Understandability | Performance | Leader Dependency | Best For |

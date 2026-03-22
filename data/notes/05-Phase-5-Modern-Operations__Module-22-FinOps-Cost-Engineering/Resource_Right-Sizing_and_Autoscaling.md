@@ -108,7 +108,7 @@ graph TD
 
 - [[Cost Engineering and FinOps]] — Right-sizing is the most impactful first step in any FinOps initiative
 - [[Cloud Cost Optimization]] — Right-sizing feeds into purchasing decisions (smaller instances need smaller commitments)
-- [[Cloud-Native and Serverless]] — Kubernetes resource management is where right-sizing meets autoscaling
+- [[Kubernetes and Platform Engineering]] — Kubernetes resource management (HPA, VPA, Karpenter) is where right-sizing meets autoscaling in practice
 - [[Load Balancing Fundamentals]] — Autoscaling changes the target group; load balancers must detect new instances
 
 ## Reflection Prompts

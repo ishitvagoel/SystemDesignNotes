@@ -158,6 +158,18 @@ RAG evaluation is multi-dimensional — you must evaluate retrieval quality AND 
 
 - **Stale index**: Documents are updated but the vector index isn't re-embedded. Users get answers based on outdated information. Mitigation: incremental indexing with CDC, monitor index freshness as an SLI.
 
+- **Multi-tenant data leakage**: In a SaaS RAG system, embeddings from tenant A and tenant B reside in the same vector index. A tenant A query about a topic that semantically overlaps with tenant B's documents may retrieve tenant B's context — a data isolation violation. This is not hypothetical: if two customers both have "internal pricing" documents, a vector search for "discount policy" can cross tenant boundaries if there's no namespace filtering. Mitigation: use per-tenant namespaces (Pinecone namespaces, Weaviate multi-tenancy, Qdrant collections) and enforce a metadata filter on every retrieval query (`filter: { tenant_id: "tenant_a" }`). The trade-off: per-tenant namespaces increase index count (operational overhead, potential per-namespace provisioning costs) and disable cross-tenant global search. Test this boundary explicitly as a security test, not just a functional test.
+
+### Production Evaluation Pipeline
+
+The note explains what to measure (RAGAS metrics). Here's how to run it continuously in production so quality regressions are caught before users notice:
+
+**Offline evaluation on a golden test set**: Maintain a curated set of 50–200 question/expected-answer pairs covering your domain. Run this benchmark on every pipeline change (different chunk size, new embedding model, re-ranking enabled/disabled). Track the metrics over time in your CI system — a change that drops faithfulness by 5% should be a CI failure, not a post-deployment discovery.
+
+**Online evaluation via sampling**: In production, a judge LLM evaluates 1–5% of live responses automatically. For each sampled response, the judge checks: "Is this answer faithful to the retrieved context? Is it relevant to the question?" Log the faithfulness score per query and alert when the rolling average drops below threshold (e.g., 90% faithfulness over a 1-hour window).
+
+**Retrieval monitoring (separate from generation)**: Log recall@5 by tracking whether users click "this wasn't helpful" or follow-up with a rephrased version of the same question. A high follow-up rate on a specific query pattern indicates retrieval failure, not generation failure. These signals point to the right layer to fix.
+
 ## Architecture Diagram
 
 ```mermaid

@@ -102,7 +102,7 @@ graph TD
 ## Connections
 
 - [[Cost Engineering and FinOps]] — The broader FinOps cultural framework this fits within
-- [[Cloud-Native and Serverless]] — Serverless pricing (pay-per-invocation) is an alternative optimization model
+- [[Serverless and Edge Computing]] — Serverless pricing (pay-per-invocation) is an alternative optimization model; the cost crossover between serverless and always-on containers is a key FinOps decision
 - [[Inference Serving Architecture]] — GPU compute dominates AI workload costs; spot GPUs are increasingly viable for batch inference
 - [[Monitoring and Alerting]] — Cost monitoring requires the same observability infrastructure as performance monitoring
 

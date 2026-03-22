@@ -85,6 +85,13 @@ This is a first-class architectural pattern, not a niche technique. Netflix's St
 
 **REST**: Public-facing APIs, simple CRUD services, webhooks, integrations with external partners, anything that needs to be callable from a browser or curl. REST is the lingua franca of the internet.
 
+**REST and async/push patterns**: REST alone is a request/response paradigm — the client always initiates. For server-initiated events, REST needs augmentation:
+- **Webhooks**: The server calls back a client-registered URL when an event occurs (Stripe payment events, GitHub PR webhooks). The client is the server in the callback leg. Best for: low-frequency events, external integrations where the client controls a public endpoint.
+- **Server-Sent Events (SSE)**: A long-lived HTTP response where the server streams events over a single connection. Built into the browser (`EventSource` API). One-directional (server → client only). Best for: live dashboards, feed updates, progress streaming.
+- **WebSockets**: A persistent, full-duplex TCP connection upgraded from HTTP. Bidirectional. Best for: chat, collaborative editing, multiplayer games.
+
+The choice among webhooks/SSE/WebSockets is **orthogonal** to the choice among REST/gRPC/GraphQL — they address the async push dimension that all three synchronous protocols lack natively. See [[Event-Driven Architecture Patterns]] for how these integrate with event-driven backends.
+
 **gRPC**: Internal service-to-service communication, especially when latency and throughput matter. Microservice mesh (100+ services calling each other). Streaming use cases (real-time event feeds, bidirectional communication). Polyglot environments where code generation eliminates hand-written clients.
 
 **GraphQL**: Client-facing API layer with diverse clients (mobile, web, third-party). Product teams that ship fast and can't wait for backend endpoint changes. Large organizations with many backend services that need a unified API (via federation).

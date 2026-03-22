@@ -12,6 +12,16 @@ Imagine a professional kitchen where every chef (engineer) can order any ingredi
 - **Without FinOps:** You get a massive bill at the end of the month, discovering you bought 50kg of truffles that went rotten (unused resources) and paid premium retail prices for staple flour (on-demand vs. reserved).
 - **With FinOps:** You have "unit economics." You know exactly how much the flour for one loaf of bread costs (cost per request). You buy flour in bulk (Reserved Instances), use "ugly" vegetables for soup at a 90% discount (Spot Instances), and turn off the ovens when the kitchen is closed (Auto-scaling/Scheduling).
 
+## FinOps as an Architecture-Time Constraint
+
+The most expensive mistake is treating cost as a post-deployment problem. An architecture that generates $0.10/request at 1K requests/day ($3/month) costs $30,000/month at 1M requests/day — a 10,000× increase in load with no fundamental architecture change. If the unit economics are broken by design, no amount of right-sizing rescues the situation.
+
+**The principle**: Budget cost the same way you budget latency. When you set a p99 latency SLO of 200ms, you design away from architectures that structurally can't meet it. Apply the same discipline to cost: define a target cost per unit (per request, per user, per GB processed) at design time, and reject architectures that structurally exceed it.
+
+This is where FinOps connects to [[FinOps Observability and Unit Economics]] — measuring cost per business unit is the feedback signal that tells you whether your architecture's cost model is healthy as you scale.
+
+**When FinOps culture fails**: Teams that only review the bill at the end of the month are in reactive mode. The high-leverage interventions happen during code review ("this query scans the whole table on every request"), during architecture design ("this fan-out pattern amplifies write cost by the follower count"), and during capacity planning ("the new feature doubles egress for every user"). Cost-conscious cultures embed this at each stage; cost-unaware cultures retrofit it after the first surprise bill.
+
 ## The Anatomy of a Cloud Bill
 
 A typical cloud bill is dominated by three primary pillars:
@@ -65,9 +75,13 @@ Networking costs are often counter-intuitive. In AWS, for example:
 
 ## Failure Modes & Production Lessons
 
-*   **The "Managed Service" Trap:** While RDS or Managed Kafka save engineering time, they often cost 2x more than raw EC2. At massive scale (millions of dollars), it may be cheaper to hire a DBA and run on EC2.
-*   **Orphaned Resources:** The most common waste. Unattached EBS volumes, elastic IPs not associated with an instance, and abandoned "testing" clusters.
-*   **The NAT Gateway Surprise:** A service accidentally makes calls to a public S3 bucket through a NAT Gateway instead of a VPC Endpoint. The "Network Transfer" line item becomes the largest part of the bill overnight.
+**The "Managed Service" Trap**: While RDS or Managed Kafka save engineering time, they often cost 2–3× more than raw EC2. At massive scale (millions of dollars/month), it may be cheaper to hire a DBA and run on EC2. The calculus depends on your team's operational maturity and traffic scale — managed services earn their cost premium when the engineering time they save is worth more than the price difference.
+
+**Orphaned Resources**: The most common waste. Unattached EBS volumes, Elastic IPs not associated with an instance, forgotten "testing" clusters, and stopped RDS instances (which still charge for storage). Mitigation: run a weekly orphaned-resource audit with AWS Trusted Advisor or Infracost; require resource tagging with owner and expiry date.
+
+**The NAT Gateway Surprise**: A service accidentally makes calls to a public S3 bucket through a NAT Gateway instead of a VPC Endpoint. NAT Gateway processing charges ($0.045/GB) compound with egress charges ($0.09/GB). A service that transfers 100TB/month generates ~$13,500/month from this single misconfiguration. Mitigation: add a cost anomaly alert on the NAT Gateway line item; enforce VPC Endpoints as the default via IAM policy.
+
+**Unit Economics Degradation**: Traffic grows 10× but cost grows 100×. The architecture has a non-linear cost component (a fan-out pattern, a full-table scan, a cross-AZ call on every request) that wasn't visible at low scale. Mitigation: calculate unit cost ($/request) monthly; if unit cost rises with traffic instead of falling, the architecture has a scaling cost problem, not just a scaling load problem.
 
 ## Architecture Diagram
 
@@ -106,10 +120,13 @@ graph LR
 
 ## Connections
 
-*   [[Object Storage Fundamentals]] — Explains the underlying mechanics of storage tiers.
-*   [[CDN Architecture]] — A primary tool for reducing expensive origin egress.
-*   [[Cloud-Native and Serverless]] — Discusses the "pay-per-use" model vs. "pay-per-provision."
-*   [[Monitoring and Alerting]] — Essential for building "Cost Observability" and anomaly detection.
+- [[Object Storage Fundamentals]] — The underlying mechanics of storage tiers (Standard, Glacier, Intelligent-Tiering) and when each is cost-appropriate.
+- [[CDN Architecture]] — A primary tool for reducing expensive origin egress; CDN egress is often 5–10× cheaper than origin egress.
+- [[Serverless and Edge Computing]] — The pay-per-invocation model creates a fundamentally different cost structure than always-on instances; cost crossover analysis applies.
+- [[Observability and Alerting]] — Cost metrics (spend/day, unit cost, anomaly detection) are first-class observability signals, not just finance reports.
+- [[Resource Right-Sizing and Autoscaling]] — The companion note covering the mechanics of autoscaling policies, HPA, and Karpenter for automated right-sizing.
+- [[FinOps Observability and Unit Economics]] — The companion note on building cost dashboards, showback/chargeback models, and tracking cost per business unit.
+- [[Partitioning and Sharding]] — Sharding strategy determines data locality, which determines cross-AZ and cross-region transfer costs at scale.
 
 ## Reflection Prompts
 
@@ -119,6 +136,8 @@ graph LR
 
 ## Canonical Sources
 
-*   Werner Vogels, "The Frugal Architect" (thefrugalarchitect.com)
-*   FinOps Foundation (finops.org) — "The FinOps Framework"
-*   AWS Well-Architected Framework: Cost Optimization Pillar
+- *Cloud FinOps* by J.R. Storment & Mike Fuller (2022) — the definitive book on FinOps practice: organizational models, tooling, and engineering patterns
+- Werner Vogels, "The Frugal Architect" (thefrugalarchitect.com) — seven laws of cost-efficient architecture from Amazon's CTO
+- FinOps Foundation, "The FinOps Framework" (finops.org) — the industry standard for FinOps maturity models and personas
+- AWS Well-Architected Framework: Cost Optimization Pillar — concrete guidance on cost-efficient design patterns for AWS workloads
+- CNCF FinOps Whitepaper — FinOps applied to Kubernetes and cloud-native workloads
