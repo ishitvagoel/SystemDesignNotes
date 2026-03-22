@@ -83,6 +83,19 @@ let dragState = null;
 let ghostEl = null;
 let customOrder = {}; // folder -> [id, ...]
 let sectionCollapsed = JSON.parse(localStorage.getItem('section-collapsed') || '{}');
+let sidebarFilterQuery = '';
+let completedNotes = new Set(JSON.parse(localStorage.getItem('sdn-complete') || '[]'));
+let bookmarkedNotes = new Set(JSON.parse(localStorage.getItem('sdn-bookmarks') || '[]'));
+let studyRatings = JSON.parse(localStorage.getItem('sdn-ratings') || '{}');
+
+function saveCompleted() { localStorage.setItem('sdn-complete', JSON.stringify([...completedNotes])); }
+function saveBookmarks() { localStorage.setItem('sdn-bookmarks', JSON.stringify([...bookmarkedNotes])); }
+function saveRatings() { localStorage.setItem('sdn-ratings', JSON.stringify(studyRatings)); }
+
+function estimateReadTime(markdown) {
+  const words = markdown.trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.round(words / 200));
+}
 
 // ── PHASE CONFIG ──
 const PHASE_CONFIG = {
@@ -96,16 +109,92 @@ const PHASE_CONFIG = {
 };
 
 // ── BUILD SIDEBAR ──
+function makeSidebarFileEl(note) {
+  const isCompleted = completedNotes.has(note.id);
+  const isBookmarked = bookmarkedNotes.has(note.id);
+  const fileEl = document.createElement('div');
+  fileEl.className = `sidebar-file${note.is_moc ? ' moc-file' : ''}${isCompleted ? ' completed' : ''}`;
+  fileEl.dataset.id = note.id;
+  fileEl.draggable = true;
+  fileEl.innerHTML = `
+    <span class="file-icon">${note.is_moc ? '◈' : '◻'}</span>
+    <span class="file-name">${note.title}</span>
+    ${isBookmarked ? '<span class="file-bookmark-dot" title="Bookmarked">★</span>' : ''}
+    ${isCompleted ? '<span class="file-done-dot" title="Completed">✓</span>' : ''}
+  `;
+  if (note.id === activeTabId) fileEl.classList.add('active');
+  fileEl.addEventListener('click', () => openNote(note.id));
+  fileEl.addEventListener('dragstart', e => onDragStart(e, note, fileEl));
+  fileEl.addEventListener('dragend', onDragEnd);
+  fileEl.addEventListener('dragover', e => onDragOver(e, fileEl));
+  fileEl.addEventListener('dragleave', () => fileEl.classList.remove('drag-over'));
+  fileEl.addEventListener('drop', e => onDrop(e, note.id, fileEl));
+  return fileEl;
+}
+
 function buildSidebar() {
   const sidebar = document.getElementById('sidebar');
   sidebar.innerHTML = '';
 
+  // ── Sidebar filter input ──
+  const filterWrap = document.createElement('div');
+  filterWrap.id = 'sidebar-filter-wrap';
+  filterWrap.innerHTML = `
+    <input id="sidebar-filter" type="text" placeholder="Filter notes…" value="${sidebarFilterQuery.replace(/"/g, '&quot;')}" autocomplete="off" spellcheck="false" />
+    <button class="sidebar-filter-clear" id="sidebar-filter-clear" style="${sidebarFilterQuery ? '' : 'display:none'}">×</button>
+  `;
+  sidebar.appendChild(filterWrap);
+
+  const filterInput = filterWrap.querySelector('#sidebar-filter');
+  filterInput.addEventListener('input', e => {
+    sidebarFilterQuery = e.target.value;
+    buildSidebar();
+    const newInput = document.getElementById('sidebar-filter');
+    if (newInput) { newInput.focus(); newInput.setSelectionRange(newInput.value.length, newInput.value.length); }
+  });
+  filterWrap.querySelector('#sidebar-filter-clear').addEventListener('click', () => {
+    sidebarFilterQuery = '';
+    buildSidebar();
+    const newInput = document.getElementById('sidebar-filter');
+    if (newInput) newInput.focus();
+  });
+
+  // ── Starred section ──
+  if (!sidebarFilterQuery && bookmarkedNotes.size > 0) {
+    const starredSection = document.createElement('div');
+    starredSection.className = 'sidebar-section starred';
+    const starredHdr = document.createElement('div');
+    starredHdr.className = 'sidebar-section-header';
+    starredHdr.innerHTML = `<span class="phase-tag starred-tag">★</span><span class="section-name">Starred</span><span class="chevron">▾</span>`;
+    starredHdr.addEventListener('click', () => toggleSection('__starred__', starredSection));
+    starredSection.classList.toggle('collapsed', sectionCollapsed['__starred__'] || false);
+    starredSection.appendChild(starredHdr);
+    for (const id of bookmarkedNotes) {
+      const note = FILTERED_INDEX.find(n => n.id === id);
+      if (note) starredSection.appendChild(makeSidebarFileEl(note));
+    }
+    sidebar.appendChild(starredSection);
+  }
+
+  // ── Build filtered+grouped structure ──
+  const activeNotes = sidebarFilterQuery
+    ? FILTERED_INDEX.filter(n => n.title.toLowerCase().includes(sidebarFilterQuery.toLowerCase()))
+    : FILTERED_INDEX;
+
   const grouped = {};
-  for (const note of FILTERED_INDEX) {
+  for (const note of activeNotes) {
     if (!grouped[note.folder]) grouped[note.folder] = {};
     const sub = note.subfolder || '_root';
     if (!grouped[note.folder][sub]) grouped[note.folder][sub] = [];
     grouped[note.folder][sub].push(note);
+  }
+
+  if (sidebarFilterQuery && activeNotes.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'sidebar-filter-empty';
+    empty.textContent = 'No notes match.';
+    sidebar.appendChild(empty);
+    return;
   }
 
   const folderOrder = Object.keys(PHASE_CONFIG);
@@ -114,6 +203,11 @@ function buildSidebar() {
     if (!grouped[folder]) continue;
     const cfg = PHASE_CONFIG[folder];
     const isCollapsed = sectionCollapsed[folder] || false;
+
+    // phase progress count
+    const folderNotes = FILTERED_INDEX.filter(n => n.folder === folder);
+    const folderDone = folderNotes.filter(n => completedNotes.has(n.id)).length;
+    const showProgress = folderDone > 0;
 
     const section = document.createElement('div');
     section.className = `sidebar-section ${cfg.cls}${isCollapsed ? ' collapsed' : ''}`;
@@ -125,6 +219,7 @@ function buildSidebar() {
     hdr.innerHTML = `
       <span class="phase-tag">${cfg.short}</span>
       <span class="section-name">${cfg.label}</span>
+      ${showProgress ? `<span class="phase-progress">${folderDone}/${folderNotes.length}</span>` : ''}
       <span class="chevron">▾</span>
     `;
     hdr.addEventListener('click', () => toggleSection(folder, section));
@@ -164,25 +259,7 @@ function buildSidebar() {
       });
 
       for (const note of sorted) {
-        const fileEl = document.createElement('div');
-        fileEl.className = `sidebar-file${note.is_moc ? ' moc-file' : ''}`;
-        fileEl.dataset.id = note.id;
-        fileEl.draggable = true;
-        fileEl.innerHTML = `
-          <span class="file-icon">${note.is_moc ? '◈' : '◻'}</span>
-          <span class="file-name">${note.title}</span>
-        `;
-
-        if (note.id === activeTabId) fileEl.classList.add('active');
-
-        fileEl.addEventListener('click', () => openNote(note.id));
-        fileEl.addEventListener('dragstart', e => onDragStart(e, note, fileEl));
-        fileEl.addEventListener('dragend', onDragEnd);
-        fileEl.addEventListener('dragover', e => onDragOver(e, fileEl));
-        fileEl.addEventListener('dragleave', () => fileEl.classList.remove('drag-over'));
-        fileEl.addEventListener('drop', e => onDrop(e, note.id, fileEl));
-
-        section.appendChild(fileEl);
+        section.appendChild(makeSidebarFileEl(note));
       }
     }
 
@@ -420,6 +497,42 @@ function renderNote(id) {
     t.textContent = `Updated ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
     meta.appendChild(t);
   }
+
+  // Reading time estimate
+  if (content) {
+    const mins = estimateReadTime(content);
+    const rt = document.createElement('span');
+    rt.className = 'meta-tag meta-readtime';
+    rt.textContent = `~${mins} min read`;
+    meta.appendChild(rt);
+  }
+
+  // Bookmark button
+  const bmBtn = document.createElement('button');
+  bmBtn.className = `meta-action-btn btn-bookmark${bookmarkedNotes.has(id) ? ' active' : ''}`;
+  bmBtn.title = bookmarkedNotes.has(id) ? 'Remove bookmark' : 'Bookmark this note';
+  bmBtn.textContent = bookmarkedNotes.has(id) ? '★' : '☆';
+  bmBtn.addEventListener('click', () => {
+    if (bookmarkedNotes.has(id)) { bookmarkedNotes.delete(id); } else { bookmarkedNotes.add(id); }
+    saveBookmarks();
+    buildSidebar();
+    renderNote(id);
+  });
+  meta.appendChild(bmBtn);
+
+  // Complete button
+  const completeBtn = document.createElement('button');
+  completeBtn.className = `meta-action-btn btn-complete${completedNotes.has(id) ? ' active' : ''}`;
+  completeBtn.title = completedNotes.has(id) ? 'Mark as incomplete' : 'Mark as complete';
+  completeBtn.textContent = completedNotes.has(id) ? '✓ Done' : '◻ Mark Complete';
+  completeBtn.addEventListener('click', () => {
+    if (completedNotes.has(id)) { completedNotes.delete(id); } else { completedNotes.add(id); }
+    saveCompleted();
+    buildSidebar();
+    renderWelcomeStats();
+    renderNote(id);
+  });
+  meta.appendChild(completeBtn);
 
   // body
   const body = document.getElementById('note-body');
@@ -840,14 +953,16 @@ function renderWelcomeStats() {
   const phases = new Set(FILTERED_INDEX.map(n => n.folder)).size;
   const notes = FILTERED_INDEX.filter(n => !n.is_moc).length;
   const mods = new Set(FILTERED_INDEX.map(n => n.subfolder).filter(Boolean)).size;
+  const completed = [...completedNotes].filter(id => FILTERED_INDEX.find(n => n.id === id)).length;
   const stats = [
     { num: notes, label: 'Notes' },
     { num: mods, label: 'Modules' },
     { num: phases, label: 'Phases' },
+    { num: completed, label: 'Completed', accent: completed > 0 },
   ];
   const el = document.getElementById('welcome-stats');
   el.innerHTML = stats.map(s => `
-    <div class="stat-box">
+    <div class="stat-box${s.accent ? ' stat-box-accent' : ''}">
       <div class="stat-num">${s.num}</div>
       <div class="stat-label">${s.label}</div>
     </div>
@@ -1307,16 +1422,51 @@ fetch('data/study-prompts.json')
   .then(data => { ALL_STUDY_PROMPTS = data; })
   .catch(console.error);
 
+function ratingKey(prompt) {
+  return `${prompt.noteId}::${prompt.text.slice(0, 50)}`;
+}
+
+function getDueCount() {
+  return ALL_STUDY_PROMPTS.filter(p => {
+    const r = studyRatings[ratingKey(p)];
+    return r && r.again > (r.easy || 0);
+  }).length;
+}
+
+function updateStudyDueBadge() {
+  const due = getDueCount();
+  const btn = document.getElementById('view-study');
+  if (!btn) return;
+  const existing = btn.querySelector('.study-due-badge');
+  if (existing) existing.remove();
+  if (due > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'study-due-badge';
+    badge.textContent = due;
+    btn.appendChild(badge);
+  }
+}
+
 function getFilteredPrompts(phaseFilter) {
-  let filtered = phaseFilter === 'all' 
-    ? [...ALL_STUDY_PROMPTS] 
+  let filtered = phaseFilter === 'all'
+    ? [...ALL_STUDY_PROMPTS]
     : ALL_STUDY_PROMPTS.filter(p => p.folder === phaseFilter);
-  
+
   // Shuffle (Fisher-Yates)
   for (let i = filtered.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
   }
+
+  // Sort: prompts rated "Again" (harder) come first
+  filtered.sort((a, b) => {
+    const ra = studyRatings[ratingKey(a)] || {};
+    const rb = studyRatings[ratingKey(b)] || {};
+    const scoreA = (ra.again || 0) - (ra.easy || 0);
+    const scoreB = (rb.again || 0) - (rb.easy || 0);
+    return scoreB - scoreA;
+  });
+
   return filtered;
 }
 
@@ -1367,17 +1517,60 @@ function restartStudy() {
     <button id="study-reveal" class="study-btn study-btn-primary">Reveal Answer</button>
     <button id="study-next" class="study-btn study-btn-primary" style="display:none;">Next Prompt</button>
     <button id="study-open" class="study-btn study-btn-secondary" style="display:none;">Open Note</button>
-    <div class="study-keyboard-hints"><kbd>Space</kbd> reveal / next &middot; <kbd>&larr;</kbd><kbd>&rarr;</kbd> navigate &middot; <kbd>Enter</kbd> open note</div>
+    <div class="study-keyboard-hints"><kbd>Space</kbd> reveal / easy &middot; <kbd>1</kbd> again &middot; <kbd>2</kbd> hard &middot; <kbd>3</kbd> easy &middot; <kbd>&larr;</kbd> back &middot; <kbd>Enter</kbd> open note</div>
   `;
   bindStudyButtons();
+}
+
+function showRatingButtons() {
+  const actionsEl = document.getElementById('study-actions');
+  const openBtn = document.getElementById('study-open');
+  // Insert rating buttons before the open/keyboard hints
+  const ratingDiv = document.createElement('div');
+  ratingDiv.className = 'study-rating-btns';
+  ratingDiv.innerHTML = `
+    <button class="study-btn study-btn-again" id="rate-again">Again ↺</button>
+    <button class="study-btn study-btn-hard" id="rate-hard">Hard 😓</button>
+    <button class="study-btn study-btn-easy" id="rate-easy">Easy ✓</button>
+  `;
+  actionsEl.insertBefore(ratingDiv, openBtn);
+
+  function recordRating(type) {
+    const prompt = studyPrompts[studyIndex];
+    if (!prompt) return;
+    const key = ratingKey(prompt);
+    if (!studyRatings[key]) studyRatings[key] = { easy: 0, hard: 0, again: 0 };
+    studyRatings[key][type]++;
+    saveRatings();
+    updateStudyDueBadge();
+    ratingDiv.remove();
+    if (type === 'again') {
+      // Re-queue at end, don't advance index so we show next card
+      studyPrompts.push(studyPrompts[studyIndex]);
+    }
+    studyIndex++;
+    renderStudyCard();
+    // Restore buttons after re-render
+    document.getElementById('study-actions').innerHTML = `
+      <button id="study-reveal" class="study-btn study-btn-primary">Reveal Answer</button>
+      <button id="study-next" class="study-btn study-btn-primary" style="display:none;">Next Prompt</button>
+      <button id="study-open" class="study-btn study-btn-secondary" style="display:none;">Open Note</button>
+      <div class="study-keyboard-hints"><kbd>Space</kbd> reveal / easy &middot; <kbd>1</kbd> again &middot; <kbd>2</kbd> hard &middot; <kbd>3</kbd> easy &middot; <kbd>&larr;</kbd> back &middot; <kbd>Enter</kbd> open note</div>
+    `;
+    bindStudyButtons();
+  }
+
+  document.getElementById('rate-again').addEventListener('click', () => recordRating('again'));
+  document.getElementById('rate-hard').addEventListener('click', () => recordRating('hard'));
+  document.getElementById('rate-easy').addEventListener('click', () => recordRating('easy'));
 }
 
 function bindStudyButtons() {
   document.getElementById('study-reveal').addEventListener('click', () => {
     document.getElementById('study-answer').style.display = '';
     document.getElementById('study-reveal').style.display = 'none';
-    document.getElementById('study-next').style.display = '';
     document.getElementById('study-open').style.display = '';
+    showRatingButtons();
   });
   document.getElementById('study-next').addEventListener('click', () => {
     studyIndex++;
@@ -1425,6 +1618,7 @@ function initStudyMode() {
 
   renderStudyCard();
   bindStudyButtons();
+  updateStudyDueBadge();
 }
 
 function updateStudyFilters() {
@@ -1669,13 +1863,25 @@ window.addEventListener('keydown', (e) => {
     e.preventDefault();
     if (reveal && reveal.style.display !== 'none') {
       reveal.click();
-    } else if (next && next.style.display !== 'none') {
-      next.click();
+    } else {
+      // Rating buttons shown — Space = Easy
+      const easyBtn = document.getElementById('rate-easy');
+      if (easyBtn) easyBtn.click();
+      else if (next && next.style.display !== 'none') next.click();
     }
   } else if (e.key === 'ArrowRight') {
-    if (next && next.style.display !== 'none') {
-      next.click();
-    }
+    const easyBtn = document.getElementById('rate-easy');
+    if (easyBtn) { easyBtn.click(); }
+    else if (next && next.style.display !== 'none') { next.click(); }
+  } else if (e.key === '1') {
+    const againBtn = document.getElementById('rate-again');
+    if (againBtn) againBtn.click();
+  } else if (e.key === '2') {
+    const hardBtn = document.getElementById('rate-hard');
+    if (hardBtn) hardBtn.click();
+  } else if (e.key === '3') {
+    const easyBtn = document.getElementById('rate-easy');
+    if (easyBtn) easyBtn.click();
   } else if (e.key === 'ArrowLeft') {
     if (studyIndex > 0) {
       studyIndex--;
