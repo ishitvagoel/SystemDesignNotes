@@ -40,6 +40,51 @@ Infrastructure exists on a spectrum of control vs. convenience:
 
 **WebAssembly (Wasm)**: Enables near-native performance for compiled languages (Rust, C++, Go) in sandboxed environments. Wasm 3.0 and WASI 0.2 enable polyglot microservices composed at the edge.
 
+## State Management in Serverless
+
+The "stateless" framing of serverless doesn't mean you can't have state — it means a function instance doesn't persist state between invocations. This is a crucial distinction because all real applications have state. The patterns for managing it:
+
+**External state store**: DynamoDB, Redis (ElastiCache), or S3 are the natural home for per-request and session state. The function reads and writes to the external store on each invocation. This is simple and works for most use cases, but adds latency (a DynamoDB read adds ~2–5ms per call) and cost (API calls are metered separately).
+
+**Durable execution (Temporal / Azure Durable Functions)**: For multi-step workflows that span minutes or hours (order processing, data pipelines, approval flows), a function's 15-minute timeout is fatal. Durable execution frameworks persist workflow state to a database after each step, allowing the function to "sleep" between steps without holding compute. The workflow resumes on a new function instance when the next step is ready. This is the serverless-native answer to long-running processes — see [[Saga Pattern]] for how orchestration patterns map here.
+
+**Edge state (Cloudflare Durable Objects)**: A Durable Object is a single-threaded stateful actor that runs at a specific edge location. Each object has a unique ID, strong consistency within the object, and persistent storage. They're ideal for: WebSocket hubs (a chat room is one Durable Object), rate limiters (one object per user), and collaborative editing cursors (one object per document). Crucially, this is *not* eventually consistent across edge nodes — the object is the single authoritative point, located where the first request for that ID lands.
+
+## When NOT to Use Serverless
+
+The serverless cost and operational model excels for some workloads and is a poor fit for others:
+
+**Avoid serverless when:**
+- **Long-running batch jobs**: Lambda's 15-minute maximum execution time disqualifies it for jobs that run hours. Use containers (AWS Batch, ECS) or a durable execution framework (Temporal).
+- **GPU-intensive AI inference**: Lambda has no GPU support. AI inference requires dedicated GPU instances — see [[Inference Serving Architecture]]. Edge Workers have even stricter constraints (no GPU, no model loading beyond small Wasm binaries).
+- **Consistent sub-50ms latency requirements**: Cold starts are non-deterministic (100ms to several seconds). For strict p99 latency SLOs, provisioned concurrency eliminates cold starts — but provisioned concurrency is essentially always-on compute at a premium price, eroding the serverless cost model.
+- **Applications needing OS-level control**: Custom kernel modules, raw socket access, or specific tuning flags require a full VM. Serverless functions run in a managed sandbox.
+- **Stateful long-lived connections**: A WebSocket game server maintaining thousands of persistent connections needs a long-lived process, not ephemeral functions. Even Durable Objects have compute limits (30-second CPU time per request, 128MB memory).
+
+The heuristic: serverless is optimal when events are sparse or bursty, functions are short-lived (<seconds), and state lives in managed external stores. When any of these is false, containers or VMs are likely a better fit.
+
+## Vendor Lock-In and Portability
+
+Serverless vendor lock-in is real but often overstated. The risk comes from three sources:
+
+**Trigger lock-in**: AWS Lambda triggered by S3 events, SQS, DynamoDB Streams, and EventBridge — these are proprietary event sources. Moving to GCP Cloud Functions means rewriting all trigger wiring, even if the business logic is identical.
+
+**Managed service dependencies**: A Lambda that calls RDS Proxy, reads from SSM Parameter Store, and publishes to EventBridge is deeply AWS-native. The business logic may be portable, but the infrastructure integration is not.
+
+**Runtime constraints**: Cloudflare Workers' V8 isolate model (no Node.js APIs, no filesystem, no native modules) means code written for Workers won't run on Lambda without modification, and vice versa.
+
+**Mitigation**: Use an abstraction framework (SST, Serverless Framework, Pulumi) to generate provider-specific resources from a provider-agnostic definition. Keep business logic in pure functions with no cloud SDK imports; inject dependencies (storage clients, queue clients) from the handler — the handler is provider-specific, the logic is not. CNCF Knative provides a Kubernetes-based FaaS layer that runs on any cloud and eliminates trigger lock-in, at the cost of more operational complexity than managed Lambda.
+
+## Local Development and Testing
+
+The development experience for serverless has a real gap compared to traditional applications:
+
+**The problem**: Cold start behavior, IAM permissions, VPC networking, and event trigger formats are hard to replicate locally. Unit-testing a Lambda handler is straightforward; integration-testing the full trigger → function → downstream chain is not.
+
+**Tools**: AWS SAM (`sam local invoke`, `sam local start-api`) emulates Lambda locally using Docker. LocalStack provides a full mock of AWS services (S3, DynamoDB, SQS, API Gateway) for local integration testing — expensive operations become instant and free locally. Wrangler runs Cloudflare Workers locally with a near-identical V8 runtime.
+
+**Strategy**: Unit-test business logic in isolation (no cloud SDK). Integration-test with LocalStack or SAM in CI. Accept that some behaviors (actual IAM policy evaluation, VPC DNS resolution, real cold start timing) can only be validated in a real cloud environment — use a dedicated staging AWS account, not production.
+
 ## Architecture Diagram
 
 ```mermaid
@@ -105,7 +150,20 @@ graph TD
 2. A user in Tokyo makes an API call. Design a decision framework (Edge vs Regional vs Central) based on data locality and consistency.
 3. Your legacy Java app has a 30s startup. What refactoring is needed to make it "serverless-ready"?
 
+## Connections
+
+- [[Kubernetes and Platform Engineering]] — The alternative to serverless for workloads needing long-lived processes, GPU support, or OS-level control; understanding both is required to make the right choice.
+- [[Cost Engineering and FinOps]] — The cost crossover between serverless ($/invocation) and containers ($/hour) depends on your request volume and function duration; understand the math before committing.
+- [[Event-Driven Architecture Patterns]] — Serverless is naturally event-driven; the function handler is a consumer in an event-driven system. The patterns (fan-out, filtering, dead-letter queues) apply directly.
+- [[Circuit Breakers and Bulkheads]] — Resilience patterns work differently in serverless: circuit breakers must be implemented in the function itself or at the gateway layer; bulkheads map to reserved concurrency per function.
+- [[Saga Pattern]] — Long-running sagas with serverless functions require durable execution (Temporal, Durable Functions) to survive function timeouts and failures mid-workflow.
+- [[Inference Serving Architecture]] — AI inference is explicitly a poor fit for current serverless due to GPU requirements and cold start sensitivity; this contrast clarifies when serverless is not the answer.
+- [[CDN Architecture]] — Edge compute (Workers, Lambda@Edge) is an extension of the CDN — understanding CDN PoP architecture explains why edge compute has the latency profile it does.
+
 ## Canonical Sources
-- AWS Lambda / Cloudflare Workers Documentation.
-- *Building Microservices* by Sam Newman (2nd ed) - Chapter 5.
-- CNCF, "Serverless Whitepaper v1.0."
+
+- AWS Lambda documentation — "Best practices for working with AWS Lambda functions" (official, covers memory/CPU, initialization, concurrency)
+- Cloudflare Workers documentation — "How Workers works" (V8 isolate model, limits, KV, Durable Objects)
+- *Serverless Architectures on AWS* by Peter Sbarski (2nd ed) — practical guide to Lambda-based architectures, including state management and event-driven patterns
+- CNCF Serverless Whitepaper v1.0 — vendor-neutral overview of serverless concepts, use cases, and the Knative ecosystem
+- Yan Cui, "Production-Ready Serverless" (course/book) — the most practical resource on building observable, cost-efficient Lambda applications in production
