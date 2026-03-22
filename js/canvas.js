@@ -242,12 +242,16 @@ class CanvasEngine {
   }
 
   addComponent(type, label) {
+    const svgEl = this.svg.node();
+    const { width, height } = svgEl.getBoundingClientRect();
+    const transform = d3.zoomTransform(svgEl);
+    const [cx, cy] = transform.invert([width / 2, height / 2]);
     const newNode = {
       id: `node-${Date.now()}`,
       type: type,
       label: label,
-      x: 100 + Math.random() * 50,
-      y: 100 + Math.random() * 50,
+      x: cx + (Math.random() - 0.5) * 120,
+      y: cy + (Math.random() - 0.5) * 120,
       capacity: 1000,
       load: 0
     };
@@ -380,6 +384,46 @@ class CanvasEngine {
       tooltip.style.top = (e.pageY - 10) + 'px';
     });
     nodeMerge.on('mouseout', () => { tooltip.style.display = 'none'; });
+
+    // Update hint overlay (only for primary canvas / active canvas)
+    if (this === activePlayground) {
+      const hint = document.getElementById('canvas-hint');
+      if (hint) {
+        if (this.connectingNode) {
+          hint.textContent = `🔗 Click another node to connect to "${this.connectingNode.label}" — Esc to cancel`;
+          hint.style.display = 'block';
+        } else {
+          hint.style.display = 'none';
+        }
+      }
+    }
+
+    // Live load refresh in props panel
+    if (this.selectedNode) {
+      const loadVal = document.getElementById('prop-load-val');
+      const loadBar = document.getElementById('prop-load-bar');
+      if (loadVal) loadVal.textContent = Math.round(this.selectedNode.load) + ' RPS';
+      if (loadBar) {
+        loadBar.style.width = Math.min(100, (this.selectedNode.load / this.selectedNode.capacity) * 100) + '%';
+        loadBar.style.background = this.selectedNode.load > this.selectedNode.capacity ? 'var(--pink)' : 'var(--accent)';
+      }
+    }
+
+    // Simulation stats overlay (only for primary canvas)
+    if (this === activePlayground) {
+      const stats = document.getElementById('canvas-sim-stats');
+      if (stats) {
+        if (globalIsSimulating && this.nodes.length > 0) {
+          const overloaded = this.nodes.filter(n => n.load > n.capacity).length;
+          const totalRps = this.nodes.filter(n => n.type === 'client').reduce((s, n) => s + n.load, 0);
+          const totalCap = this.nodes.reduce((s, n) => s + n.capacity, 0);
+          stats.innerHTML = `NODES: ${this.nodes.length} &nbsp;|&nbsp; LINKS: ${this.links.length}<br>THROUGHPUT: ${Math.round(totalRps)} RPS<br>CAPACITY: ${totalCap} RPS<br>OVERLOADED: <span style="color:${overloaded > 0 ? 'var(--pink)' : 'var(--accent)'}">${overloaded}</span>`;
+          stats.style.display = 'block';
+        } else {
+          stats.style.display = 'none';
+        }
+      }
+    }
   }
 
   updateProps() {
@@ -402,9 +446,9 @@ class CanvasEngine {
         <input id="prop-cap" type="number" value="${this.selectedNode.capacity}" style="width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:6px; border-radius:4px; font-size:12px; outline:none;">
       </div>
       <div style="font-size:10px; color:var(--text3); line-height:1.4; margin-top:16px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>CURRENT LOAD</span> <span>${Math.round(this.selectedNode.load)} RPS</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>CURRENT LOAD</span> <span id="prop-load-val">${Math.round(this.selectedNode.load)} RPS</span></div>
         <div style="height:4px; background:var(--surface2); border-radius:2px; overflow:hidden;">
-          <div style="width:${Math.min(100, (this.selectedNode.load / this.selectedNode.capacity) * 100)}%; height:100%; background:${this.selectedNode.load > this.selectedNode.capacity ? 'var(--pink)' : 'var(--accent)'};"></div>
+          <div id="prop-load-bar" style="width:${Math.min(100, (this.selectedNode.load / this.selectedNode.capacity) * 100)}%; height:100%; background:${this.selectedNode.load > this.selectedNode.capacity ? 'var(--pink)' : 'var(--accent)'};"></div>
         </div>
       </div>
       <div id="node-links" style="margin-top:16px;">
