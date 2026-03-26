@@ -14,6 +14,7 @@ graph LR
 
 | Week | Phase | Topic | Modules |
 |------|-------|-------|---------|
+| 0 | Design Thinking | How to make decisions | [[Phase_0_MOC]], all Phase 0 notes |
 | 1-2 | Foundations | Networking & DNS | M01 |
 | 3-4 | Foundations | API Design & Gateway | M02 |
 | 5-6 | Foundations | Storage Engines & DBs | M03, M04 |
@@ -30,6 +31,8 @@ graph LR
 | 24 | Capstones | Design Drill Down | Capstones |
 
 ## Module Prerequisites
+
+> **Recommended prerequisite for everything**: Read [[Phase_0_MOC]] and the Phase 0 notes before starting any module. Phase 0 teaches the decision-making framework that makes all subsequent module content more actionable — not just what the patterns are, but *why* you would choose them over alternatives.
 
 Some modules build on concepts from earlier modules. Use this dependency map to ensure you have the foundations before tackling advanced topics:
 

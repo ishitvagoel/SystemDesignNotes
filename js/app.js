@@ -100,6 +100,7 @@ function estimateReadTime(markdown) {
 // ── PHASE CONFIG ──
 const PHASE_CONFIG = {
   '00-Meta':                          { label: 'Meta', cls: 'phase-0', short: 'M' },
+  '00-Phase-0-Design-Thinking':       { label: 'Phase 0 — Design Thinking', cls: 'phase-dt', short: 'P0' },
   '01-Phase-1-Foundations':           { label: 'Phase 1 — Foundations', cls: 'phase-1', short: 'P1' },
   '02-Phase-2-Distribution':          { label: 'Phase 2 — Distribution', cls: 'phase-2', short: 'P2' },
   '03-Phase-3-Architecture-Operations': { label: 'Phase 3 — Architecture', cls: 'phase-3', short: 'P3' },
@@ -1045,6 +1046,7 @@ let graphSimulation = null;
 
 const GRAPH_PHASE_COLORS = {
   '00-Meta': '#a78bfa',
+  '00-Phase-0-Design-Thinking': '#f0abfc',
   '01-Phase-1-Foundations': '#6bde8c',
   '02-Phase-2-Distribution': '#6baade',
   '03-Phase-3-Architecture-Operations': '#e8d06b',
@@ -1054,6 +1056,7 @@ const GRAPH_PHASE_COLORS = {
 };
 const GRAPH_PHASE_LABELS = {
   '00-Meta': 'Meta',
+  '00-Phase-0-Design-Thinking': 'Phase 0',
   '01-Phase-1-Foundations': 'Phase 1',
   '02-Phase-2-Distribution': 'Phase 2',
   '03-Phase-3-Architecture-Operations': 'Phase 3',
