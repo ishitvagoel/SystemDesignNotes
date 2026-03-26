@@ -434,6 +434,12 @@ async function openNote(id) {
   renderNote(id);
   updateSidebarActive();
   if (outlineActive) buildOutline(id);
+  persistTabs();
+}
+
+function persistTabs() {
+  localStorage.setItem('sdn-open-tabs', JSON.stringify(tabs));
+  localStorage.setItem('sdn-active-tab', activeTabId || '');
 }
 
 function closeTab(id, e) {
@@ -454,6 +460,7 @@ function closeTab(id, e) {
 
   renderTabs();
   updateSidebarActive();
+  persistTabs();
 }
 
 function renderTabs() {
@@ -1170,6 +1177,40 @@ async function init() {
   // Background loads for heavy features
   fetch('data/search-index.json').then(r => r.json()).then(data => SEARCH_INDEX = data).catch(console.error);
   fetch('data/graph-edges.json').then(r => r.json()).then(data => GRAPH_EDGES = data).catch(console.error);
+
+  // Restore persisted tabs
+  try {
+    const savedTabs = JSON.parse(localStorage.getItem('sdn-open-tabs') || '[]');
+    const savedActive = localStorage.getItem('sdn-active-tab');
+    if (savedTabs.length > 0) {
+      for (const id of savedTabs) {
+        const note = FILTERED_INDEX.find(n => n.id === id);
+        if (!note) continue;
+        if (!tabs.includes(id)) tabs.push(id);
+        // Pre-fetch note content
+        if (!NOTE_CACHE[id]) {
+          const path = note.subfolder
+            ? `data/notes/${note.folder}/${note.subfolder}/${note.filename}`
+            : `data/notes/${note.folder}/${note.filename}`;
+          fetch(path).then(r => r.ok ? r.text() : '').then(md => { NOTE_CACHE[id] = md; }).catch(() => {});
+        }
+      }
+      renderTabs();
+      if (savedActive && tabs.includes(savedActive)) {
+        openNote(savedActive);
+      }
+    }
+  } catch (e) { /* ignore corrupt tab state */ }
+
+  // First-visit onboarding
+  if (!localStorage.getItem('sdn-onboarded')) {
+    showOnboardingModal();
+  }
+
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
 }
 init();
 // ── MOBILE SIDEBAR TOGGLE ──
@@ -2054,3 +2095,84 @@ window.addEventListener('keydown', (e) => {
     }
   }
 });
+
+// ── ONBOARDING MODAL ──
+function showOnboardingModal() {
+  const steps = [
+    {
+      title: 'Welcome to the System Design Vault',
+      body: 'Your complete system design knowledge base with 137+ notes across 6 phases. Browse the sidebar, search with <kbd>Ctrl+K</kbd>, and open multiple notes in tabs.'
+    },
+    {
+      title: 'Interactive Canvas Playground',
+      body: 'Design distributed systems visually. Drag components, connect them, and simulate traffic at scale. Use <strong>Compare</strong> mode to evaluate two architectures side by side.'
+    },
+    {
+      title: 'Study Mode & Mastery',
+      body: 'Use <strong>Study Mode</strong> to test yourself — answers blur until you click Reveal. Track progress with the mastery checklist, and celebrate milestones with confetti!'
+    }
+  ];
+  let step = 0;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'onboarding-overlay';
+  const modal = document.createElement('div');
+  modal.id = 'onboarding-modal';
+
+  function renderStep() {
+    const s = steps[step];
+    const isLast = step === steps.length - 1;
+    modal.innerHTML = `
+      <div class="onboarding-step-dots">${steps.map((_, i) => `<span class="onboarding-dot${i === step ? ' active' : ''}"></span>`).join('')}</div>
+      <h2 class="onboarding-title">${s.title}</h2>
+      <p class="onboarding-body">${s.body}</p>
+      <div class="onboarding-actions">
+        ${step > 0 ? '<button class="onboarding-btn onboarding-btn-back">Back</button>' : ''}
+        <button class="onboarding-btn onboarding-btn-next">${isLast ? 'Get Started' : 'Next'}</button>
+      </div>
+    `;
+    const nextBtn = modal.querySelector('.onboarding-btn-next');
+    const backBtn = modal.querySelector('.onboarding-btn-back');
+    nextBtn.addEventListener('click', () => {
+      if (isLast) {
+        localStorage.setItem('sdn-onboarded', '1');
+        overlay.remove();
+      } else {
+        step++;
+        renderStep();
+      }
+    });
+    if (backBtn) backBtn.addEventListener('click', () => { step--; renderStep(); });
+  }
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+  renderStep();
+}
+
+// ── ARIA ENHANCEMENTS ──
+(function addAriaAttributes() {
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) sidebar.setAttribute('role', 'navigation');
+
+  const tabsBar = document.getElementById('tabs-bar');
+  if (tabsBar) tabsBar.setAttribute('role', 'tablist');
+
+  const contentArea = document.getElementById('content-area');
+  if (contentArea) { contentArea.setAttribute('role', 'main'); contentArea.setAttribute('aria-live', 'polite'); }
+
+  const search = document.getElementById('search');
+  if (search) { search.setAttribute('role', 'searchbox'); search.setAttribute('aria-label', 'Search notes'); }
+
+  // Keyboard nav for tabs: Ctrl+Tab / Ctrl+Shift+Tab to cycle
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'Tab' && tabs.length > 1) {
+      e.preventDefault();
+      const currentIdx = tabs.indexOf(activeTabId);
+      const next = e.shiftKey
+        ? (currentIdx - 1 + tabs.length) % tabs.length
+        : (currentIdx + 1) % tabs.length;
+      openNote(tabs[next]);
+    }
+  });
+})();

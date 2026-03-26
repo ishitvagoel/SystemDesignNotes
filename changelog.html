@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Changelog — System Design Vault</title>
+  <style>
+    :root {
+      --bg: #0d0f0e; --bg2: #141716; --text: #e8e6e3; --text2: #b0ada8;
+      --text3: #6b6965; --accent: #6bde8c; --border: rgba(255,255,255,0.08);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.7; padding: 48px 24px;
+      max-width: 720px; margin: 0 auto;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    h1 { font-size: 28px; margin-bottom: 8px; }
+    .subtitle { color: var(--text3); font-size: 13px; margin-bottom: 40px; font-family: 'IBM Plex Mono', monospace; }
+    .version { margin-bottom: 36px; }
+    .version-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+    .version-tag {
+      font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 600;
+      color: var(--accent); background: rgba(107,222,140,0.1);
+      padding: 2px 10px; border-radius: 4px;
+    }
+    .version-date { font-size: 12px; color: var(--text3); font-family: 'IBM Plex Mono', monospace; }
+    .version ul { padding-left: 20px; }
+    .version li { color: var(--text2); font-size: 14px; margin-bottom: 6px; }
+    .version li strong { color: var(--text); }
+    .back-link { margin-top: 40px; display: inline-block; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Changelog</h1>
+  <div class="subtitle">System Design Vault release history</div>
+
+  <div class="version">
+    <div class="version-header">
+      <span class="version-tag">v2.0</span>
+      <span class="version-date">March 26, 2026</span>
+    </div>
+    <ul>
+      <li><strong>Canvas Split-View:</strong> True side-by-side architecture comparison with draggable splitter and auto-generated trade-off table</li>
+      <li><strong>10 New Scenarios:</strong> RAG latency, LLM costs, CQRS rebuild, hot partition, microservice death spiral, DNS failover, event sourcing replay, rate limiter thundering herd, cross-region replication, ML cold start</li>
+      <li><strong>Phase 5 — Modern Operations:</strong> FinOps & Cost Engineering + Data Privacy & Compliance now visible in sidebar</li>
+      <li><strong>Study Mode:</strong> Toggle to blur answers/diagrams with per-section Reveal buttons</li>
+      <li><strong>Copy as Markdown:</strong> One-click copy of raw note markdown</li>
+      <li><strong>PDF Export:</strong> Export all open tabs as a multi-page PDF</li>
+      <li><strong>Confetti Milestones:</strong> Celebration on every 10th completion and phase completions</li>
+      <li><strong>Quick Links:</strong> Sidebar section for Canvas, Graph, Study, and Mastery shortcuts</li>
+      <li><strong>Onboarding Tour:</strong> 3-step welcome modal for first-time visitors</li>
+      <li><strong>Tab Persistence:</strong> Open tabs and active note restored on page reload</li>
+      <li><strong>Service Worker:</strong> Offline support with cache-first static assets</li>
+      <li><strong>Print-Friendly:</strong> Clean single-column layout for Ctrl+P printing</li>
+      <li><strong>GitHub Actions:</strong> Auto-rebuild data indexes on push</li>
+      <li><strong>Sitemap:</strong> Auto-generated sitemap.xml for SEO</li>
+      <li><strong>ARIA + Keyboard:</strong> Focus styles, role attributes, Ctrl+Tab tab cycling</li>
+    </ul>
+  </div>
+
+  <div class="version">
+    <div class="version-header">
+      <span class="version-tag">v1.0</span>
+      <span class="version-date">March 2026</span>
+    </div>
+    <ul>
+      <li><strong>Initial Release:</strong> 123 enriched notes across 6 phases</li>
+      <li><strong>Canvas Playground:</strong> D3.js interactive architecture designer with simulation</li>
+      <li><strong>Knowledge Graph:</strong> Force-directed visualization of note connections</li>
+      <li><strong>Study Mode:</strong> Spaced repetition flashcards with keyboard shortcuts</li>
+      <li><strong>Obsidian Export:</strong> Full vault export as zip with YAML frontmatter</li>
+      <li><strong>Search:</strong> Full-text Ctrl+K search with scoring</li>
+      <li><strong>Dark/Light Mode:</strong> Theme-aware Mermaid diagrams</li>
+      <li><strong>Lazy Loading:</strong> On-demand markdown fetching</li>
+    </ul>
+  </div>
+
+  <a class="back-link" href="index.html">&larr; Back to Vault</a>
+</body>
+</html>
