@@ -9,11 +9,9 @@ Without threat modeling, security is reactive: you patch vulnerabilities after t
 
 ## Mental Model
 
-Threat modeling is thinking like a burglar before the burglary happens. You walk through your house (system), check every window and door (attack surface), and ask: "If I were a burglar, how would I get in? What would I steal?" STRIDE gives you six categories to think through: could someone pretend to be the homeowner (**S**poofing)? Change the locks without permission (**T**ampering)? Deny they broke in (**R**epudiation)? Read private mail through the letterbox (**I**nformation disclosure)? Block the front door so nobody can enter (**D**enial of service)? Pick the lock and gain homeowner privileges (**E**levation of privilege)? Zero-trust means assuming the burglar is already inside and locking every interior door too.
+Threat modeling is thinking like a burglar before the burglary happens. You walk through your house (system), check every window and door (attack surface), and ask: "How would I get in, and what would I steal?" The front door is SQL injection on the public API. The windows are unsecured internal service endpoints. The garage door opener is a leaked API key. The spare key under the mat is default credentials left unchanged. For each entry point, you assess: how likely is exploitation? How bad if they succeed? What's the mitigation?
 
-## Mental Model
-
-Threat modeling is like a home security assessment. You walk around the house asking: "How would a burglar get in?" The front door (SQL injection on the public API). The windows (unsecured internal service endpoints). The garage door opener (leaked API keys). The spare key under the mat (default credentials). For each entry point, you assess: how likely is it? How bad if they succeed? What's the mitigation?
+STRIDE gives you six categories to ensure you check every kind of entry: could someone pretend to be the homeowner (**S**poofing)? Change the locks without permission (**T**ampering)? Deny they broke in (**R**epudiation)? Read private mail through the letterbox (**I**nformation disclosure)? Block the front door so nobody can enter (**D**enial of service)? Pick the lock and gain homeowner privileges (**E**levation of privilege)? Zero-trust means assuming the burglar is already inside and locking every interior door too — no implicit trust for traffic just because it's on the internal network.
 
 ## STRIDE Framework
 

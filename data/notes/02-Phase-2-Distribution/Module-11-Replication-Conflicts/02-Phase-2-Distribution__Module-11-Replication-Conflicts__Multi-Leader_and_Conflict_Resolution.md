@@ -51,6 +51,12 @@ Attach a timestamp to each write. The write with the latest timestamp wins; the 
 
 **When it's acceptable**: Data where the latest update is genuinely the only one that matters and earlier concurrent values have no business significance. User preferences, session data, cursor position. NOT acceptable for: counters, account balances, inventory, or anything where both concurrent writes carry meaningful information.
 
+### LWW: A Concrete Data Loss Scenario with Numbers
+
+A global e-commerce platform uses DynamoDB Global Tables (multi-region, LWW) for shopping carts. A user in Tokyo adds item `SKU-A` to their cart at timestamp `T=1000ms` (Tokyo region clock). Simultaneously, the same user on a different device in Frankfurt adds item `SKU-B` at timestamp `T=1002ms` (Frankfurt region clock). Frankfurt's timestamp is 2ms later. Under LWW, the cart state converges to the Frankfurt write. `SKU-A` is silently discarded — no error, no notification. The user ends up with a cart containing only `SKU-B`. The product team discovers this three weeks later when users report "items disappearing from my cart."
+
+The clock skew amplifier makes this worse. NTP provides ±10–50ms accuracy between nodes on different continents. If Tokyo's clock is 50ms ahead of Frankfurt's, Tokyo's write (`T=1000ms`) will beat Frankfurt's (`T=1002ms`) even if Frankfurt's write happened at a later real-world time. The "winner" is determined by clock drift, not user intent. At scale: a platform with 10,000 concurrent cart modifications per second, where 0.01% experience concurrent writes to the same cart, generates approximately 1 lost cart item per second — 86,400 per day — with zero error logs. The silence is the worst part: LWW data loss is invisible until someone notices missing data and traces it back.
+
 ### Application-Level Merge
 
 The application provides a custom merge function that combines conflicting versions:
@@ -67,6 +73,16 @@ The application provides a custom merge function that combines conflicting versi
 ### Conflict-Free Resolution (CRDTs)
 
 Design the data structure so that all concurrent operations automatically merge without conflicts. This is the subject of [[CRDTs]] — the most elegant solution but limited to specific data types.
+
+### OT vs CRDTs: When to Use Which
+
+Operational Transform (OT) and CRDTs both appear in the trade-off table as "no data loss, deterministic." They are not interchangeable — they solve different problems.
+
+OT is designed for sequential text editing with preserved intent. When two concurrent edits arrive — insert `"hello"` at position 5 and delete the character at position 3 — OT transforms each operation to account for the other's effect before applying them, preserving the intent of both. The mechanism works, but it requires a central server to serialize the order in which operations are transformed. Without a central serialization point, implementing OT correctly across more than two concurrent editors is extremely complex (this was the original motivation for developing CRDTs). Google Docs uses OT with a central server as the single source of transform order.
+
+CRDTs work without coordination, but only for *commutative* data types. A G-Counter (grow-only counter) merges two concurrent increments by taking the per-replica max — `{A: 5, B: 3}` merges to counter value 8 — because addition is commutative. An OR-Set (Observed-Remove Set) handles concurrent adds and removes by tracking the identity of each operation. These merge automatically and deterministically, with no server required. The constraint: CRDTs cannot represent operations where order matters. "Move the cursor to position 5" is not commutative with respect to a concurrent insertion — the cursor's correct position after the merge depends on where the insertion landed.
+
+The practical rule: if your conflict lives on a data type with a mathematically convergent merge (counters, sets, maps with last-value-per-key, registers), use a CRDT. If your conflict requires preserving the sequential intent of operations on a shared mutable structure (text documents, ordered lists), use OT with a serialization server — and accept that server as a coordination dependency.
 
 ### Manual Resolution
 

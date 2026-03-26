@@ -21,6 +21,14 @@ A sushi conveyor belt restaurant. Training a model is writing the menu and perfe
 
 ## Batching Strategies
 
+### Why Static Batching Failed for LLMs (The 2023 Context)
+
+Before understanding continuous batching, it helps to understand why the standard approach collapsed specifically in 2023. For traditional inference workloads — CNNs for image classification, BERT for text classification — the output is always a fixed-size tensor. You can batch 64 requests, run one forward pass, and return all 64 results simultaneously. Static batching is trivially optimal here: all batch members finish at the same time.
+
+LLMs broke this assumption. They generate tokens autoregressively, one at a time, and the output length is not known at request start. Request A might produce 50 tokens (a short answer). Request B might produce 2,000 tokens (detailed code generation). With static batching, A finishes in 50 decode steps but must wait for B to finish 2,000 steps before its slot in the batch is released. For those 1,950 steps, A's GPU allocation is entirely wasted — it has finished its work but is holding the batch open. GPU utilization under static batching dropped to 20–40% in real deployments with mixed-length outputs.
+
+The crisis became acute in 2023 when open-source LLMs (LLaMA in February 2023, followed by dozens of fine-tunes) gave organizations their first experience deploying large generative models on their own hardware. The output length distribution was highly bimodal: chatbot-style queries averaged ~100 tokens, while code generation and document summarization averaged 1,000–3,000 tokens. A single long-output request could hold a GPU batch hostage for seconds while dozens of short requests queued behind it. The Orca paper (Yu et al., 2022) had described the solution — schedule at the *iteration* level, releasing completed requests after each single token generation step so new requests immediately fill the slot — but it was vLLM's open-source release in May 2023 that made continuous batching accessible. The result was approximately a doubling of effective throughput for the same hardware.
+
 **Static batching**: Wait for N requests, process them together. Simple but introduces latency (waiting for the batch to fill) and wastes GPU if the batch isn't full.
 
 **Dynamic batching**: Set a maximum wait time (e.g., 5ms). Batch whatever requests have arrived within that window. Balances latency and throughput.
