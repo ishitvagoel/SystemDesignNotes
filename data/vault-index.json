@@ -70,6 +70,86 @@
     "module": 0
   },
   {
+    "id": "00-Phase-0__Common_Decision_Pitfalls",
+    "title": "Common Decision Pitfalls",
+    "folder": "00-Phase-0-Design-Thinking",
+    "subfolder": null,
+    "filename": "00-Phase-0__Common_Decision_Pitfalls.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Phase-0__Decision_Frameworks_in_Practice",
+    "title": "Decision Frameworks in Practice",
+    "folder": "00-Phase-0-Design-Thinking",
+    "subfolder": null,
+    "filename": "00-Phase-0__Decision_Frameworks_in_Practice.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Phase-0__Evolving_Designs_Over_Time",
+    "title": "Evolving Designs Over Time",
+    "folder": "00-Phase-0-Design-Thinking",
+    "subfolder": null,
+    "filename": "00-Phase-0__Evolving_Designs_Over_Time.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Phase-0__First_Principles_Thinking",
+    "title": "First Principles Thinking",
+    "folder": "00-Phase-0-Design-Thinking",
+    "subfolder": null,
+    "filename": "00-Phase-0__First_Principles_Thinking.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Phase-0__Reasoning_Through_Trade-Offs",
+    "title": "Reasoning Through Trade-Offs",
+    "folder": "00-Phase-0-Design-Thinking",
+    "subfolder": null,
+    "filename": "00-Phase-0__Reasoning_Through_Trade-Offs.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Phase-0__Requirements_to_Constraints",
+    "title": "Requirements to Constraints",
+    "folder": "00-Phase-0-Design-Thinking",
+    "subfolder": null,
+    "filename": "00-Phase-0__Requirements_to_Constraints.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "00-Phase-0__The_Physics_of_Distributed_Systems",
+    "title": "The Physics of Distributed Systems",
+    "folder": "00-Phase-0-Design-Thinking",
+    "subfolder": null,
+    "filename": "00-Phase-0__The_Physics_of_Distributed_Systems.md",
+    "is_moc": false,
+    "phase": 0,
+    "module": 0
+  },
+  {
+    "id": "Phase_0_MOC",
+    "title": "Phase 0 — Design Thinking: Map of Contents",
+    "folder": "00-Phase-0-Design-Thinking",
+    "subfolder": null,
+    "filename": "Phase_0_MOC.md",
+    "is_moc": true,
+    "phase": 0,
+    "module": 0
+  },
+  {
     "id": "01-Phase-1-Foundations__Module-01-Networking__Anycast_and_GeoDNS",
     "title": "Anycast and GeoDNS",
     "folder": "01-Phase-1-Foundations",
