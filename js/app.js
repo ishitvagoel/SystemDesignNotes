@@ -87,6 +87,7 @@ let sidebarFilterQuery = '';
 let completedNotes = new Set(JSON.parse(localStorage.getItem('sdn-complete') || '[]'));
 let bookmarkedNotes = new Set(JSON.parse(localStorage.getItem('sdn-bookmarks') || '[]'));
 let studyRatings = JSON.parse(localStorage.getItem('sdn-ratings') || '{}');
+let studyModeActive = JSON.parse(localStorage.getItem('sdn-study-mode') || 'false');
 
 function saveCompleted() { localStorage.setItem('sdn-complete', JSON.stringify([...completedNotes])); }
 function saveBookmarks() { localStorage.setItem('sdn-bookmarks', JSON.stringify([...bookmarkedNotes])); }
@@ -159,6 +160,45 @@ function buildSidebar() {
     const newInput = document.getElementById('sidebar-filter');
     if (newInput) newInput.focus();
   });
+
+  // ── Quick Links section ──
+  if (!sidebarFilterQuery) {
+    const qlSection = document.createElement('div');
+    qlSection.className = 'sidebar-section quick-links-section';
+    const qlCollapsed = sectionCollapsed['__quicklinks__'] || false;
+    if (qlCollapsed) qlSection.classList.add('collapsed');
+    const qlHdr = document.createElement('div');
+    qlHdr.className = 'sidebar-section-header';
+    qlHdr.innerHTML = `<span class="phase-tag" style="background:var(--accent-dim); color:var(--accent);">&#9889;</span><span class="section-name">Quick Links</span><span class="chevron">▾</span>`;
+    qlHdr.addEventListener('click', () => toggleSection('__quicklinks__', qlSection));
+    qlSection.appendChild(qlHdr);
+
+    const links = [
+      { label: 'Canvas Playground', icon: '&#9998;', target: 'view-canvas' },
+      { label: 'Knowledge Graph', icon: '&#11044;', target: 'view-graph' },
+      { label: 'Study Mode', icon: '&#9733;', target: 'view-study' },
+      { label: 'Mastery Progress', icon: '&#9745;', target: '__mastery__' }
+    ];
+    links.forEach(lnk => {
+      const el = document.createElement('div');
+      el.className = 'sidebar-file quick-link-item';
+      el.innerHTML = `<span class="file-icon" style="font-size:12px;">${lnk.icon}</span><span class="file-name">${lnk.label}</span>`;
+      el.addEventListener('click', () => {
+        if (lnk.target === '__mastery__') {
+          // Switch to files view and scroll to welcome stats
+          document.getElementById('view-files').click();
+          setTimeout(() => {
+            const ws = document.getElementById('welcome-stats');
+            if (ws) ws.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+        } else {
+          document.getElementById(lnk.target).click();
+        }
+      });
+      qlSection.appendChild(el);
+    });
+    sidebar.appendChild(qlSection);
+  }
 
   // ── Starred section ──
   if (!sidebarFilterQuery && bookmarkedNotes.size > 0) {
@@ -394,6 +434,12 @@ async function openNote(id) {
   renderNote(id);
   updateSidebarActive();
   if (outlineActive) buildOutline(id);
+  persistTabs();
+}
+
+function persistTabs() {
+  localStorage.setItem('sdn-open-tabs', JSON.stringify(tabs));
+  localStorage.setItem('sdn-active-tab', activeTabId || '');
 }
 
 function closeTab(id, e) {
@@ -414,6 +460,7 @@ function closeTab(id, e) {
 
   renderTabs();
   updateSidebarActive();
+  persistTabs();
 }
 
 function renderTabs() {
@@ -436,6 +483,51 @@ function renderTabs() {
     });
     bar.appendChild(tab);
   }
+
+  // PDF export button (only shown when tabs are open)
+  if (tabs.length > 0 && typeof html2pdf !== 'undefined') {
+    const pdfBtn = document.createElement('button');
+    pdfBtn.className = 'tab tab-pdf-btn';
+    pdfBtn.title = 'Export open tabs as PDF';
+    pdfBtn.textContent = '↓ PDF';
+    pdfBtn.style.cssText = 'margin-left:auto; font-size:10px; padding:4px 10px; border:1px solid var(--border); border-radius:4px; background:none; color:var(--text3); cursor:pointer; white-space:nowrap;';
+    pdfBtn.addEventListener('click', exportTabsToPdf);
+    bar.appendChild(pdfBtn);
+  }
+}
+
+async function exportTabsToPdf() {
+  if (typeof html2pdf === 'undefined') return;
+  const container = document.createElement('div');
+  container.style.cssText = 'padding:20px; font-family:IBM Plex Sans,sans-serif; color:#222; background:#fff;';
+
+  for (let i = 0; i < tabs.length; i++) {
+    const id = tabs[i];
+    const note = FILTERED_INDEX.find(n => n.id === id);
+    const md = NOTE_CACHE[id] || '';
+    if (!md) continue;
+    const section = document.createElement('div');
+    if (i > 0) section.style.pageBreakBefore = 'always';
+    section.innerHTML = `<h1 style="color:#2d8a4e; margin-bottom:8px;">${note ? note.title : id}</h1>` + marked.parse(md);
+    // Remove mermaid code blocks (they won't render in pdf context)
+    section.querySelectorAll('pre.mermaid, code.language-mermaid').forEach(el => {
+      const placeholder = document.createElement('div');
+      placeholder.style.cssText = 'padding:12px; background:#f0f0f0; border:1px dashed #ccc; border-radius:4px; font-size:11px; color:#888; margin:8px 0;';
+      placeholder.textContent = '[Mermaid diagram — see interactive version]';
+      el.parentElement.replaceWith(placeholder);
+    });
+    container.appendChild(section);
+  }
+
+  const opt = {
+    margin: [10, 10, 10, 10],
+    filename: 'system-design-notes.pdf',
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  };
+
+  await html2pdf().set(opt).from(container).save();
 }
 
 function updateSidebarActive() {
@@ -527,17 +619,90 @@ function renderNote(id) {
   completeBtn.title = completedNotes.has(id) ? 'Mark as incomplete' : 'Mark as complete';
   completeBtn.textContent = completedNotes.has(id) ? '✓ Done' : '◻ Mark Complete';
   completeBtn.addEventListener('click', () => {
-    if (completedNotes.has(id)) { completedNotes.delete(id); } else { completedNotes.add(id); }
+    const wasCompleted = completedNotes.has(id);
+    if (wasCompleted) { completedNotes.delete(id); } else { completedNotes.add(id); }
     saveCompleted();
     buildSidebar();
     renderWelcomeStats();
     renderNote(id);
+    // Confetti on milestones (every 10th completion, or module/phase complete)
+    if (!wasCompleted && typeof confetti === 'function') {
+      const count = completedNotes.size;
+      const phaseNotes = FILTERED_INDEX.filter(n => n.folder === note.folder);
+      const phaseDone = phaseNotes.filter(n => completedNotes.has(n.id)).length;
+      const phaseComplete = phaseDone === phaseNotes.length;
+      if (count % 10 === 0 || phaseComplete) {
+        confetti({ particleCount: phaseComplete ? 200 : 100, spread: phaseComplete ? 100 : 70, origin: { y: 0.6 } });
+      }
+    }
   });
   meta.appendChild(completeBtn);
+
+  // Study Mode toggle button
+  const studyBtn = document.createElement('button');
+  studyBtn.className = `meta-action-btn btn-study-toggle${studyModeActive ? ' active' : ''}`;
+  studyBtn.title = studyModeActive ? 'Disable study mode' : 'Enable study mode (hides answers)';
+  studyBtn.textContent = studyModeActive ? '👁 Study ON' : '👁‍🗨 Study Mode';
+  studyBtn.addEventListener('click', () => {
+    studyModeActive = !studyModeActive;
+    localStorage.setItem('sdn-study-mode', JSON.stringify(studyModeActive));
+    renderNote(id);
+  });
+  meta.appendChild(studyBtn);
+
+  // Copy as Markdown button
+  const copyMdBtn = document.createElement('button');
+  copyMdBtn.className = 'meta-action-btn btn-copy-md';
+  copyMdBtn.title = 'Copy note as Markdown';
+  copyMdBtn.textContent = '📋 Copy MD';
+  copyMdBtn.addEventListener('click', () => {
+    const raw = NOTE_CACHE[id] || content;
+    navigator.clipboard.writeText(raw).then(() => {
+      copyMdBtn.textContent = '✓ Copied!';
+      setTimeout(() => { copyMdBtn.textContent = '📋 Copy MD'; }, 2000);
+    });
+  });
+  meta.appendChild(copyMdBtn);
 
   // body
   const body = document.getElementById('note-body');
   body.innerHTML = marked.parse(content);
+
+  // Study Mode: blur revealable sections
+  if (studyModeActive) {
+    const revealableHeadings = ['Architecture Diagram', 'Back-of-the-Envelope Heuristics', 'Real-World Case Studies', 'Reflection Prompts', 'Mental Model', 'Key Insight', 'Answer', 'Solution'];
+    body.querySelectorAll('h2').forEach(h2 => {
+      const text = h2.textContent.trim();
+      if (!revealableHeadings.some(h => text.toLowerCase().includes(h.toLowerCase()))) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'study-revealable';
+      // Collect all siblings until next h2
+      let sibling = h2.nextElementSibling;
+      const collected = [];
+      while (sibling && sibling.tagName !== 'H2') {
+        collected.push(sibling);
+        sibling = sibling.nextElementSibling;
+      }
+      // Wrap heading and collected elements
+      h2.parentNode.insertBefore(wrapper, h2);
+      wrapper.appendChild(h2);
+      collected.forEach(el => wrapper.appendChild(el));
+
+      // Add blur overlay and reveal button
+      const overlay = document.createElement('div');
+      overlay.className = 'study-blur-overlay';
+      const revealBtn = document.createElement('button');
+      revealBtn.className = 'study-reveal-btn';
+      revealBtn.textContent = 'Reveal ' + text;
+      revealBtn.addEventListener('click', () => {
+        wrapper.classList.add('revealed');
+        overlay.remove();
+      });
+      overlay.appendChild(revealBtn);
+      wrapper.appendChild(overlay);
+    });
+  }
 
   // Add Copy Buttons to code blocks (excluding mermaid blocks)
   body.querySelectorAll('pre:not(.mermaid)').forEach(block => {
@@ -1012,6 +1177,40 @@ async function init() {
   // Background loads for heavy features
   fetch('data/search-index.json').then(r => r.json()).then(data => SEARCH_INDEX = data).catch(console.error);
   fetch('data/graph-edges.json').then(r => r.json()).then(data => GRAPH_EDGES = data).catch(console.error);
+
+  // Restore persisted tabs
+  try {
+    const savedTabs = JSON.parse(localStorage.getItem('sdn-open-tabs') || '[]');
+    const savedActive = localStorage.getItem('sdn-active-tab');
+    if (savedTabs.length > 0) {
+      for (const id of savedTabs) {
+        const note = FILTERED_INDEX.find(n => n.id === id);
+        if (!note) continue;
+        if (!tabs.includes(id)) tabs.push(id);
+        // Pre-fetch note content
+        if (!NOTE_CACHE[id]) {
+          const path = note.subfolder
+            ? `data/notes/${note.folder}/${note.subfolder}/${note.filename}`
+            : `data/notes/${note.folder}/${note.filename}`;
+          fetch(path).then(r => r.ok ? r.text() : '').then(md => { NOTE_CACHE[id] = md; }).catch(() => {});
+        }
+      }
+      renderTabs();
+      if (savedActive && tabs.includes(savedActive)) {
+        openNote(savedActive);
+      }
+    }
+  } catch (e) { /* ignore corrupt tab state */ }
+
+  // First-visit onboarding
+  if (!localStorage.getItem('sdn-onboarded')) {
+    showOnboardingModal();
+  }
+
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
 }
 init();
 // ── MOBILE SIDEBAR TOGGLE ──
@@ -1896,3 +2095,84 @@ window.addEventListener('keydown', (e) => {
     }
   }
 });
+
+// ── ONBOARDING MODAL ──
+function showOnboardingModal() {
+  const steps = [
+    {
+      title: 'Welcome to the System Design Vault',
+      body: 'Your complete system design knowledge base with 137+ notes across 6 phases. Browse the sidebar, search with <kbd>Ctrl+K</kbd>, and open multiple notes in tabs.'
+    },
+    {
+      title: 'Interactive Canvas Playground',
+      body: 'Design distributed systems visually. Drag components, connect them, and simulate traffic at scale. Use <strong>Compare</strong> mode to evaluate two architectures side by side.'
+    },
+    {
+      title: 'Study Mode & Mastery',
+      body: 'Use <strong>Study Mode</strong> to test yourself — answers blur until you click Reveal. Track progress with the mastery checklist, and celebrate milestones with confetti!'
+    }
+  ];
+  let step = 0;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'onboarding-overlay';
+  const modal = document.createElement('div');
+  modal.id = 'onboarding-modal';
+
+  function renderStep() {
+    const s = steps[step];
+    const isLast = step === steps.length - 1;
+    modal.innerHTML = `
+      <div class="onboarding-step-dots">${steps.map((_, i) => `<span class="onboarding-dot${i === step ? ' active' : ''}"></span>`).join('')}</div>
+      <h2 class="onboarding-title">${s.title}</h2>
+      <p class="onboarding-body">${s.body}</p>
+      <div class="onboarding-actions">
+        ${step > 0 ? '<button class="onboarding-btn onboarding-btn-back">Back</button>' : ''}
+        <button class="onboarding-btn onboarding-btn-next">${isLast ? 'Get Started' : 'Next'}</button>
+      </div>
+    `;
+    const nextBtn = modal.querySelector('.onboarding-btn-next');
+    const backBtn = modal.querySelector('.onboarding-btn-back');
+    nextBtn.addEventListener('click', () => {
+      if (isLast) {
+        localStorage.setItem('sdn-onboarded', '1');
+        overlay.remove();
+      } else {
+        step++;
+        renderStep();
+      }
+    });
+    if (backBtn) backBtn.addEventListener('click', () => { step--; renderStep(); });
+  }
+
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+  renderStep();
+}
+
+// ── ARIA ENHANCEMENTS ──
+(function addAriaAttributes() {
+  const sidebar = document.getElementById('sidebar');
+  if (sidebar) sidebar.setAttribute('role', 'navigation');
+
+  const tabsBar = document.getElementById('tabs-bar');
+  if (tabsBar) tabsBar.setAttribute('role', 'tablist');
+
+  const contentArea = document.getElementById('content-area');
+  if (contentArea) { contentArea.setAttribute('role', 'main'); contentArea.setAttribute('aria-live', 'polite'); }
+
+  const search = document.getElementById('search');
+  if (search) { search.setAttribute('role', 'searchbox'); search.setAttribute('aria-label', 'Search notes'); }
+
+  // Keyboard nav for tabs: Ctrl+Tab / Ctrl+Shift+Tab to cycle
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'Tab' && tabs.length > 1) {
+      e.preventDefault();
+      const currentIdx = tabs.indexOf(activeTabId);
+      const next = e.shiftKey
+        ? (currentIdx - 1 + tabs.length) % tabs.length
+        : (currentIdx + 1) % tabs.length;
+      openNote(tabs[next]);
+    }
+  });
+})();

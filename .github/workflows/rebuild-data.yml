@@ -1,0 +1,37 @@
+name: Rebuild Data Indexes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/notes/**'
+      - 'scripts/rebuild-data.js'
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Rebuild data indexes
+        run: node scripts/rebuild-data.js
+
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet data/ && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push updated indexes
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/vault-index.json data/search-index.json data/graph-edges.json data/study-prompts.json
+          git commit -m "chore: auto-rebuild data indexes [skip ci]"
+          git push

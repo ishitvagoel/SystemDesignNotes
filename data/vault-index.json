@@ -1202,102 +1202,102 @@
   {
     "id": "Cloud_Cost_Optimization",
     "title": "Cloud Cost Optimization",
-    "folder": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering",
-    "subfolder": null,
+    "folder": "05-Phase-5-Modern-Operations",
+    "subfolder": "Module-22-FinOps-Cost-Engineering",
     "filename": "Cloud_Cost_Optimization.md",
     "is_moc": false,
     "phase": 5,
-    "module": 0
+    "module": 22
   },
   {
     "id": "Cost_Engineering_and_FinOps",
     "title": "FinOps and Cost Engineering",
-    "folder": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering",
-    "subfolder": null,
+    "folder": "05-Phase-5-Modern-Operations",
+    "subfolder": "Module-22-FinOps-Cost-Engineering",
     "filename": "Cost_Engineering_and_FinOps.md",
     "is_moc": false,
     "phase": 5,
-    "module": 0
+    "module": 22
   },
   {
     "id": "FinOps_Observability_and_Unit_Economics",
     "title": "FinOps Observability and Unit Economics",
-    "folder": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering",
-    "subfolder": null,
+    "folder": "05-Phase-5-Modern-Operations",
+    "subfolder": "Module-22-FinOps-Cost-Engineering",
     "filename": "FinOps_Observability_and_Unit_Economics.md",
     "is_moc": false,
     "phase": 5,
-    "module": 0
+    "module": 22
   },
   {
     "id": "Module_22_MOC",
     "title": "Module 22: FinOps & Cost Engineering",
-    "folder": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering",
-    "subfolder": null,
+    "folder": "05-Phase-5-Modern-Operations",
+    "subfolder": "Module-22-FinOps-Cost-Engineering",
     "filename": "Module_22_MOC.md",
     "is_moc": true,
     "phase": 5,
-    "module": 0
+    "module": 22
   },
   {
     "id": "Resource_Right-Sizing_and_Autoscaling",
     "title": "Resource Right-Sizing and Autoscaling",
-    "folder": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering",
-    "subfolder": null,
+    "folder": "05-Phase-5-Modern-Operations",
+    "subfolder": "Module-22-FinOps-Cost-Engineering",
     "filename": "Resource_Right-Sizing_and_Autoscaling.md",
     "is_moc": false,
     "phase": 5,
-    "module": 0
+    "module": 22
   },
   {
     "id": "Audit_Logging_and_Compliance",
     "title": "Audit Logging and Compliance",
-    "folder": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance",
-    "subfolder": null,
+    "folder": "05-Phase-5-Modern-Operations",
+    "subfolder": "Module-23-Data-Privacy-Compliance",
     "filename": "Audit_Logging_and_Compliance.md",
     "is_moc": false,
     "phase": 5,
-    "module": 0
+    "module": 23
   },
   {
     "id": "Data_Classification_and_Access_Control",
     "title": "Data Classification and Access Control",
-    "folder": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance",
-    "subfolder": null,
+    "folder": "05-Phase-5-Modern-Operations",
+    "subfolder": "Module-23-Data-Privacy-Compliance",
     "filename": "Data_Classification_and_Access_Control.md",
     "is_moc": false,
     "phase": 5,
-    "module": 0
+    "module": 23
   },
   {
     "id": "Data_Privacy_and_Compliance",
     "title": "Data Privacy and Compliance",
-    "folder": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance",
-    "subfolder": null,
+    "folder": "05-Phase-5-Modern-Operations",
+    "subfolder": "Module-23-Data-Privacy-Compliance",
     "filename": "Data_Privacy_and_Compliance.md",
     "is_moc": false,
     "phase": 5,
-    "module": 0
+    "module": 23
   },
   {
     "id": "GDPR_and_Data_Sovereignty",
     "title": "GDPR and Data Sovereignty",
-    "folder": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance",
-    "subfolder": null,
+    "folder": "05-Phase-5-Modern-Operations",
+    "subfolder": "Module-23-Data-Privacy-Compliance",
     "filename": "GDPR_and_Data_Sovereignty.md",
     "is_moc": false,
     "phase": 5,
-    "module": 0
+    "module": 23
   },
   {
     "id": "Module_23_MOC",
     "title": "Module 23: Data Privacy & Compliance",
-    "folder": "05-Phase-5-Modern-Operations__Module-23-Data-Privacy-Compliance",
-    "subfolder": null,
+    "folder": "05-Phase-5-Modern-Operations",
+    "subfolder": "Module-23-Data-Privacy-Compliance",
     "filename": "Module_23_MOC.md",
     "is_moc": true,
     "phase": 5,
-    "module": 0
+    "module": 23
   },
   {
     "id": "06-Phase-6-Capstones__Capstone_—_AI_Search_and_Chat_Platform",
