@@ -409,19 +409,18 @@ class CanvasEngine {
       }
     }
 
-    // Simulation stats overlay (only for primary canvas)
-    if (this === activePlayground) {
-      const stats = document.getElementById('canvas-sim-stats');
-      if (stats) {
-        if (globalIsSimulating && this.nodes.length > 0) {
-          const overloaded = this.nodes.filter(n => n.load > n.capacity).length;
-          const totalRps = this.nodes.filter(n => n.type === 'client').reduce((s, n) => s + n.load, 0);
-          const totalCap = this.nodes.reduce((s, n) => s + n.capacity, 0);
-          stats.innerHTML = `NODES: ${this.nodes.length} &nbsp;|&nbsp; LINKS: ${this.links.length}<br>THROUGHPUT: ${Math.round(totalRps)} RPS<br>CAPACITY: ${totalCap} RPS<br>OVERLOADED: <span style="color:${overloaded > 0 ? 'var(--pink)' : 'var(--accent)'}">${overloaded}</span>`;
-          stats.style.display = 'block';
-        } else {
-          stats.style.display = 'none';
-        }
+    // Simulation stats overlay — show for both A and B
+    const statsId = this.isPrimary ? 'canvas-sim-stats' : 'canvas-sim-stats-b';
+    const stats = document.getElementById(statsId);
+    if (stats) {
+      if (globalIsSimulating && this.nodes.length > 0) {
+        const overloaded = this.nodes.filter(n => n.load > n.capacity).length;
+        const totalRps = this.nodes.filter(n => n.type === 'client').reduce((s, n) => s + n.load, 0);
+        const totalCap = this.nodes.reduce((s, n) => s + n.capacity, 0);
+        stats.innerHTML = `NODES: ${this.nodes.length} &nbsp;|&nbsp; LINKS: ${this.links.length}<br>THROUGHPUT: ${Math.round(totalRps)} RPS<br>CAPACITY: ${totalCap} RPS<br>OVERLOADED: <span style="color:${overloaded > 0 ? 'var(--pink)' : 'var(--accent)'}">${overloaded}</span>`;
+        stats.style.display = 'block';
+      } else {
+        stats.style.display = 'none';
       }
     }
   }
@@ -730,21 +729,37 @@ function initCanvasControls() {
   document.getElementById('canvas-compare').onclick = () => {
     isCompareMode = !isCompareMode;
     const btn = document.getElementById('canvas-compare');
+    const wrapA = document.getElementById('canvas-stage-wrap');
     const wrapB = document.getElementById('canvas-stage-wrap-b');
+    const splitter = document.getElementById('canvas-splitter');
     const labelA = document.getElementById('label-a');
-    
+    const compTable = document.getElementById('canvas-comparison-table');
+
     if (isCompareMode) {
       btn.classList.add('active');
       wrapB.style.display = 'block';
+      splitter.style.display = 'block';
       labelA.style.display = 'block';
+      compTable.style.display = 'block';
+      // Set initial 50/50 split
+      wrapA.style.flex = 'none';
+      wrapA.style.width = '50%';
+      wrapB.style.flex = 'none';
+      wrapB.style.width = 'calc(50% - 6px)';
       if (!playgroundB) {
         playgroundB = new CanvasEngine('#canvas-svg-b', 'system-design-canvas-state-b');
       }
       activePlayground = playgroundB;
+      initSplitter();
+      updateComparisonTable();
     } else {
       btn.classList.remove('active');
       wrapB.style.display = 'none';
+      splitter.style.display = 'none';
       labelA.style.display = 'none';
+      compTable.style.display = 'none';
+      wrapA.style.flex = '1';
+      wrapA.style.width = '';
       activePlayground = playgroundA;
     }
   };
@@ -796,11 +811,124 @@ function initCanvasControls() {
   };
 }
 
+// ── Draggable Splitter ──
+function initSplitter() {
+  const splitter = document.getElementById('canvas-splitter');
+  const container = document.getElementById('canvas-split-container');
+  const wrapA = document.getElementById('canvas-stage-wrap');
+  const wrapB = document.getElementById('canvas-stage-wrap-b');
+
+  let isDragging = false;
+
+  splitter.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    isDragging = true;
+    splitter.classList.add('dragging');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const rect = container.getBoundingClientRect();
+    const offset = e.clientX - rect.left;
+    const total = rect.width;
+    const pct = Math.max(20, Math.min(80, (offset / total) * 100));
+    wrapA.style.width = pct + '%';
+    wrapB.style.width = (100 - pct) + '%';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    splitter.classList.remove('dragging');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  });
+}
+
+// ── Comparison Trade-Off Table ──
+function getCanvasMetrics(engine) {
+  if (!engine || engine.nodes.length === 0) return null;
+  const nodes = engine.nodes;
+  const links = engine.links;
+  const totalCapacity = nodes.reduce((s, n) => s + (n.capacity || 0), 0);
+  const totalLoad = nodes.reduce((s, n) => s + (n.load || 0), 0);
+  const overloaded = nodes.filter(n => n.load > n.capacity).length;
+  const types = {};
+  nodes.forEach(n => { types[n.type] = (types[n.type] || 0) + 1; });
+  const typeStr = Object.entries(types).map(([t, c]) => `${c} ${t}`).join(', ');
+  const avgUtil = totalCapacity > 0 ? Math.round((totalLoad / totalCapacity) * 100) : 0;
+  return {
+    nodeCount: nodes.length,
+    linkCount: links.length,
+    totalCapacity,
+    totalLoad: Math.round(totalLoad),
+    overloaded,
+    typeStr,
+    avgUtil
+  };
+}
+
+function updateComparisonTable() {
+  if (!isCompareMode) return;
+  const table = document.getElementById('canvas-comparison-table');
+  if (!table) return;
+
+  const mA = getCanvasMetrics(playgroundA);
+  const mB = getCanvasMetrics(playgroundB);
+
+  if (!mA && !mB) {
+    table.innerHTML = '<div style="color:var(--text3); text-align:center; padding:8px;">Add components to both designs to see comparison</div>';
+    return;
+  }
+
+  const a = mA || { nodeCount: 0, linkCount: 0, totalCapacity: 0, totalLoad: 0, overloaded: 0, typeStr: '—', avgUtil: 0 };
+  const b = mB || { nodeCount: 0, linkCount: 0, totalCapacity: 0, totalLoad: 0, overloaded: 0, typeStr: '—', avgUtil: 0 };
+
+  function better(valA, valB, higherIsBetter) {
+    if (valA === valB) return ['', ''];
+    if (higherIsBetter) return valA > valB ? ['metric-better', 'metric-worse'] : ['metric-worse', 'metric-better'];
+    return valA < valB ? ['metric-better', 'metric-worse'] : ['metric-worse', 'metric-better'];
+  }
+
+  const cap = better(a.totalCapacity, b.totalCapacity, true);
+  const ovr = better(a.overloaded, b.overloaded, false);
+  const util = better(a.avgUtil, b.avgUtil, false);
+
+  table.innerHTML = `
+    <table>
+      <thead><tr><th>Metric</th><th>Design A</th><th>Design B</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>Components</td><td>${a.nodeCount}</td><td>${b.nodeCount}</td><td>${a.nodeCount === b.nodeCount ? 'Tied' : a.nodeCount < b.nodeCount ? 'A is simpler' : 'B is simpler'}</td></tr>
+        <tr><td>Connections</td><td>${a.linkCount}</td><td>${b.linkCount}</td><td>${a.linkCount === b.linkCount ? 'Tied' : a.linkCount < b.linkCount ? 'A less coupled' : 'B less coupled'}</td></tr>
+        <tr><td>Topology</td><td>${a.typeStr || '—'}</td><td>${b.typeStr || '—'}</td><td>—</td></tr>
+        <tr><td>Total Capacity</td><td class="${cap[0]}">${a.totalCapacity.toLocaleString()} RPS</td><td class="${cap[1]}">${b.totalCapacity.toLocaleString()} RPS</td><td>${a.totalCapacity === b.totalCapacity ? 'Tied' : a.totalCapacity > b.totalCapacity ? 'A higher' : 'B higher'}</td></tr>
+        <tr><td>Avg Utilization</td><td class="${util[0]}">${a.avgUtil}%</td><td class="${util[1]}">${b.avgUtil}%</td><td>${a.avgUtil === b.avgUtil ? 'Tied' : a.avgUtil < b.avgUtil ? 'A headroom' : 'B headroom'}</td></tr>
+        <tr><td>Bottlenecks</td><td class="${ovr[0]}">${a.overloaded}</td><td class="${ovr[1]}">${b.overloaded}</td><td>${a.overloaded === b.overloaded ? 'Tied' : a.overloaded < b.overloaded ? 'A healthier' : 'B healthier'}</td></tr>
+      </tbody>
+    </table>
+  `;
+}
+
+// Auto-update comparison table during simulation
+let comparisonInterval = null;
+function startComparisonUpdates() {
+  if (comparisonInterval) return;
+  comparisonInterval = setInterval(() => {
+    if (isCompareMode) updateComparisonTable();
+  }, 1000);
+}
+function stopComparisonUpdates() {
+  if (comparisonInterval) { clearInterval(comparisonInterval); comparisonInterval = null; }
+}
+
 function initCanvas() {
   if (!playgroundA) {
     playgroundA = new CanvasEngine('#canvas-svg', 'system-design-canvas-state', true);
     activePlayground = playgroundA;
     playgroundA.initPalette();
     initCanvasControls();
+    startComparisonUpdates();
   }
 }

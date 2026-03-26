@@ -10,6 +10,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js" defer></script>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -134,17 +136,22 @@
               <span id="canvas-scale-label" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent); min-width:70px;">1 User</span>
             </div>
           </div>
-          <div id="canvas-split-container" style="flex:1; display:flex; flex-direction:row; overflow:hidden; background:var(--bg);">
-            <div id="canvas-stage-wrap" style="flex:1; position:relative; overflow:hidden; border-right:1px solid var(--border);">
-              <div class="canvas-label" id="label-a" style="position:absolute; top:10px; right:10px; z-index:10; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); background:var(--bg2); padding:4px 8px; border-radius:4px; border:1px solid var(--border); display:none;">Design A</div>
-              <div id="canvas-hint" style="display:none;"></div>
-              <div id="canvas-sim-stats" style="display:none;"></div>
-              <svg id="canvas-svg" style="width:100%; height:100%;"></svg>
+          <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
+            <div id="canvas-split-container" style="flex:1; display:flex; flex-direction:row; overflow:hidden; background:var(--bg);">
+              <div id="canvas-stage-wrap" style="flex:1; position:relative; overflow:hidden;">
+                <div class="canvas-label" id="label-a" style="position:absolute; top:10px; right:10px; z-index:10; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); background:var(--bg2); padding:4px 8px; border-radius:4px; border:1px solid var(--border); display:none;">Design A</div>
+                <div id="canvas-hint" style="display:none;"></div>
+                <div id="canvas-sim-stats" style="display:none;"></div>
+                <svg id="canvas-svg" style="width:100%; height:100%;"></svg>
+              </div>
+              <div id="canvas-splitter" style="display:none;"></div>
+              <div id="canvas-stage-wrap-b" style="position:relative; overflow:hidden; display:none;">
+                <div class="canvas-label" id="label-b" style="position:absolute; top:10px; right:10px; z-index:10; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); background:var(--bg2); padding:4px 8px; border-radius:4px; border:1px solid var(--border);">Design B</div>
+                <div id="canvas-sim-stats-b" style="display:none;"></div>
+                <svg id="canvas-svg-b" style="width:100%; height:100%;"></svg>
+              </div>
             </div>
-            <div id="canvas-stage-wrap-b" style="flex:1; position:relative; overflow:hidden; display:none;">
-              <div class="canvas-label" id="label-b" style="position:absolute; top:10px; right:10px; z-index:10; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); background:var(--bg2); padding:4px 8px; border-radius:4px; border:1px solid var(--border);">Design B</div>
-              <svg id="canvas-svg-b" style="width:100%; height:100%;"></svg>
-            </div>
+            <div id="canvas-comparison-table" style="display:none;"></div>
           </div>
         </div>
         <div id="canvas-props" class="canvas-sidebar" style="width:240px; border-left:1px solid var(--border); background:var(--bg2); padding:16px; display:none;">

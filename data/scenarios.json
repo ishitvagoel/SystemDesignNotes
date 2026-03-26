@@ -140,5 +140,175 @@
         "component": { "type": "db", "label": "Token Vault", "capacity": 5000 }
       }
     ]
+  },
+  "rag_latency_surge": {
+    "text": "Your RAG pipeline p99 latency has spiked to 5s. Users are abandoning queries. How do you fix it?",
+    "choices": [
+      {
+        "text": "Vector DB Index Optimization",
+        "id": "vector_index",
+        "impact": "HNSW index tuning and quantization reduce retrieval from 800ms to 50ms, but recall may drop 2-3%.",
+        "component": { "type": "db", "label": "Optimized Vector DB", "capacity": 8000 }
+      },
+      {
+        "text": "Semantic Cache Layer",
+        "id": "semantic_cache",
+        "impact": "Cache semantically similar queries. 60-70% hit rate for repeated question patterns, dramatically cuts LLM calls.",
+        "component": { "type": "cache", "label": "Semantic Cache", "capacity": 15000 }
+      }
+    ]
+  },
+  "llm_cost_explosion": {
+    "text": "Your GPT-4 bill hit 10x budget this month. Product wants to keep quality high. How do you cut costs?",
+    "choices": [
+      {
+        "text": "Model Routing (Small → Large)",
+        "id": "model_router",
+        "impact": "Route simple queries to smaller models, escalate complex ones to GPT-4. Cuts cost 70% with <5% quality loss.",
+        "component": { "type": "app", "label": "Model Router", "capacity": 12000 }
+      },
+      {
+        "text": "Response Cache + Prompt Compression",
+        "id": "prompt_compress",
+        "impact": "Cache frequent responses and compress prompts by 40%. Reduces tokens but may miss nuance in edge cases.",
+        "component": { "type": "cache", "label": "LLM Response Cache", "capacity": 20000 }
+      }
+    ]
+  },
+  "cqrs_rebuild_storm": {
+    "text": "Your CQRS read model is 2 hours behind writes after a deployment. Users see stale data everywhere. How do you catch up?",
+    "choices": [
+      {
+        "text": "Parallel Projection Rebuilder",
+        "id": "parallel_rebuild",
+        "impact": "Spin up parallel consumers to rebuild projections concurrently. Fast, but requires idempotent handlers.",
+        "component": { "type": "app", "label": "Parallel Rebuilder", "capacity": 10000 }
+      },
+      {
+        "text": "Snapshot + Incremental",
+        "id": "snapshot_incremental",
+        "impact": "Restore from last snapshot, then replay only recent events. Faster recovery but requires snapshot infrastructure.",
+        "component": { "type": "db", "label": "Snapshot Store", "capacity": 5000 }
+      }
+    ]
+  },
+  "hot_partition_stampede": {
+    "text": "One DynamoDB partition is at 95% while others sit idle. A viral product is causing a hot key. What's your move?",
+    "choices": [
+      {
+        "text": "Consistent Hashing Rebalance",
+        "id": "hash_rebalance",
+        "impact": "Add virtual nodes and re-hash the key space. Distributes load evenly but requires a migration window.",
+        "component": { "type": "db", "label": "Rebalanced Shards", "capacity": 6000 }
+      },
+      {
+        "text": "Write-Behind Cache",
+        "id": "write_behind_cache",
+        "impact": "Buffer writes in cache, flush to DB in batches. Absorbs spikes but risks data loss on cache failure.",
+        "component": { "type": "cache", "label": "Write Buffer", "capacity": 25000 }
+      }
+    ]
+  },
+  "microservice_death_spiral": {
+    "text": "Cascading timeouts across 12 services — one slow upstream is taking everything down. How do you stop the bleeding?",
+    "choices": [
+      {
+        "text": "Circuit Breaker Mesh",
+        "id": "circuit_breaker",
+        "impact": "Fail fast when upstream is unhealthy. Prevents cascade but returns errors to some users during recovery.",
+        "component": { "type": "app", "label": "Circuit Breaker", "capacity": 15000 }
+      },
+      {
+        "text": "Bulkhead Isolation",
+        "id": "bulkhead",
+        "impact": "Isolate each service's thread pool. Slow service can't starve others, but reduces overall throughput ceiling.",
+        "component": { "type": "app", "label": "Bulkhead Pool", "capacity": 8000 }
+      }
+    ]
+  },
+  "dns_failover_cascade": {
+    "text": "Primary region is down. DNS TTL is 300s and users are still hitting the dead endpoint. How do you fail over?",
+    "choices": [
+      {
+        "text": "Active-Active with Global LB",
+        "id": "active_active",
+        "impact": "Both regions serve traffic simultaneously. Zero failover time but doubles infrastructure cost and complexity.",
+        "component": { "type": "lb", "label": "Global Load Balancer", "capacity": 50000 }
+      },
+      {
+        "text": "Pre-Warmed Standby + Health Checks",
+        "id": "warm_standby",
+        "impact": "Standby region with Route53 health checks. 60-90s failover, lower cost, but brief downtime window.",
+        "component": { "type": "app", "label": "Standby Region", "capacity": 8000 }
+      }
+    ]
+  },
+  "event_sourcing_replay": {
+    "text": "Your event store replay is taking 6 hours for a full rebuild. A bug corrupted the last projection. How do you recover?",
+    "choices": [
+      {
+        "text": "Periodic Snapshots",
+        "id": "periodic_snapshots",
+        "impact": "Snapshot aggregate state hourly. Replay only from last snapshot — 6hrs becomes 45min. Adds storage overhead.",
+        "component": { "type": "db", "label": "Snapshot Store", "capacity": 4000 }
+      },
+      {
+        "text": "Parallel Partitioned Replay",
+        "id": "parallel_replay",
+        "impact": "Partition event stream and replay in parallel across workers. Linear speedup but requires partition-safe projections.",
+        "component": { "type": "queue", "label": "Partitioned Stream", "capacity": 30000 }
+      }
+    ]
+  },
+  "rate_limiter_thundering_herd": {
+    "text": "Your rate limiter resets every minute, causing a thundering herd of requests at the boundary. How do you smooth it?",
+    "choices": [
+      {
+        "text": "Sliding Window Counter",
+        "id": "sliding_window",
+        "impact": "Weighted average of current and previous window. Smooth traffic but slightly more complex to implement.",
+        "component": { "type": "cache", "label": "Sliding Window Limiter", "capacity": 20000 }
+      },
+      {
+        "text": "Token Bucket with Jitter",
+        "id": "token_bucket",
+        "impact": "Tokens refill continuously with random jitter. Eliminates boundary spikes and allows controlled bursts.",
+        "component": { "type": "cache", "label": "Token Bucket", "capacity": 18000 }
+      }
+    ]
+  },
+  "cross_region_replication_lag": {
+    "text": "800ms replication lag between US-East and EU-West. Users editing the same document see stale versions. What's the fix?",
+    "choices": [
+      {
+        "text": "Read-Your-Writes Consistency",
+        "id": "read_your_writes",
+        "impact": "Route reads to the region where the write occurred. Guarantees freshness for the writer, not other readers.",
+        "component": { "type": "app", "label": "Session Router", "capacity": 10000 }
+      },
+      {
+        "text": "CRDTs (Conflict-Free Replicated Data)",
+        "id": "crdt",
+        "impact": "Data structures that merge automatically without coordination. Eventually consistent but zero conflicts.",
+        "component": { "type": "db", "label": "CRDT Store", "capacity": 7000 }
+      }
+    ]
+  },
+  "ml_model_serving_cold_start": {
+    "text": "Your ML model takes 30s to load on new instances. Autoscaling events leave users waiting. How do you fix cold starts?",
+    "choices": [
+      {
+        "text": "Pre-Loaded Model Registry",
+        "id": "model_registry",
+        "impact": "Pre-bake models into container images. Instances start with model ready — 30s becomes 3s. Larger images though.",
+        "component": { "type": "app", "label": "Pre-Loaded Serving", "capacity": 6000 }
+      },
+      {
+        "text": "Distilled Smaller Model",
+        "id": "distilled_model",
+        "impact": "Knowledge-distill to a 10x smaller model. 2s load time, 85% of accuracy. May underperform on edge cases.",
+        "component": { "type": "app", "label": "Distilled Model", "capacity": 15000 }
+      }
+    ]
   }
 }
