@@ -43,6 +43,14 @@ HTTP/2 solves HTTP-layer head-of-line blocking with **stream multiplexing** over
 
 This is TCP's fundamental limitation: it provides ordered byte-stream delivery, and you can't opt out of ordering for some bytes but not others.
 
+### The HTTP/2 Regression Under Packet Loss
+
+The head-of-line blocking problem described above produces a measurable regression in real-world conditions. HTTP/2 uses one TCP connection with up to 100 concurrent streams by default. HTTP/1.1 uses 6 parallel connections. At 1% per-packet loss, a lost TCP packet on HTTP/2's single connection stalls all 100 streams until retransmission completes (typically one RTT for fast retransmit). On HTTP/1.1's 6 connections, the same 1% loss rate stalls only the streams on the one affected connection — the other 5 continue. For a page loading 50 assets, HTTP/2 with 1% packet loss can have worse completion time than HTTP/1.1 with domain sharding.
+
+This regression is environment-dependent. On wired connections in data centers, packet loss is effectively 0% — HTTP/2's reduced connection overhead and header compression are pure wins. On mobile 4G/5G networks, 1–3% packet loss is common during handoffs, congestion, and weak signal. Google's internal data from developing QUIC showed that at 2% packet loss, QUIC reduced page load time by 30% compared to HTTP/2 over TCP; at 25% (a very lossy link), the improvement exceeded 100%.
+
+The practical implication: the decision to invest in HTTP/3 infrastructure should be driven by your users' actual packet loss distribution, not by protocol version numbers. For a SaaS product where 90% of users are on wired broadband, HTTP/2 is sufficient. For a consumer mobile app where 30% of sessions are on cellular, HTTP/3 is worth the QUIC operational complexity. Most teams reach a middle path: configure Cloudflare or Fastly to terminate HTTP/3 at the edge and use HTTP/2 between the CDN and the origin — mobile users get QUIC's benefits without requiring the origin servers to support QUIC.
+
 ### HTTP/3 — QUIC (2022)
 
 HTTP/3 replaces TCP with **QUIC**, a transport protocol built on UDP that provides per-stream reliability.

@@ -67,6 +67,10 @@ In practice, you typically need multiple guarantees together:
 
 **All four together** approximate causal consistency without the full complexity of a causal consistency protocol. They provide per-session causal ordering, which is sufficient for most applications.
 
+### When Session Guarantees Are Not Enough
+
+Session guarantees are client-centric — they protect a single client's view of the data across reads and writes *from that client*. They say nothing about what happens when two different clients concurrently write to the same record on different leaders. Read-your-writes guarantees that client A sees its own update; it provides no guarantee about what happens when client A and client B simultaneously update the same profile field on two different regional leaders. That scenario produces a write conflict, and the outcome depends entirely on the conflict resolution strategy of the replication layer — not on any session guarantee. Session guarantees solve the "single client, multiple replicas" problem. The "multiple clients, multiple leaders" problem requires conflict resolution (see [[Multi-Leader and Conflict Resolution]]). A system that implements both gives you the combination: your own writes are always visible to you (session guarantee), and concurrent writes from others converge to a consistent value (conflict resolution).
+
 ## Implementation Patterns
 
 ### Session Token Approach

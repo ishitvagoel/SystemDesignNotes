@@ -42,6 +42,14 @@ sequenceDiagram
 
 ## Why 2PC Is Problematic
 
+### Why Participants Cannot Self-Resolve
+
+The blocking problem is not a design oversight — it follows from a fundamental impossibility. When participant P1 has voted YES and is waiting for the coordinator's decision, it cannot unilaterally decide either way without risking split-brain.
+
+If P1 unilaterally aborts, it might contradict a `COMMIT` that the coordinator already delivered to P2 before crashing. P2 has committed; P1 has aborted. The transaction is half-done — exactly the corruption that 2PC was designed to prevent. If P1 unilaterally commits, it might contradict an `ABORT` that the coordinator sent to P2 because a *different* participant voted NO before the crash. Now P1 committed and P2 aborted. Same result, different direction.
+
+A naive fix seems obvious: let participants communicate with each other and reach consensus. The problem is information asymmetry. Only the coordinator collected all votes. P1 knows it voted YES and that the protocol was initiated, but it does not know how many participants there are, which ones voted YES, or which ones voted NO. If P1 contacts P2 and P3 and they are all in PREPARED state (all voted YES), they can safely agree to commit. But if P3 is in ABORTED state (it voted NO before the coordinator failed), the participants now have conflicting information with no way to determine the ground truth. This is why 2PC is provably blocking under coordinator failure in an asynchronous network — it requires a coordinator who has the full vote record, and that coordinator's loss is unrecoverable until it restarts.
+
 ### The Blocking Problem
 
 Between Phase 1 (participant votes YES) and Phase 2 (coordinator sends COMMIT/ABORT), the participant is in a **prepared** state. It has voted YES — promising to commit if told to. It holds locks on the affected data. It cannot unilaterally commit or abort — it must wait for the coordinator's decision.
@@ -49,6 +57,14 @@ Between Phase 1 (participant votes YES) and Phase 2 (coordinator sends COMMIT/AB
 **If the coordinator crashes after receiving all YES votes but before sending the decision**, all participants are stuck. They're holding locks, blocking other transactions, and can't proceed. They must wait for the coordinator to recover and replay its decision from its log. This is the **blocking failure mode** — the defining weakness of 2PC.
 
 In the worst case, the coordinator's disk fails and the decision is lost. Now participants are stuck indefinitely. Manual intervention is required — an operator must decide whether to commit or abort, hoping the guess is consistent with the coordinator's intended decision.
+
+### Network Partition Mid-Commit
+
+A coordinator crash is the canonical failure, but a network partition during Phase 2 is equally damaging and more common. Suppose the coordinator has received all YES votes and begins sending `COMMIT`. It successfully delivers `COMMIT` to P1 and P2. A network partition then isolates the coordinator from P3 and P4. From P3 and P4's perspective, they are in PREPARED state with no decision received. From P1 and P2's perspective, they committed and released their locks. The system is inconsistent: two participants have applied the transaction and two have not, and the latter two are holding locks.
+
+Unlike a coordinator crash (where the coordinator restarts and replays the decision), a partition involves a *live* coordinator that can retry. When the partition heals, the coordinator retries `COMMIT` to P3 and P4, and consistency is restored. But the recovery window is bounded by the partition duration — a 30-second partition means 30 seconds of lock contention on P3 and P4's rows, cascading into request timeouts across anything that needs those rows.
+
+This probability scales poorly in microservice deployments. With 5 services each at 99.9% availability, the chance that at least one is unreachable during a 2PC round is approximately `1 - (0.999)^5 ≈ 0.5%`. At 100 transactions per second, that is roughly one blocked transaction every 20 seconds — each holding locks in multiple services simultaneously.
 
 ### Availability Impact
 
