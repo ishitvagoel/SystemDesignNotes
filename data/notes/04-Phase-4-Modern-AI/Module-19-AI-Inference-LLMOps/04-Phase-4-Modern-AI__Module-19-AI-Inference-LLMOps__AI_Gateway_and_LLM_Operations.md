@@ -182,6 +182,7 @@ graph TD
 - [[Inference Serving Architecture]] — The serving layer that the gateway routes to (for self-hosted models)
 - [[API Gateway Patterns]] — AI gateways are specialized API gateways with LLM-specific features
 - [[Cache Patterns and Strategies]] — Semantic caching extends traditional caching with embedding-based similarity
+- [[Semantic Caching and Prompt Caching]] — Deep dive on vector similarity cache architecture, similarity threshold tuning, provider-side prompt caching, and cache invalidation strategies
 - [[Rate Limiting and Throttling]] — Token-based rate limiting for LLM APIs
 - [[Cost Engineering and FinOps]] — LLM cost management is a FinOps concern
 - [[Observability and Alerting]] — LLM-specific monitoring (token usage, quality metrics, drift detection)

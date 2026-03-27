@@ -162,6 +162,7 @@ sequenceDiagram
 - [[API Gateway Patterns]] — Auth offloading is a primary gateway responsibility
 - [[Multi-Tenancy and Isolation]] — Tenant-scoped authorization prevents cross-tenant access
 - [[Threat Modeling for Distributed Systems]] — Auth failures are the most common attack vector
+- [[Zero-Trust Architecture]] — How SPIFFE/SPIRE service identity and OPA policy engines extend auth to every service-to-service call
 
 ## Reflection Prompts
 

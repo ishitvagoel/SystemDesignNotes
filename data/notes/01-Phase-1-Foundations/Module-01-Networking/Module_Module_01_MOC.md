@@ -25,6 +25,7 @@ Every distributed system is, at its core, machines sending messages over a netwo
 
 ### API Communication Paradigms
 - [[gRPC vs REST vs GraphQL]] — Three models for service-to-service and client-to-server communication, and when each shines
+- [[gRPC Deep Dive]] — Protobuf encoding efficiency, the four streaming patterns, deadline propagation, interceptor chains, and gRPC-Web limitations
 
 ## Prerequisites
 None — this is where the vault begins.

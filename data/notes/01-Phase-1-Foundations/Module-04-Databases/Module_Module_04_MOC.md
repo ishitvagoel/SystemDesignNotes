@@ -13,6 +13,7 @@ Module 3 gave you the engines inside databases. This module zooms out to the ope
 
 ### Indexing
 - [[Indexing Deep Dive]] — B-tree, hash, GIN/GiST, partial, and covering indexes — how they work and when to use each
+- [[Query Optimization and EXPLAIN]] — Cost-based optimizer mechanics, EXPLAIN output walkthrough, common anti-patterns (N+1, SELECT *, implicit casting), and index design for query performance
 
 ### Scaling
 - [[Database Replication]] — Single-leader, multi-leader, leaderless replication topologies and their trade-offs

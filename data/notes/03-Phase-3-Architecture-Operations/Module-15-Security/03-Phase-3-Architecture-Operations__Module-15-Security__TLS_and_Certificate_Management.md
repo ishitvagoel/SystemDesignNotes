@@ -152,6 +152,7 @@ graph TD
 - [[Authentication and Authorization]] — mTLS provides service identity; OAuth2/OIDC provides user identity
 - [[Load Balancing Fundamentals]] — TLS termination at the LB is the most common pattern
 - [[Threat Modeling for Distributed Systems]] — mTLS mitigates spoofing and tampering threats
+- [[Zero-Trust Architecture]] — SPIFFE/SPIRE uses X.509-SVID (a TLS certificate format) as the service identity carrier
 
 ## Reflection Prompts
 

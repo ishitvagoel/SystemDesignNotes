@@ -12,6 +12,7 @@ This module covers the inference serving stack — from low-level GPU optimizati
 
 - [[Inference Serving Architecture]] — Continuous batching, model parallelism, quantization (INT8/INT4), KV cache management with PagedAttention, disaggregated prefill/decode, and the vLLM/TensorRT-LLM landscape
 - [[AI Gateway and LLM Operations]] — Gateway patterns (routing, fallback, rate limiting), semantic caching, prompt management, cost tracking, LLM evaluation frameworks, and guardrail architectures
+- [[Semantic Caching and Prompt Caching]] — Deep dive on vector similarity-based query caching, provider-side KV cache reuse, similarity threshold tuning, cache invalidation, and cost/latency analysis
 
 ## Prerequisites
 - [[_Module 06 MOC]] — Caching (semantic caching for LLMs is an evolution of traditional cache patterns)

@@ -15,6 +15,7 @@ This module covers the full security stack: transport security (TLS, mTLS), iden
 - [[Encryption at Rest and in Transit]] — Envelope encryption, KMS architecture, secret management with Vault/SOPS
 - [[Threat Modeling for Distributed Systems]] — STRIDE framework, zero-trust principles, attack surface analysis for microservices
 - [[Software Supply Chain Security]] — SLSA levels, Sigstore, SBOMs, and protecting your build pipeline from compromise
+- [[Zero-Trust Architecture]] — "Never trust, always verify": SPIFFE/SPIRE service identity, mTLS enforcement, OPA policy engine, micro-segmentation, and BeyondCorp reference architecture
 
 ## Prerequisites
 - [[_Module 02 MOC]] — API design (authentication and authorization are API-layer concerns)

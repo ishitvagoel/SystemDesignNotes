@@ -220,6 +220,16 @@
     "module": 1
   },
   {
+    "id": "01-Phase-1-Foundations__Module-01-Networking__gRPC_Deep_Dive",
+    "title": "gRPC Deep Dive",
+    "folder": "01-Phase-1-Foundations",
+    "subfolder": "Module-01-Networking",
+    "filename": "01-Phase-1-Foundations__Module-01-Networking__gRPC_Deep_Dive.md",
+    "is_moc": false,
+    "phase": 1,
+    "module": 1
+  },
+  {
     "id": "01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL",
     "title": "gRPC vs REST vs GraphQL",
     "folder": "01-Phase-1-Foundations",
@@ -395,6 +405,16 @@
     "folder": "01-Phase-1-Foundations",
     "subfolder": "Module-04-Databases",
     "filename": "01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding.md",
+    "is_moc": false,
+    "phase": 1,
+    "module": 4
+  },
+  {
+    "id": "01-Phase-1-Foundations__Module-04-Databases__Query_Optimization_and_EXPLAIN",
+    "title": "Query Optimization and EXPLAIN",
+    "folder": "01-Phase-1-Foundations",
+    "subfolder": "Module-04-Databases",
+    "filename": "01-Phase-1-Foundations__Module-04-Databases__Query_Optimization_and_EXPLAIN.md",
     "is_moc": false,
     "phase": 1,
     "module": 4
@@ -960,6 +980,16 @@
     "module": 15
   },
   {
+    "id": "03-Phase-3-Architecture-Operations__Module-15-Security__Zero_Trust_Architecture",
+    "title": "Zero-Trust Architecture",
+    "folder": "03-Phase-3-Architecture-Operations",
+    "subfolder": "Module-15-Security",
+    "filename": "03-Phase-3-Architecture-Operations__Module-15-Security__Zero_Trust_Architecture.md",
+    "is_moc": false,
+    "phase": 3,
+    "module": 15
+  },
+  {
     "id": "Module_Module_15_MOC",
     "title": "Module 15: Security & Zero-Trust Architecture",
     "folder": "03-Phase-3-Architecture-Operations",
@@ -985,6 +1015,16 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-16-Reliability-Testing",
     "filename": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads.md",
+    "is_moc": false,
+    "phase": 3,
+    "module": 16
+  },
+  {
+    "id": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Disaster_Recovery_and_RTO_RPO",
+    "title": "Disaster Recovery and RTO/RPO",
+    "folder": "03-Phase-3-Architecture-Operations",
+    "subfolder": "Module-16-Reliability-Testing",
+    "filename": "03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Disaster_Recovery_and_RTO_RPO.md",
     "is_moc": false,
     "phase": 3,
     "module": 16
@@ -1035,6 +1075,26 @@
     "folder": "03-Phase-3-Architecture-Operations",
     "subfolder": "Module-17-Observability-Deployment",
     "filename": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering.md",
+    "is_moc": false,
+    "phase": 3,
+    "module": 17
+  },
+  {
+    "id": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Distributed_Tracing_Deep_Dive",
+    "title": "Distributed Tracing Deep Dive",
+    "folder": "03-Phase-3-Architecture-Operations",
+    "subfolder": "Module-17-Observability-Deployment",
+    "filename": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Distributed_Tracing_Deep_Dive.md",
+    "is_moc": false,
+    "phase": 3,
+    "module": 17
+  },
+  {
+    "id": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Feature_Flags_and_Safe_Deployment",
+    "title": "Feature Flags and Safe Deployment",
+    "folder": "03-Phase-3-Architecture-Operations",
+    "subfolder": "Module-17-Observability-Deployment",
+    "filename": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Feature_Flags_and_Safe_Deployment.md",
     "is_moc": false,
     "phase": 3,
     "module": 17
@@ -1120,6 +1180,16 @@
     "module": 19
   },
   {
+    "id": "04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Semantic_Caching_and_Prompt_Caching",
+    "title": "Semantic Caching and Prompt Caching",
+    "folder": "04-Phase-4-Modern-AI",
+    "subfolder": "Module-19-AI-Inference-LLMOps",
+    "filename": "04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Semantic_Caching_and_Prompt_Caching.md",
+    "is_moc": false,
+    "phase": 4,
+    "module": 19
+  },
+  {
     "id": "Module_Module_19_MOC",
     "title": "Module 19: AI/ML Inference Serving & LLM Operations",
     "folder": "04-Phase-4-Modern-AI",
@@ -1185,6 +1255,16 @@
     "folder": "04-Phase-4-Modern-AI",
     "subfolder": "Module-21-Serverless-Edge-Platform",
     "filename": "04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing.md",
+    "is_moc": false,
+    "phase": 4,
+    "module": 21
+  },
+  {
+    "id": "04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__WebAssembly_and_WASI",
+    "title": "WebAssembly and WASI",
+    "folder": "04-Phase-4-Modern-AI",
+    "subfolder": "Module-21-Serverless-Edge-Platform",
+    "filename": "04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__WebAssembly_and_WASI.md",
     "is_moc": false,
     "phase": 4,
     "module": 21
