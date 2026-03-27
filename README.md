@@ -143,7 +143,7 @@ This vault is **open to contributions** — new notes, corrections, diagram impr
 
 ---
 
-MIT License © 2026 [Ishit Vagoel](https://github.com/ishitvagoel)
+MIT License © 2026 [Ishitva Goel](https://github.com/ishitvagoel)
 
 *Built with ❤️, vanilla JS, and an unhealthy obsession with distributed systems.*
 
