@@ -13,6 +13,7 @@ class CanvasEngine {
     this.links = [];
     this.selectedNode = null;
     this.connectingNode = null;
+    this.connectMode = false;
     this.isSimulating = false;
     this.scaleIndex = 0;
     this.scaleOptions = [
@@ -40,6 +41,29 @@ class CanvasEngine {
       });
     
     this.svg.call(zoom);
+
+    // Arrow marker definition for directional links
+    const defs = this.svg.append('defs');
+    defs.append('marker')
+      .attr('id', 'arrow-' + svgId.replace(/[^a-z0-9]/gi, ''))
+      .attr('viewBox', '0 0 10 6')
+      .attr('refX', 10)
+      .attr('refY', 3)
+      .attr('markerWidth', 10)
+      .attr('markerHeight', 6)
+      .attr('orient', 'auto')
+      .append('path')
+      .attr('d', 'M0,0 L10,3 L0,6 Z')
+      .attr('fill', 'var(--border2)');
+    this.arrowMarkerId = 'arrow-' + svgId.replace(/[^a-z0-9]/gi, '');
+
+    // Temporary line for drag-to-connect
+    this.dragLine = this.container.append('line')
+      .attr('class', 'canvas-drag-line')
+      .attr('stroke', 'var(--yellow)')
+      .attr('stroke-width', 2)
+      .attr('stroke-dasharray', '6,4')
+      .style('display', 'none');
 
     // Initial render
     this.render();
@@ -110,8 +134,8 @@ class CanvasEngine {
         this.isSimulating = true;
         this.startSimulation();
       };
-      btn.onmouseenter = () => { btn.style.borderColor = 'var(--accent)'; btn.style.background = 'var(--accent-dim2)'; };
-      btn.onmouseleave = () => { btn.style.borderColor = 'var(--border)'; btn.style.background = 'var(--surface)'; };
+      btn.addEventListener('pointerenter', () => { btn.style.borderColor = 'var(--accent)'; btn.style.background = 'var(--accent-dim2)'; });
+      btn.addEventListener('pointerleave', () => { btn.style.borderColor = 'var(--border)'; btn.style.background = 'var(--surface)'; });
     });
   }
 
@@ -225,7 +249,7 @@ class CanvasEngine {
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 6px;
-        cursor: grab;
+        cursor: pointer;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -235,8 +259,8 @@ class CanvasEngine {
       `;
       el.innerHTML = `<span>${c.icon}</span><span>${c.label}</span>`;
       el.onclick = () => activePlayground.addComponent(c.type, c.label);
-      el.onmouseenter = () => el.style.borderColor = 'var(--accent)';
-      el.onmouseleave = () => el.style.borderColor = 'var(--border)';
+      el.addEventListener('pointerenter', () => el.style.borderColor = 'var(--accent)');
+      el.addEventListener('pointerleave', () => el.style.borderColor = 'var(--border)');
       list.appendChild(el);
     });
   }
@@ -272,11 +296,23 @@ class CanvasEngine {
       .attr('class', 'canvas-link')
       .attr('stroke', 'var(--border2)')
       .attr('stroke-width', 2)
+      .attr('marker-end', `url(#${this.arrowMarkerId})`)
       .merge(links)
       .attr('x1', d => d.source.x)
       .attr('y1', d => d.source.y)
-      .attr('x2', d => d.target.x)
-      .attr('y2', d => d.target.y);
+      .attr('x2', d => {
+        // Shorten line so arrow sits at node edge (node half-width = 60)
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        return d.target.x - (dx / dist) * 60;
+      })
+      .attr('y2', d => {
+        const dx = d.target.x - d.source.x;
+        const dy = d.target.y - d.source.y;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        return d.target.y - (dy / dist) * 32;
+      });
 
     // Draw Nodes
     const nodes = this.container.selectAll('.canvas-node')
@@ -326,6 +362,30 @@ class CanvasEngine {
       .style('pointer-events', 'none')
       .text(d => d.label);
 
+    // Connection port: output (right side)
+    nodeEnter.append('circle')
+      .attr('class', 'port port-out')
+      .attr('cx', 60).attr('cy', 0).attr('r', 6)
+      .attr('fill', 'var(--bg2)')
+      .attr('stroke', 'var(--accent)')
+      .attr('stroke-width', 1.5)
+      .style('cursor', 'crosshair')
+      .style('opacity', 0)
+      .on('mouseenter', function() { d3.select(this).style('opacity', 1); })
+      .on('mouseleave', function() { if (!self.connectingNode) d3.select(this).style('opacity', 0); });
+
+    // Connection port: input (left side)
+    nodeEnter.append('circle')
+      .attr('class', 'port port-in')
+      .attr('cx', -60).attr('cy', 0).attr('r', 6)
+      .attr('fill', 'var(--bg2)')
+      .attr('stroke', 'var(--accent)')
+      .attr('stroke-width', 1.5)
+      .style('cursor', 'crosshair')
+      .style('opacity', 0)
+      .on('mouseenter', function() { d3.select(this).style('opacity', 1); })
+      .on('mouseleave', function() { if (!self.connectingNode) d3.select(this).style('opacity', 0); });
+
     const nodeMerge = nodeEnter.merge(nodes);
     
     nodeMerge.attr('transform', d => `translate(${d.x},${d.y})`);
@@ -348,7 +408,7 @@ class CanvasEngine {
       activePlayground = this;
       e.stopPropagation();
       
-      if (e.shiftKey || this.connectingNode) {
+      if (e.shiftKey || this.connectMode || this.connectingNode) {
         if (this.connectingNode && this.connectingNode !== d) {
           // Create link
           const exists = this.links.some(l => 
@@ -385,12 +445,55 @@ class CanvasEngine {
     });
     nodeMerge.on('mouseout', () => { tooltip.style.display = 'none'; });
 
+    // Show ports when in connect mode or connecting
+    nodeMerge.selectAll('.port')
+      .style('opacity', (this.connectMode || this.connectingNode) ? 0.8 : 0);
+
+    // Drag-to-connect from output port
+    nodeMerge.select('.port-out')
+      .call(d3.drag()
+        .on('start', (e, d) => {
+          e.sourceEvent.stopPropagation();
+          this.connectingNode = d;
+          this.dragLine.style('display', null)
+            .attr('x1', d.x + 60).attr('y1', d.y)
+            .attr('x2', d.x + 60).attr('y2', d.y);
+        })
+        .on('drag', (e, d) => {
+          const transform = d3.zoomTransform(this.svg.node());
+          const [mx, my] = transform.invert([e.sourceEvent.offsetX, e.sourceEvent.offsetY]);
+          this.dragLine.attr('x2', mx).attr('y2', my);
+        })
+        .on('end', (e, d) => {
+          this.dragLine.style('display', 'none');
+          // Find if we dropped on a node
+          const transform = d3.zoomTransform(this.svg.node());
+          const [mx, my] = transform.invert([e.sourceEvent.offsetX, e.sourceEvent.offsetY]);
+          const target = this.nodes.find(n => n !== d &&
+            Math.abs(n.x - mx) < 60 && Math.abs(n.y - my) < 32);
+          if (target) {
+            const exists = this.links.some(l =>
+              (l.source.id === d.id && l.target.id === target.id) ||
+              (l.source.id === target.id && l.target.id === d.id));
+            if (!exists) {
+              this.links.push({ source: d, target: target });
+              this.saveState();
+            }
+          }
+          this.connectingNode = null;
+          this.render();
+        })
+      );
+
     // Update hint overlay (only for primary canvas / active canvas)
     if (this === activePlayground) {
       const hint = document.getElementById('canvas-hint');
       if (hint) {
         if (this.connectingNode) {
           hint.textContent = `🔗 Click another node to connect to "${this.connectingNode.label}" — Esc to cancel`;
+          hint.style.display = 'block';
+        } else if (this.nodes.length >= 2 && this.links.length === 0) {
+          hint.textContent = '💡 Click "Connect" or Shift+Click nodes to create connections. Drag from port circles on node edges.';
           hint.style.display = 'block';
         } else {
           hint.style.display = 'none';
@@ -714,6 +817,16 @@ function initCanvasControls() {
     }
   };
 
+  document.getElementById('canvas-connect').onclick = () => {
+    if (!activePlayground) return;
+    activePlayground.connectMode = !activePlayground.connectMode;
+    document.getElementById('canvas-connect').classList.toggle('active', activePlayground.connectMode);
+    if (!activePlayground.connectMode) {
+      activePlayground.connectingNode = null;
+      activePlayground.render();
+    }
+  };
+
   document.getElementById('canvas-simulate').onclick = () => {
     globalIsSimulating = !globalIsSimulating;
     document.getElementById('canvas-simulate').classList.toggle('active', globalIsSimulating);
@@ -794,6 +907,8 @@ function initCanvasControls() {
     } else if (e.key === 'Escape') {
       activePlayground.selectedNode = null;
       activePlayground.connectingNode = null;
+      activePlayground.connectMode = false;
+      document.getElementById('canvas-connect').classList.remove('active');
       activePlayground.updateProps();
       activePlayground.render();
     }
@@ -820,31 +935,39 @@ function initSplitter() {
 
   let isDragging = false;
 
-  splitter.addEventListener('mousedown', (e) => {
+  function startDrag(e) {
     e.preventDefault();
     isDragging = true;
     splitter.classList.add('dragging');
     document.body.style.cursor = 'col-resize';
     document.body.style.userSelect = 'none';
-  });
-
-  document.addEventListener('mousemove', (e) => {
+  }
+  function onDrag(clientX) {
     if (!isDragging) return;
     const rect = container.getBoundingClientRect();
-    const offset = e.clientX - rect.left;
+    const offset = clientX - rect.left;
     const total = rect.width;
     const pct = Math.max(20, Math.min(80, (offset / total) * 100));
     wrapA.style.width = pct + '%';
     wrapB.style.width = (100 - pct) + '%';
-  });
-
-  document.addEventListener('mouseup', () => {
+  }
+  function endDrag() {
     if (!isDragging) return;
     isDragging = false;
     splitter.classList.remove('dragging');
     document.body.style.cursor = '';
     document.body.style.userSelect = '';
-  });
+  }
+
+  // Mouse events
+  splitter.addEventListener('mousedown', startDrag);
+  document.addEventListener('mousemove', (e) => onDrag(e.clientX));
+  document.addEventListener('mouseup', endDrag);
+
+  // Touch events
+  splitter.addEventListener('touchstart', (e) => { startDrag(e); }, { passive: false });
+  document.addEventListener('touchmove', (e) => { if (isDragging) onDrag(e.touches[0].clientX); }, { passive: true });
+  document.addEventListener('touchend', endDrag);
 }
 
 // ── Comparison Trade-Off Table ──

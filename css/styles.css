@@ -1206,6 +1206,71 @@
       .mermaid-copy-btn { display: none; }
       #mermaid-modal-toolbar { top: 8px; left: 8px; padding: 2px 4px; }
       .mm-tool-btn { width: 36px; height: 36px; }
+
+      /* Hide note TOC on mobile */
+      #note-toc { display: none !important; }
+
+      /* ── CANVAS MOBILE LAYOUT ── */
+      #canvas-screen { flex-direction: column !important; }
+      #canvas-palette {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border);
+        max-height: 56px;
+        flex-direction: row !important;
+        overflow: hidden;
+      }
+      #canvas-palette > div:first-child { display: none; }
+      #palette-list {
+        display: flex !important;
+        flex-direction: row !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        padding: 6px 8px !important;
+        gap: 6px !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      #palette-list::-webkit-scrollbar { display: none; }
+      #palette-list .palette-item {
+        flex-shrink: 0 !important;
+        padding: 6px 10px !important;
+        margin-bottom: 0 !important;
+        font-size: 11px !important;
+        white-space: nowrap;
+      }
+      #canvas-props {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        max-height: 40vh;
+        border-left: none !important;
+        border-top: 1px solid var(--border);
+        z-index: 60;
+        overflow-y: auto;
+        border-radius: 12px 12px 0 0;
+      }
+      #canvas-toolbar {
+        flex-wrap: wrap !important;
+        padding: 8px !important;
+        gap: 6px !important;
+      }
+      #canvas-toolbar .graph-ctrl-btn {
+        padding: 4px 8px !important;
+        font-size: 10px !important;
+      }
+      #canvas-scale-control {
+        margin-left: 0 !important;
+        width: 100%;
+        justify-content: center;
+      }
+      #canvas-scale-control input[type="range"] { flex: 1; max-width: 140px; }
+      #canvas-comparison-table { font-size: 10px !important; padding: 8px 12px !important; }
+      #canvas-comparison-table th, #canvas-comparison-table td { padding: 4px 6px !important; }
+      #canvas-splitter { display: none !important; }
+      #canvas-hint { font-size: 9px !important; padding: 4px 10px !important; }
     }
     @media (max-width: 480px) {
       #search-wrap { display: none; }
