@@ -155,6 +155,17 @@ graph TD
 
 2. A colleague says "we chose Cassandra because it's AP and we need high availability." Unpack this statement. What's correct? What's misleading? What questions should you ask about their actual consistency requirements?
 
+## Common Interview Scenarios
+
+**Q: Is Cassandra CP or AP?**
+Skeleton: Cassandra is PA/EL by default (available during partitions, lower latency during normal operation). With `QUORUM` consistency on reads AND writes, it becomes more PC/EL — it will reject requests rather than return stale data when quorum isn't reachable. The correct answer requires nuance: Cassandra's consistency model is tunable per-operation, not a fixed global choice. The follow-up to probe depth: "What does `LOCAL_QUORUM` do in a multi-datacenter deployment?"
+
+**Q: What does PACELC add that CAP doesn't capture?**
+Skeleton: CAP only addresses behavior under network partitions (a rare event). PACELC adds the "Else" case — during normal operation (no partition), there's still a trade-off between **Latency** and **Consistency**. A system can be PC (consistent under partition) but EL (low latency, eventual consistency, during normal operation) — like DynamoDB. Or PC and EC (consistent even during normal operation) — like HBase. CAP says nothing about the normal-operation trade-off; PACELC makes it explicit.
+
+**Q: Design a globally distributed database — what consistency model would you choose?**
+Skeleton: Start with the business requirements: can the application tolerate stale reads? For a social media feed — PA/EL is fine (eventual consistency, staleness ≤ a few seconds). For a payment ledger — PC/EC is required (no stale reads, no concurrent writes to the same account). Then identify the cost: PC/EC requires cross-region synchronous replication (adds 50–200ms write latency). If the application cannot tolerate that latency, consider a hybrid: PC/EC only for the critical path (balance check, payment commit); PA/EL for the non-critical path (activity feed, notification history).
+
 ## Canonical Sources
 
 - *Designing Data-Intensive Applications* by Martin Kleppmann — Chapter 9: "Consistency and Consensus" includes the most lucid critique of CAP and explanation of its limitations

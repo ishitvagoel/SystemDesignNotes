@@ -12,6 +12,7 @@ These topics share a common thread: they all require carefully orchestrated dist
 
 - [[RAG Architecture]] — The full pipeline: chunking strategies, embedding models, vector retrieval, hybrid search, re-ranking, context window management, and enterprise patterns (multi-index, query routing, evaluation)
 - [[Agentic System Architecture]] — ReAct loops, multi-agent patterns (hierarchical, horizontal), tool use, memory (short and long-term), guardrails, and observability for multi-step reasoning chains
+- [[Agent Reliability Patterns]] — Tool-call error taxonomy (retryable vs non-retryable vs LLM-specific), idempotency keys, checkpoint-and-resume, circuit breakers for LLM APIs, and the graceful degradation ladder
 - [[Real-Time Collaboration]] — WebSocket scaling, CRDTs vs Operational Transform, presence systems, CDC-to-frontend pipelines, and the architecture behind collaborative editors
 
 ## Prerequisites

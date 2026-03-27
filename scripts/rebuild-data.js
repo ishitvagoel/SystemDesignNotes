@@ -132,12 +132,21 @@ async function rebuild() {
         for (const item of items) {
           const cleaned = item.replace(/^\d+\.\s*/, '').trim();
           if (cleaned.length > 20) {
+            // Infer difficulty from question keywords
+            const lower = cleaned.toLowerCase();
+            let difficulty = 'medium';
+            if (/\bdesign\b|\bcompare\b|\btrade.off\b|\bcalculate\b|\bestimate\b|\barchitect\b/.test(lower)) {
+              difficulty = 'hard';
+            } else if (/\bdefine\b|\bwhat is\b|\bname\b|\blist\b/.test(lower)) {
+              difficulty = 'easy';
+            }
             studyPrompts.push({
               text: cleaned,
               noteId: id,
               noteTitle: noteMeta.title,
               folder: noteMeta.folder,
-              mentalSnippet: mentalSnippet
+              mentalSnippet: mentalSnippet,
+              difficulty
             });
           }
         }

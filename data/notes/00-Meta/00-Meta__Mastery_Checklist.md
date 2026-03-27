@@ -56,6 +56,7 @@ pie title Knowledge Distribution
 - [ ] Collaborative Editor — CRDT vs OT decision, WebSocket scaling, presence, cell-based document isolation
 - [ ] AI Search Platform — Hybrid retrieval, re-ranking, semantic caching, multi-provider LLM routing, cost breakdown
 - [ ] Multi-Region E-Commerce — Data classification by consistency/sovereignty/latency, per-type strategy
+- [ ] Feature Flag Platform — Flag evaluation pipeline (< 1ms p99, in-memory cache), SDK push vs pull, A/B experiment analytics (Welch's t-test, MDE calculation), stale flag cleanup
 
 ---
-*Last content update: March 2026. Vault covers developments through early 2026 including Kafka 4.0/KRaft, reasoning models, EAGLE-3 speculative decoding, GraphRAG, ColBERT late interaction, MCP/A2A protocols, passkeys/FIDO2, post-quantum cryptography standards, WASI 0.2 Component Model, and zero-trust architecture (SPIFFE/SPIRE, OPA).*
+*Last content update: March 2026. Vault covers developments through early 2026 including Kafka 4.0/KRaft, reasoning models, EAGLE-3 speculative decoding, GraphRAG, ColBERT late interaction, MCP/A2A protocols, passkeys/FIDO2, post-quantum cryptography standards, WASI 0.2 Component Model, zero-trust architecture (SPIFFE/SPIRE, OPA), eBPF kernel observability, and agent reliability patterns.*

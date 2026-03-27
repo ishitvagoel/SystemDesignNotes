@@ -12,6 +12,7 @@ Modern deployment has evolved far beyond "push to prod and pray." Progressive de
 
 - [[Observability and Alerting]] — The three pillars (metrics, logs, traces), OpenTelemetry as the convergence standard, eBPF-powered deep observability, burn-rate alerting, and why dashboards are not observability
 - [[Distributed Tracing Deep Dive]] — Span data model, context propagation (W3C traceparent), OpenTelemetry collector architecture, head-based vs tail-based vs adaptive sampling, trace storage backends, and cardinality pitfalls
+- [[eBPF and Kernel Observability]] — eBPF program types (kprobe, XDP, LSM), the verifier safety model, BPF maps, CO-RE portability, and production use cases (Cilium, Parca, Falco, Cloudflare XDP)
 - [[Feature Flags and Safe Deployment]] — Flag types, evaluation semantics, progressive delivery integration, stale flag cleanup, and circuit breaker interaction
 - [[Deployment and Release Engineering]] — Blue-green, canary, feature flags, progressive delivery, GitOps with ArgoCD/Flux, automated rollback strategies, and the critical difference between deployment and release
 
