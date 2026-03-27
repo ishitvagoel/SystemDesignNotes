@@ -7,7 +7,8 @@
 
 [![Live Demo](https://img.shields.io/badge/🌐%20Live%20Demo-ishitvagoel.github.io%2FSystemDesignNotes-4f46e5?style=for-the-badge)](https://ishitvagoel.github.io/SystemDesignNotes/)
 [![Version](https://img.shields.io/badge/version-v2.0-22c55e?style=for-the-badge)](https://ishitvagoel.github.io/SystemDesignNotes/changelog.html)
-[![License](https://img.shields.io/badge/license-MIT-f59e0b?style=for-the-badge)](LICENSE)
+[![Code License: MIT](https://img.shields.io/badge/code-MIT-f59e0b?style=for-the-badge)](LICENSE)
+[![Notes License: CC BY-NC-SA 4.0](https://img.shields.io/badge/notes-CC%20BY--NC--SA%204.0-ef4444?style=for-the-badge)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/ishitvagoel/SystemDesignNotes?style=for-the-badge&color=ec4899)](https://github.com/ishitvagoel/SystemDesignNotes/stargazers)
 
 </div>
@@ -143,7 +144,8 @@ This vault is **open to contributions** — new notes, corrections, diagram impr
 
 ---
 
-MIT License © 2026 [Ishitva Goel](https://github.com/ishitvagoel)
+**Code** (js/, css/, index.html) — [MIT License](LICENSE) © 2026 [Ishitva Goel](https://github.com/ishitvagoel)
+**Notes** (data/notes/) — [CC BY-NC-SA 4.0](LICENSE) — free to share & adapt with attribution, non-commercial only
 
 *Built with ❤️, vanilla JS, and an unhealthy obsession with distributed systems.*
 
