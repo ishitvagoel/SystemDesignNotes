@@ -208,6 +208,17 @@ graph TD
 
 2. A cache entry that takes 2 seconds to compute (it aggregates data from 3 services) expires. In the next 100ms, 500 concurrent requests arrive for that key. Without stampede prevention, all 500 hit the backend. With a lock-based approach, 499 wait for one request to finish. The 499 requests now have 2+ seconds of added latency. Is this better or worse than the stampede? What's the optimal approach?
 
+## Common Interview Scenarios
+
+**Q: Which cache pattern do you use for a leaderboard?**
+Skeleton: Write-through or write-behind for the sorted set (Redis `ZSET`). Reads always go to Redis (cache-aside would introduce a race between concurrent score updates). The leaderboard data is derived from write events — every time a user scores points, update both the database and the Redis ZSET atomically (or use write-behind with a Lua script for atomicity). Never use read-through for a leaderboard — the read path doesn't know how to reconstruct a sorted set from the source; only the write path does.
+
+**Q: How do you handle cache stampede under high traffic?**
+Skeleton: Three approaches, each with trade-offs: (1) **Mutex/lock** — one request rebuilds, others wait. Simple but adds latency for all waiters. (2) **Probabilistic early expiration (XFetch)** — recompute before TTL expires with a probability that increases as TTL approaches zero. Zero additional infrastructure, no lock contention, minor risk of over-computing. (3) **Background refresh** — a dedicated job recomputes the cache entry before it expires; application always reads from cache (never a miss). Best for predictable, high-value keys. The follow-up to probe depth: "What happens to the background refresh job if the backend is down?"
+
+**Q: What's the risk of write-behind caching for financial data?**
+Skeleton: Write-behind (write-back) acknowledges the write to the client before persisting to the database — the cache absorbs the write and flushes asynchronously. For financial data, this means: if the cache node fails before flushing, you lose confirmed writes (money). The risk is data loss, not just staleness. Financial data should use write-through (both cache and database written before acknowledging) or skip the cache entirely for the write path and use the database as the system of record. Write-behind is acceptable for non-durable, recomputable data (session state, analytics counters).
+
 ## Canonical Sources
 
 - *Designing Data-Intensive Applications* by Martin Kleppmann — Chapter 5 discusses caching in the context of replication and consistency

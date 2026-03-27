@@ -153,6 +153,7 @@ graph TD
 - [[Deployment and Release Engineering]] — Canary analysis uses observability data to detect regressions
 - [[Incident Management]] — Observability enables rapid detection and diagnosis
 - [[Distributed Tracing Deep Dive]] — Deep dive on sampling strategies, OTel collector architecture, and trace storage backends
+- [[eBPF and Kernel Observability]] — Zero-instrumentation observability via kernel programs; production use in Cilium, Parca, Falco, and Cloudflare XDP
 
 ## Reflection Prompts
 

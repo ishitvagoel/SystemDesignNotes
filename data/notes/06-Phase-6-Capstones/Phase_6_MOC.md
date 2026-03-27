@@ -9,6 +9,9 @@ Each capstone walks through the full design evolution of a real system: requirem
 3. [[Capstone — Payments and Orders]] — Distributed transactions, idempotency, saga patterns, event sourcing
 4. [[Capstone — Collaborative Editor]] — CRDTs/OT, WebSockets, presence, conflict resolution
 5. [[Capstone — AI Search and Chat Platform]] — RAG pipeline, vector search, LLM gateway, semantic caching, agentic tool use
+6. [[Capstone — Multi-Region E-Commerce]] — Data classification by consistency/sovereignty/latency, per-type replication strategy, global routing
+7. [[Capstone — Feature Flag Platform]] — Flag evaluation pipeline, SDK design (push vs pull), A/B experiment analytics, stale flag cleanup
+
 ## The Capstone Loop
 
 ```mermaid

@@ -153,6 +153,7 @@ flowchart TD
 - [[TLS and Certificate Management]] — mTLS is the transport mechanism; SPIFFE/SPIRE is the identity framework on top of it
 - [[Threat Modeling for Distributed Systems]] — Zero-trust addresses lateral movement threats (STRIDE: Elevation of Privilege, Spoofing)
 - [[gRPC Deep Dive]] — gRPC interceptors enforce mTLS and SVID validation for every service call
+- [[eBPF and Kernel Observability]] — eBPF LSM hooks provide the enforcement plane for network micro-segmentation and runtime security policy
 
 ## Reflection Prompts
 

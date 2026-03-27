@@ -116,6 +116,7 @@ graph TD
 - [[Observability and Alerting]] — Agent-specific observability extends traditional distributed tracing
 - [[Semantic Caching and Prompt Caching]] — Agent tool results can be semantically cached; provider-side prompt caching reduces cost for repeated reasoning prefixes
 - [[Idempotency]] — Tool calls with side effects require idempotency keys to support safe retry
+- [[Agent Reliability Patterns]] — Detailed treatment of retry/backoff, idempotency key design, circuit breakers for LLM APIs, and the graceful degradation ladder
 
 ## Canonical Sources
 

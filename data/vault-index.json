@@ -1110,6 +1110,16 @@
     "module": 17
   },
   {
+    "id": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__eBPF_and_Kernel_Observability",
+    "title": "eBPF and Kernel Observability",
+    "folder": "03-Phase-3-Architecture-Operations",
+    "subfolder": "Module-17-Observability-Deployment",
+    "filename": "03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__eBPF_and_Kernel_Observability.md",
+    "is_moc": false,
+    "phase": 3,
+    "module": 17
+  },
+  {
     "id": "Module_Module_17_MOC",
     "title": "Module 17: Observability, Deployment & Release Engineering",
     "folder": "03-Phase-3-Architecture-Operations",
@@ -1198,6 +1208,16 @@
     "is_moc": true,
     "phase": 4,
     "module": 19
+  },
+  {
+    "id": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agent_Reliability_Patterns",
+    "title": "Agent Reliability Patterns",
+    "folder": "04-Phase-4-Modern-AI",
+    "subfolder": "Module-20-RAG-Agents-Realtime",
+    "filename": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agent_Reliability_Patterns.md",
+    "is_moc": false,
+    "phase": 4,
+    "module": 20
   },
   {
     "id": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agentic_System_Architecture",
@@ -1395,6 +1415,16 @@
     "folder": "06-Phase-6-Capstones",
     "subfolder": null,
     "filename": "06-Phase-6-Capstones__Capstone_—_Collaborative_Editor.md",
+    "is_moc": false,
+    "phase": 6,
+    "module": 0
+  },
+  {
+    "id": "06-Phase-6-Capstones__Capstone_—_Feature_Flag_Platform",
+    "title": "Capstone — Feature Flag Platform",
+    "folder": "06-Phase-6-Capstones",
+    "subfolder": null,
+    "filename": "06-Phase-6-Capstones__Capstone_—_Feature_Flag_Platform.md",
     "is_moc": false,
     "phase": 6,
     "module": 0

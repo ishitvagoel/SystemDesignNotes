@@ -178,6 +178,17 @@ stateDiagram-v2
 
 2. Your Raft cluster spans three data centers: 2 nodes in DC-A, 2 in DC-B, 1 in DC-C. DC-A loses network connectivity to both DC-B and DC-C. What happens to reads and writes in each DC? Is there a better node placement strategy?
 
+## Common Interview Scenarios
+
+**Q: Walk me through how Raft elects a leader.**
+Skeleton: All nodes start as followers. After an election timeout (randomized 150–300ms) without hearing from a leader, a follower becomes a candidate, increments its term, votes for itself, and sends RequestVote RPCs. A candidate wins if it receives votes from a majority of nodes. Key detail: a node only votes for a candidate whose log is at least as up-to-date as its own (prevents nodes with stale logs from becoming leaders). If no candidate wins (split vote), a new term starts with new randomized timeouts.
+
+**Q: What happens if the network partitions during a Raft election?**
+Skeleton: Describe the minority/majority split: the majority partition can elect a new leader and continue making progress (quorum = ⌊N/2⌋ + 1). The minority partition cannot elect a leader (can't get majority votes) — it stalls. Any old leader in the minority partition discovers it's deposed when it tries to commit entries and can't get a quorum of acknowledgments. Crucially, the minority partition cannot commit new entries — no split-brain. When the partition heals, the node with the higher term wins; the old leader steps down.
+
+**Q: What's the difference between Raft log replication and Two-Phase Commit?**
+Skeleton: Both get a majority/all participants to agree before committing. Key differences: (1) **Failure model** — 2PC blocks if the coordinator crashes; Raft elects a new leader and continues. (2) **Quorum** — 2PC requires all participants; Raft requires a majority (can tolerate minority failures). (3) **Use case** — 2PC commits a distributed transaction across heterogeneous systems; Raft replicates a log for a single consistent state machine. Raft is fault-tolerant by design; 2PC is not.
+
 ## Canonical Sources
 
 - Ongaro & Ousterhout, "In Search of an Understandable Consensus Algorithm" (2014) — the Raft paper. Clear, well-written, and includes the TLA+ specification. Essential reading.
