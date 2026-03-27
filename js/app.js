@@ -93,6 +93,39 @@ function saveCompleted() { localStorage.setItem('sdn-complete', JSON.stringify([
 function saveBookmarks() { localStorage.setItem('sdn-bookmarks', JSON.stringify([...bookmarkedNotes])); }
 function saveRatings() { localStorage.setItem('sdn-ratings', JSON.stringify(studyRatings)); }
 
+// ── DEEP LINK HELPERS ──
+// Suppress pushState when we're already handling a popstate navigation
+let _historyNavigating = false;
+
+function resolveNoteFromSlug(slug) {
+  if (!slug) return null;
+  const raw = decodeURIComponent(slug).trim();
+  // 1. Exact id match
+  let note = FILTERED_INDEX.find(n => n.id === raw);
+  if (note) return note;
+  // 2. Filename match (without .md extension)
+  note = FILTERED_INDEX.find(n => n.filename && n.filename.replace(/\.md$/i, '') === raw);
+  if (note) return note;
+  // 3. Title-slug match: lowercase, collapse non-alphanumeric to hyphens
+  const toSlug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const targetSlug = toSlug(raw);
+  note = FILTERED_INDEX.find(n => toSlug(n.title) === targetSlug);
+  if (note) return note;
+  // 4. Partial title-slug: note slug contains the query slug
+  note = FILTERED_INDEX.find(n => toSlug(n.title).includes(targetSlug));
+  return note || null;
+}
+
+function resolveDeepLink() {
+  const params = new URLSearchParams(location.search);
+  const fromQuery = params.get('note');
+  if (fromQuery) return resolveNoteFromSlug(fromQuery);
+  // Fall back to hash (strip leading #)
+  const hash = location.hash.replace(/^#/, '');
+  if (hash) return resolveNoteFromSlug(hash);
+  return null;
+}
+
 function estimateReadTime(markdown) {
   const words = markdown.trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.round(words / 200));
@@ -435,6 +468,11 @@ async function openNote(id) {
   updateSidebarActive();
   if (outlineActive) buildOutline(id);
   persistTabs();
+
+  // Update URL so this note can be shared as a deep link
+  if (!_historyNavigating) {
+    history.pushState({ noteId: id }, '', '?note=' + encodeURIComponent(id));
+  }
 }
 
 function persistTabs() {
@@ -911,6 +949,9 @@ function showWelcome() {
   document.getElementById('note-screen').style.display = 'none';
   document.getElementById('search-screen').style.display = 'none';
   document.getElementById('outline-screen').style.display = 'none';
+  if (!_historyNavigating) {
+    history.replaceState({}, '', location.pathname);
+  }
 }
 
 // ── SEARCH ──
@@ -1123,10 +1164,14 @@ document.addEventListener('keydown', e => {
 
 // ── WELCOME STATS ──
 function renderWelcomeStats() {
-  const phases = new Set(FILTERED_INDEX.map(n => n.folder)).size;
   const notes = FILTERED_INDEX.filter(n => !n.is_moc).length;
   const mods = new Set(FILTERED_INDEX.map(n => n.subfolder).filter(Boolean)).size;
+  // Count only numbered phases (folders that start with a digit), not Meta
+  const phases = new Set(
+    FILTERED_INDEX.map(n => n.folder).filter(f => /^\d/.test(f))
+  ).size;
   const completed = [...completedNotes].filter(id => FILTERED_INDEX.find(n => n.id === id)).length;
+
   const stats = [
     { num: notes, label: 'Notes' },
     { num: mods, label: 'Modules' },
@@ -1140,6 +1185,12 @@ function renderWelcomeStats() {
       <div class="stat-label">${s.label}</div>
     </div>
   `).join('');
+
+  // Update subtitle with real numbers so it never drifts out of sync
+  const sub = document.getElementById('welcome-sub');
+  if (sub) {
+    sub.textContent = `Your complete system design knowledge base — ${notes} notes · ${mods} modules · ${phases} phases. Click any note to open it, or search with Ctrl+K.`;
+  }
 }
 
 // ── INIT ──
@@ -1185,29 +1236,43 @@ async function init() {
   fetch('data/search-index.json').then(r => r.json()).then(data => SEARCH_INDEX = data).catch(console.error);
   fetch('data/graph-edges.json').then(r => r.json()).then(data => GRAPH_EDGES = data).catch(console.error);
 
-  // Restore persisted tabs
-  try {
-    const savedTabs = JSON.parse(localStorage.getItem('sdn-open-tabs') || '[]');
-    const savedActive = localStorage.getItem('sdn-active-tab');
-    if (savedTabs.length > 0) {
-      for (const id of savedTabs) {
-        const note = FILTERED_INDEX.find(n => n.id === id);
-        if (!note) continue;
-        if (!tabs.includes(id)) tabs.push(id);
-        // Pre-fetch note content
-        if (!NOTE_CACHE[id]) {
-          const path = note.subfolder
-            ? `data/notes/${note.folder}/${note.subfolder}/${note.filename}`
-            : `data/notes/${note.folder}/${note.filename}`;
-          fetch(path).then(r => r.ok ? r.text() : '').then(md => { NOTE_CACHE[id] = md; }).catch(() => {});
+  // Deep link takes priority over saved tabs.
+  // Resolve ?note= or #hash from the URL before restoring session state.
+  const deepLinked = resolveDeepLink();
+  if (deepLinked) {
+    _historyNavigating = true;
+    await openNote(deepLinked.id);
+    _historyNavigating = false;
+    // Stamp the resolved note id onto the current history entry so popstate works
+    history.replaceState({ noteId: deepLinked.id }, '', '?note=' + encodeURIComponent(deepLinked.id));
+  } else {
+    // Restore persisted tabs from previous session
+    try {
+      const savedTabs = JSON.parse(localStorage.getItem('sdn-open-tabs') || '[]');
+      const savedActive = localStorage.getItem('sdn-active-tab');
+      if (savedTabs.length > 0) {
+        for (const id of savedTabs) {
+          const note = FILTERED_INDEX.find(n => n.id === id);
+          if (!note) continue;
+          if (!tabs.includes(id)) tabs.push(id);
+          // Pre-fetch note content
+          if (!NOTE_CACHE[id]) {
+            const path = note.subfolder
+              ? `data/notes/${note.folder}/${note.subfolder}/${note.filename}`
+              : `data/notes/${note.folder}/${note.filename}`;
+            fetch(path).then(r => r.ok ? r.text() : '').then(md => { NOTE_CACHE[id] = md; }).catch(() => {});
+          }
+        }
+        renderTabs();
+        if (savedActive && tabs.includes(savedActive)) {
+          _historyNavigating = true;
+          await openNote(savedActive);
+          _historyNavigating = false;
+          history.replaceState({ noteId: savedActive }, '', '?note=' + encodeURIComponent(savedActive));
         }
       }
-      renderTabs();
-      if (savedActive && tabs.includes(savedActive)) {
-        openNote(savedActive);
-      }
-    }
-  } catch (e) { /* ignore corrupt tab state */ }
+    } catch (e) { /* ignore corrupt tab state */ }
+  }
 
   // First-visit onboarding
   if (!localStorage.getItem('sdn-onboarded')) {
@@ -1220,6 +1285,25 @@ async function init() {
   }
 }
 init();
+
+// ── POPSTATE (browser back / forward) ──
+window.addEventListener('popstate', (e) => {
+  const id = e.state && e.state.noteId;
+  if (id) {
+    _historyNavigating = true;
+    openNote(id).finally(() => { _historyNavigating = false; });
+  } else {
+    // No note state → back to welcome
+    _historyNavigating = true;
+    activeTabId = null;
+    tabs = [];
+    openTabs = {};
+    showWelcome();
+    renderTabs();
+    _historyNavigating = false;
+  }
+});
+
 // ── MOBILE SIDEBAR TOGGLE ──
 const mobileToggle = document.getElementById('mobile-toggle');
 const sidebarOverlay = document.getElementById('sidebar-overlay');
