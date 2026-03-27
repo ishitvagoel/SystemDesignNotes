@@ -1054,23 +1054,30 @@ function buildOutline(id) {
 // ── RESIZE HANDLE ──
 const resizeHandle = document.getElementById('resize-handle');
 let resizing = false;
-resizeHandle.addEventListener('mousedown', e => {
+function startResize() {
   resizing = true;
   document.body.style.cursor = 'col-resize';
   document.body.style.userSelect = 'none';
-});
-document.addEventListener('mousemove', e => {
+}
+function doResize(clientX) {
   if (!resizing) return;
   const sidebar = document.getElementById('sidebar');
-  const newW = Math.min(Math.max(180, e.clientX), 480);
+  const newW = Math.min(Math.max(180, clientX), 480);
   sidebar.style.width = newW + 'px';
   sidebar.style.minWidth = newW + 'px';
-});
-document.addEventListener('mouseup', () => {
+}
+function endResize() {
   resizing = false;
   document.body.style.cursor = '';
   document.body.style.userSelect = '';
-});
+}
+resizeHandle.addEventListener('mousedown', startResize);
+document.addEventListener('mousemove', e => doResize(e.clientX));
+document.addEventListener('mouseup', endResize);
+// Touch support
+resizeHandle.addEventListener('touchstart', (e) => { e.preventDefault(); startResize(); }, { passive: false });
+document.addEventListener('touchmove', (e) => { if (resizing) doResize(e.touches[0].clientX); }, { passive: true });
+document.addEventListener('touchend', endResize);
 
 // ── VIEW BUTTONS ──
 document.getElementById('view-files').addEventListener('click', () => {
@@ -2027,6 +2034,44 @@ window.addEventListener('mouseup', () => {
     const svgContainer = document.getElementById('mermaid-modal-svg');
     if (svgContainer) svgContainer.style.cursor = '';
   }
+});
+
+// Touch pan support for mermaid modal
+const mmSvgContainer = document.getElementById('mermaid-modal-svg');
+mmSvgContainer.addEventListener('touchstart', (e) => {
+  if (e.touches.length === 1) {
+    mmDragging = true;
+    mmDragStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    mmPanStart = { x: mmPanX, y: mmPanY };
+  } else if (e.touches.length === 2) {
+    // Pinch zoom start
+    mmDragging = false;
+    mmSvgContainer._pinchStart = Math.hypot(
+      e.touches[1].clientX - e.touches[0].clientX,
+      e.touches[1].clientY - e.touches[0].clientY
+    );
+    mmSvgContainer._pinchZoomStart = mmZoom;
+  }
+}, { passive: true });
+mmSvgContainer.addEventListener('touchmove', (e) => {
+  if (e.touches.length === 1 && mmDragging) {
+    e.preventDefault();
+    mmPanX = mmPanStart.x + (e.touches[0].clientX - mmDragStart.x) / mmZoom;
+    mmPanY = mmPanStart.y + (e.touches[0].clientY - mmDragStart.y) / mmZoom;
+    applyMmTransform();
+  } else if (e.touches.length === 2 && mmSvgContainer._pinchStart) {
+    e.preventDefault();
+    const dist = Math.hypot(
+      e.touches[1].clientX - e.touches[0].clientX,
+      e.touches[1].clientY - e.touches[0].clientY
+    );
+    const scale = dist / mmSvgContainer._pinchStart;
+    mmSetZoom(mmSvgContainer._pinchZoomStart * scale);
+  }
+}, { passive: false });
+mmSvgContainer.addEventListener('touchend', () => {
+  mmDragging = false;
+  mmSvgContainer._pinchStart = null;
 });
 
 function closeMermaidModal() {
