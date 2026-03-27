@@ -818,15 +818,18 @@ function initCanvasControls() {
     }
   };
 
-  document.getElementById('canvas-connect').onclick = () => {
-    if (!activePlayground) return;
-    activePlayground.connectMode = !activePlayground.connectMode;
-    document.getElementById('canvas-connect').classList.toggle('active', activePlayground.connectMode);
-    if (!activePlayground.connectMode) {
-      activePlayground.connectingNode = null;
-      activePlayground.render();
-    }
-  };
+  const connectBtn = document.getElementById('canvas-connect');
+  if (connectBtn) {
+    connectBtn.onclick = () => {
+      if (!activePlayground) return;
+      activePlayground.connectMode = !activePlayground.connectMode;
+      connectBtn.classList.toggle('active', activePlayground.connectMode);
+      if (!activePlayground.connectMode) {
+        activePlayground.connectingNode = null;
+        activePlayground.render();
+      }
+    };
+  }
 
   document.getElementById('canvas-simulate').onclick = () => {
     globalIsSimulating = !globalIsSimulating;
@@ -909,7 +912,8 @@ function initCanvasControls() {
       activePlayground.selectedNode = null;
       activePlayground.connectingNode = null;
       activePlayground.connectMode = false;
-      document.getElementById('canvas-connect').classList.remove('active');
+      const cBtn = document.getElementById('canvas-connect');
+      if (cBtn) cBtn.classList.remove('active');
       activePlayground.updateProps();
       activePlayground.render();
     }

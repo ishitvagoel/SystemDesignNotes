@@ -2,7 +2,7 @@
  * System Design Vault — Service Worker
  * Cache-first for static assets, network-first for data indexes.
  */
-const CACHE_NAME = 'sdv-cache-v2';
+const CACHE_NAME = 'sdv-cache-v3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
