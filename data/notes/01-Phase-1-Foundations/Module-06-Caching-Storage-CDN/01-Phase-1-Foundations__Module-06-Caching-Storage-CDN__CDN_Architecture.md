@@ -21,7 +21,7 @@ Imagine a chain of pizza restaurants. The original kitchen is in New York (origi
 sequenceDiagram
     participant User
     participant Edge as CDN Edge PoP
-    participant Shield as Origin Shield (optional)
+    participant Shield as Origin Shield
     participant Origin as Origin Server
 
     User->>Edge: GET /images/hero.jpg

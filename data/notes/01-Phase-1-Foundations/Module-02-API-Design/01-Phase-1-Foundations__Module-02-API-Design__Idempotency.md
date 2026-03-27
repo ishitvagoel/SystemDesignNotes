@@ -119,7 +119,7 @@ This is the key insight: **exactly-once semantics = at-least-once delivery + ide
 sequenceDiagram
     participant Client
     participant API as API Gateway
-    participant Store as Redis (Idemp Store)
+    participant Store as Redis Idempotency Store
     participant DB as Main Database
 
     Client->>API: POST /orders (Key: uuid-123)
