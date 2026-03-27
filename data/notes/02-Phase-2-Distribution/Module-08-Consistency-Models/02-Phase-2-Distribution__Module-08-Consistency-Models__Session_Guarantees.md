@@ -119,9 +119,9 @@ The most general implementation:
 ```mermaid
 sequenceDiagram
     participant User as User Browser
-    participant LB as Load Balancer (Session Aware)
-    participant R1 as Replica A (Lag: 5ms)
-    participant R2 as Replica B (Lag: 200ms)
+    participant LB as Session-Aware Load Balancer
+    participant R1 as Replica A - Fast
+    participant R2 as Replica B - Slow
     participant DB as Primary DB
 
     User->>DB: 1. POST /profile (Update Name)
