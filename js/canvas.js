@@ -5,6 +5,7 @@
 
 class CanvasEngine {
   constructor(svgId, stateKey = 'system-design-canvas-state', isPrimary = false) {
+    this.svgId = svgId;
     this.stateKey = stateKey;
     this.isPrimary = isPrimary;
     this.svg = d3.select(svgId);
@@ -45,7 +46,7 @@ class CanvasEngine {
     // Arrow marker definition for directional links
     const defs = this.svg.append('defs');
     defs.append('marker')
-      .attr('id', 'arrow-' + svgId.replace(/[^a-z0-9]/gi, ''))
+      .attr('id', 'arrow-' + this.svgId.replace(/[^a-z0-9]/gi, ''))
       .attr('viewBox', '0 0 10 6')
       .attr('refX', 10)
       .attr('refY', 3)
@@ -55,7 +56,7 @@ class CanvasEngine {
       .append('path')
       .attr('d', 'M0,0 L10,3 L0,6 Z')
       .attr('fill', 'var(--border2)');
-    this.arrowMarkerId = 'arrow-' + svgId.replace(/[^a-z0-9]/gi, '');
+    this.arrowMarkerId = 'arrow-' + this.svgId.replace(/[^a-z0-9]/gi, '');
 
     // Temporary line for drag-to-connect
     this.dragLine = this.container.append('line')
