@@ -186,6 +186,7 @@ graph TD
 - [[MVCC Deep Dive]] — Index entries must account for MVCC visibility (Postgres includes dead tuples in indexes)
 - [[Partitioning and Sharding]] — Partition pruning + local indexes vs global indexes is a key design decision
 - [[Full-Text Search Architecture]] — GIN indexes power full-text search in Postgres
+- [[Query Optimization and EXPLAIN]] — How the cost-based optimizer uses index statistics to choose access methods; EXPLAIN output interpretation
 
 ## Reflection Prompts
 

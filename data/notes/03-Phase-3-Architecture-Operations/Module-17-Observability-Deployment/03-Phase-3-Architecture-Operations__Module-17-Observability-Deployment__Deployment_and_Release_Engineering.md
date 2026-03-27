@@ -121,6 +121,7 @@ graph TD
 - [[Observability and Alerting]] — Canary analysis requires observability; SLI monitoring drives promotion/rollback
 - [[Zero-Downtime Schema Migrations]] — Database changes must be coordinated with deployment strategies
 - [[SLOs SLIs and Error Budgets]] — Error budget informs deployment velocity
+- [[Feature Flags and Safe Deployment]] — Deep dive on flag types, evaluation architecture, and safe rollout patterns
 
 ## Reflection Prompts
 

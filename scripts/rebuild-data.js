@@ -124,11 +124,11 @@ async function rebuild() {
     if (noteMeta && !noteMeta.is_moc) {
       const promptMatch = content.match(/## Reflection Prompts\s*\n([\s\S]*?)(?=\n## |$)/);
       const mentalMatch = content.match(/## Mental Model\s*\n([\s\S]*?)(?=\n## )/);
-      
+
       if (promptMatch) {
         const mentalSnippet = mentalMatch ? mentalMatch[1].trim().split('\n').slice(0, 6).join('\n') : '';
         const items = promptMatch[1].trim().split(/\n(?=\d+\.\s)/).filter(s => s.trim());
-        
+
         for (const item of items) {
           const cleaned = item.replace(/^\d+\.\s*/, '').trim();
           if (cleaned.length > 20) {
@@ -144,8 +144,45 @@ async function rebuild() {
       }
     }
 
+    // 4. Validation: Mermaid diagram presence (non-MOC notes only)
+    if (noteMeta && !noteMeta.is_moc) {
+      if (!content.includes('```mermaid')) {
+        console.warn(`⚠️  MISSING MERMAID: ${path.relative(NOTES_DIR, fullPath)} has no mermaid diagram block`);
+      }
+    }
+
+    // 5. Validation: Required section headers (non-MOC notes only)
+    if (noteMeta && !noteMeta.is_moc) {
+      const requiredSections = ['## Why This Exists', '## Reflection Prompts'];
+      for (const section of requiredSections) {
+        if (!content.includes(section)) {
+          console.warn(`⚠️  MISSING SECTION "${section}": ${path.relative(NOTES_DIR, fullPath)}`);
+        }
+      }
+    }
+
     processed++;
   });
+
+  // 6. Validation: Broken wiki-links
+  let brokenLinkCount = 0;
+  fullPaths.forEach(fullPath => {
+    const content = fs.readFileSync(fullPath, 'utf8');
+    const id = path.basename(fullPath).replace('.md', '');
+    const re = /\[\[([^\]]+)\]\]/g;
+    let m;
+    while ((m = re.exec(content)) !== null) {
+      const targetName = m[1].split('|')[0].trim();
+      const targetId = notesByTitle[normalize(targetName)];
+      if (!targetId) {
+        console.warn(`⚠️  BROKEN LINK: [[${targetName}]] in ${path.relative(NOTES_DIR, fullPath)}`);
+        brokenLinkCount++;
+      }
+    }
+  });
+  if (brokenLinkCount > 0) {
+    console.warn(`\n⚠️  Total broken wiki-links found: ${brokenLinkCount}`);
+  }
 
   fs.writeFileSync(SEARCH_INDEX_FILE, JSON.stringify(searchIndex), 'utf8');
   fs.writeFileSync(GRAPH_EDGES_FILE, JSON.stringify(graphEdges), 'utf8');

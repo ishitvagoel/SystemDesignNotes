@@ -21,10 +21,10 @@ pie title Knowledge Distribution
 ```
 
 ## Phase 1: Foundations
-- [ ] M1: Networking — DNS chain, TCP congestion control, HTTP/2 vs HTTP/3, L4 vs L7 LB, gRPC vs REST vs GraphQL
+- [ ] M1: Networking — DNS chain, TCP congestion control, HTTP/2 vs HTTP/3, L4 vs L7 LB, gRPC vs REST vs GraphQL, **gRPC streaming patterns & deadline propagation**
 - [ ] M2: API Design — REST principles, versioning strategies, rate limiting algorithms, idempotency keys, gateway patterns
 - [ ] M3: Storage Engines — B-tree vs LSM trade-offs, WAL mechanics, MVCC implementations, buffer pool sizing
-- [ ] M4: Databases — SQL vs NoSQL framework, index types, replication topologies, sharding strategies, NewSQL
+- [ ] M4: Databases — SQL vs NoSQL framework, index types, replication topologies, sharding strategies, NewSQL, **query optimizer mechanics, EXPLAIN analysis, anti-patterns (N+1, implicit type cast)**
 - [ ] M5: Data Modeling — Normalization vs denormalization, schema evolution (Protobuf/Avro), zero-downtime migrations
 - [ ] M6: Caching & CDN — Four cache patterns, invalidation strategies, stampede prevention, CDN architecture
 - [ ] M7: ID Generation — UUID v7 vs Snowflake, Lamport timestamps vs vector clocks vs HLCs
@@ -39,15 +39,15 @@ pie title Knowledge Distribution
 - [ ] M12: Architecture — Monolith-first, bounded contexts, event sourcing/CQRS, cell architecture, strangler fig
 - [ ] M13: Messaging — Queues vs streams, EDA patterns, windowing/watermarks, Lambda vs Kappa, data contracts
 - [ ] M14: Search — Inverted indexes, BM25, HNSW, hybrid search, RRF, re-ranking
-- [ ] M15: Security — TLS 1.3, mTLS/SPIFFE, OAuth2/OIDC, RBAC/ABAC/ReBAC, SLSA/Sigstore, STRIDE
-- [ ] M16: Reliability — SLOs/error budgets, circuit breakers/bulkheads, chaos engineering, blameless postmortems
-- [ ] M17: Observability — Three pillars, burn-rate alerts, OpenTelemetry, eBPF, canary/feature flags, GitOps
+- [ ] M15: Security — TLS 1.3, mTLS/SPIFFE, OAuth2/OIDC, RBAC/ABAC/ReBAC, SLSA/Sigstore, STRIDE, **zero-trust (BeyondCorp, SPIRE SVIDs, OPA policy engine, micro-segmentation)**
+- [ ] M16: Reliability — SLOs/error budgets, circuit breakers/bulkheads, chaos engineering, blameless postmortems, **RTO/RPO tiers, backup strategies (3-2-1 rule), DR drill design**
+- [ ] M17: Observability — Three pillars, burn-rate alerts, OpenTelemetry, eBPF, canary/feature flags, GitOps, **distributed tracing deep dive (tail-based sampling, span propagation, trace storage), feature flags (kill switch vs experiment vs permission)**
 - [ ] M18: Multi-Tenancy — Isolation spectrum, geo-routing, data sovereignty, FinOps, TCO
 
 ## Phase 4: Modern Infrastructure & AI
-- [ ] M19: AI Inference — Continuous batching, quantization, KV cache/PagedAttention, AI gateway, semantic caching
-- [ ] M20: RAG/Agents — RAG pipeline (chunk → embed → retrieve → rerank → generate), agent patterns, MCP/A2A
-- [ ] M21: Serverless/Platform — Cold starts, edge compute, Wasm, K8s architecture, platform engineering/IDPs
+- [ ] M19: AI Inference — Continuous batching, quantization, KV cache/PagedAttention, AI gateway, **semantic caching (vector similarity threshold, provider-side prompt caching, cache invalidation)**
+- [ ] M20: RAG/Agents — RAG pipeline (chunk → embed → retrieve → rerank → generate), agent patterns, MCP/A2A, **agent resilience (idempotent tool calls, retry/backoff, graceful degradation)**
+- [ ] M21: Serverless/Platform — Cold starts, edge compute, **WASM/WASI 0.2 (component model, startup latency, isolation density, use cases)**, K8s architecture, platform engineering/IDPs
 
 ## Capstones
 - [ ] URL Shortener — Estimation, short code generation, 301 vs 302, analytics pipeline separation
@@ -58,4 +58,4 @@ pie title Knowledge Distribution
 - [ ] Multi-Region E-Commerce — Data classification by consistency/sovereignty/latency, per-type strategy
 
 ---
-*Last content update: March 2026. Vault covers developments through early 2026 including Kafka 4.0/KRaft, reasoning models, EAGLE-3 speculative decoding, GraphRAG, ColBERT late interaction, MCP/A2A protocols, passkeys/FIDO2, and post-quantum cryptography standards.*
+*Last content update: March 2026. Vault covers developments through early 2026 including Kafka 4.0/KRaft, reasoning models, EAGLE-3 speculative decoding, GraphRAG, ColBERT late interaction, MCP/A2A protocols, passkeys/FIDO2, post-quantum cryptography standards, WASI 0.2 Component Model, and zero-trust architecture (SPIFFE/SPIRE, OPA).*

@@ -15,6 +15,7 @@ The SLO framework is particularly foundational: it gives you a quantitative lang
 - [[Circuit Breakers and Bulkheads]] — Deep dive into the two most important patterns for preventing cascading failure
 - [[Chaos Engineering and Testing]] — Principles of chaos: steady-state hypothesis, blast radius control, and tools (Chaos Monkey, Litmus, Gremlin). Plus testing strategies beyond chaos.
 - [[Incident Management]] — Incident response frameworks, blameless postmortems, on-call practices, and capacity planning
+- [[Disaster Recovery and RTO/RPO]] — RTO/RPO framework, four DR tiers (cold standby to active-active), backup architecture (3-2-1 rule), restore verification, and DR drill design
 
 ## Prerequisites
 - [[_Module 12 MOC]] — Architecture patterns (reliability depends on architectural choices)

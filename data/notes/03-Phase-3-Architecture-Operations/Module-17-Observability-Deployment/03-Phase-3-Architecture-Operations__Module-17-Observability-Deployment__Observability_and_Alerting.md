@@ -152,6 +152,7 @@ graph TD
 - [[SLOs SLIs and Error Budgets]] — SLI measurement is the core observability requirement; burn-rate alerts are the alerting mechanism
 - [[Deployment and Release Engineering]] — Canary analysis uses observability data to detect regressions
 - [[Incident Management]] — Observability enables rapid detection and diagnosis
+- [[Distributed Tracing Deep Dive]] — Deep dive on sampling strategies, OTel collector architecture, and trace storage backends
 
 ## Reflection Prompts
 

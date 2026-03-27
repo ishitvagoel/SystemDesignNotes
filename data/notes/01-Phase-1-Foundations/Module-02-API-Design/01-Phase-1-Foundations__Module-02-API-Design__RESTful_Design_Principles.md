@@ -181,6 +181,7 @@ graph TD
 ## Connections
 
 - [[gRPC vs REST vs GraphQL]] — REST in context with the other major paradigms
+- [[gRPC Deep Dive]] — When to replace REST with gRPC for internal service communication; streaming patterns REST cannot match
 - [[API Versioning and Compatibility]] — How to evolve REST APIs without breaking consumers
 - [[Idempotency]] — Why HTTP method semantics (idempotent vs not) matter for retry safety
 - [[Rate Limiting and Throttling]] — Protecting REST endpoints from abuse
