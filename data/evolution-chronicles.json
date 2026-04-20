@@ -1,0 +1,38 @@
+{
+  "systems": [
+    {
+      "id": "twitter",
+      "name": "Twitter: From Monolith to Microservices",
+      "snapshots": [
+        {
+          "id": "era-1",
+          "label": "2006: The Ruby Monolith",
+          "scale": "10K Users",
+          "narrative": "A simple CRUD app using Ruby on Rails. Bottleneck: Single DB lock contention.",
+          "nodes": [
+            { "id": "n1", "type": "app", "label": "Rails Monolith", "x": 400, "y": 200 },
+            { "id": "n2", "type": "db", "label": "MySQL", "x": 400, "y": 400 }
+          ],
+          "links": [
+            { "source": "n1", "target": "n2" }
+          ]
+        },
+        {
+          "id": "era-2",
+          "label": "2010: The Migration to JVM",
+          "scale": "1M Users",
+          "narrative": "Introduced Kestrel MQ and migrated core services to Scala/Finagle.",
+          "nodes": [
+            { "id": "n1", "type": "app", "label": "Scala Service", "x": 300, "y": 200 },
+            { "id": "n3", "type": "queue", "label": "Kestrel MQ", "x": 500, "y": 200 },
+            { "id": "n2", "type": "db", "label": "MySQL Cluster", "x": 400, "y": 400 }
+          ],
+          "links": [
+            { "source": "n1", "target": "n3" },
+            { "source": "n3", "target": "n2" }
+          ]
+        }
+      ]
+    }
+  ]
+}
