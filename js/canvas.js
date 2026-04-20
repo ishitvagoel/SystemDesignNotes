@@ -27,6 +27,9 @@ class CanvasEngine {
       { label: '5M', traffic: 5000000 },
       { label: '10M', traffic: 10000000 }
     ];
+    this.chronicles = null;
+    this.currentChronicle = null;
+    this.currentSnapshotIndex = 0;
 
     this.init();
   }
@@ -71,6 +74,7 @@ class CanvasEngine {
 
     // Load persisted state
     this.loadState();
+    this.loadChronicles();
     
     // Global click to deselect
     this.svg.on('click', (e) => {
@@ -84,6 +88,33 @@ class CanvasEngine {
     });
     this.initQuests();
     this.initScenarios();
+  }
+
+  async loadChronicles() {
+    try {
+      const res = await fetch('data/evolution-chronicles.json');
+      this.chronicles = await res.json();
+    } catch (e) {
+      console.error('Failed to load chronicles:', e);
+    }
+  }
+
+  setSnapshot(index) {
+    if (!this.currentChronicle) return;
+    this.currentSnapshotIndex = index;
+    const snapshot = this.currentChronicle.snapshots[index];
+    
+    // Update internal state
+    this.nodes = JSON.parse(JSON.stringify(snapshot.nodes));
+    this.links = snapshot.links.map(l => ({
+      source: this.nodes.find(n => n.id === l.source),
+      target: this.nodes.find(n => n.id === l.target)
+    })).filter(l => l.source && l.target);
+    
+    // Update HUD (we'll build the HUD in Task 3)
+    if (this.updateHUD) this.updateHUD(snapshot);
+    
+    this.render(); // Existing render method
   }
 
   async initScenarios() {
@@ -299,6 +330,7 @@ class CanvasEngine {
       .attr('stroke-width', 2)
       .attr('marker-end', `url(#${this.arrowMarkerId})`)
       .merge(links)
+      .transition().duration(750)
       .attr('x1', d => d.source.x)
       .attr('y1', d => d.source.y)
       .attr('x2', d => {
@@ -389,9 +421,10 @@ class CanvasEngine {
 
     const nodeMerge = nodeEnter.merge(nodes);
     
-    nodeMerge.attr('transform', d => `translate(${d.x},${d.y})`);
+    nodeMerge.transition().duration(750)
+      .attr('transform', d => `translate(${d.x},${d.y})`);
+    
     nodeMerge.select('.node-label').text(d => d.label);
-
     nodeMerge.select('rect')
       .attr('fill', d => {
         if (d.load > d.capacity) return 'rgba(222,107,138,0.3)'; // Red
