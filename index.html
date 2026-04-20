@@ -10,8 +10,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js" defer></script>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -23,7 +21,6 @@
   <div class="logo">
     <div class="logo-icon">SD</div>
     <span class="logo-text">System Design Vault</span>
-    <span class="version-badge">v2.0 · Mar 26, 2026</span>
   </div>
   <div id="search-wrap">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -35,7 +32,7 @@
     <button class="pill active" id="view-files" data-tip="File tree view">Files</button>
     <button class="pill" id="view-outline" data-tip="Current note outline">Outline</button>
     <button class="pill" id="view-graph" data-tip="Knowledge graph">Graph</button>
-    <button class="pill" id="view-canvas" data-tip="Design Playground">Canvas</button>
+    <button class="pill" id="view-canvas" data-tip="Design Playground">Canvas <span style="font-size:8px; background:var(--accent); color:#000; padding:1px 3px; border-radius:3px; margin-left:4px; font-weight:700;">NEW</span></button>
     <button class="pill pill-export" id="btn-export" data-tip="Export to Obsidian">↓ Obsidian</button>
     <button class="pill pill-study" id="view-study" data-tip="Spaced repetition study">Study</button>
     <button id="theme-toggle" class="pill" style="margin-left:8px; width:34px; padding:0; display:flex; align-items:center; justify-content:center;" data-tip="Toggle Light/Dark Mode">🌓</button>
@@ -57,18 +54,11 @@
         <div id="welcome">
           <div class="welcome-logo">⚡</div>
           <div class="welcome-title">System Design Vault</div>
-          <div class="welcome-sub" id="welcome-sub">
-            Your complete system design knowledge base. Click any note to open it, or search with Ctrl+K.
+          <div class="welcome-sub">
+            Your complete system design knowledge base — 21 modules across 4 phases, 6 capstone projects. Click any note to open it, or search with Ctrl+K.
           </div>
           <div class="welcome-stats" id="welcome-stats"></div>
           <div class="welcome-hint">Drag notes to reorder · Multiple tabs · Full-text search</div>
-        </div>
-        <div id="welcome-footer">
-          <span>System Design Vault v2.0 — March 2026</span>
-          <span class="footer-sep">·</span>
-          <a href="https://github.com/ishitvagoel/SystemDesignNotes" target="_blank" rel="noopener">GitHub</a>
-          <span class="footer-sep">·</span>
-          <a href="changelog.html" target="_blank">Changelog</a>
         </div>
       </div>
       <div id="note-screen" style="display:none; flex:1; overflow:hidden; flex-direction:row;">
@@ -104,7 +94,7 @@
         </div>
         <div id="graph-info" style="position:absolute;bottom:12px;left:12px;z-index:10;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);background:rgba(13,15,14,0.85);padding:6px 10px;border-radius:6px;border:1px solid var(--border);"></div>
         <div id="graph-minimap" style="position:absolute;bottom:12px;right:12px;z-index:10;width:160px;height:120px;background:rgba(13,15,14,0.9);border:1px solid var(--border);border-radius:6px;overflow:hidden;"></div>
-        <svg id="graph-svg" style="width:100%;height:100%;"></svg>
+        <svg id="graph-svg" style="width:100%; height:100%;"></svg>
       </div>
       <div id="study-screen" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
         <div id="study-container">
@@ -119,7 +109,6 @@
             <button id="study-reveal" class="study-btn study-btn-primary">Reveal Answer</button>
             <button id="study-next" class="study-btn study-btn-primary" style="display:none;">Next Prompt</button>
             <button id="study-open" class="study-btn study-btn-secondary" style="display:none;">Open Note</button>
-            <div class="study-keyboard-hints"><kbd>Space</kbd> reveal / easy &middot; <kbd>1</kbd> again &middot; <kbd>2</kbd> hard &middot; <kbd>3</kbd> easy &middot; <kbd>&larr;</kbd> back &middot; <kbd>Enter</kbd> open note</div>
           </div>
           <div id="study-filters">
             <span class="study-filter-label">Filter by phase:</span>
@@ -131,36 +120,38 @@
         <div id="canvas-palette" class="canvas-sidebar" style="width:200px; border-right:1px solid var(--border); background:var(--bg2); display:flex; flex-direction:column;">
           <div style="padding:16px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); text-transform:uppercase; border-bottom:1px solid var(--border);">Components</div>
           <div id="palette-list" style="flex:1; overflow-y:auto; padding:8px;"></div>
+          <div style="padding:16px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); text-transform:uppercase; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">Chronicles</div>
+          <div id="chronicles-list" style="flex:1; overflow-y:auto; padding:8px;"></div>
         </div>
         <div style="flex:1; display:flex; flex-direction:column; position:relative; overflow:hidden;">
           <div id="canvas-toolbar" style="padding:12px; display:flex; gap:8px; align-items:center; background:var(--bg2); border-bottom:1px solid var(--border);">
             <button class="graph-ctrl-btn" id="canvas-clear">Clear</button>
-            <button class="graph-ctrl-btn" id="canvas-connect">Connect</button>
             <button class="graph-ctrl-btn" id="canvas-simulate">Simulate</button>
             <button class="graph-ctrl-btn" id="canvas-compare">Compare</button>
-            <button class="graph-ctrl-btn" id="canvas-export">Export</button>
             <div id="canvas-scale-control" style="display:flex; align-items:center; gap:10px; margin-left:auto; background:rgba(13,15,14,0.85); padding:4px 12px; border-radius:20px; border:1px solid var(--border);">
               <span style="font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace;">SCALE:</span>
               <input type="range" id="canvas-scale-slider" min="0" max="7" step="1" value="0" style="width:100px; cursor:pointer;">
               <span id="canvas-scale-label" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent); min-width:70px;">1 User</span>
             </div>
           </div>
-          <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
-            <div id="canvas-split-container" style="flex:1; display:flex; flex-direction:row; overflow:hidden; background:var(--bg);">
-              <div id="canvas-stage-wrap" style="flex:1; position:relative; overflow:hidden;">
-                <div class="canvas-label" id="label-a" style="position:absolute; top:10px; right:10px; z-index:10; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); background:var(--bg2); padding:4px 8px; border-radius:4px; border:1px solid var(--border); display:none;">Design A</div>
-                <div id="canvas-hint" style="display:none;"></div>
-                <div id="canvas-sim-stats" style="display:none;"></div>
-                <svg id="canvas-svg" style="width:100%; height:100%;"></svg>
+          <div id="canvas-split-container" style="flex:1; display:flex; flex-direction:row; overflow:hidden; background:var(--bg);">
+            <div id="canvas-stage-wrap" style="flex:1; position:relative; overflow:hidden; border-right:1px solid var(--border);">
+              <div id="narrative-hud" class="hidden">
+                <div id="hud-era"></div>
+                <div id="hud-scale"></div>
+                <div id="hud-text"></div>
               </div>
-              <div id="canvas-splitter" style="display:none;"></div>
-              <div id="canvas-stage-wrap-b" style="position:relative; overflow:hidden; display:none;">
-                <div class="canvas-label" id="label-b" style="position:absolute; top:10px; right:10px; z-index:10; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); background:var(--bg2); padding:4px 8px; border-radius:4px; border:1px solid var(--border);">Design B</div>
-                <div id="canvas-sim-stats-b" style="display:none;"></div>
-                <svg id="canvas-svg-b" style="width:100%; height:100%;"></svg>
+              <div id="chronicles-slider-wrap" class="hidden">
+                <input type="range" id="evolution-slider" min="0" max="0" value="0">
+                <div id="slider-label">Era 1</div>
               </div>
+              <div class="canvas-label" id="label-a" style="position:absolute; top:10px; right:10px; z-index:10; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); background:var(--bg2); padding:4px 8px; border-radius:4px; border:1px solid var(--border); display:none;">Design A</div>
+              <svg id="canvas-svg" style="width:100%; height:100%;"></svg>
             </div>
-            <div id="canvas-comparison-table" style="display:none;"></div>
+            <div id="canvas-stage-wrap-b" style="flex:1; position:relative; overflow:hidden; display:none;">
+              <div class="canvas-label" id="label-b" style="position:absolute; top:10px; right:10px; z-index:10; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); background:var(--bg2); padding:4px 8px; border-radius:4px; border:1px solid var(--border);">Design B</div>
+              <svg id="canvas-svg-b" style="width:100%; height:100%;"></svg>
+            </div>
           </div>
         </div>
         <div id="canvas-props" class="canvas-sidebar" style="width:240px; border-left:1px solid var(--border); background:var(--bg2); padding:16px; display:none;">
@@ -172,27 +163,8 @@
   </div>
 </div>
 
-<!-- CANVAS TOOLTIP -->
-<div id="canvas-tooltip" style="display:none;"></div>
-
-<!-- MERMAID MODAL -->
-<div id="mermaid-modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:1000; align-items:center; justify-content:center; cursor:zoom-out; padding:20px;">
-  <div id="mermaid-modal-content" style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:40px; width:95vw; height:95vh; display:flex; align-items:center; justify-content:center; position:relative; cursor:default; box-shadow:0 20px 50px rgba(0,0,0,0.5);">
-    <div id="mermaid-modal-toolbar">
-      <button class="mm-tool-btn" id="mm-zoom-in" aria-label="Zoom in" title="Zoom in (+)">+</button>
-      <button class="mm-tool-btn" id="mm-zoom-out" aria-label="Zoom out" title="Zoom out (−)">−</button>
-      <button class="mm-tool-btn" id="mm-zoom-reset" aria-label="Reset zoom" title="Reset (0)">⟲</button>
-      <span id="mm-zoom-level" class="mm-zoom-label">100%</span>
-      <div class="mm-tool-sep"></div>
-      <button class="mm-tool-btn" id="mm-download" aria-label="Download SVG" title="Download SVG">↓</button>
-    </div>
-    <button id="mermaid-modal-close" style="position:absolute; top:12px; right:12px; width:36px; height:36px; border-radius:18px; background:var(--bg2); border:1px solid var(--border); color:var(--text); font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; z-index:1001; transition:all 0.2s;" aria-label="Close diagram">×</button>
-    <div id="mermaid-modal-svg" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; touch-action:manipulation;"></div>
-  </div>
-</div>
-
-<script src="js/app.js"></script>
 <script src="js/canvas.js"></script>
+<script src="js/app.js"></script>
 
 </body>
 </html>

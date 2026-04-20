@@ -1232,6 +1232,16 @@ async function init() {
   buildSidebar();
   renderWelcomeStats();
 
+  // Evolution Slider
+  const evolutionSlider = document.getElementById('canvas-scale-slider');
+  if (evolutionSlider) {
+    evolutionSlider.addEventListener('input', (e) => {
+      if (typeof playgroundA !== 'undefined' && playgroundA && playgroundA.currentChronicle) {
+        playgroundA.setSnapshot(parseInt(e.target.value));
+      }
+    });
+  }
+
   // Background loads for heavy features
   fetch('data/search-index.json').then(r => r.json()).then(data => SEARCH_INDEX = data).catch(console.error);
   fetch('data/graph-edges.json').then(r => r.json()).then(data => GRAPH_EDGES = data).catch(console.error);
@@ -1677,8 +1687,41 @@ document.getElementById('view-canvas').addEventListener('click', () => {
   document.getElementById('graph-screen').style.display = 'none';
   document.getElementById('canvas-screen').style.display = 'flex';
 
-  if (typeof initCanvas === 'function') initCanvas();
+  if (typeof initCanvas === 'function') {
+    initCanvas();
+    if (typeof loadChroniclesIntoUI === 'function') loadChroniclesIntoUI(playgroundA);
+  }
 });
+
+async function loadChroniclesIntoUI(engine) {
+  if (!engine) return;
+  await engine.loadChronicles();
+  const list = document.getElementById('chronicles-list');
+  if (!list || !engine.chronicles) return;
+  
+  list.innerHTML = '';
+  engine.chronicles.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'chronicle-item';
+    el.innerHTML = `
+      <div class="chronicle-title">${c.title}</div>
+      <div class="chronicle-desc">${c.description}</div>
+    `;
+    el.onclick = () => {
+      document.querySelectorAll('.chronicle-item').forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+      engine.currentChronicle = c;
+      engine.setSnapshot(0);
+      
+      const slider = document.getElementById('canvas-scale-slider');
+      if (slider) {
+        slider.max = c.snapshots.length - 1;
+        slider.value = 0;
+      }
+    };
+    list.appendChild(el);
+  });
+}
 
 // Update Files and Outline buttons to hide graph and canvas
 document.getElementById('view-files').addEventListener('click', () => {

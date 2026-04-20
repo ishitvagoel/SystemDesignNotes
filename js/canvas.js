@@ -117,6 +117,21 @@ class CanvasEngine {
     this.render(); // Existing render method
   }
 
+  updateHUD(snapshot) {
+    const hud = document.getElementById('narrative-hud');
+    if (!hud) return;
+    
+    hud.classList.remove('hidden');
+    document.getElementById('hud-era').textContent = snapshot.label;
+    document.getElementById('hud-scale').textContent = snapshot.scale;
+    document.getElementById('hud-text').textContent = snapshot.narrative;
+    
+    const sliderLabel = document.getElementById('canvas-scale-label');
+    if (sliderLabel) {
+      sliderLabel.textContent = snapshot.scale;
+    }
+  }
+
   async initScenarios() {
     try {
       const res = await fetch('data/scenarios.json');
