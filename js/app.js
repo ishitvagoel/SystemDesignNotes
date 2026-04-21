@@ -1233,15 +1233,16 @@ async function init() {
   renderWelcomeStats();
 
   // Evolution Slider
-  const evolutionSlider = document.getElementById('canvas-scale-slider');
+  const evolutionSlider = document.getElementById('evolution-slider');
   if (evolutionSlider) {
     evolutionSlider.addEventListener('input', (e) => {
       if (typeof playgroundA !== 'undefined' && playgroundA && playgroundA.currentChronicle) {
         playgroundA.setSnapshot(parseInt(e.target.value));
+        const label = document.getElementById('slider-label');
+        if (label) label.textContent = `Era ${parseInt(e.target.value) + 1}`;
       }
     });
   }
-
   // Background loads for heavy features
   fetch('data/search-index.json').then(r => r.json()).then(data => SEARCH_INDEX = data).catch(console.error);
   fetch('data/graph-edges.json').then(r => r.json()).then(data => GRAPH_EDGES = data).catch(console.error);
@@ -1694,29 +1695,48 @@ document.getElementById('view-canvas').addEventListener('click', () => {
 });
 
 async function loadChroniclesIntoUI(engine) {
+  console.log('Loading chronicles into UI...', engine);
   if (!engine) return;
   await engine.loadChronicles();
   const list = document.getElementById('chronicles-list');
-  if (!list || !engine.chronicles) return;
+  console.log('Chronicles data:', engine.chronicles);
+  if (!list || !engine.chronicles || !engine.chronicles.systems) {
+    console.error('Failed to find chronicles-list or data structure is wrong');
+    return;
+  }
   
   list.innerHTML = '';
-  engine.chronicles.forEach(c => {
+  engine.chronicles.systems.forEach(c => {
     const el = document.createElement('div');
     el.className = 'chronicle-item';
     el.innerHTML = `
-      <div class="chronicle-title">${c.title}</div>
-      <div class="chronicle-desc">${c.description}</div>
+      <div class="chronicle-title">${c.name}</div>
+      <div class="chronicle-desc">${c.snapshots[0].narrative.substring(0, 60)}...</div>
     `;
     el.onclick = () => {
       document.querySelectorAll('.chronicle-item').forEach(i => i.classList.remove('active'));
       el.classList.add('active');
+      
+      // Reset any active simulation
+      if (typeof globalIsSimulating !== 'undefined') {
+        globalIsSimulating = false;
+        const simBtn = document.getElementById('canvas-simulate');
+        if (simBtn) simBtn.classList.remove('active');
+        engine.stopSimulation();
+      }
+
       engine.currentChronicle = c;
       engine.setSnapshot(0);
       
-      const slider = document.getElementById('canvas-scale-slider');
+      const wrap = document.getElementById('chronicles-slider-wrap');
+      if (wrap) wrap.classList.remove('hidden');
+      
+      const slider = document.getElementById('evolution-slider');
       if (slider) {
         slider.max = c.snapshots.length - 1;
         slider.value = 0;
+        const label = document.getElementById('slider-label');
+        if (label) label.textContent = 'Era 1';
       }
     };
     list.appendChild(el);

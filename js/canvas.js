@@ -101,11 +101,19 @@ class CanvasEngine {
 
   setSnapshot(index) {
     if (!this.currentChronicle) return;
+    
+    // Track previous node IDs to highlight new ones
+    const prevIds = new Set(this.nodes.map(n => n.id));
+    
     this.currentSnapshotIndex = index;
     const snapshot = this.currentChronicle.snapshots[index];
     
     // Update internal state
     this.nodes = JSON.parse(JSON.stringify(snapshot.nodes));
+    this.nodes.forEach(n => {
+      n.isNew = !prevIds.has(n.id) && prevIds.size > 0;
+    });
+
     this.links = snapshot.links.map(l => ({
       source: this.nodes.find(n => n.id === l.source),
       target: this.nodes.find(n => n.id === l.target)
@@ -410,6 +418,7 @@ class CanvasEngine {
       .style('pointer-events', 'none')
       .text(d => d.label);
 
+<<<<<<< HEAD
     // Connection port: output (right side)
     nodeEnter.append('circle')
       .attr('class', 'port port-out')
@@ -434,9 +443,10 @@ class CanvasEngine {
       .on('mouseenter', function() { d3.select(this).style('opacity', 1); })
       .on('mouseleave', function() { if (!self.connectingNode) d3.select(this).style('opacity', 0); });
 
-    const nodeMerge = nodeEnter.merge(nodes);
-    
+    const nodeMerge = nodeEnter.merge(nodes)
+      .classed('node-pulse', d => d.isNew);
     nodeMerge.transition().duration(750)
+
       .attr('transform', d => `translate(${d.x},${d.y})`);
     
     nodeMerge.select('.node-label').text(d => d.label);

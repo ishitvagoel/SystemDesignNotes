@@ -10,8 +10,8 @@
           "scale": "10K Users",
           "narrative": "A simple CRUD app using Ruby on Rails. Bottleneck: Single DB lock contention.",
           "nodes": [
-            { "id": "n1", "type": "app", "label": "Rails Monolith", "x": 400, "y": 200 },
-            { "id": "n2", "type": "db", "label": "MySQL", "x": 400, "y": 400 }
+            { "id": "n1", "type": "app", "label": "Rails Monolith", "x": 400, "y": 200, "capacity": 1000, "load": 0 },
+            { "id": "n2", "type": "db", "label": "MySQL", "x": 400, "y": 400, "capacity": 500, "load": 0 }
           ],
           "links": [
             { "source": "n1", "target": "n2" }
@@ -21,15 +21,90 @@
           "id": "era-2",
           "label": "2010: The Migration to JVM",
           "scale": "1M Users",
-          "narrative": "Introduced Kestrel MQ and migrated core services to Scala/Finagle.",
+          "narrative": "Introduced Kestrel MQ and migrated core services to Scala/Finagle to handle asynchronous fan-out.",
           "nodes": [
-            { "id": "n1", "type": "app", "label": "Scala Service", "x": 300, "y": 200 },
-            { "id": "n3", "type": "queue", "label": "Kestrel MQ", "x": 500, "y": 200 },
-            { "id": "n2", "type": "db", "label": "MySQL Cluster", "x": 400, "y": 400 }
+            { "id": "n1", "type": "app", "label": "Scala Service", "x": 300, "y": 200, "capacity": 5000, "load": 0 },
+            { "id": "n3", "type": "queue", "label": "Kestrel MQ", "x": 500, "y": 200, "capacity": 10000, "load": 0 },
+            { "id": "n2", "type": "db", "label": "MySQL Cluster", "x": 400, "y": 400, "capacity": 5000, "load": 0 }
           ],
           "links": [
             { "source": "n1", "target": "n3" },
             { "source": "n3", "target": "n2" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "netflix",
+      "name": "Netflix: Moving to the Cloud",
+      "snapshots": [
+        {
+          "id": "net-1",
+          "label": "2008: Data Center Days",
+          "scale": "1M Subscribers",
+          "narrative": "Relied on vertical scaling in a single data center. A major hardware failure in 2008 prompted the cloud migration.",
+          "nodes": [
+            { "id": "app", "type": "app", "label": "Monolithic App", "x": 400, "y": 200, "capacity": 5000, "load": 0 },
+            { "id": "db", "type": "db", "label": "Oracle DB", "x": 400, "y": 400, "capacity": 3000, "load": 0 }
+          ],
+          "links": [
+            { "source": "app", "target": "db" }
+          ]
+        },
+        {
+          "id": "net-2",
+          "label": "2012: AWS & Microservices",
+          "scale": "25M Subscribers",
+          "narrative": "Migrated to AWS and decomposed into microservices. Introduced Eureka for discovery and Hystrix for resilience.",
+          "nodes": [
+            { "id": "lb", "type": "lb", "label": "ELB", "x": 400, "y": 100, "capacity": 50000, "load": 0 },
+            { "id": "as", "type": "app", "label": "API Gateway", "x": 400, "y": 200, "capacity": 20000, "load": 0 },
+            { "id": "s1", "type": "app", "label": "Movie Service", "x": 250, "y": 350, "capacity": 10000, "load": 0 },
+            { "id": "s2", "type": "app", "label": "User Service", "x": 550, "y": 350, "capacity": 10000, "load": 0 },
+            { "id": "c1", "type": "db", "label": "Cassandra", "x": 400, "y": 500, "capacity": 30000, "load": 0 }
+          ],
+          "links": [
+            { "source": "lb", "target": "as" },
+            { "source": "as", "target": "s1" },
+            { "source": "as", "target": "s2" },
+            { "source": "s1", "target": "c1" },
+            { "source": "s2", "target": "c1" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "airbnb",
+      "name": "Airbnb: Scaling the Marketplace",
+      "snapshots": [
+        {
+          "id": "air-1",
+          "label": "Early Days: Simple Rails",
+          "scale": "1K Bookings",
+          "narrative": "A standard Rails app on Heroku. Easy to deploy, but difficult to scale as traffic surged.",
+          "nodes": [
+            { "id": "rails", "type": "app", "label": "Rails App", "x": 400, "y": 200, "capacity": 2000, "load": 0 },
+            { "id": "pg", "type": "db", "label": "Postgres", "x": 400, "y": 400, "capacity": 1000, "load": 0 }
+          ],
+          "links": [
+            { "source": "rails", "target": "pg" }
+          ]
+        },
+        {
+          "id": "air-2",
+          "label": "Search Expansion",
+          "scale": "100K Bookings",
+          "narrative": "Introduced Elasticsearch to handle complex search queries and Redis for session caching.",
+          "nodes": [
+            { "id": "rails", "type": "app", "label": "Rails App", "x": 400, "y": 200, "capacity": 10000, "load": 0 },
+            { "id": "redis", "type": "cache", "label": "Redis", "x": 250, "y": 300, "capacity": 20000, "load": 0 },
+            { "id": "es", "type": "db", "label": "Elasticsearch", "x": 550, "y": 300, "capacity": 15000, "load": 0 },
+            { "id": "pg", "type": "db", "label": "Postgres", "x": 400, "y": 450, "capacity": 5000, "load": 0 }
+          ],
+          "links": [
+            { "source": "rails", "target": "redis" },
+            { "source": "rails", "target": "es" },
+            { "source": "rails", "target": "pg" }
           ]
         }
       ]

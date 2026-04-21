@@ -1658,8 +1658,7 @@ pre:hover .copy-code-btn { opacity: 1; }
   border-radius: 40px;
   border: 1px solid var(--border);
   display: flex;
-  align-items: center;
-  gap: 16px;
+  align-items: center; gap: 16px;
   z-index: 100;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   backdrop-filter: blur(8px);
