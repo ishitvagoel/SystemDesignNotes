@@ -49,6 +49,11 @@ pie title Knowledge Distribution
 - [ ] M20: RAG/Agents — RAG pipeline (chunk → embed → retrieve → rerank → generate), agent patterns, MCP/A2A, **agent resilience (idempotent tool calls, retry/backoff, graceful degradation)**
 - [ ] M21: Serverless/Platform — Cold starts, edge compute, **WASM/WASI 0.2 (component model, startup latency, isolation density, use cases)**, K8s architecture, platform engineering/IDPs
 
+## Evolution Chronicles (Interactive History)
+- [ ] **Twitter**: From Rails monolith to Kestrel/Scala fan-out
+- [ ] **Netflix**: Data center vertical scaling to AWS/Microservices/Resilience
+- [ ] **Airbnb**: Early Rails on Heroku to Search/Redis/ES expansion
+
 ## Capstones
 - [ ] URL Shortener — Estimation, short code generation, 301 vs 302, analytics pipeline separation
 - [ ] News Feed — Hybrid fan-out (push for regular users, pull for celebrities), feed cache design
@@ -59,4 +64,4 @@ pie title Knowledge Distribution
 - [ ] Feature Flag Platform — Flag evaluation pipeline (< 1ms p99, in-memory cache), SDK push vs pull, A/B experiment analytics (Welch's t-test, MDE calculation), stale flag cleanup
 
 ---
-*Last content update: March 2026. Vault covers developments through early 2026 including Kafka 4.0/KRaft, reasoning models, EAGLE-3 speculative decoding, GraphRAG, ColBERT late interaction, MCP/A2A protocols, passkeys/FIDO2, post-quantum cryptography standards, WASI 0.2 Component Model, zero-trust architecture (SPIFFE/SPIRE, OPA), eBPF kernel observability, and agent reliability patterns.*
+*Last content update: April 2026. Vault covers developments through early 2026 including Kafka 4.0/KRaft, reasoning models, EAGLE-3 speculative decoding, GraphRAG, ColBERT late interaction, MCP/A2A protocols, passkeys/FIDO2, post-quantum cryptography standards, WASI 0.2 Component Model, zero-trust architecture (SPIFFE/SPIRE, OPA), eBPF kernel observability, and agent reliability patterns.*

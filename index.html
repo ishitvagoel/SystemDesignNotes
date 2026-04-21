@@ -126,15 +126,17 @@
         <div style="flex:1; display:flex; flex-direction:column; position:relative; overflow:hidden;">
           <div id="canvas-toolbar" style="padding:12px; display:flex; gap:8px; align-items:center; background:var(--bg2); border-bottom:1px solid var(--border);">
             <button class="graph-ctrl-btn" id="canvas-clear">Clear</button>
+            <button class="graph-ctrl-btn" id="canvas-connect">Connect</button>
             <button class="graph-ctrl-btn" id="canvas-simulate">Simulate</button>
             <button class="graph-ctrl-btn" id="canvas-compare">Compare</button>
+            <button class="graph-ctrl-btn" id="canvas-export">Export</button>
             <div id="canvas-scale-control" style="display:flex; align-items:center; gap:10px; margin-left:auto; background:rgba(13,15,14,0.85); padding:4px 12px; border-radius:20px; border:1px solid var(--border);">
               <span style="font-size:10px; color:var(--text3); font-family:'IBM Plex Mono',monospace;">SCALE:</span>
               <input type="range" id="canvas-scale-slider" min="0" max="7" step="1" value="0" style="width:100px; cursor:pointer;">
               <span id="canvas-scale-label" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent); min-width:70px;">1 User</span>
             </div>
           </div>
-          <div id="canvas-split-container" style="flex:1; display:flex; flex-direction:row; overflow:hidden; background:var(--bg);">
+          <div id="canvas-split-container" style="flex:1; display:flex; flex-direction:row; overflow:hidden; background:var(--bg); position:relative;">
             <div id="canvas-stage-wrap" style="flex:1; position:relative; overflow:hidden; border-right:1px solid var(--border);">
               <div id="narrative-hud" class="hidden">
                 <div id="hud-era"></div>
@@ -148,10 +150,14 @@
               <div class="canvas-label" id="label-a" style="position:absolute; top:10px; right:10px; z-index:10; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); background:var(--bg2); padding:4px 8px; border-radius:4px; border:1px solid var(--border); display:none;">Design A</div>
               <svg id="canvas-svg" style="width:100%; height:100%;"></svg>
             </div>
+            <div id="canvas-splitter" style="width:6px; cursor:col-resize; background:var(--border); display:none; position:relative; z-index:15;"></div>
             <div id="canvas-stage-wrap-b" style="flex:1; position:relative; overflow:hidden; display:none;">
               <div class="canvas-label" id="label-b" style="position:absolute; top:10px; right:10px; z-index:10; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text3); background:var(--bg2); padding:4px 8px; border-radius:4px; border:1px solid var(--border);">Design B</div>
               <svg id="canvas-svg-b" style="width:100%; height:100%;"></svg>
             </div>
+            <div id="canvas-comparison-table" style="position:absolute; bottom:20px; right:20px; background:rgba(20,22,20,0.9); border:1px solid var(--border); border-radius:8px; padding:12px; display:none; z-index:20; max-width:400px; font-size:12px;"></div>
+            <div id="canvas-tooltip" style="position:fixed; background:rgba(0,0,0,0.85); color:white; padding:8px 12px; border-radius:4px; font-size:12px; pointer-events:none; display:none; z-index:1000; border:1px solid var(--border); line-height:1.4;"></div>
+            <div id="canvas-hint" style="position:absolute; top:20px; left:50%; transform:translateX(-50%); background:rgba(107,222,140,0.15); color:var(--accent); padding:8px 16px; border-radius:20px; font-size:11px; font-family:'IBM Plex Mono',monospace; border:1px solid var(--accent); display:none; z-index:30;"></div>
           </div>
         </div>
         <div id="canvas-props" class="canvas-sidebar" style="width:240px; border-left:1px solid var(--border); background:var(--bg2); padding:16px; display:none;">

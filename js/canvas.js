@@ -418,7 +418,6 @@ class CanvasEngine {
       .style('pointer-events', 'none')
       .text(d => d.label);
 
-<<<<<<< HEAD
     // Connection port: output (right side)
     nodeEnter.append('circle')
       .attr('class', 'port port-out')

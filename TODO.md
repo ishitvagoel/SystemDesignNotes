@@ -1,6 +1,6 @@
-# Evolution Chronicles Implementation
+# Tasks
 
-- [x] Task 1: Foundation Data Structure
-- [x] Task 2: Canvas Engine Snapshot Support
-- [x] Task 3: The Narrative HUD & Sidebar UI
-- [x] Task 4: Polish & Integration
+- [x] Evolution Chronicles Implementation
+- [x] Update Changelog and Documentation (v2.1)
+- [ ] Author more Chronicles (WhatsApp, Discord)
+- [ ] Fix broken wiki-links in MOCs

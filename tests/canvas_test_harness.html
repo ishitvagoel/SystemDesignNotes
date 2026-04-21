@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas Test Harness</title>
+  <style>
+    .hidden { display: none; }
+    :root { 
+      --bg: #0d0f0e; --bg2: #141716; --text: #e8e6e3; --text2: #b0ada8;
+      --text3: #6b6965; --accent: #6bde8c; --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.15); --surface: #1c201b; --pink: #de6b8a;
+      --yellow: #e8d06b;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-screen">
+    <div id="palette-list"></div>
+    <div id="chronicles-list"></div>
+    <button id="canvas-clear">Clear</button>
+    <button id="canvas-connect">Connect</button>
+    <button id="canvas-simulate">Simulate</button>
+    <button id="canvas-compare">Compare</button>
+    <button id="canvas-export">Export</button>
+    <input type="range" id="canvas-scale-slider" min="0" max="7" value="0">
+    <span id="canvas-scale-label">1 User</span>
+    
+    <div id="canvas-split-container">
+      <div id="canvas-stage-wrap">
+        <div id="narrative-hud" class="hidden">
+          <div id="hud-era"></div>
+          <div id="hud-scale"></div>
+          <div id="hud-text"></div>
+        </div>
+        <div id="chronicles-slider-wrap" class="hidden">
+          <input type="range" id="evolution-slider">
+          <div id="slider-label"></div>
+        </div>
+        <div id="label-a"></div>
+        <svg id="canvas-svg"></svg>
+      </div>
+      <div id="canvas-splitter"></div>
+      <div id="canvas-stage-wrap-b" style="display:none;">
+        <div id="label-b"></div>
+        <svg id="canvas-svg-b"></svg>
+      </div>
+      <div id="canvas-comparison-table" style="display:none;"></div>
+      <div id="canvas-tooltip" style="display:none;"></div>
+      <div id="canvas-hint" style="display:none;"></div>
+    </div>
+    <div id="canvas-props" style="display:none;"><div id="props-content"></div></div>
+  </div>
+
+  <script>
+    // Test Suite
+    const results = [];
+    function assert(condition, message) {
+      if (condition) {
+        results.push({ success: true, message });
+      } else {
+        results.push({ success: false, message });
+        console.error('Assertion failed:', message);
+      }
+    }
+
+    async function runTests() {
+      console.log('Running tests...');
+      
+      try {
+        // Test 1: Initialization
+        if (typeof initCanvas !== 'function') {
+           throw new Error('initCanvas is not defined. Script might have failed to load.');
+        }
+        initCanvas();
+        assert(playgroundA !== null, 'playgroundA should be initialized');
+        assert(activePlayground === playgroundA, 'activePlayground should be playgroundA');
+        
+        // Test 2: addComponent
+        const initialNodes = playgroundA.nodes.length;
+        playgroundA.addComponent('app', 'Test App');
+        assert(playgroundA.nodes.length === initialNodes + 1, 'Nodes length should increase by 1');
+        assert(playgroundA.nodes[playgroundA.nodes.length-1].label === 'Test App', 'Node label should match');
+
+        // Test 3: Clear
+        document.getElementById('canvas-clear').click();
+        assert(playgroundA.nodes.length === 0, 'Nodes should be cleared');
+
+        // Test 4: Snapshot Support
+        playgroundA.chronicles = {
+          systems: [{
+            name: 'Test System',
+            snapshots: [{
+              label: 'Era 1',
+              scale: '1 User',
+              narrative: 'Test narrative',
+              nodes: [{ id: 'n1', type: 'app', label: 'App', x: 100, y: 100 }],
+              links: []
+            }]
+          }]
+        };
+        playgroundA.currentChronicle = playgroundA.chronicles.systems[0];
+        playgroundA.setSnapshot(0);
+        assert(playgroundA.nodes.length === 1, 'Snapshot nodes should be loaded');
+        assert(document.getElementById('hud-era').textContent === 'Era 1', 'HUD era should update');
+
+        // Test 5: Compare Mode
+        document.getElementById('canvas-compare').click();
+        assert(isCompareMode === true, 'isCompareMode should be true');
+        assert(playgroundB !== null, 'playgroundB should be initialized in compare mode');
+        assert(activePlayground === playgroundB, 'activePlayground should switch to playgroundB');
+
+        // Test 6: Simulation Toggle
+        const simBtn = document.getElementById('canvas-simulate');
+        simBtn.click();
+        assert(globalIsSimulating === true, 'globalIsSimulating should be true');
+        assert(simBtn.classList.contains('active'), 'Simulate button should have active class');
+        
+        simBtn.click();
+        assert(globalIsSimulating === false, 'globalIsSimulating should be false after second click');
+        assert(!simBtn.classList.contains('active'), 'Simulate button should not have active class');
+
+        console.log('Tests completed.');
+        window.testResults = results;
+      } catch (e) {
+        console.error('Test execution failed:', e);
+        window.testResults = [{ success: false, message: 'Test crashed: ' + e.message + '\n' + e.stack }];
+      }
+    }
+
+    // Delay start to ensure scripts load
+    setTimeout(runTests, 1000);
+  </script>
+</body>
+</html>
