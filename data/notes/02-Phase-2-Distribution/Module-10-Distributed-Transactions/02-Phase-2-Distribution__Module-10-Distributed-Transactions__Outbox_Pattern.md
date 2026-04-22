@@ -4,7 +4,7 @@
 
 A service updates its database and publishes an event to a message broker. These are two operations on two different systems. If the database write succeeds but the event publish fails (broker is down, network error), the database reflects the change but downstream consumers never hear about it. If the event publishes but the database write fails, consumers react to an event that didn't actually happen.
 
-You could use 2PC across the database and the broker — but that's exactly what we're trying to avoid ([[Two-Phase Commit]]). The outbox pattern solves this without distributed transactions: **write the event to the database in the same local transaction as the business data, then asynchronously relay the event to the message broker.**
+You could use 2PC across the database and the broker — but that's exactly what we're trying to avoid ([[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]]). The outbox pattern solves this without distributed transactions: **write the event to the database in the same local transaction as the business data, then asynchronously relay the event to the message broker.**
 
 
 ## Mental Model
@@ -29,7 +29,7 @@ graph LR
 
 **Why this works**: Because the business data and the outbox event are written in the same local transaction, they're atomic — both succeed or both fail. The relay is a separate process that can retry publishing indefinitely. If the relay crashes, it restarts and picks up where it left off (unpublished events are still in the outbox table).
 
-**The trade-off**: Events are published **at-least-once**, not exactly-once. If the relay publishes an event but crashes before marking it as published, it'll publish the event again on restart. Consumers must be idempotent ([[Idempotent Consumers]]).
+**The trade-off**: Events are published **at-least-once**, not exactly-once. If the relay publishes an event but crashes before marking it as published, it'll publish the event again on restart. Consumers must be idempotent ([[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers]]).
 
 ### The Outbox Table
 
@@ -127,11 +127,11 @@ graph LR
 
 ## Connections
 
-- [[Saga Pattern]] — The outbox pattern is the mechanism for reliable event publishing in choreography-based sagas
-- [[Idempotent Consumers]] — Outbox publishes at-least-once; consumers must handle duplicates
-- [[Two-Phase Commit]] — The outbox pattern avoids 2PC between the database and the message broker
-- [[Write-Ahead Log]] — CDC-based outbox relays read the WAL, connecting database durability to event publishing
-- [[Change Data Capture]] — CDC is the preferred relay mechanism for production outbox implementations
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] — The outbox pattern is the mechanism for reliable event publishing in choreography-based sagas
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers]] — Outbox publishes at-least-once; consumers must handle duplicates
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]] — The outbox pattern avoids 2PC between the database and the message broker
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — CDC-based outbox relays read the WAL, connecting database durability to event publishing
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Change_Data_Capture]] — CDC is the preferred relay mechanism for production outbox implementations
 
 ## Reflection Prompts
 

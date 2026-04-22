@@ -122,13 +122,13 @@ graph LR
 ## Connections
 
 **Prerequisites:**
-- [[Load Balancing Fundamentals]] — Consistent hashing is a load balancing algorithm for stateful services
-- [[Partitioning and Sharding]] — Consistent hashing is one strategy for partition assignment
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — Consistent hashing is a load balancing algorithm for stateful services
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Consistent hashing is one strategy for partition assignment
 
 **Used by:**
-- [[Distributed Caching]] — Redis Cluster and Memcached client libraries use consistent hashing for key distribution
-- [[CDN Architecture]] — CDN nodes use consistent hashing to determine which edge server caches which content
-- [[Leaderless Replication]] — Dynamo-style systems use consistent hashing for partition ownership
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Distributed_Caching]] — Redis Cluster and Memcached client libraries use consistent hashing for key distribution
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — CDN nodes use consistent hashing to determine which edge server caches which content
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Leaderless_Replication]] — Dynamo-style systems use consistent hashing for partition ownership
 
 ## Reflection Prompts
 

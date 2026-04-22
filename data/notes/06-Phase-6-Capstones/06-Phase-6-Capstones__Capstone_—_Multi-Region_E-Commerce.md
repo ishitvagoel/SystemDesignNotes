@@ -150,13 +150,13 @@ graph TD
 ## Connections
 
 **Core concepts applied:**
-- [[Geo-Distribution and Data Sovereignty]] — Multi-region deployment, data residency
-- [[Multi-Tenancy and Isolation]] — Regional tenant isolation
-- [[Cell-Based Architecture]] — Regional cells with independent data
-- [[Consistency Spectrum]] — Different consistency for different data types
-- [[Cost Engineering and FinOps]] — Cross-region cost optimization
-- [[Saga Pattern]] — Cross-region order fulfillment
-- [[CDN Architecture]] — Global product catalog and media delivery
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty]] — Multi-region deployment, data residency
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]] — Regional tenant isolation
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]] — Regional cells with independent data
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — Different consistency for different data types
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — Cross-region cost optimization
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] — Cross-region order fulfillment
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — Global product catalog and media delivery
 
 ## Canonical Sources
 

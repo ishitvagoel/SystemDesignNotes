@@ -17,7 +17,7 @@ Maintain two identical production environments (blue and green). One serves live
 
 **Pros**: Instant rollback (just switch traffic back). Zero-downtime deployment. Full environment parity.
 
-**Cons**: Double the infrastructure cost (two full environments). Database compatibility must be maintained — both versions must work with the current database schema (see [[Zero-Downtime Schema Migrations]]).
+**Cons**: Double the infrastructure cost (two full environments). Database compatibility must be maintained — both versions must work with the current database schema (see [[01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations]]).
 
 ### Canary Release
 
@@ -51,7 +51,7 @@ Store the desired state of infrastructure and deployments in Git. A GitOps contr
 
 **Code rollback**: Redeploy the previous version. Straightforward for stateless services. For stateful services, the previous version must be compatible with the current data (if the new version created data in a new format, the old version must handle it).
 
-**Database rollback**: Hard. If the new version ran a migration (added a column, changed a type), rolling back the code means the old code faces a modified schema. Prevention: backward-compatible migrations only ([[Zero-Downtime Schema Migrations]]).
+**Database rollback**: Hard. If the new version ran a migration (added a column, changed a type), rolling back the code means the old code faces a modified schema. Prevention: backward-compatible migrations only ([[01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations]]).
 
 **Dark launches**: Deploy new code to production but don't route user traffic. Send synthetic traffic or shadow production traffic to the new code. Compare outputs. Only enable for real users after verification. This catches bugs without any user impact.
 
@@ -118,10 +118,10 @@ graph TD
 
 ## Connections
 
-- [[Observability and Alerting]] — Canary analysis requires observability; SLI monitoring drives promotion/rollback
-- [[Zero-Downtime Schema Migrations]] — Database changes must be coordinated with deployment strategies
-- [[SLOs SLIs and Error Budgets]] — Error budget informs deployment velocity
-- [[Feature Flags and Safe Deployment]] — Deep dive on flag types, evaluation architecture, and safe rollout patterns
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Canary analysis requires observability; SLI monitoring drives promotion/rollback
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations]] — Database changes must be coordinated with deployment strategies
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — Error budget informs deployment velocity
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Feature_Flags_and_Safe_Deployment]] — Deep dive on flag types, evaluation architecture, and safe rollout patterns
 
 ## Reflection Prompts
 

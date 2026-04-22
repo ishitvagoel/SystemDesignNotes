@@ -143,11 +143,11 @@ graph TD
 
 ## Connections
 
-- [[Consistency Spectrum]] — The detailed definitions of each consistency level that CAP and PACELC reference
-- [[Session Guarantees]] — Practical guarantees that make eventual consistency usable for applications
-- [[Database Replication]] — Synchronous vs asynchronous replication is the mechanism behind the EL/EC trade-off
-- [[NewSQL and Globally Distributed Databases]] — Spanner and CockroachDB are PC/EC systems that accept latency for consistency
-- [[Consensus and Raft]] — Consensus protocols are the mechanism that makes PC/EC possible
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — The detailed definitions of each consistency level that CAP and PACELC reference
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees]] — Practical guarantees that make eventual consistency usable for applications
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Synchronous vs asynchronous replication is the mechanism behind the EL/EC trade-off
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — Spanner and CockroachDB are PC/EC systems that accept latency for consistency
+- [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft]] — Consensus protocols are the mechanism that makes PC/EC possible
 
 ## Reflection Prompts
 

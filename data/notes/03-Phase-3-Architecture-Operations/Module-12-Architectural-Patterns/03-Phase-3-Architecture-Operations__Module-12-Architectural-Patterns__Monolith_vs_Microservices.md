@@ -99,10 +99,10 @@ graph TD
 
 ## Connections
 
-- [[Service Decomposition and Bounded Contexts]] — How to find the right service boundaries
-- [[Strangler Fig and Migration Patterns]] — How to migrate from monolith to services incrementally
-- [[API Gateway Patterns]] — The external interface for a microservice architecture
-- [[Cell-Based Architecture]] — A scaling pattern that works within both monoliths and microservices
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Service_Decomposition_and_Bounded_Contexts]] — How to find the right service boundaries
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Strangler_Fig_and_Migration_Patterns]] — How to migrate from monolith to services incrementally
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — The external interface for a microservice architecture
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]] — A scaling pattern that works within both monoliths and microservices
 
 ## Reflection Prompts
 

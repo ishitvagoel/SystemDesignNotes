@@ -22,14 +22,14 @@ Microsoft's STRIDE is the most widely used threat categorization. For each compo
 
 **In distributed systems**: Service A impersonates Service B to access B's downstream dependencies. A user forges a JWT token. A DNS hijack redirects traffic to a malicious server.
 
-**Mitigations**: mTLS for service-to-service identity ([[TLS and Certificate Management]]). SPIFFE/SPIRE for automated service identity. JWT signature verification with key rotation. DNSSEC for DNS integrity.
+**Mitigations**: mTLS for service-to-service identity ([[03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management]]). SPIFFE/SPIRE for automated service identity. JWT signature verification with key rotation. DNSSEC for DNS integrity.
 
 ### Tampering (Integrity)
 **Threat**: An attacker modifies data in transit or at rest.
 
 **In distributed systems**: Man-in-the-middle alters API responses. An attacker modifies a message in a Kafka topic. A compromised CI pipeline injects malicious code into a build artifact.
 
-**Mitigations**: TLS for all traffic (in transit). Message signing for event integrity. SLSA framework for build artifact integrity ([[Software Supply Chain Security]]). Immutable audit logs.
+**Mitigations**: TLS for all traffic (in transit). Message signing for event integrity. SLSA framework for build artifact integrity ([[03-Phase-3-Architecture-Operations__Module-15-Security__Software_Supply_Chain_Security]]). Immutable audit logs.
 
 ### Repudiation (Accountability)
 **Threat**: An attacker (or a legitimate user) performs an action and later denies it.
@@ -43,21 +43,21 @@ Microsoft's STRIDE is the most widely used threat categorization. For each compo
 
 **In distributed systems**: Database backup uploaded to a public S3 bucket. Internal service error messages expose stack traces and database schemas to external clients. Logs containing PII shipped to a third-party log aggregator. Cross-tenant data leakage in a multi-tenant system.
 
-**Mitigations**: Encryption at rest and in transit ([[Encryption at Rest and in Transit]]). Access control on all storage (S3 bucket policies, database permissions). PII scrubbing in logs. Error message sanitization (generic errors externally, detailed errors in internal logs). Row-Level Security for multi-tenancy ([[Multi-Tenancy and Isolation]]).
+**Mitigations**: Encryption at rest and in transit ([[03-Phase-3-Architecture-Operations__Module-15-Security__Encryption_at_Rest_and_in_Transit]]). Access control on all storage (S3 bucket policies, database permissions). PII scrubbing in logs. Error message sanitization (generic errors externally, detailed errors in internal logs). Row-Level Security for multi-tenancy ([[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]]).
 
 ### Denial of Service (Availability)
 **Threat**: An attacker makes the system unavailable.
 
 **In distributed systems**: DDoS flood on the API gateway. A slow query by one tenant degrades service for all tenants. An attacker triggers expensive operations (large file uploads, complex queries) to exhaust resources.
 
-**Mitigations**: Rate limiting at the gateway ([[Rate Limiting and Throttling]]). CDN for DDoS absorption ([[CDN Architecture]]). Auto-scaling with per-tenant resource quotas. Circuit breakers on internal dependencies ([[Resilience Patterns]]).
+**Mitigations**: Rate limiting at the gateway ([[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]]). CDN for DDoS absorption ([[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]]). Auto-scaling with per-tenant resource quotas. Circuit breakers on internal dependencies ([[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns]]).
 
 ### Elevation of Privilege (Authorization)
 **Threat**: An attacker gains access beyond their authorization level.
 
 **In distributed systems**: Server-Side Request Forgery (SSRF) — an attacker tricks a public-facing service into making requests to internal services (bypassing network boundaries). Exploiting overly broad IAM roles. Accessing the metadata service from a compromised container (AWS IMDS attacks).
 
-**Mitigations**: Network segmentation (services can only reach their declared dependencies). Least-privilege IAM (no wildcard permissions). IMDS v2 (requires a PUT request, preventing SSRF exploitation). Policy engines (OPA, Cedar) for fine-grained authorization ([[Authentication and Authorization]]).
+**Mitigations**: Network segmentation (services can only reach their declared dependencies). Least-privilege IAM (no wildcard permissions). IMDS v2 (requires a PUT request, preventing SSRF exploitation). Policy engines (OPA, Cedar) for fine-grained authorization ([[03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization]]).
 
 ## Zero-Trust Architecture
 
@@ -71,7 +71,7 @@ Traditional security: a hard perimeter (firewall) with a trusted interior ("cast
 
 **Least-privilege access**: Each service can only access the specific services and data it needs. Kubernetes NetworkPolicies restrict pod-to-pod communication. IAM roles are scoped to specific resources.
 
-**Assume breach**: Design as if an attacker is already inside. Segment networks so a compromised service can't reach unrelated services. Encrypt all traffic (even internal). Monitor for lateral movement (unusual service-to-service traffic patterns). Limit blast radius with [[Cell-Based Architecture]].
+**Assume breach**: Design as if an attacker is already inside. Segment networks so a compromised service can't reach unrelated services. Encrypt all traffic (even internal). Monitor for lateral movement (unusual service-to-service traffic patterns). Limit blast radius with [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]].
 
 ## The Threat Modeling Process
 
@@ -144,11 +144,11 @@ graph TD
 
 ## Connections
 
-- [[Authentication and Authorization]] — Identity verification and access control
-- [[TLS and Certificate Management]] — Encryption and service identity
-- [[Software Supply Chain Security]] — Build and deployment pipeline integrity
-- [[API Gateway Patterns]] — The primary external trust boundary
-- [[Multi-Tenancy and Isolation]] — Cross-tenant threats in shared infrastructure
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization]] — Identity verification and access control
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management]] — Encryption and service identity
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Software_Supply_Chain_Security]] — Build and deployment pipeline integrity
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — The primary external trust boundary
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]] — Cross-tenant threats in shared infrastructure
 
 ## Reflection Prompts
 

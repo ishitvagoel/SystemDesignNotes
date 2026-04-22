@@ -23,7 +23,7 @@ Traditional databases (Postgres, MySQL/InnoDB, Oracle) manage their own buffer p
 1. **Read request**: The query executor needs page 42. It checks the buffer pool's page table (a hash map: page ID → buffer frame).
 2. **Cache hit**: Page is in the buffer pool. Return it. No disk I/O. This is the fast path and happens 95–99%+ of the time in a well-tuned system.
 3. **Cache miss**: Page is not in memory. Allocate a buffer frame (or evict one), read the page from disk, insert it into the buffer pool, return it.
-4. **Modification**: If the page is modified (INSERT, UPDATE, DELETE), it's marked **dirty**. Dirty pages are eventually flushed to disk by the background writer or checkpoint process (see [[Write-Ahead Log]]).
+4. **Modification**: If the page is modified (INSERT, UPDATE, DELETE), it's marked **dirty**. Dirty pages are eventually flushed to disk by the background writer or checkpoint process (see [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]]).
 5. **Eviction**: When the buffer pool is full and a new page is needed, the eviction policy chooses a victim. The victim must be flushed to disk first if dirty.
 
 **Eviction policies**:
@@ -116,10 +116,10 @@ graph TD
 
 ## Connections
 
-- [[B-Tree vs LSM-Tree]] — B-trees depend heavily on the buffer pool for caching internal nodes; LSM-trees rely more on the block cache and OS page cache
-- [[Write-Ahead Log]] — The WAL enables dirty pages to stay in the buffer pool safely; checkpoints flush dirty pages from the buffer pool to disk
-- [[MVCC Deep Dive]] — MVCC version lookups happen against pages in the buffer pool
-- [[Storage Engine Selection]] — Understanding buffer pool behavior helps choose the right engine for your workload
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree]] — B-trees depend heavily on the buffer pool for caching internal nodes; LSM-trees rely more on the block cache and OS page cache
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — The WAL enables dirty pages to stay in the buffer pool safely; checkpoints flush dirty pages from the buffer pool to disk
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive]] — MVCC version lookups happen against pages in the buffer pool
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Storage_Engine_Selection]] — Understanding buffer pool behavior helps choose the right engine for your workload
 
 ## Reflection Prompts
 

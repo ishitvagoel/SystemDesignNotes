@@ -10,13 +10,13 @@ This module covers both paradigms: traditional keyword search (inverted indexes,
 
 ## Notes in This Module
 
-- [[Full-Text Search Architecture]] — Inverted indexes, tokenization pipelines, BM25 ranking, Elasticsearch cluster design, and the operational realities of search at scale
-- [[Vector Search and Hybrid Retrieval]] — HNSW indexes, product quantization, embedding models, hybrid keyword+vector search with reciprocal rank fusion, and re-ranking strategies
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Full-Text_Search_Architecture]] — Inverted indexes, tokenization pipelines, BM25 ranking, Elasticsearch cluster design, and the operational realities of search at scale
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval]] — HNSW indexes, product quantization, embedding models, hybrid keyword+vector search with reciprocal rank fusion, and re-ranking strategies
 
 ## Prerequisites
-- [[_Module 04 MOC]] — Indexing fundamentals (B-trees are to databases what inverted indexes are to search)
-- [[_Module 06 MOC]] — Caching (search results are heavily cached; understanding cache patterns helps design search layer caching)
+- [[Module_Module_04_MOC]] — Indexing fundamentals (B-trees are to databases what inverted indexes are to search)
+- [[Module_Module_06_MOC]] — Caching (search results are heavily cached; understanding cache patterns helps design search layer caching)
 
 ## Where This Leads
-- [[_Module 20 MOC]] — RAG Architecture (vector search is the retrieval layer for retrieval-augmented generation)
-- [[_Module 19 MOC]] — AI inference (embedding generation for vector search runs on inference infrastructure)
+- [[Module_Module_20_MOC]] — RAG Architecture (vector search is the retrieval layer for retrieval-augmented generation)
+- [[Module_Module_19_MOC]] — AI inference (embedding generation for vector search runs on inference infrastructure)

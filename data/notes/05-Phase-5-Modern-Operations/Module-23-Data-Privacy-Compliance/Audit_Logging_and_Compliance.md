@@ -127,10 +127,10 @@ graph TD
 
 ## Connections
 
-- [[Data Privacy and Compliance]] — Audit logging is a core requirement of most privacy regulations
-- [[GDPR and Data Sovereignty]] — Audit logs must handle the tension between retention requirements and deletion rights
-- [[Write-Ahead Log]] — WAL is an analogous concept: append-only, ordered, recoverable
-- [[Monitoring and Alerting]] — Audit alerting (suspicious access patterns) uses the same infrastructure as operational alerting
+- [[Data_Privacy_and_Compliance]] — Audit logging is a core requirement of most privacy regulations
+- [[GDPR_and_Data_Sovereignty]] — Audit logs must handle the tension between retention requirements and deletion rights
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — WAL is an analogous concept: append-only, ordered, recoverable
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Audit alerting (suspicious access patterns) uses the same infrastructure as operational alerting
 
 ## Reflection Prompts
 

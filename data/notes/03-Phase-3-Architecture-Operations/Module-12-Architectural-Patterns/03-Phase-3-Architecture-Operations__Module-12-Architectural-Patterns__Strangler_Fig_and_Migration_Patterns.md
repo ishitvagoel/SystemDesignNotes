@@ -125,9 +125,9 @@ graph TD
 
 ## Connections
 
-- [[Monolith vs Microservices]] — The strangler fig is the migration path from monolith to microservices
-- [[Service Decomposition and Bounded Contexts]] — Each strangler fig iteration extracts one bounded context
-- [[API Gateway Patterns]] — The gateway serves as the routing layer for the strangler fig
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Monolith_vs_Microservices]] — The strangler fig is the migration path from monolith to microservices
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Service_Decomposition_and_Bounded_Contexts]] — Each strangler fig iteration extracts one bounded context
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — The gateway serves as the routing layer for the strangler fig
 
 ## Reflection Prompts
 

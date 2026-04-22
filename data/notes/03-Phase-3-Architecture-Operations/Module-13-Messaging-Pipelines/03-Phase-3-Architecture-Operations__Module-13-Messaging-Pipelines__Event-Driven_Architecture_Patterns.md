@@ -4,7 +4,7 @@
 
 "Event-driven architecture" is used loosely to describe at least four distinct patterns, each with different coupling characteristics, data flow implications, and failure modes. An engineer who says "let's use events" without specifying which pattern is like saying "let's use a database" without specifying relational vs document vs graph — the implementation implications are vastly different.
 
-Martin Fowler distinguishes three EDA patterns for inter-service communication. A fourth (event sourcing) is covered in [[Event Sourcing and CQRS]]. Understanding which pattern you're actually using prevents architectural confusion and mismatched expectations.
+Martin Fowler distinguishes three EDA patterns for inter-service communication. A fourth (event sourcing) is covered in [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]]. Understanding which pattern you're actually using prevents architectural confusion and mismatched expectations.
 
 
 ## Mental Model
@@ -47,23 +47,23 @@ Producer publishes: {
 
 **The coupling it introduces**: Schema coupling. The event must include data for all consumers. If the shipping service needs the address and the analytics service needs the price breakdown, both fields must be in the event. The producer must anticipate what consumers need — or include everything and let consumers ignore what they don't use.
 
-**Schema evolution is critical**: Events are often stored durably (Kafka retention). Old events have old schemas. New consumers must handle old event formats. This is exactly the [[Schema Evolution]] problem — and it's why Avro/Protobuf with a schema registry are essential for event-carried state transfer at scale.
+**Schema evolution is critical**: Events are often stored durably (Kafka retention). Old events have old schemas. New consumers must handle old event formats. This is exactly the [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] problem — and it's why Avro/Protobuf with a schema registry are essential for event-carried state transfer at scale.
 
 **Consumers build local views**: Each consumer typically stores a local copy of the data it needs (a "projection" or "materialized view"). The notification service stores user names and email addresses from UserCreated events. The recommendation service stores purchase history from OrderCreated events. Each service's local data is eventually consistent with the source of truth.
 
-**This is denormalization at the system level.** The same data exists in multiple services' databases — each shaped for its own query patterns. The trade-offs are the same as [[Relational Modeling and Normalization|relational denormalization]]: faster reads, more storage, and the risk that copies drift if events are lost or processed out of order.
+**This is denormalization at the system level.** The same data exists in multiple services' databases — each shaped for its own query patterns. The trade-offs are the same as [[01-Phase-1-Foundations__Module-05-Data-Modeling__Relational_Modeling_and_Normalization|relational denormalization]]: faster reads, more storage, and the risk that copies drift if events are lost or processed out of order.
 
 **When it works well**: High-volume events where callback latency is unacceptable. Services that need to build and maintain their own views of data (search indexes, caches, analytics stores). Systems where runtime independence is critical (the consumer must work even if the producer is down).
 
 ### Change Data Capture (CDC)
 
-A special case of event-carried state transfer where the events are generated from the database's [[Write-Ahead Log]] rather than application code. Every insert, update, and delete in the database is captured and published as an event.
+A special case of event-carried state transfer where the events are generated from the database's [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] rather than application code. Every insert, update, and delete in the database is captured and published as an event.
 
 **Tools**: Debezium (the standard), AWS DMS, Maxwell (for MySQL).
 
-**Why CDC instead of application-published events**: The application might update the database but fail to publish the event (crash, bug, [[Outbox Pattern|outbox]] not implemented). CDC reads the WAL — if the data is in the database, the event is published. There's no gap between "data written" and "event published."
+**Why CDC instead of application-published events**: The application might update the database but fail to publish the event (crash, bug, [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern|outbox]] not implemented). CDC reads the WAL — if the data is in the database, the event is published. There's no gap between "data written" and "event published."
 
-**The trade-off**: CDC events are database-schema-level (table names, column names, row values), not domain-level (OrderCreated, PaymentProcessed). Consumers must map from database schema to domain concepts. If the database schema changes (column rename), CDC events change — consumers break. The [[Outbox Pattern]] bridges this: write domain events to an outbox table, and CDC captures domain-level events from that table.
+**The trade-off**: CDC events are database-schema-level (table names, column names, row values), not domain-level (OrderCreated, PaymentProcessed). Consumers must map from database schema to domain concepts. If the database schema changes (column rename), CDC events change — consumers break. The [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] bridges this: write domain events to an outbox table, and CDC captures domain-level events from that table.
 
 ## Decision Framework
 
@@ -78,7 +78,7 @@ A special case of event-carried state transfer where the events are generated fr
 
 **Event soup**: Every microservice publishes events for everything. The event bus has 500 event types. Nobody knows what events are available, what schema they use, or who consumes them. New engineers are overwhelmed. Mitigation: an event catalog (schema registry + documentation), ownership per event type, and the discipline to ask "does this really need to be an event?" before publishing.
 
-**Temporal coupling via events**: Service A publishes OrderCreated. Service B processes it and publishes InventoryReserved. Service C waits for both OrderCreated AND InventoryReserved before proceeding. This is a distributed saga implemented implicitly through event choreography — but nobody can see the full flow. The dependencies are hidden in consumer subscriptions. Mitigation: if the flow is a saga, make it explicit with an [[Saga Pattern|orchestrator]].
+**Temporal coupling via events**: Service A publishes OrderCreated. Service B processes it and publishes InventoryReserved. Service C waits for both OrderCreated AND InventoryReserved before proceeding. This is a distributed saga implemented implicitly through event choreography — but nobody can see the full flow. The dependencies are hidden in consumer subscriptions. Mitigation: if the flow is a saga, make it explicit with an [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern|orchestrator]].
 
 **Event ordering assumptions**: Consumer assumes events arrive in order. But if the producer publishes to multiple Kafka partitions, or events are retried out of order, the consumer sees OrderUpdated before OrderCreated. Mitigation: design consumers to handle out-of-order events (check for existence before applying updates, use event timestamps for ordering, or ensure causal events go to the same partition).
 
@@ -147,12 +147,12 @@ graph TD
 
 ## Connections
 
-- [[Message Queues vs Event Streams]] — The transport layer for these patterns
-- [[Event Sourcing and CQRS]] — Event sourcing uses events as the source of truth, not just an integration mechanism
-- [[Saga Pattern]] — Choreography sagas use event notification or event-carried state transfer
-- [[Schema Evolution]] — Event-carried state transfer requires careful schema management
-- [[Outbox Pattern]] — Reliable domain event publishing combining the best of application events and CDC
-- [[Service Decomposition and Bounded Contexts]] — Events are the primary integration mechanism between bounded contexts
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams]] — The transport layer for these patterns
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]] — Event sourcing uses events as the source of truth, not just an integration mechanism
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] — Choreography sagas use event notification or event-carried state transfer
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] — Event-carried state transfer requires careful schema management
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] — Reliable domain event publishing combining the best of application events and CDC
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Service_Decomposition_and_Bounded_Contexts]] — Events are the primary integration mechanism between bounded contexts
 
 ## Reflection Prompts
 

@@ -31,7 +31,7 @@ Data is organized into tables (relations) with rows and columns. Relationships b
 **Weaknesses**:
 - Object-relational impedance mismatch: Application objects (a User with nested Addresses and Orders) don't map 1:1 to flat tables. ORMs try to bridge this gap but add complexity and sometimes generate terrible SQL.
 - Schema rigidity: Adding a column to a billion-row table can be slow (though modern databases handle this better — Postgres `ALTER TABLE ADD COLUMN` with a default is instant since v11).
-- Horizontal scaling: Joins across partitions are expensive or impossible. Sharding a relational database means giving up some of its best features (see [[Partitioning and Sharding]]).
+- Horizontal scaling: Joins across partitions are expensive or impossible. Sharding a relational database means giving up some of its best features (see [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]]).
 
 **Best for**: Most OLTP applications. Anything with complex relationships, ad-hoc query needs, or strong consistency requirements. E-commerce, SaaS, financial systems, CMS.
 
@@ -149,10 +149,10 @@ graph TD
 
 ## Connections
 
-- [[SQL vs NoSQL Decision Framework]] — This note focuses on data models; that note covers the broader database selection including operational concerns
-- [[Relational Modeling and Normalization]] — Deep dive into relational modeling specifically
-- [[Schema Evolution]] — How each model handles schema changes
-- [[Partitioning and Sharding]] — Document and graph models have very different partitioning characteristics
+- [[01-Phase-1-Foundations__Module-04-Databases__SQL_vs_NoSQL_Decision_Framework]] — This note focuses on data models; that note covers the broader database selection including operational concerns
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Relational_Modeling_and_Normalization]] — Deep dive into relational modeling specifically
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] — How each model handles schema changes
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Document and graph models have very different partitioning characteristics
 
 ## Reflection Prompts
 

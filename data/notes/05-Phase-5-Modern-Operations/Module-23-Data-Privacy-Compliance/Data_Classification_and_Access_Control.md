@@ -121,11 +121,11 @@ graph TD
 
 ## Connections
 
-- [[Data Privacy and Compliance]] — Classification and access control are foundational to all compliance frameworks
-- [[GDPR and Data Sovereignty]] — GDPR's "data minimization" principle requires classification to determine what data is necessary
-- [[Audit Logging and Compliance]] — Access control decisions must be audit-logged
-- [[Authentication and Identity]] — Identity is the prerequisite for access control
-- [[Encryption at Rest and in Transit]] — Encryption protects data at the storage layer; access control protects it at the application layer
+- [[Data_Privacy_and_Compliance]] — Classification and access control are foundational to all compliance frameworks
+- [[GDPR_and_Data_Sovereignty]] — GDPR's "data minimization" principle requires classification to determine what data is necessary
+- [[Audit_Logging_and_Compliance]] — Access control decisions must be audit-logged
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization]] — Identity is the prerequisite for access control
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Encryption_at_Rest_and_in_Transit]] — Encryption protects data at the storage layer; access control protects it at the application layer
 
 ## Reflection Prompts
 

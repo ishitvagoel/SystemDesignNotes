@@ -2,7 +2,7 @@
 
 ## Why This Exists
 
-A single cache server has limits — memory capacity (one machine's RAM) and throughput (one machine's network and CPU). When your cache needs to hold 500GB of data or serve 1 million requests per second, you need to distribute it across multiple nodes. Distributed caching is the infrastructure layer that makes the caching patterns from [[Cache Patterns and Strategies]] work at scale.
+A single cache server has limits — memory capacity (one machine's RAM) and throughput (one machine's network and CPU). When your cache needs to hold 500GB of data or serve 1 million requests per second, you need to distribute it across multiple nodes. Distributed caching is the infrastructure layer that makes the caching patterns from [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] work at scale.
 
 
 ## Mental Model
@@ -35,7 +35,7 @@ Data structure server with caching capabilities. Supports strings, hashes, lists
 
 **Weaknesses**: Single-threaded command execution means one slow command (KEYS *, large SORT) blocks everything. Memory overhead per key is higher than Memcached (Redis stores metadata for each data structure). More operational complexity.
 
-**Best for**: Anything beyond simple key-value caching. Session storage, rate limiting ([[Rate Limiting and Throttling]]), distributed locks, leaderboards, pub/sub, real-time analytics.
+**Best for**: Anything beyond simple key-value caching. Session storage, rate limiting ([[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]]), distributed locks, leaderboards, pub/sub, real-time analytics.
 
 ### Comparison
 
@@ -66,11 +66,11 @@ Redis Cluster provides automatic sharding across multiple Redis nodes with built
 
 ## Cache Sharding with Consistent Hashing
 
-For systems not using Redis Cluster's native sharding (e.g., Memcached, or Redis in non-cluster mode), clients distribute keys across nodes using [[Consistent Hashing]].
+For systems not using Redis Cluster's native sharding (e.g., Memcached, or Redis in non-cluster mode), clients distribute keys across nodes using [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]].
 
 **Why not simple modular hashing** (`node = hash(key) % num_nodes`)? When you add or remove a node, `num_nodes` changes, and *every* key's assigned node changes. The entire cache is effectively invalidated — a cold start that can overwhelm the database.
 
-**Consistent hashing**: Nodes and keys are mapped onto a hash ring. Adding a node only remaps keys in its immediate vicinity — typically ~1/N of all keys (where N is the number of nodes). The rest stay on their current nodes. See [[Consistent Hashing]] for the full mechanism.
+**Consistent hashing**: Nodes and keys are mapped onto a hash ring. Adding a node only remaps keys in its immediate vicinity — typically ~1/N of all keys (where N is the number of nodes). The rest stay on their current nodes. See [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]] for the full mechanism.
 
 **Virtual nodes**: Each physical node is represented by multiple points on the ring. This smooths out distribution (preventing one node from getting a disproportionate range) and allows weighted assignment (a node with more memory gets more virtual nodes).
 
@@ -197,12 +197,12 @@ graph TD
 
 ## Connections
 
-- [[Cache Patterns and Strategies]] — The caching patterns that this infrastructure supports
-- [[Consistent Hashing]] — The algorithm behind cache sharding in Memcached and non-cluster Redis
-- [[Partitioning and Sharding]] — Cache sharding follows the same principles as database sharding
-- [[Rate Limiting and Throttling]] — Redis is the standard backend for distributed rate limiting
-- [[Connection Pooling and Keep-Alive]] — Connection pools to Redis are essential for high-throughput services
-- [[Idempotency]] — Redis SETNX is commonly used for idempotency key deduplication
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — The caching patterns that this infrastructure supports
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]] — The algorithm behind cache sharding in Memcached and non-cluster Redis
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Cache sharding follows the same principles as database sharding
+- [[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]] — Redis is the standard backend for distributed rate limiting
+- [[01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive]] — Connection pools to Redis are essential for high-throughput services
+- [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] — Redis SETNX is commonly used for idempotency key deduplication
 
 ## Reflection Prompts
 

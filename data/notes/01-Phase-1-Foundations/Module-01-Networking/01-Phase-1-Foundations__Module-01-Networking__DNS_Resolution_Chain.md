@@ -42,7 +42,7 @@ sequenceDiagram
     Recursive-->>Client: 93.184.216.34
 ```
 
-**Root servers**: 13 logical root server clusters (A through M), each replicated via [[Anycast and GeoDNS]] to hundreds of physical locations worldwide. They don't know any domain's IP — they only know which TLD servers handle `.com`, `.org`, `.io`, etc.
+**Root servers**: 13 logical root server clusters (A through M), each replicated via [[01-Phase-1-Foundations__Module-01-Networking__Anycast_and_GeoDNS]] to hundreds of physical locations worldwide. They don't know any domain's IP — they only know which TLD servers handle `.com`, `.org`, `.io`, etc.
 
 **TLD servers**: Operated by registries (Verisign for `.com`, for example). They know which authoritative nameservers handle each registered domain.
 
@@ -143,11 +143,11 @@ graph TD
 
 ## Connections
 
-- [[Anycast and GeoDNS]] — How DNS itself gets load-balanced globally
-- [[Load Balancing Fundamentals]] — DNS-based load balancing (multiple A records) is the simplest form of load balancing, but the coarsest
-- [[CDN Architecture]] — CDNs rely heavily on DNS to route users to the nearest edge node
-- [[Geo-Distribution and Data Sovereignty]] — DNS failover (Route 53 health checks, for example) is a common multi-region routing strategy
-- [[TCP Deep Dive]] — DNS traditionally uses UDP, but falls back to TCP for large responses (and DNS over HTTPS/TLS is TCP-based)
+- [[01-Phase-1-Foundations__Module-01-Networking__Anycast_and_GeoDNS]] — How DNS itself gets load-balanced globally
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — DNS-based load balancing (multiple A records) is the simplest form of load balancing, but the coarsest
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — CDNs rely heavily on DNS to route users to the nearest edge node
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty]] — DNS failover (Route 53 health checks, for example) is a common multi-region routing strategy
+- [[01-Phase-1-Foundations__Module-01-Networking__TCP_Deep_Dive]] — DNS traditionally uses UDP, but falls back to TCP for large responses (and DNS over HTTPS/TLS is TCP-based)
 
 ## Reflection Prompts
 

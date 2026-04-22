@@ -20,11 +20,11 @@ The danger: if you put the concierge in charge of *too much* — menu design, ro
 
 **Request routing**: The gateway maps external URLs to internal services. `api.example.com/orders/*` → order-service, `api.example.com/users/*` → user-service. This decouples the external API shape from internal service boundaries — you can restructure services without changing client URLs.
 
-**Authentication and authorization offload**: The gateway validates tokens (JWT verification, OAuth2 token introspection), extracts user identity, and passes it to downstream services as a trusted header. Services don't need to implement auth logic; they trust the gateway's attestation. See [[Authentication and Authorization]].
+**Authentication and authorization offload**: The gateway validates tokens (JWT verification, OAuth2 token introspection), extracts user identity, and passes it to downstream services as a trusted header. Services don't need to implement auth logic; they trust the gateway's attestation. See [[03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization]].
 
 This is one of the gateway's highest-value functions. Without it, every service reimplements token validation, and a security fix (rotating signing keys, patching a JWT library vulnerability) requires updating 50 services instead of one.
 
-**Rate limiting**: Global and per-consumer rate limiting at the edge, before requests reach backend services. See [[Rate Limiting and Throttling]].
+**Rate limiting**: Global and per-consumer rate limiting at the edge, before requests reach backend services. See [[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]].
 
 **Request/response transformation**: Protocol translation (REST externally, gRPC internally), header manipulation, response filtering (strip internal fields before returning to external clients), request enrichment (add correlation IDs, geolocation headers).
 
@@ -62,7 +62,7 @@ Each BFF is owned by the team that owns the client. The web team's BFF aggregate
 - Con: Multiple BFFs may duplicate logic. If all three BFFs need to call the order service and transform the response, that's three implementations of the same transform.
 - Con: More services to deploy, monitor, and maintain.
 
-**BFF vs GraphQL Federation**: GraphQL Federation ([[gRPC vs REST vs GraphQL]]) solves a similar problem differently — instead of per-client gateways, you have a single graph that clients query selectively. The two approaches can coexist: BFF per client type, with each BFF using GraphQL to query backend subgraphs.
+**BFF vs GraphQL Federation**: GraphQL Federation ([[01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL]]) solves a similar problem differently — instead of per-client gateways, you have a single graph that clients query selectively. The two approaches can coexist: BFF per client type, with each BFF using GraphQL to query backend subgraphs.
 
 ### Gateway vs Service Mesh
 
@@ -70,7 +70,7 @@ This distinction confuses many teams:
 
 **API gateway**: Handles **north-south** traffic (external clients → internal services). Focuses on external concerns: public auth, rate limiting, API versioning, protocol translation.
 
-**Service mesh** (Envoy, Istio, Linkerd): Handles **east-west** traffic (service → service). Focuses on internal concerns: mTLS, retries, circuit breaking, observability between services. See [[Kubernetes and Platform Engineering]].
+**Service mesh** (Envoy, Istio, Linkerd): Handles **east-west** traffic (service → service). Focuses on internal concerns: mTLS, retries, circuit breaking, observability between services. See [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering]].
 
 They're complementary, not competing. A request hits the API gateway first (north-south), then traverses the service mesh (east-west). Some tools blur the line — Envoy can function as both a gateway and a service mesh data plane.
 
@@ -156,14 +156,14 @@ graph TD
 
 ## Connections
 
-- [[Load Balancing Fundamentals]] — The gateway is effectively an L7 load balancer with extra capabilities
-- [[Rate Limiting and Throttling]] — Rate limiting is a core gateway responsibility
-- [[gRPC vs REST vs GraphQL]] — The gateway often translates between external (REST/GraphQL) and internal (gRPC) protocols
-- [[API Versioning and Compatibility]] — The gateway can handle version routing (route /v1/* to old service, /v2/* to new)
-- [[RESTful Design Principles]] — The gateway shapes the external API surface
-- [[Authentication and Authorization]] — Auth offloading is one of the gateway's highest-value functions
-- [[Service Decomposition and Bounded Contexts]] — Gateway structure should reflect domain boundaries, not mirror every internal service
-- [[Kubernetes and Platform Engineering]] — Gateway handles north-south; service mesh handles east-west
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — The gateway is effectively an L7 load balancer with extra capabilities
+- [[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]] — Rate limiting is a core gateway responsibility
+- [[01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL]] — The gateway often translates between external (REST/GraphQL) and internal (gRPC) protocols
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility]] — The gateway can handle version routing (route /v1/* to old service, /v2/* to new)
+- [[01-Phase-1-Foundations__Module-02-API-Design__RESTful_Design_Principles]] — The gateway shapes the external API surface
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization]] — Auth offloading is one of the gateway's highest-value functions
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Service_Decomposition_and_Bounded_Contexts]] — Gateway structure should reflect domain boundaries, not mirror every internal service
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering]] — Gateway handles north-south; service mesh handles east-west
 
 ## Reflection Prompts
 

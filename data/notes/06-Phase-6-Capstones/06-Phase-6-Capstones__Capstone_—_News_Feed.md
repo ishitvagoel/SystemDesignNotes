@@ -203,13 +203,13 @@ graph TD
 ## Connections
 
 **Core concepts applied:**
-- [[Cache Patterns and Strategies]] — Pre-materialized feed cache per user
-- [[Message Queues vs Event Streams]] — Fan-out on write via async message processing
-- [[Database Replication]] — Read replicas for feed serving
-- [[Partitioning and Sharding]] — User-based sharding for feed storage
-- [[CDN Architecture]] — Media delivery for posts with images/video
-- [[Consistent Hashing]] — Cache distribution for feed data
-- [[Stream Processing]] — Real-time ranking and feature computation
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — Pre-materialized feed cache per user
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams]] — Fan-out on write via async message processing
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Read replicas for feed serving
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — User-based sharding for feed storage
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — Media delivery for posts with images/video
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]] — Cache distribution for feed data
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Stream_Processing]] — Real-time ranking and feature computation
 
 ## Canonical Sources
 

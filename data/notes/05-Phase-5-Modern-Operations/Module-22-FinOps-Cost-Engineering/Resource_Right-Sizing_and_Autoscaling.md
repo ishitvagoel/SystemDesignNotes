@@ -106,10 +106,10 @@ graph TD
 
 ## Connections
 
-- [[Cost Engineering and FinOps]] — Right-sizing is the most impactful first step in any FinOps initiative
-- [[Cloud Cost Optimization]] — Right-sizing feeds into purchasing decisions (smaller instances need smaller commitments)
-- [[Kubernetes and Platform Engineering]] — Kubernetes resource management (HPA, VPA, Karpenter) is where right-sizing meets autoscaling in practice
-- [[Load Balancing Fundamentals]] — Autoscaling changes the target group; load balancers must detect new instances
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — Right-sizing is the most impactful first step in any FinOps initiative
+- [[Cloud_Cost_Optimization]] — Right-sizing feeds into purchasing decisions (smaller instances need smaller commitments)
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering]] — Kubernetes resource management (HPA, VPA, Karpenter) is where right-sizing meets autoscaling in practice
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — Autoscaling changes the target group; load balancers must detect new instances
 
 ## Reflection Prompts
 

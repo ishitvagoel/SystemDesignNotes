@@ -32,9 +32,9 @@ graph TD
     L3 --> D3["Data pages..."]
 ```
 
-**Read path**: Start at the root. At each level, do a binary search to find which child pointer to follow. For a tree with N keys and branching factor B, this takes O(log_B N) page reads. With a branching factor of 500 (typical for 8KB pages with smallish keys), a tree with 250 billion keys is only 4 levels deep. Four page reads — if the upper levels are cached in the [[Buffer Pool and Page Cache]], it's often 1–2 disk reads.
+**Read path**: Start at the root. At each level, do a binary search to find which child pointer to follow. For a tree with N keys and branching factor B, this takes O(log_B N) page reads. With a branching factor of 500 (typical for 8KB pages with smallish keys), a tree with 250 billion keys is only 4 levels deep. Four page reads — if the upper levels are cached in the [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]], it's often 1–2 disk reads.
 
-**Write path**: Find the leaf page, update it in place. If the page is full, split it into two pages and update the parent pointer. Splits cascade upward in rare cases. Before any page modification, the change is recorded in the [[Write-Ahead Log]] for crash recovery.
+**Write path**: Find the leaf page, update it in place. If the page is full, split it into two pages and update the parent pointer. Splits cascade upward in rare cases. Before any page modification, the change is recorded in the [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] for crash recovery.
 
 **The cost of in-place updates**: Modifying a page on disk means random I/O — seeking to the page's location and rewriting it. On HDDs, this is catastrophically slow (each seek is ~10ms). On SSDs, it's faster but still involves write amplification at the flash translation layer (SSDs can't update in place; they erase whole blocks and rewrite).
 
@@ -42,7 +42,7 @@ graph TD
 
 An LSM-tree never modifies data in place. All writes go through a layered structure:
 
-**Step 1 — Memtable**: Writes go to an in-memory sorted structure (typically a red-black tree or skip list). This is blazingly fast — no disk I/O at all. The [[Write-Ahead Log]] ensures durability in case of crash.
+**Step 1 — Memtable**: Writes go to an in-memory sorted structure (typically a red-black tree or skip list). This is blazingly fast — no disk I/O at all. The [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] ensures durability in case of crash.
 
 **Step 2 — Flush to SSTable**: When the memtable reaches a size threshold (e.g., 64MB), it's written to disk as a **Sorted String Table (SSTable)** — an immutable, sorted file. This write is sequential (one contiguous write), which is fast on both HDDs and SSDs.
 
@@ -147,12 +147,12 @@ graph TD
 
 ## Connections
 
-- [[Write-Ahead Log]] — Both B-trees and LSM-trees use WAL for durability; the WAL is the sequential write that makes crash recovery possible
-- [[Buffer Pool and Page Cache]] — B-trees rely heavily on the buffer pool to cache pages in memory; LSM-trees rely on OS page cache for SSTable reads
-- [[Storage Engine Selection]] — Decision framework for choosing between B-tree and LSM-tree engines
-- [[MVCC Deep Dive]] — Concurrency control layered on top of the storage engine
-- [[Indexing Deep Dive]] — Indexes are typically B-trees or LSM-trees themselves
-- [[ID Generation Strategies]] — Key design (sequential vs random) directly impacts B-tree and LSM-tree performance
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — Both B-trees and LSM-trees use WAL for durability; the WAL is the sequential write that makes crash recovery possible
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]] — B-trees rely heavily on the buffer pool to cache pages in memory; LSM-trees rely on OS page cache for SSTable reads
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Storage_Engine_Selection]] — Decision framework for choosing between B-tree and LSM-tree engines
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive]] — Concurrency control layered on top of the storage engine
+- [[01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive]] — Indexes are typically B-trees or LSM-trees themselves
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__ID_Generation_Strategies]] — Key design (sequential vs random) directly impacts B-tree and LSM-tree performance
 
 ## Reflection Prompts
 

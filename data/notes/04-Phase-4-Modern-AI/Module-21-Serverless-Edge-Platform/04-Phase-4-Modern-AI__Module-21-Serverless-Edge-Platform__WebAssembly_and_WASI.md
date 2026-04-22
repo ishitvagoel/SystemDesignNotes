@@ -158,10 +158,10 @@ flowchart TD
 
 ## Connections
 
-- [[Serverless and Edge Computing]] — WASM is the execution substrate for edge functions; Cloudflare Workers is the canonical example
-- [[Kubernetes and Platform Engineering]] — WASM is emerging as an alternative to containers in K8s via WasmEdge and runwasi (OCI-compatible WASM shim)
-- [[Zero-Trust Architecture]] — WASM's capability-based WASI model mirrors zero-trust principles: explicit capability grants, deny-by-default
-- [[Inference Serving Architecture]] — WASI-NN enables portable AI inference across GPU and CPU backends
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing]] — WASM is the execution substrate for edge functions; Cloudflare Workers is the canonical example
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering]] — WASM is emerging as an alternative to containers in K8s via WasmEdge and runwasi (OCI-compatible WASM shim)
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Zero_Trust_Architecture]] — WASM's capability-based WASI model mirrors zero-trust principles: explicit capability grants, deny-by-default
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture]] — WASI-NN enables portable AI inference across GPU and CPU backends
 
 ## Reflection Prompts
 

@@ -29,7 +29,7 @@ A post office vs. a newspaper. A **message queue** (RabbitMQ, SQS) is like a pos
 
 **Best for**: Event-driven architecture (react to business events), event sourcing (the log IS the source of truth), stream processing (real-time analytics, aggregations), data integration (CDC from databases to analytics), and audit logging.
 
-**Key property — the log**: Kafka's core abstraction is an append-only, ordered, partitioned log. This is the same abstraction as the [[Write-Ahead Log]] in databases and the event log in [[Event Sourcing and CQRS]]. Jay Kreps' "The Log" essay argues this is the unifying abstraction for data integration.
+**Key property — the log**: Kafka's core abstraction is an append-only, ordered, partitioned log. This is the same abstraction as the [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] in databases and the event log in [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]]. Jay Kreps' "The Log" essay argues this is the unifying abstraction for data integration.
 
 ## Comparison
 
@@ -120,10 +120,10 @@ graph TD
 
 ## Connections
 
-- [[Event-Driven Architecture Patterns]] — Message queues and event streams are the transport for different EDA patterns
-- [[Stream Processing]] — Kafka is the standard input for stream processing engines
-- [[Outbox Pattern]] — Events published via outbox are typically sent to Kafka
-- [[Idempotent Consumers]] — Both queues and streams deliver at-least-once; consumers must be idempotent
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns]] — Message queues and event streams are the transport for different EDA patterns
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Stream_Processing]] — Kafka is the standard input for stream processing engines
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] — Events published via outbox are typically sent to Kafka
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers]] — Both queues and streams deliver at-least-once; consumers must be idempotent
 
 ## Reflection Prompts
 

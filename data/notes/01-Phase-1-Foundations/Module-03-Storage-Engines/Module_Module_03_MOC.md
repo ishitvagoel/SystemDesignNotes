@@ -11,25 +11,25 @@ Understanding storage engines gives you the ability to predict database behavior
 ## Notes in This Module
 
 ### Core Data Structures
-- [[B-Tree vs LSM-Tree]] — The two fundamental storage engine designs and their amplification trade-offs
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree]] — The two fundamental storage engine designs and their amplification trade-offs
 
 ### Durability & Recovery
-- [[Write-Ahead Log]] — How databases guarantee durability without writing data in place, checkpoint strategies, and WAL-based replication
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — How databases guarantee durability without writing data in place, checkpoint strategies, and WAL-based replication
 
 ### Concurrency Control
-- [[MVCC Deep Dive]] — How Postgres, MySQL/InnoDB, and Spanner implement snapshot isolation differently, and why it matters
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive]] — How Postgres, MySQL/InnoDB, and Spanner implement snapshot isolation differently, and why it matters
 
 ### Memory & I/O Management
-- [[Buffer Pool and Page Cache]] — How databases manage memory, minimize disk I/O, and interact with the OS page cache
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]] — How databases manage memory, minimize disk I/O, and interact with the OS page cache
 
 ### Decision Framework
-- [[Storage Engine Selection]] — When to use B-tree engines, LSM-tree engines, or hybrid approaches, matched to workload patterns
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Storage_Engine_Selection]] — When to use B-tree engines, LSM-tree engines, or hybrid approaches, matched to workload patterns
 
 ## Prerequisites
-- [[_Module 01 MOC]] — Networking fundamentals (storage engines are local, but understanding I/O latency and throughput sets the frame)
+- [[Module_Module_01_MOC]] — Networking fundamentals (storage engines are local, but understanding I/O latency and throughput sets the frame)
 
 ## Where This Leads
-- [[_Module 04 MOC]] — Databases: Selection, Scaling & Operations (builds on storage engine knowledge to reason about indexing, replication, and sharding)
-- [[_Module 05 MOC]] — Data Modeling & Schema Evolution (schema design interacts with storage engine behavior)
-- [[_Module 08 MOC]] — Consistency Models (MVCC connects to isolation levels and consistency guarantees)
-- [[_Module 11 MOC]] — Replication & Conflict Resolution (WAL is the mechanism beneath replication)
+- [[Module_Module_04_MOC]] — Databases: Selection, Scaling & Operations (builds on storage engine knowledge to reason about indexing, replication, and sharding)
+- [[Module_Module_05_MOC]] — Data Modeling & Schema Evolution (schema design interacts with storage engine behavior)
+- [[Module_Module_08_MOC]] — Consistency Models (MVCC connects to isolation levels and consistency guarantees)
+- [[Module_Module_11_MOC]] — Replication & Conflict Resolution (WAL is the mechanism beneath replication)

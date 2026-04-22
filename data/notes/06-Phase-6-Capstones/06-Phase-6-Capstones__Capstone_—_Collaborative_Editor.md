@@ -46,7 +46,7 @@ This is substantial but manageable. The key bottleneck is per-document fan-out: 
 
 ## 3. The Central Decision: CRDTs vs OT
 
-This is covered in depth in [[Real-Time Collaboration]]. Summary of the trade-off:
+This is covered in depth in [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Real-Time_Collaboration]]. Summary of the trade-off:
 
 | Dimension | OT (Google Docs) | CRDT (Figma, Yjs) |
 |-----------|-------------------|-------------------|
@@ -96,7 +96,7 @@ graph TD
 
 ### Deep Dive 1: Cell-Based Document Isolation
 
-Each document is independent — edits to Document A never interact with Document B. This makes [[Cell-Based Architecture]] natural: partition documents across cells.
+Each document is independent — edits to Document A never interact with Document B. This makes [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]] natural: partition documents across cells.
 
 **Cell routing**: `cell = hash(document_id) % num_cells`. Each cell has its own Sync Service instances, WebSocket gateway connections, and Redis presence store. A cell failure affects only its documents — other cells are completely unaffected.
 
@@ -135,7 +135,7 @@ Every persisted CRDT state is a version. But persisting every keystroke is expen
 
 **Reverting**: To revert to a historical version, load the snapshot at that time, replace the current CRDT state, and broadcast to all connected clients. Their local state is replaced. This is a "hard revert" — all subsequent edits are effectively undone. For a "soft revert" (see the old version without losing current edits), show the historical snapshot in a read-only view alongside the current document.
 
-**This is [[Event Sourcing and CQRS]] for documents**: The CRDT updates are events. The current document is a materialized view. Historical states are recoverable by replay.
+**This is [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]] for documents**: The CRDT updates are events. The current document is a materialized view. Historical states are recoverable by replay.
 
 ## 6. Failure Analysis
 
@@ -232,12 +232,12 @@ graph TD
 ## Connections
 
 **Core concepts applied:**
-- [[CRDTs]] — Conflict-free data types for concurrent editing
-- [[Real-Time Collaboration]] — WebSocket infrastructure, presence systems
-- [[Cell-Based Architecture]] — Document-level cell isolation
-- [[Consistent Hashing]] — Document-to-server assignment
-- [[Observability and Alerting]] — Real-time system health for collaboration
-- [[Resilience Patterns]] — Graceful degradation when collaboration server fails
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs]] — Conflict-free data types for concurrent editing
+- [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Real-Time_Collaboration]] — WebSocket infrastructure, presence systems
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]] — Document-level cell isolation
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]] — Document-to-server assignment
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Real-time system health for collaboration
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns]] — Graceful degradation when collaboration server fails
 
 ## Canonical Sources
 

@@ -51,7 +51,7 @@ This is the system's quality bottleneck — the LLM can only be as good as the c
 
 **Stage 1 — Hybrid retrieval**: Run the user's query through both BM25 (OpenSearch) and vector search (pgvector or Milvus) in parallel. BM25 catches exact keyword matches (product names, error codes, proper nouns). Vector search catches semantic matches (paraphrases, related concepts).
 
-**Stage 2 — Fusion**: Merge results using [[Vector Search and Hybrid Retrieval|Reciprocal Rank Fusion]]. This produces a unified ranked list that benefits from both retrieval methods.
+**Stage 2 — Fusion**: Merge results using [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval|Reciprocal Rank Fusion]]. This produces a unified ranked list that benefits from both retrieval methods.
 
 **Stage 3 — Re-ranking**: Take the top 20 results and re-rank with a cross-encoder model (a model that jointly encodes the query + each document and produces a relevance score). This is slower (20 model inferences) but significantly more accurate than embedding similarity alone. The re-ranker is the quality lever — it catches subtle relevance signals that embedding similarity misses.
 
@@ -59,7 +59,7 @@ This is the system's quality bottleneck — the LLM can only be as good as the c
 
 ### Deep Dive 2: LLM Gateway (Multi-Provider Routing)
 
-The [[AI Gateway and LLM Operations|AI Gateway]] routes LLM calls across providers based on:
+The [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__AI_Gateway_and_LLM_Operations|AI Gateway]] routes LLM calls across providers based on:
 
 - **Cost**: Route simple queries (classification, extraction) to smaller/cheaper models (GPT-4o-mini, Haiku). Route complex queries (analysis, reasoning) to powerful models (GPT-4o, Opus).
 - **Latency**: If one provider is slow (service degradation), automatically route to another.
@@ -88,7 +88,7 @@ For questions beyond the knowledge base ("What's the average deal size this quar
 
 **Sandboxing**: The SQL tool runs queries in a read-only connection with a row limit and query timeout. The API tool is restricted to a whitelist of endpoints. The calculator tool runs in a sandboxed interpreter. No tool can modify data or access resources beyond its scope.
 
-**Multi-step reasoning**: The agent may need to chain tool calls: "What percentage of revenue comes from enterprise customers?" → Step 1: SQL query to get total revenue. Step 2: SQL query to get enterprise revenue. Step 3: Calculate percentage. The [[Agentic System Architecture|ReAct loop]] handles this iteratively.
+**Multi-step reasoning**: The agent may need to chain tool calls: "What percentage of revenue comes from enterprise customers?" → Step 1: SQL query to get total revenue. Step 2: SQL query to get enterprise revenue. Step 3: Calculate percentage. The [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agentic_System_Architecture|ReAct loop]] handles this iteratively.
 
 **Cost control**: Cap tool calls per query (max 5). Cap tokens per query (max 10K). If the agent exceeds limits, return a partial answer with an explanation.
 
@@ -184,13 +184,13 @@ graph TD
 ## Connections
 
 **Core concepts applied:**
-- [[RAG Architecture]] — Full retrieval-augmented generation pipeline
-- [[Vector Search and Hybrid Retrieval]] — Hybrid keyword + vector search with re-ranking
-- [[Full-Text Search Architecture]] — BM25 keyword search component
-- [[Inference Serving Architecture]] — LLM inference for generation
-- [[AI Gateway and LLM Operations]] — Gateway routing, semantic caching, cost control
-- [[Stream Processing]] — Indexing pipeline for document ingestion
-- [[Cache Patterns and Strategies]] — Semantic caching for repeated queries
+- [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__RAG_Architecture]] — Full retrieval-augmented generation pipeline
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval]] — Hybrid keyword + vector search with re-ranking
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Full-Text_Search_Architecture]] — BM25 keyword search component
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture]] — LLM inference for generation
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__AI_Gateway_and_LLM_Operations]] — Gateway routing, semantic caching, cost control
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Stream_Processing]] — Indexing pipeline for document ingestion
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — Semantic caching for repeated queries
 
 ## Canonical Sources
 

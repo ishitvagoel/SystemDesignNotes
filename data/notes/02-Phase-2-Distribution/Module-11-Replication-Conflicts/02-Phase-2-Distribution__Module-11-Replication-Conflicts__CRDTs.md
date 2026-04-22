@@ -105,7 +105,7 @@ Extending CRDTs to JSON documents: each field is independently a CRDT (counter, 
 
 **Riak**: One of the earliest databases to support CRDTs natively (counters, sets, maps, registers).
 
-**Figma**: Uses CRDTs for their real-time collaborative design tool. Multiple users editing the same design concurrently — edits merge without conflicts. See [[Real-Time Collaboration]].
+**Figma**: Uses CRDTs for their real-time collaborative design tool. Multiple users editing the same design concurrently — edits merge without conflicts. See [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Real-Time_Collaboration]].
 
 **Apple Notes, Notion**: Use CRDT-inspired approaches for offline editing and sync.
 
@@ -175,11 +175,11 @@ graph TD
 
 ## Connections
 
-- [[Multi-Leader and Conflict Resolution]] — CRDTs are the conflict-free alternative to LWW and manual resolution
-- [[Leaderless Replication]] — CRDTs work naturally with leaderless replication (every node merges independently)
-- [[Logical Clocks and Ordering]] — Vector clocks and causal ordering underpin operation-based CRDTs
-- [[Real-Time Collaboration]] — CRDTs vs OT (Operational Transform) for real-time collaboration
-- [[Consistency Spectrum]] — CRDTs provide strong eventual consistency: replicas that have received the same set of operations converge to the same state
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Multi-Leader_and_Conflict_Resolution]] — CRDTs are the conflict-free alternative to LWW and manual resolution
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Leaderless_Replication]] — CRDTs work naturally with leaderless replication (every node merges independently)
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering]] — Vector clocks and causal ordering underpin operation-based CRDTs
+- [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Real-Time_Collaboration]] — CRDTs vs OT (Operational Transform) for real-time collaboration
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — CRDTs provide strong eventual consistency: replicas that have received the same set of operations converge to the same state
 
 ## Reflection Prompts
 

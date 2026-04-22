@@ -2,7 +2,7 @@
 
 ## Why This Exists
 
-TCP is the workhorse of the internet. Every HTTP request, database query, gRPC call, and SSH session runs over TCP (until HTTP/3 came along — more in [[HTTP Evolution — 1.1 to 2 to 3]]). TCP provides **reliable, ordered, byte-stream delivery** over an unreliable network. It does this through a remarkable set of mechanisms: connection handshakes, sequence numbers, acknowledgments, flow control, and congestion control.
+TCP is the workhorse of the internet. Every HTTP request, database query, gRPC call, and SSH session runs over TCP (until HTTP/3 came along — more in [[01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3]]). TCP provides **reliable, ordered, byte-stream delivery** over an unreliable network. It does this through a remarkable set of mechanisms: connection handshakes, sequence numbers, acknowledgments, flow control, and congestion control.
 
 The problem is that these guarantees aren't free. TCP's reliability mechanisms introduce latency, head-of-line blocking, and connection setup overhead that become real bottlenecks at scale. Understanding *how* TCP provides its guarantees helps you understand *when* those guarantees are worth the cost — and when they're not.
 
@@ -30,7 +30,7 @@ sequenceDiagram
     C->>S: ACK (ack=y+1) + [optional: first data]
 ```
 
-This costs **one full round-trip** before any data flows. On a cross-continent link (~150ms RTT), that's 150ms of pure overhead per new connection. This is why [[Connection Pooling and Keep-Alive]] matters so much for high-throughput services.
+This costs **one full round-trip** before any data flows. On a cross-continent link (~150ms RTT), that's 150ms of pure overhead per new connection. This is why [[01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive]] matters so much for high-throughput services.
 
 **TLS adds more round-trips**: TLS 1.2 adds two more round-trips (four total before data). TLS 1.3 reduces this to one additional round-trip (two total), and supports 0-RTT resumption for repeat connections — though 0-RTT is vulnerable to replay attacks.
 
@@ -59,7 +59,7 @@ TCP delivers bytes **in order**. If packet 3 of 10 is lost, the receiver has pac
 
 This is TCP's most fundamental trade-off: **ordered delivery guarantees create blocking**. For a single request-response, this is fine. But when you multiplex many independent streams over one TCP connection (as HTTP/2 does), a single lost packet blocks *all* streams — even ones whose data arrived fine.
 
-This is the exact problem that motivated HTTP/3's switch to QUIC (UDP-based), which provides per-stream ordering without cross-stream head-of-line blocking. See [[HTTP Evolution — 1.1 to 2 to 3]].
+This is the exact problem that motivated HTTP/3's switch to QUIC (UDP-based), which provides per-stream ordering without cross-stream head-of-line blocking. See [[01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3]].
 
 ### Flow Control vs Congestion Control
 
@@ -141,11 +141,11 @@ sequenceDiagram
 
 ## Connections
 
-- [[TCP vs UDP]] — When TCP's guarantees cost more than they're worth
-- [[HTTP Evolution — 1.1 to 2 to 3]] — How HTTP/2 multiplexing exposed TCP's head-of-line blocking, leading to HTTP/3's move to QUIC
-- [[Connection Pooling and Keep-Alive]] — Strategies to avoid paying TCP's handshake and slow-start costs repeatedly
-- [[Load Balancing Fundamentals]] — L4 load balancers operate at the TCP level; L7 balancers terminate TCP and inspect application data
-- [[Circuit Breakers and Bulkheads]] — TCP timeout tuning interacts with circuit breaker configuration
+- [[01-Phase-1-Foundations__Module-01-Networking__TCP_vs_UDP]] — When TCP's guarantees cost more than they're worth
+- [[01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3]] — How HTTP/2 multiplexing exposed TCP's head-of-line blocking, leading to HTTP/3's move to QUIC
+- [[01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive]] — Strategies to avoid paying TCP's handshake and slow-start costs repeatedly
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — L4 load balancers operate at the TCP level; L7 balancers terminate TCP and inspect application data
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads]] — TCP timeout tuning interacts with circuit breaker configuration
 
 ## Reflection Prompts
 

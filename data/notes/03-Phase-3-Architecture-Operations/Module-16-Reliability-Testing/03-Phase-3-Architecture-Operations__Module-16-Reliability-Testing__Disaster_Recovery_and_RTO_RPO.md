@@ -169,11 +169,11 @@ flowchart TD
 
 ## Connections
 
-- [[SLOs SLIs and Error Budgets]] — RTO/RPO targets are reliability SLOs; replication lag is a key SLI
-- [[Database Replication]] — Streaming replication is the primary mechanism for sub-minute RPO
-- [[Chaos Engineering and Testing]] — DR drills are a form of chaos engineering for the recovery path
-- [[Multi-Tenancy and Isolation]] — Multi-tenant systems need per-tenant RTO/RPO guarantees and isolated backup/restore
-- [[Incident Management]] — DR invocation is the highest-severity tier of incident response
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — RTO/RPO targets are reliability SLOs; replication lag is a key SLI
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Streaming replication is the primary mechanism for sub-minute RPO
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Chaos_Engineering_and_Testing]] — DR drills are a form of chaos engineering for the recovery path
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]] — Multi-tenant systems need per-tenant RTO/RPO guarantees and isolated backup/restore
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Incident_Management]] — DR invocation is the highest-severity tier of incident response
 
 ## Reflection Prompts
 

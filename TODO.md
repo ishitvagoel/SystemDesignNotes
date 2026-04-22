@@ -3,4 +3,4 @@
 - [x] Evolution Chronicles Implementation
 - [x] Update Changelog and Documentation (v2.1)
 - [ ] Author more Chronicles (WhatsApp, Discord)
-- [ ] Fix broken wiki-links in MOCs
+- [x] Fix broken wiki-links in MOCs (automated via fix-links.js)

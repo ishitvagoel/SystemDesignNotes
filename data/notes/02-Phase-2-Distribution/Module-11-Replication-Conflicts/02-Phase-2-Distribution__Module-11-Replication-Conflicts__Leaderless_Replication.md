@@ -72,7 +72,7 @@ Read repair is opportunistic — it only fixes stale replicas that happen to be 
 
 - **Stale reads despite quorum**: With sloppy quorums, a write goes to 2 designated + 1 non-designated node (W=3). A read queries 3 designated nodes (R=3). Only 2 of the 3 designated nodes have the write — the third is stale. The quorum condition `W + R > N` is satisfied numerically but not in practice because the sets don't overlap as expected. This is the fundamental weakness of sloppy quorums.
 
-- **Write conflicts**: Two clients write different values to the same key concurrently. Both writes reach W nodes. The replicas now hold conflicting versions. Resolution requires version vectors and a conflict resolution strategy ([[Multi-Leader and Conflict Resolution]]).
+- **Write conflicts**: Two clients write different values to the same key concurrently. Both writes reach W nodes. The replicas now hold conflicting versions. Resolution requires version vectors and a conflict resolution strategy ([[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Multi-Leader_and_Conflict_Resolution]]).
 
 - **Anti-entropy lag**: A replica was down for a week. When it comes back, the anti-entropy process must synchronize a week's worth of changes. If the dataset is large, this can take hours and consume significant I/O. During this window, reads that hit the stale replica return old data.
 
@@ -111,10 +111,10 @@ graph TD
 
 ## Connections
 
-- [[Database Replication]] — Leaderless is one of the three replication topologies introduced in Module 4
-- [[Multi-Leader and Conflict Resolution]] — Leaderless faces the same concurrent write conflicts as multi-leader
-- [[CRDTs]] — CRDTs can replace version vectors for conflict-free merging in leaderless systems
-- [[Consistency Spectrum]] — Leaderless with strict quorums approximates linearizability for non-concurrent operations; sloppy quorums provide eventual consistency
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Leaderless is one of the three replication topologies introduced in Module 4
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Multi-Leader_and_Conflict_Resolution]] — Leaderless faces the same concurrent write conflicts as multi-leader
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs]] — CRDTs can replace version vectors for conflict-free merging in leaderless systems
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — Leaderless with strict quorums approximates linearizability for non-concurrent operations; sloppy quorums provide eventual consistency
 
 ## Reflection Prompts
 

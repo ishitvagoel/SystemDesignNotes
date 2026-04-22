@@ -150,11 +150,11 @@ graph TD
 
 ## Connections
 
-- [[Consensus and Raft]] — etcd and Consul use Raft; ZooKeeper uses ZAB
-- [[Distributed Locks and Fencing]] — All three provide primitives for distributed locking
-- [[Load Balancing Fundamentals]] — Service discovery feeds into load balancer backend lists
-- [[API Gateway Patterns]] — Gateways can use coordination services for dynamic routing configuration
-- [[Kubernetes and Platform Engineering]] — etcd is Kubernetes's sole data store
+- [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft]] — etcd and Consul use Raft; ZooKeeper uses ZAB
+- [[02-Phase-2-Distribution__Module-09-Consensus__Distributed_Locks_and_Fencing]] — All three provide primitives for distributed locking
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — Service discovery feeds into load balancer backend lists
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — Gateways can use coordination services for dynamic routing configuration
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering]] — etcd is Kubernetes's sole data store
 
 ## Reflection Prompts
 

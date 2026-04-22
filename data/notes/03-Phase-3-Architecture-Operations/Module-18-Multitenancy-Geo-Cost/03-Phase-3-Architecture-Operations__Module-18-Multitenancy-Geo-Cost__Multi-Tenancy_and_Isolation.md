@@ -29,13 +29,13 @@ In shared-everything, one tenant's behavior degrades others:
 
 ### Mitigation Strategies
 
-**Per-tenant rate limiting** ([[Rate Limiting and Throttling]]): Each tenant gets a request quota (e.g., 1,000 req/min for free tier, 50,000 for enterprise). Requests exceeding the quota return 429. This prevents any single tenant from monopolizing shared compute.
+**Per-tenant rate limiting** ([[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]]): Each tenant gets a request quota (e.g., 1,000 req/min for free tier, 50,000 for enterprise). Requests exceeding the quota return 429. This prevents any single tenant from monopolizing shared compute.
 
 **Resource quotas**: Limit CPU, memory, I/O, and connection pool usage per tenant. In Kubernetes, use ResourceQuotas per namespace (if tenants are in separate namespaces). In a database, use connection limits and statement timeouts per tenant role.
 
 **Query timeouts and guardrails**: Kill queries exceeding a time limit (e.g., 30 seconds). Reject queries that would scan more than N rows without an index. These protect the shared database from accidental full-table scans.
 
-**QoS tiers**: Separate shared resources into tiers. Enterprise tenants' requests go to a dedicated pool with higher capacity. Free-tier requests go to a shared pool that's throttled more aggressively. This is [[Cell-Based Architecture]] applied per tier.
+**QoS tiers**: Separate shared resources into tiers. Enterprise tenants' requests go to a dedicated pool with higher capacity. Free-tier requests go to a shared pool that's throttled more aggressively. This is [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]] applied per tier.
 
 ## Data Isolation
 
@@ -63,7 +63,7 @@ Global metrics hide per-tenant problems. A global p99 of 200ms might conceal one
 
 **Per-tenant SLIs**: Track latency, error rate, and throughput per tenant. Alert when a tenant's SLI degrades relative to their tier's SLO.
 
-**Per-tenant cost attribution**: Track compute, storage, and network consumption per tenant. This enables usage-based pricing and identifies tenants whose usage doesn't justify their plan. See [[Cost Engineering and FinOps]].
+**Per-tenant cost attribution**: Track compute, storage, and network consumption per tenant. This enables usage-based pricing and identifies tenants whose usage doesn't justify their plan. See [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]].
 
 ## Trade-Off Analysis
 
@@ -127,11 +127,11 @@ graph TD
 
 ## Connections
 
-- [[Cell-Based Architecture]] — The strongest isolation: each cell serves a subset of tenants
-- [[Rate Limiting and Throttling]] — Per-tenant rate limiting prevents noisy neighbors
-- [[Partitioning and Sharding]] — Tenant-based partitioning is a natural sharding strategy
-- [[Cost Engineering and FinOps]] — Per-tenant cost attribution enables pricing optimization
-- [[Geo-Distribution and Data Sovereignty]] — Tenant location determines data residency requirements
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]] — The strongest isolation: each cell serves a subset of tenants
+- [[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]] — Per-tenant rate limiting prevents noisy neighbors
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Tenant-based partitioning is a natural sharding strategy
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — Per-tenant cost attribution enables pricing optimization
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty]] — Tenant location determines data residency requirements
 
 ## Reflection Prompts
 

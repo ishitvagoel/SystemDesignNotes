@@ -177,10 +177,10 @@ flowchart TD
 
 ## Connections
 
-- [[Agentic System Architecture]] — Orchestration patterns (ReAct, plan-and-execute), multi-agent coordination, and tool use design; this note covers the reliability layer on top of those patterns
-- [[Semantic Caching and Prompt Caching]] — Caching tool results (level 2 of the degradation ladder) reuses semantic caching infrastructure
-- [[Circuit Breakers and Bulkheads]] — Circuit breaker pattern for LLM APIs is the same pattern applied to any downstream dependency
-- [[Idempotent Consumers]] — Idempotency key design for agent tool calls mirrors idempotent message consumer design
+- [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agentic_System_Architecture]] — Orchestration patterns (ReAct, plan-and-execute), multi-agent coordination, and tool use design; this note covers the reliability layer on top of those patterns
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Semantic_Caching_and_Prompt_Caching]] — Caching tool results (level 2 of the degradation ladder) reuses semantic caching infrastructure
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads]] — Circuit breaker pattern for LLM APIs is the same pattern applied to any downstream dependency
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers]] — Idempotency key design for agent tool calls mirrors idempotent message consumer design
 
 ## Reflection Prompts
 

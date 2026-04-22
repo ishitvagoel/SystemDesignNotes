@@ -2,11 +2,11 @@
 
 ## Why This Exists
 
-Every reliable message delivery system delivers at-least-once. Kafka redelivers after consumer rebalances. SQS redelivers after visibility timeout. RabbitMQ redelivers after NACK or channel close. The [[Outbox Pattern]] publishes at-least-once. Saga retries deliver at-least-once.
+Every reliable message delivery system delivers at-least-once. Kafka redelivers after consumer rebalances. SQS redelivers after visibility timeout. RabbitMQ redelivers after NACK or channel close. The [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] publishes at-least-once. Saga retries deliver at-least-once.
 
 If your consumer isn't idempotent, every redelivery risks duplicate side effects: double charges, duplicate emails, duplicated inventory reservations. Idempotent consumers are not optional in distributed systems — they're a requirement.
 
-This note extends the [[Idempotency]] concepts from Module 2 (API-level) to the message consumer context.
+This note extends the [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] concepts from Module 2 (API-level) to the message consumer context.
 
 
 ## Mental Model
@@ -58,7 +58,7 @@ process_message(msg):
     )
 ```
 
-The downstream system (payment service) deduplicates using the idempotency key ([[Idempotency]]). The consumer doesn't need its own dedup table — it delegates deduplication to the service that owns the side effect.
+The downstream system (payment service) deduplicates using the idempotency key ([[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]]). The consumer doesn't need its own dedup table — it delegates deduplication to the service that owns the side effect.
 
 ### 4. Transactional Offset Commit (Kafka Exactly-Once)
 
@@ -140,10 +140,10 @@ graph TD
 
 ## Connections
 
-- [[Idempotency]] — API-level idempotency concepts that apply equally to message consumers
-- [[Outbox Pattern]] — Outbox produces at-least-once; consumers must be idempotent
-- [[Saga Pattern]] — Every saga step and compensation must be idempotent
-- [[Two-Phase Commit]] — Idempotent consumers are the alternative to 2PC for exactly-once semantics
+- [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] — API-level idempotency concepts that apply equally to message consumers
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] — Outbox produces at-least-once; consumers must be idempotent
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] — Every saga step and compensation must be idempotent
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]] — Idempotent consumers are the alternative to 2PC for exactly-once semantics
 
 ## Reflection Prompts
 

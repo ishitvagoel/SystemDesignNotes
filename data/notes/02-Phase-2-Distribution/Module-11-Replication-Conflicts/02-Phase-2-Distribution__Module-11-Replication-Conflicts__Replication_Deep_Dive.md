@@ -2,7 +2,7 @@
 
 ## Why This Exists
 
-[[Database Replication]] in Module 4 introduced the three replication topologies. This note goes deep on single-leader replication — the most common topology — focusing on the operational challenges that determine whether replication actually works in production: failover mechanics, split-brain prevention, and the practical patterns for handling replication lag.
+[[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] in Module 4 introduced the three replication topologies. This note goes deep on single-leader replication — the most common topology — focusing on the operational challenges that determine whether replication actually works in production: failover mechanics, split-brain prevention, and the practical patterns for handling replication lag.
 
 
 ## Mental Model
@@ -54,7 +54,7 @@ The most dangerous replication failure: two nodes both believe they're the leade
 
 ## Handling Replication Lag
 
-Replication lag is inevitable with asynchronous replication. The patterns from [[Session Guarantees]] address this, but here are the concrete implementation strategies:
+Replication lag is inevitable with asynchronous replication. The patterns from [[02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees]] address this, but here are the concrete implementation strategies:
 
 ### Read-After-Write via Leader Routing
 
@@ -157,11 +157,11 @@ graph TD
 
 ## Connections
 
-- [[Database Replication]] — Module 4's introduction to replication topologies
-- [[Multi-Leader and Conflict Resolution]] — When single-leader's constraints (single write endpoint) are too restrictive
-- [[Session Guarantees]] — The client-facing guarantees that make replication lag manageable
-- [[Write-Ahead Log]] — WAL shipping is the mechanism beneath physical replication
-- [[Coordination Services]] — Consensus-based leader election prevents split-brain
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Module 4's introduction to replication topologies
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Multi-Leader_and_Conflict_Resolution]] — When single-leader's constraints (single write endpoint) are too restrictive
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees]] — The client-facing guarantees that make replication lag manageable
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — WAL shipping is the mechanism beneath physical replication
+- [[02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services]] — Consensus-based leader election prevents split-brain
 
 ## Reflection Prompts
 

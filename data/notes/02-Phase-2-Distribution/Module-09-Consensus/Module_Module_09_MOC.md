@@ -11,23 +11,23 @@ Raft and Paxos are the two foundational consensus algorithms. ZooKeeper, etcd, a
 ## Notes in This Module
 
 ### Algorithms
-- [[Consensus and Raft]] — Raft leader election, log replication, safety proofs, and why Raft was designed to be understandable
-- [[Paxos and Its Legacy]] — Multi-Paxos, why it's notoriously hard to implement, and its relationship to Raft
+- [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft]] — Raft leader election, log replication, safety proofs, and why Raft was designed to be understandable
+- [[02-Phase-2-Distribution__Module-09-Consensus__Paxos_and_Its_Legacy]] — Multi-Paxos, why it's notoriously hard to implement, and its relationship to Raft
 
 ### Practical Systems
-- [[Coordination Services]] — ZooKeeper, etcd, Consul — when and how to use them for leader election, configuration, and service discovery
+- [[02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services]] — ZooKeeper, etcd, Consul — when and how to use them for leader election, configuration, and service discovery
 
 ### Coordination Primitives
-- [[Distributed Locks and Fencing]] — Distributed locks, fencing tokens, lease-based coordination, and why naive locking is dangerous
+- [[02-Phase-2-Distribution__Module-09-Consensus__Distributed_Locks_and_Fencing]] — Distributed locks, fencing tokens, lease-based coordination, and why naive locking is dangerous
 
 ### Impossibility
-- [[FLP Impossibility]] — What it means practically that perfect consensus is impossible in asynchronous systems — and why we build consensus systems anyway
+- [[02-Phase-2-Distribution__Module-09-Consensus__FLP_Impossibility]] — What it means practically that perfect consensus is impossible in asynchronous systems — and why we build consensus systems anyway
 
 ## Prerequisites
-- [[_Module 08 MOC]] — Consistency Models (consensus is the mechanism for achieving strong consistency)
-- [[_Module 07 MOC]] — Logical Clocks (ordering is foundational to replicated log protocols)
+- [[Module_Module_08_MOC]] — Consistency Models (consensus is the mechanism for achieving strong consistency)
+- [[Module_Module_07_MOC]] — Logical Clocks (ordering is foundational to replicated log protocols)
 
 ## Where This Leads
-- [[_Module 10 MOC]] — Distributed Transactions (transactions across nodes use consensus or weaker coordination)
-- [[_Module 11 MOC]] — Replication & Conflict Resolution (consensus-based replication vs conflict-resolution-based replication)
-- [[_Module 12 MOC]] — Architectural Patterns (coordination services underpin service discovery, config management)
+- [[Module_Module_10_MOC]] — Distributed Transactions (transactions across nodes use consensus or weaker coordination)
+- [[Module_Module_11_MOC]] — Replication & Conflict Resolution (consensus-based replication vs conflict-resolution-based replication)
+- [[Module_Module_12_MOC]] — Architectural Patterns (coordination services underpin service discovery, config management)

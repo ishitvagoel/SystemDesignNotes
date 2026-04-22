@@ -203,8 +203,8 @@ The Knight Capital disaster ($440M in 45 minutes) was partly caused by an old co
 
 ## Connections
 
-- [[Feature Flags and Safe Deployment]] — Core patterns for flag types, evaluation semantics, and stale flag cleanup
-- [[Deployment and Release Engineering]] — Feature flags are the "release" half of the deploy-vs-release separation; this capstone designs the platform that enables that
-- [[Message Queues vs Event Streams]] — Evaluation event pipeline and config change propagation via Kafka
-- [[Observability and Alerting]] — Evaluation events feed experiment analysis; error rates per variant are a key SLI
-- [[SLOs SLIs and Error Budgets]] — 99.99% availability SLO for the flag evaluation path; propagation latency as an SLI
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Feature_Flags_and_Safe_Deployment]] — Core patterns for flag types, evaluation semantics, and stale flag cleanup
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering]] — Feature flags are the "release" half of the deploy-vs-release separation; this capstone designs the platform that enables that
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams]] — Evaluation event pipeline and config change propagation via Kafka
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Evaluation events feed experiment analysis; error rates per variant are a key SLI
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — 99.99% availability SLO for the flag evaluation path; propagation latency as an SLI

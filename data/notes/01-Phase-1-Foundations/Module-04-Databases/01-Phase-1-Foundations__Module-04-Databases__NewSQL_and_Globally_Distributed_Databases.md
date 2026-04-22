@@ -187,13 +187,13 @@ graph TD
 
 ## Connections
 
-- [[Database Replication]] — NewSQL databases use Raft-based replication instead of traditional leader-follower replication
-- [[Partitioning and Sharding]] — Automatic range partitioning eliminates manual sharding
-- [[Consistency Spectrum]] — Spanner provides external consistency; CockroachDB provides serializability; both are stronger than most NoSQL databases
-- [[MVCC Deep Dive]] — All three use MVCC; Spanner's timestamp-based MVCC is unique
-- [[Two-Phase Commit]] — NewSQL databases' main selling point: distributed transactions that actually work
-- [[SQL vs NoSQL Decision Framework]] — NewSQL is the "third option" when SQL's scaling limitations hit but NoSQL's consistency trade-offs are unacceptable
-- [[Geo-Distribution and Data Sovereignty]] — NewSQL databases' locality-aware partitioning addresses data sovereignty requirements
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — NewSQL databases use Raft-based replication instead of traditional leader-follower replication
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Automatic range partitioning eliminates manual sharding
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — Spanner provides external consistency; CockroachDB provides serializability; both are stronger than most NoSQL databases
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive]] — All three use MVCC; Spanner's timestamp-based MVCC is unique
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]] — NewSQL databases' main selling point: distributed transactions that actually work
+- [[01-Phase-1-Foundations__Module-04-Databases__SQL_vs_NoSQL_Decision_Framework]] — NewSQL is the "third option" when SQL's scaling limitations hit but NoSQL's consistency trade-offs are unacceptable
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty]] — NewSQL databases' locality-aware partitioning addresses data sovereignty requirements
 
 ## Reflection Prompts
 

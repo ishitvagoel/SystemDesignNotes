@@ -112,10 +112,10 @@ sequenceDiagram
 
 ## Connections
 
-- [[DNS Resolution Chain]] — Anycast and GeoDNS are strategies built on top of the DNS resolution process
-- [[Load Balancing Fundamentals]] — DNS-based routing is the coarsest form of load balancing; L4/L7 balancers handle finer-grained distribution
-- [[CDN Architecture]] — CDNs are the largest users of both anycast and GeoDNS
-- [[Geo-Distribution and Data Sovereignty]] — GeoDNS is the first routing layer for active-active multi-region systems
+- [[01-Phase-1-Foundations__Module-01-Networking__DNS_Resolution_Chain]] — Anycast and GeoDNS are strategies built on top of the DNS resolution process
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — DNS-based routing is the coarsest form of load balancing; L4/L7 balancers handle finer-grained distribution
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — CDNs are the largest users of both anycast and GeoDNS
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty]] — GeoDNS is the first routing layer for active-active multi-region systems
 
 ## Reflection Prompts
 

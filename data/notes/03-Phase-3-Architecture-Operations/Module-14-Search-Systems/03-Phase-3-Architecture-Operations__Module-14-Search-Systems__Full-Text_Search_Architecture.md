@@ -177,10 +177,10 @@ graph TD
 
 ## Connections
 
-- [[Vector Search and Hybrid Retrieval]] — Combining BM25 keyword search with vector similarity for better relevance
-- [[Indexing Deep Dive]] — Inverted indexes are a fundamentally different structure from B-tree/LSM indexes
-- [[Partitioning and Sharding]] — Elasticsearch sharding follows the same principles as database sharding
-- [[Cache Patterns and Strategies]] — Search result caching (query cache, request cache, field data cache) is critical for performance
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval]] — Combining BM25 keyword search with vector similarity for better relevance
+- [[01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive]] — Inverted indexes are a fundamentally different structure from B-tree/LSM indexes
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Elasticsearch sharding follows the same principles as database sharding
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — Search result caching (query cache, request cache, field data cache) is critical for performance
 
 ## Reflection Prompts
 

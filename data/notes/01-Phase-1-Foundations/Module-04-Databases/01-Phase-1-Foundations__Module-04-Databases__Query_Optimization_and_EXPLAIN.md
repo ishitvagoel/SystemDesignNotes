@@ -231,11 +231,11 @@ flowchart TD
 
 ## Connections
 
-- [[Indexing Deep Dive]] — Index types (B-tree, covering, partial, GIN) and their physical structure
-- [[B-Tree vs LSM-Tree]] — B-tree structure explains why index column order and range queries behave as they do
-- [[MVCC Deep Dive]] — MVCC creates dead tuples that bloat indexes; VACUUM reclaims them
-- [[Buffer Pool and Page Cache]] — Query performance critically depends on whether data fits in buffer pool
-- [[SQL vs NoSQL Decision Framework]] — Query optimization complexity is a key factor in SQL vs NoSQL selection
+- [[01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive]] — Index types (B-tree, covering, partial, GIN) and their physical structure
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree]] — B-tree structure explains why index column order and range queries behave as they do
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive]] — MVCC creates dead tuples that bloat indexes; VACUUM reclaims them
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]] — Query performance critically depends on whether data fits in buffer pool
+- [[01-Phase-1-Foundations__Module-04-Databases__SQL_vs_NoSQL_Decision_Framework]] — Query optimization complexity is a key factor in SQL vs NoSQL selection
 
 ## Reflection Prompts
 

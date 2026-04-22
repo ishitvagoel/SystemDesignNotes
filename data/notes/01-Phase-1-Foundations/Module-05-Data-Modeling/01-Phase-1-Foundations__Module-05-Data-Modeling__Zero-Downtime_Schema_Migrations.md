@@ -118,7 +118,7 @@ The most dangerous moment in a migration is when the database schema and the app
 - **Removing a column**: Deploy app first (stop using column), then migrate DB (drop column). New app doesn't reference the dropped column.
 - **Renaming**: Three-step expand-and-contract as described above. Never a single-step rename.
 
-**Rolling deployments complicate this**: During a rolling deploy, some instances run the old code and some run the new. Both versions must work with the current schema. This means migrations must be backward compatible (old code works) and forward compatible (new code works) — exactly the same principles as [[Schema Evolution]] and [[API Versioning and Compatibility]].
+**Rolling deployments complicate this**: During a rolling deploy, some instances run the old code and some run the new. Both versions must work with the current schema. This means migrations must be backward compatible (old code works) and forward compatible (new code works) — exactly the same principles as [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] and [[01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility]].
 
 ## Trade-Off Analysis
 
@@ -180,12 +180,12 @@ graph TD
 
 ## Connections
 
-- [[Schema Evolution]] — Zero-downtime migrations are the operational implementation of schema evolution principles
-- [[API Versioning and Compatibility]] — The expand-and-contract pattern is identical for APIs and schemas
-- [[Write-Ahead Log]] — Large migrations generate significant WAL, affecting replication lag and disk usage
-- [[Database Replication]] — Migrations on the primary propagate to replicas; replica lag can spike during migrations
-- [[Deployment and Release Engineering]] — Database migrations must be coordinated with application deployment strategies
-- [[Relational Modeling and Normalization]] — Schema migrations implement modeling changes in production
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] — Zero-downtime migrations are the operational implementation of schema evolution principles
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility]] — The expand-and-contract pattern is identical for APIs and schemas
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — Large migrations generate significant WAL, affecting replication lag and disk usage
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Migrations on the primary propagate to replicas; replica lag can spike during migrations
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering]] — Database migrations must be coordinated with application deployment strategies
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Relational_Modeling_and_Normalization]] — Schema migrations implement modeling changes in production
 
 ## Reflection Prompts
 

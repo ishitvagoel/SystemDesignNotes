@@ -4,17 +4,17 @@
 
 ## Notes in This Module
 
-- [[Monolith vs Microservices]] — The decision framework, not a foregone conclusion
-- [[Service Decomposition and Bounded Contexts]] — DDD, Conway's Law, and team topology alignment
-- [[Event Sourcing and CQRS]] — Append-only event logs, projections, and when command-query separation justifies the complexity
-- [[Cell-Based Architecture]] — Blast radius isolation, cell routing, independent scaling
-- [[Strangler Fig and Migration Patterns]] — Incremental migration from monolith to services, sidecar pattern, service mesh
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Monolith_vs_Microservices]] — The decision framework, not a foregone conclusion
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Service_Decomposition_and_Bounded_Contexts]] — DDD, Conway's Law, and team topology alignment
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]] — Append-only event logs, projections, and when command-query separation justifies the complexity
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]] — Blast radius isolation, cell routing, independent scaling
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Strangler_Fig_and_Migration_Patterns]] — Incremental migration from monolith to services, sidecar pattern, service mesh
 
 ## Prerequisites
-- [[_Module 10 MOC]] — Distributed Transactions (sagas, event sourcing connections)
-- [[_Module 02 MOC]] — API Design (gateway patterns, service interfaces)
+- [[Module_Module_10_MOC]] — Distributed Transactions (sagas, event sourcing connections)
+- [[Module_Module_02_MOC]] — API Design (gateway patterns, service interfaces)
 
 ## Where This Leads
-- [[_Module 13 MOC]] — Message Queues & Event-Driven Architecture
-- [[_Module 16 MOC]] — Reliability Engineering & Testing
-- [[_Module 17 MOC]] — Observability, Deployment & Release Engineering
+- [[Module_Module_13_MOC]] — Message Queues & Event-Driven Architecture
+- [[Module_Module_16_MOC]] — Reliability Engineering & Testing
+- [[Module_Module_17_MOC]] — Observability, Deployment & Release Engineering

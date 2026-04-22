@@ -147,12 +147,12 @@ graph TD
 
 ## Connections
 
-- [[B-Tree vs LSM-Tree]] — MVCC interacts with the storage engine: B-trees update pages in place (with undo for old versions); LSM-trees naturally store multiple versions (different SSTables at different levels)
-- [[Write-Ahead Log]] — WAL records include transaction IDs that MVCC uses for visibility decisions
-- [[Buffer Pool and Page Cache]] — MVCC version lookups happen in the buffer pool; undo log traversal requires buffer pool pages
-- [[Consistency Spectrum]] — MVCC isolation levels correspond to consistency models (snapshot isolation ≈ causal consistency for a single node)
-- [[Two-Phase Commit]] — Spanner's MVCC extends to distributed transactions via TrueTime; CockroachDB uses HLCs
-- [[NewSQL and Globally Distributed Databases]] — Spanner and CockroachDB's MVCC designs are central to their distributed consistency guarantees
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree]] — MVCC interacts with the storage engine: B-trees update pages in place (with undo for old versions); LSM-trees naturally store multiple versions (different SSTables at different levels)
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — WAL records include transaction IDs that MVCC uses for visibility decisions
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]] — MVCC version lookups happen in the buffer pool; undo log traversal requires buffer pool pages
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — MVCC isolation levels correspond to consistency models (snapshot isolation ≈ causal consistency for a single node)
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]] — Spanner's MVCC extends to distributed transactions via TrueTime; CockroachDB uses HLCs
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — Spanner and CockroachDB's MVCC designs are central to their distributed consistency guarantees
 
 ## Reflection Prompts
 

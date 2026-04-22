@@ -84,7 +84,7 @@ This works well for *additive* evolution. It struggles with *semantic* changes (
 
 Protocol Buffers handle evolution through field numbers. Each field has a unique number that's used in the binary encoding. Rules: never change a field's number. Never reuse a deleted field's number. Add new fields as optional. This gives you both backward and forward compatibility — old code ignores unknown field numbers, new code uses defaults for missing fields.
 
-This is covered in depth in [[Schema Evolution]].
+This is covered in depth in [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]].
 
 ## Trade-Off Analysis
 
@@ -107,7 +107,7 @@ This is covered in depth in [[Schema Evolution]].
 4. Run old and new versions in parallel during the migration period
 5. Set a hard sunset date and communicate it repeatedly
 
-**The expand-and-contract pattern for APIs** (mirrors the database migration pattern in [[Schema Evolution]]):
+**The expand-and-contract pattern for APIs** (mirrors the database migration pattern in [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]]):
 1. **Expand**: Add the new field/endpoint alongside the old one. Both work.
 2. **Migrate**: Consumers switch to the new field/endpoint.
 3. **Contract**: Remove the old field/endpoint once all consumers have migrated.
@@ -163,11 +163,11 @@ graph TD
 
 ## Connections
 
-- [[RESTful Design Principles]] — Versioning is about evolving the REST contract
-- [[Schema Evolution]] — The data-layer equivalent: evolving Protobuf, Avro, and database schemas with backward/forward compatibility
-- [[gRPC vs REST vs GraphQL]] — Each paradigm handles evolution differently (Protobuf field numbers, GraphQL deprecation, REST versioning)
-- [[API Gateway Patterns]] — Gateways can handle version routing and transformation at the edge
-- [[Zero-Downtime Schema Migrations]] — The expand-and-contract pattern applies to both API and database changes
+- [[01-Phase-1-Foundations__Module-02-API-Design__RESTful_Design_Principles]] — Versioning is about evolving the REST contract
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] — The data-layer equivalent: evolving Protobuf, Avro, and database schemas with backward/forward compatibility
+- [[01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL]] — Each paradigm handles evolution differently (Protobuf field numbers, GraphQL deprecation, REST versioning)
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — Gateways can handle version routing and transformation at the edge
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations]] — The expand-and-contract pattern applies to both API and database changes
 
 ## Reflection Prompts
 

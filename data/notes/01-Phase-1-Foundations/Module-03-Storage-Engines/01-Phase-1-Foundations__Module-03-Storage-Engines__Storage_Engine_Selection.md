@@ -2,7 +2,7 @@
 
 ## Why This Exists
 
-You know how B-trees and LSM-trees work ([[B-Tree vs LSM-Tree]]). You understand the amplification trade-offs. Now comes the practical question: given a specific workload, which engine should you use? This note is the decision framework.
+You know how B-trees and LSM-trees work ([[01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree]]). You understand the amplification trade-offs. Now comes the practical question: given a specific workload, which engine should you use? This note is the decision framework.
 
 The answer is almost never "one is universally better." It depends on your read/write ratio, latency requirements, data size relative to memory, key distribution, and operational tolerance. The goal is to match the engine's strengths to your workload's demands.
 
@@ -150,11 +150,11 @@ graph TD
 
 ## Connections
 
-- [[B-Tree vs LSM-Tree]] — The foundational comparison this framework is built on
-- [[Write-Ahead Log]] — WAL behavior differs between engines; LSM uses WAL for memtable durability, B-tree uses WAL for page-level crash recovery
-- [[Buffer Pool and Page Cache]] — Buffer pool sizing depends on the engine type; B-trees benefit more from large buffer pools
-- [[SQL vs NoSQL Decision Framework]] — Engine selection is one input to the broader database choice
-- [[ID Generation Strategies]] — Key design (sequential vs random) directly impacts engine performance
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree]] — The foundational comparison this framework is built on
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — WAL behavior differs between engines; LSM uses WAL for memtable durability, B-tree uses WAL for page-level crash recovery
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]] — Buffer pool sizing depends on the engine type; B-trees benefit more from large buffer pools
+- [[01-Phase-1-Foundations__Module-04-Databases__SQL_vs_NoSQL_Decision_Framework]] — Engine selection is one input to the broader database choice
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__ID_Generation_Strategies]] — Key design (sequential vs random) directly impacts engine performance
 
 ## Reflection Prompts
 

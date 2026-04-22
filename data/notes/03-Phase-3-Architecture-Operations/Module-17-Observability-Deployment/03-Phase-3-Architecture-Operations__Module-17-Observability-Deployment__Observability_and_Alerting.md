@@ -70,7 +70,7 @@ Meta reported ~20% CPU reduction by replacing sidecar-based telemetry with eBPF-
 
 ### Multi-Window Burn-Rate Alerts
 
-Covered in [[SLOs SLIs and Error Budgets]]. The summary: alert based on how fast the error budget is being consumed, not on raw thresholds. Fast burn (14× in 1 hour) = acute incident, alert immediately. Slow burn (3× over 6 hours) = gradual degradation, alert with lower urgency.
+Covered in [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]]. The summary: alert based on how fast the error budget is being consumed, not on raw thresholds. Fast burn (14× in 1 hour) = acute incident, alert immediately. Slow burn (3× over 6 hours) = gradual degradation, alert with lower urgency.
 
 ### Alert Fatigue Prevention
 
@@ -149,11 +149,11 @@ graph TD
 
 ## Connections
 
-- [[SLOs SLIs and Error Budgets]] — SLI measurement is the core observability requirement; burn-rate alerts are the alerting mechanism
-- [[Deployment and Release Engineering]] — Canary analysis uses observability data to detect regressions
-- [[Incident Management]] — Observability enables rapid detection and diagnosis
-- [[Distributed Tracing Deep Dive]] — Deep dive on sampling strategies, OTel collector architecture, and trace storage backends
-- [[eBPF and Kernel Observability]] — Zero-instrumentation observability via kernel programs; production use in Cilium, Parca, Falco, and Cloudflare XDP
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — SLI measurement is the core observability requirement; burn-rate alerts are the alerting mechanism
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering]] — Canary analysis uses observability data to detect regressions
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Incident_Management]] — Observability enables rapid detection and diagnosis
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Distributed_Tracing_Deep_Dive]] — Deep dive on sampling strategies, OTel collector architecture, and trace storage backends
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__eBPF_and_Kernel_Observability]] — Zero-instrumentation observability via kernel programs; production use in Cilium, Parca, Falco, and Cloudflare XDP
 
 ## Reflection Prompts
 

@@ -10,16 +10,16 @@ This module covers the patterns for making multi-service operations reliable: tw
 
 ## Notes in This Module
 
-- [[Two-Phase Commit]] — 2PC mechanics, failure modes, and why it's avoided in microservice architectures
-- [[Saga Pattern]] — Choreography vs orchestration, compensating transactions, and designing for failure
-- [[Outbox Pattern]] — Reliable event publishing without distributed transactions
-- [[Idempotent Consumers]] — Deduplication strategies for message consumers in at-least-once delivery systems
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]] — 2PC mechanics, failure modes, and why it's avoided in microservice architectures
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] — Choreography vs orchestration, compensating transactions, and designing for failure
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] — Reliable event publishing without distributed transactions
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers]] — Deduplication strategies for message consumers in at-least-once delivery systems
 
 ## Prerequisites
-- [[_Module 08 MOC]] — Consistency Models (understanding what guarantees you're giving up)
-- [[_Module 09 MOC]] — Consensus (the coordination mechanisms that underpin 2PC)
-- [[_Module 02 MOC]] — Idempotency fundamentals
+- [[Module_Module_08_MOC]] — Consistency Models (understanding what guarantees you're giving up)
+- [[Module_Module_09_MOC]] — Consensus (the coordination mechanisms that underpin 2PC)
+- [[Module_Module_02_MOC]] — Idempotency fundamentals
 
 ## Where This Leads
-- [[_Module 12 MOC]] — Architectural Patterns (event sourcing, CQRS, and how they relate to sagas)
-- [[_Module 13 MOC]] — Message Queues & Event-Driven Architecture (the infrastructure sagas and outbox rely on)
+- [[Module_Module_12_MOC]] — Architectural Patterns (event sourcing, CQRS, and how they relate to sagas)
+- [[Module_Module_13_MOC]] — Message Queues & Event-Driven Architecture (the infrastructure sagas and outbox rely on)

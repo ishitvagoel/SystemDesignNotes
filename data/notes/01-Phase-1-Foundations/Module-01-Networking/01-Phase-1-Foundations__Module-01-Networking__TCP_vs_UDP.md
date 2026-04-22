@@ -18,7 +18,7 @@ The key insight: UDP isn't "unreliable TCP." It's a *minimal foundation* that le
 
 **DNS**: Queries are small (fits in one packet), stateless, and idempotent. The overhead of a TCP handshake per query would triple DNS latency. (DNS does fall back to TCP for responses over 512 bytes or when DNSSEC signatures are large.)
 
-**QUIC / HTTP/3**: QUIC is a userspace transport protocol built on UDP that provides TCP-like reliability *per stream* without cross-stream head-of-line blocking. It also integrates TLS 1.3 into its handshake, achieving 0-RTT connection establishment for repeat clients. By building on UDP, QUIC avoids TCP's kernel-level ossification — it can iterate faster because it runs in userspace. See [[HTTP Evolution — 1.1 to 2 to 3]].
+**QUIC / HTTP/3**: QUIC is a userspace transport protocol built on UDP that provides TCP-like reliability *per stream* without cross-stream head-of-line blocking. It also integrates TLS 1.3 into its handshake, achieving 0-RTT connection establishment for repeat clients. By building on UDP, QUIC avoids TCP's kernel-level ossification — it can iterate faster because it runs in userspace. See [[01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3]].
 
 **Service discovery and health checks**: Some internal service meshes use UDP for lightweight heartbeats where an occasional missed beat is tolerable. Consul's Serf protocol uses UDP gossip for membership detection.
 
@@ -85,10 +85,10 @@ graph TD
 
 ## Connections
 
-- [[TCP Deep Dive]] — The full mechanics of what TCP provides (and what it costs)
-- [[HTTP Evolution — 1.1 to 2 to 3]] — HTTP/3 and QUIC: the highest-profile example of "build better TCP on UDP"
-- [[DNS Resolution Chain]] — DNS primarily uses UDP, with TCP fallback
-- [[Load Balancing Fundamentals]] — L4 balancers handle TCP and UDP differently; UDP load balancing is stateless but can't do connection-aware routing
+- [[01-Phase-1-Foundations__Module-01-Networking__TCP_Deep_Dive]] — The full mechanics of what TCP provides (and what it costs)
+- [[01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3]] — HTTP/3 and QUIC: the highest-profile example of "build better TCP on UDP"
+- [[01-Phase-1-Foundations__Module-01-Networking__DNS_Resolution_Chain]] — DNS primarily uses UDP, with TCP fallback
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — L4 balancers handle TCP and UDP differently; UDP load balancing is stateless but can't do connection-aware routing
 
 ## Reflection Prompts
 

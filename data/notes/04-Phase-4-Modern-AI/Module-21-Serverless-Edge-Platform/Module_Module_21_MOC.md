@@ -10,14 +10,14 @@ Understanding both extremes — and the trade-offs between them — is essential
 
 ## Notes in This Module
 
-- [[Serverless and Edge Computing]] — Lambda/Cloud Functions architecture, cold start mitigation, edge compute (Cloudflare Workers, Deno Deploy), WebAssembly in production, cost crossover analysis (when serverless costs more than servers), and edge-origin hybrid architecture
-- [[WebAssembly and WASI]] — WASM binary format, WASI 0.2 component model, server-side use cases (edge functions, plugin systems, database UDFs), runtime ecosystem (Wasmtime, WasmEdge), and comparison with containers
-- [[Kubernetes and Platform Engineering]] — K8s architecture (control plane, data plane, operators, CRDs), orchestration patterns (sidecar, ambassador, adapter), service mesh, internal developer platforms (IDPs), and the "platform as product" philosophy
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing]] — Lambda/Cloud Functions architecture, cold start mitigation, edge compute (Cloudflare Workers, Deno Deploy), WebAssembly in production, cost crossover analysis (when serverless costs more than servers), and edge-origin hybrid architecture
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__WebAssembly_and_WASI]] — WASM binary format, WASI 0.2 component model, server-side use cases (edge functions, plugin systems, database UDFs), runtime ecosystem (Wasmtime, WasmEdge), and comparison with containers
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering]] — K8s architecture (control plane, data plane, operators, CRDs), orchestration patterns (sidecar, ambassador, adapter), service mesh, internal developer platforms (IDPs), and the "platform as product" philosophy
 
 ## Prerequisites
-- [[_Module 12 MOC]] — Microservices (K8s orchestrates microservice deployments; serverless is an alternative to microservices)
-- [[_Module 17 MOC]] — Deployment and observability (platform engineering standardizes these across an organization)
+- [[Module_Module_12_MOC]] — Microservices (K8s orchestrates microservice deployments; serverless is an alternative to microservices)
+- [[Module_Module_17_MOC]] — Deployment and observability (platform engineering standardizes these across an organization)
 
 ## Where This Leads
-- [[_Module 19 MOC]] — AI inference on Kubernetes (GPU scheduling, model serving frameworks)
+- [[Module_Module_19_MOC]] — AI inference on Kubernetes (GPU scheduling, model serving frameworks)
 - This is the final module before capstones — these patterns provide the infrastructure context for all capstone designs

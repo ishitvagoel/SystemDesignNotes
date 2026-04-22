@@ -31,9 +31,9 @@ Naming a baby vs. naming a star. When you name a baby, you pick something meanin
 
 **Weaknesses**: Not sortable by time. 128 bits (16 bytes) — larger than an 8-byte integer. The canonical string representation is 36 characters. **B-tree performance disaster**: Random UUIDs cause random inserts across the entire B-tree, splitting pages everywhere, destroying cache locality, and increasing write amplification. On a large table, UUIDv4 primary keys can make inserts 2–5× slower than sequential keys.
 
-**The B-tree problem in detail**: A B-tree index is physically sorted. Auto-incrementing IDs always insert at the end — the "hot" leaf page stays in the buffer pool, and splits are rare. Random UUIDs insert at random positions — every insert potentially touches a different leaf page, evicting cached pages. The buffer pool thrashes. See [[B-Tree vs LSM-Tree]].
+**The B-tree problem in detail**: A B-tree index is physically sorted. Auto-incrementing IDs always insert at the end — the "hot" leaf page stays in the buffer pool, and splits are rare. Random UUIDs insert at random positions — every insert potentially touches a different leaf page, evicting cached pages. The buffer pool thrashes. See [[01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree]].
 
-**When to use**: When you need coordination-free generation and don't care about sort order or index performance. Good for idempotency keys ([[Idempotency]]), distributed systems where any node must generate IDs independently, and situations where the ID is not a primary key or frequently-queried index.
+**When to use**: When you need coordination-free generation and don't care about sort order or index performance. Good for idempotency keys ([[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]]), distributed systems where any node must generate IDs independently, and situations where the ID is not a primary key or frequently-queried index.
 
 ### UUID v7 (Time-Sorted, RFC 9562)
 
@@ -191,12 +191,12 @@ graph TD
 
 ## Connections
 
-- [[Logical Clocks and Ordering]] — Time-sorted IDs use wall-clock time, which is unreliable across nodes. Logical clocks provide ordering guarantees that wall clocks can't.
-- [[B-Tree vs LSM-Tree]] — ID format directly impacts storage engine performance. Random IDs degrade B-trees; LSM-trees are more tolerant.
-- [[Partitioning and Sharding]] — IDs are often used as partition keys. Time-sorted IDs can cause write hotspots (all recent writes go to the same partition). Random IDs distribute evenly.
-- [[Indexing Deep Dive]] — Primary key index performance depends heavily on ID sort characteristics.
-- [[Idempotency]] — UUID v4 is the standard for idempotency keys.
-- [[NewSQL and Globally Distributed Databases]] — CockroachDB uses UUIDs for primary keys by default; Spanner uses application-chosen keys with strong guidance against monotonically increasing keys (hotspot risk).
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering]] — Time-sorted IDs use wall-clock time, which is unreliable across nodes. Logical clocks provide ordering guarantees that wall clocks can't.
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree]] — ID format directly impacts storage engine performance. Random IDs degrade B-trees; LSM-trees are more tolerant.
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — IDs are often used as partition keys. Time-sorted IDs can cause write hotspots (all recent writes go to the same partition). Random IDs distribute evenly.
+- [[01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive]] — Primary key index performance depends heavily on ID sort characteristics.
+- [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] — UUID v4 is the standard for idempotency keys.
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — CockroachDB uses UUIDs for primary keys by default; Spanner uses application-chosen keys with strong guidance against monotonically increasing keys (hotspot risk).
 
 ## Reflection Prompts
 

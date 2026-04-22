@@ -29,7 +29,7 @@ On a 50ms RTT link, this saves 50ms per new connection — significant for servi
 
 For repeat connections, TLS 1.3 supports **0-RTT**: the client sends encrypted application data in its very first message, using a Pre-Shared Key (PSK) from a previous session.
 
-**The trade-off**: 0-RTT data is vulnerable to **replay attacks**. An attacker who captures the client's first message can resend it — the server might process the same request twice. Mitigation: only use 0-RTT for idempotent requests ([[Idempotency]]). Servers should implement anti-replay mechanisms (single-use session tickets, request deduplication).
+**The trade-off**: 0-RTT data is vulnerable to **replay attacks**. An attacker who captures the client's first message can resend it — the server might process the same request twice. Mitigation: only use 0-RTT for idempotent requests ([[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]]). Servers should implement anti-replay mechanisms (single-use session tickets, request deduplication).
 
 ### Security Improvements
 
@@ -148,11 +148,11 @@ graph TD
 
 ## Connections
 
-- [[Encryption at Rest and in Transit]] — TLS is encryption in transit; this note covers the certificate infrastructure
-- [[Authentication and Authorization]] — mTLS provides service identity; OAuth2/OIDC provides user identity
-- [[Load Balancing Fundamentals]] — TLS termination at the LB is the most common pattern
-- [[Threat Modeling for Distributed Systems]] — mTLS mitigates spoofing and tampering threats
-- [[Zero-Trust Architecture]] — SPIFFE/SPIRE uses X.509-SVID (a TLS certificate format) as the service identity carrier
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Encryption_at_Rest_and_in_Transit]] — TLS is encryption in transit; this note covers the certificate infrastructure
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization]] — mTLS provides service identity; OAuth2/OIDC provides user identity
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — TLS termination at the LB is the most common pattern
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Threat_Modeling_for_Distributed_Systems]] — mTLS mitigates spoofing and tampering threats
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Zero_Trust_Architecture]] — SPIFFE/SPIRE uses X.509-SVID (a TLS certificate format) as the service identity carrier
 
 ## Reflection Prompts
 

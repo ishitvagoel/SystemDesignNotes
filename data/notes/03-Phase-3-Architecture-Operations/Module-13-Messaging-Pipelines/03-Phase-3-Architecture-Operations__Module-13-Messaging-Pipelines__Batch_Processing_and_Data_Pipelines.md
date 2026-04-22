@@ -68,7 +68,7 @@ As data flows between teams (producers → pipelines → consumers), schema drif
 - **SLAs**: "Data arrives within 15 minutes of the event." "99.9% of records pass validation."
 - **Ownership**: Clear ownership of each data source, with contact information for schema change notifications.
 
-Data contracts are the data pipeline equivalent of [[API Versioning and Compatibility]] — they prevent producers from silently breaking consumers.
+Data contracts are the data pipeline equivalent of [[01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility]] — they prevent producers from silently breaking consumers.
 
 ## Trade-Off Analysis
 
@@ -139,10 +139,10 @@ graph LR
 
 ## Connections
 
-- [[Stream Processing]] — Stream processing is converging with batch (Flink, Spark Structured Streaming)
-- [[Object Storage Fundamentals]] — Data lakes are built on object storage
-- [[Schema Evolution]] — Schema registries enforce data contracts for event-driven pipelines
-- [[Message Queues vs Event Streams]] — Kafka is both the transport and the replay mechanism for Kappa architecture
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Stream_Processing]] — Stream processing is converging with batch (Flink, Spark Structured Streaming)
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals]] — Data lakes are built on object storage
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] — Schema registries enforce data contracts for event-driven pipelines
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams]] — Kafka is both the transport and the replay mechanism for Kappa architecture
 
 ## Reflection Prompts
 

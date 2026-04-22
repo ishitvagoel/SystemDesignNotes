@@ -145,7 +145,7 @@ git commit -m "feat: implement wiki-link title-to-id resolution"
 **Files:**
 - Create: `scripts/fix-links.js`
 
-- [ ] **Step 1: Write the batch processing script**
+- [x] **Step 1: Write the batch processing script**
 This script will use the library to fix all files in `data/notes/`.
 
 ```javascript
@@ -185,14 +185,14 @@ walk(NOTES_DIR);
 console.log('✅ Link fixing complete.');
 ```
 
-- [ ] **Step 2: Run the batch fix**
+- [x] **Step 2: Run the batch fix**
 Run: `node scripts/fix-links.js`
 
-- [ ] **Step 3: Verify with rebuild-data script**
+- [x] **Step 3: Verify with rebuild-data script**
 Run: `node scripts/rebuild-data.js`
 Expected: Broken link count should be significantly lower or 0.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 ```bash
 git add scripts/fix-links.js
 git commit -m "chore: run link fixer on all notes"
@@ -203,10 +203,10 @@ git commit -m "chore: run link fixer on all notes"
 **Files:**
 - Modify: `TODO.md`
 
-- [ ] **Step 1: Update TODO.md**
+- [x] **Step 1: Update TODO.md**
 Mark the task as complete and add a note about the link fixer script.
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 ```bash
 git add TODO.md
 git commit -m "docs: mark broken link fix as complete"

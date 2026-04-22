@@ -115,10 +115,10 @@ graph TD
 
 ## Connections
 
-- [[Monolith vs Microservices]] — Bounded contexts define where to draw service boundaries
-- [[Saga Pattern]] — Cross-context operations require saga coordination
-- [[gRPC vs REST vs GraphQL]] — Inter-service communication paradigm choice; GraphQL Federation aligns with bounded context ownership
-- [[Strangler Fig and Migration Patterns]] — Extracting bounded contexts from a monolith
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Monolith_vs_Microservices]] — Bounded contexts define where to draw service boundaries
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] — Cross-context operations require saga coordination
+- [[01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL]] — Inter-service communication paradigm choice; GraphQL Federation aligns with bounded context ownership
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Strangler_Fig_and_Migration_Patterns]] — Extracting bounded contexts from a monolith
 
 ## Reflection Prompts
 

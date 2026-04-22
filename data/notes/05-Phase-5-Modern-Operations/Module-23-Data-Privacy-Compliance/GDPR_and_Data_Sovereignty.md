@@ -103,10 +103,10 @@ graph TD
 
 ## Connections
 
-- [[Data Privacy and Compliance]] — The broader privacy framework this fits within
-- [[Cell-Based Architecture]] — Cell-based design is the architectural pattern enabling data residency
-- [[Encryption at Rest and in Transit]] — Encryption is a key mechanism for cross-border data transfer compliance
-- [[Geo-Distribution and Data Sovereignty]] — Data sovereignty is often the primary driver of multi-region architecture decisions; the companion note covers routing, failover, and cross-region replication patterns
+- [[Data_Privacy_and_Compliance]] — The broader privacy framework this fits within
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]] — Cell-based design is the architectural pattern enabling data residency
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Encryption_at_Rest_and_in_Transit]] — Encryption is a key mechanism for cross-border data transfer compliance
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty]] — Data sovereignty is often the primary driver of multi-region architecture decisions; the companion note covers routing, failover, and cross-region replication patterns
 
 ## Reflection Prompts
 

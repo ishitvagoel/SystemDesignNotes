@@ -4,13 +4,13 @@ Each capstone walks through the full design evolution of a real system: requirem
 
 ## The Capstones
 
-1. [[Capstone — URL Shortener]] — Deceptively simple; teaches estimation, storage, caching, unique ID generation, analytics pipelines
-2. [[Capstone — News Feed]] — Fan-out strategies, ranking, caching at scale, read-heavy optimization
-3. [[Capstone — Payments and Orders]] — Distributed transactions, idempotency, saga patterns, event sourcing
-4. [[Capstone — Collaborative Editor]] — CRDTs/OT, WebSockets, presence, conflict resolution
-5. [[Capstone — AI Search and Chat Platform]] — RAG pipeline, vector search, LLM gateway, semantic caching, agentic tool use
-6. [[Capstone — Multi-Region E-Commerce]] — Data classification by consistency/sovereignty/latency, per-type replication strategy, global routing
-7. [[Capstone — Feature Flag Platform]] — Flag evaluation pipeline, SDK design (push vs pull), A/B experiment analytics, stale flag cleanup
+1. [[06-Phase-6-Capstones__Capstone_—_URL_Shortener]] — Deceptively simple; teaches estimation, storage, caching, unique ID generation, analytics pipelines
+2. [[06-Phase-6-Capstones__Capstone_—_News_Feed]] — Fan-out strategies, ranking, caching at scale, read-heavy optimization
+3. [[06-Phase-6-Capstones__Capstone_—_Payments_and_Orders]] — Distributed transactions, idempotency, saga patterns, event sourcing
+4. [[06-Phase-6-Capstones__Capstone_—_Collaborative_Editor]] — CRDTs/OT, WebSockets, presence, conflict resolution
+5. [[06-Phase-6-Capstones__Capstone_—_AI_Search_and_Chat_Platform]] — RAG pipeline, vector search, LLM gateway, semantic caching, agentic tool use
+6. [[06-Phase-6-Capstones__Capstone_—_Multi-Region_E-Commerce]] — Data classification by consistency/sovereignty/latency, per-type replication strategy, global routing
+7. [[06-Phase-6-Capstones__Capstone_—_Feature_Flag_Platform]] — Flag evaluation pipeline, SDK design (push vs pull), A/B experiment analytics, stale flag cleanup
 
 ## The Capstone Loop
 

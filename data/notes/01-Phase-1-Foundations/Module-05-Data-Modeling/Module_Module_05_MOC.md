@@ -11,18 +11,18 @@ Schema evolution is the other half of the story. Your schema will change — new
 ## Notes in This Module
 
 ### Modeling Approaches
-- [[Data Model Selection]] — Relational vs document vs graph: matching the model to access patterns, not to trends
-- [[Relational Modeling and Normalization]] — Normalization forms, when to stop normalizing, and denormalization strategies
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Data_Model_Selection]] — Relational vs document vs graph: matching the model to access patterns, not to trends
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Relational_Modeling_and_Normalization]] — Normalization forms, when to stop normalizing, and denormalization strategies
 
 ### Evolution & Migration
-- [[Schema Evolution]] — Backward/forward compatibility with Avro, Protobuf, and schema registries
-- [[Zero-Downtime Schema Migrations]] — Expand-and-contract, ghost table migrations, and surviving migrations in production
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] — Backward/forward compatibility with Avro, Protobuf, and schema registries
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations]] — Expand-and-contract, ghost table migrations, and surviving migrations in production
 
 ## Prerequisites
-- [[_Module 03 MOC]] — Storage Engines (understanding how storage engines handle schema changes)
-- [[_Module 04 MOC]] — Databases (SQL vs NoSQL, indexing — data modeling builds on these choices)
+- [[Module_Module_03_MOC]] — Storage Engines (understanding how storage engines handle schema changes)
+- [[Module_Module_04_MOC]] — Databases (SQL vs NoSQL, indexing — data modeling builds on these choices)
 
 ## Where This Leads
-- [[_Module 02 MOC]] — API Design (schema evolution parallels API versioning)
-- [[_Module 10 MOC]] — Distributed Transactions (event sourcing and CQRS data models)
-- [[_Module 13 MOC]] — Messaging & Pipelines (schema registries for event schemas)
+- [[Module_Module_02_MOC]] — API Design (schema evolution parallels API versioning)
+- [[Module_Module_10_MOC]] — Distributed Transactions (event sourcing and CQRS data models)
+- [[Module_Module_13_MOC]] — Messaging & Pipelines (schema registries for event schemas)

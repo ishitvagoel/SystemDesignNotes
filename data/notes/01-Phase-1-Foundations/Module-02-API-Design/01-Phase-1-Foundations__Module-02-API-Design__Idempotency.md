@@ -88,11 +88,11 @@ This is the key insight: **exactly-once semantics = at-least-once delivery + ide
 **Message consumers**: When processing messages from a queue (Kafka, SQS, RabbitMQ), consumers must handle redelivery. Strategies:
 - **Idempotency table**: Store processed message IDs in a database table. Before processing, check if the ID exists. Process + insert atomically in a transaction.
 - **Natural idempotency**: If the operation is "set status to SHIPPED," it's naturally idempotent — running it twice doesn't change the outcome.
-- **Transactional outbox**: Process the message and record the message ID in the same database transaction. See [[Outbox Pattern]].
+- **Transactional outbox**: Process the message and record the message ID in the same database transaction. See [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]].
 
-**Saga orchestrators**: Each saga step must be idempotent because the orchestrator retries failed steps. Compensating transactions must also be idempotent — you don't want to refund a payment twice. See [[Saga Pattern]].
+**Saga orchestrators**: Each saga step must be idempotent because the orchestrator retries failed steps. Compensating transactions must also be idempotent — you don't want to refund a payment twice. See [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]].
 
-**Event sourcing**: Events are appended with sequence numbers. Consumers track the last processed sequence number and skip duplicates. The event log itself is the idempotency mechanism. See [[Event Sourcing and CQRS]].
+**Event sourcing**: Events are appended with sequence numbers. Consumers track the last processed sequence number and skip duplicates. The event log itself is the idempotency mechanism. See [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]].
 
 ## Trade-Off Analysis
 
@@ -154,13 +154,13 @@ sequenceDiagram
 
 ## Connections
 
-- [[RESTful Design Principles]] — HTTP method semantics (idempotent methods vs non-idempotent POST)
-- [[Two-Phase Commit]] — Idempotency is essential when retrying distributed transaction steps
-- [[Saga Pattern]] — Each saga step and its compensating transaction must be idempotent
-- [[Outbox Pattern]] — Reliable event publishing with deduplication
-- [[Event Sourcing and CQRS]] — The event log's sequence numbers provide a natural idempotency mechanism
-- [[Rate Limiting and Throttling]] — Rate-limited clients retry; idempotency makes those retries safe
-- [[Consistency Spectrum]] — Exactly-once semantics relate to consistency guarantees
+- [[01-Phase-1-Foundations__Module-02-API-Design__RESTful_Design_Principles]] — HTTP method semantics (idempotent methods vs non-idempotent POST)
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]] — Idempotency is essential when retrying distributed transaction steps
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] — Each saga step and its compensating transaction must be idempotent
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] — Reliable event publishing with deduplication
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]] — The event log's sequence numbers provide a natural idempotency mechanism
+- [[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]] — Rate-limited clients retry; idempotency makes those retries safe
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — Exactly-once semantics relate to consistency guarantees
 
 ## Reflection Prompts
 

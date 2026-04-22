@@ -69,7 +69,7 @@ In practice, you typically need multiple guarantees together:
 
 ### When Session Guarantees Are Not Enough
 
-Session guarantees are client-centric — they protect a single client's view of the data across reads and writes *from that client*. They say nothing about what happens when two different clients concurrently write to the same record on different leaders. Read-your-writes guarantees that client A sees its own update; it provides no guarantee about what happens when client A and client B simultaneously update the same profile field on two different regional leaders. That scenario produces a write conflict, and the outcome depends entirely on the conflict resolution strategy of the replication layer — not on any session guarantee. Session guarantees solve the "single client, multiple replicas" problem. The "multiple clients, multiple leaders" problem requires conflict resolution (see [[Multi-Leader and Conflict Resolution]]). A system that implements both gives you the combination: your own writes are always visible to you (session guarantee), and concurrent writes from others converge to a consistent value (conflict resolution).
+Session guarantees are client-centric — they protect a single client's view of the data across reads and writes *from that client*. They say nothing about what happens when two different clients concurrently write to the same record on different leaders. Read-your-writes guarantees that client A sees its own update; it provides no guarantee about what happens when client A and client B simultaneously update the same profile field on two different regional leaders. That scenario produces a write conflict, and the outcome depends entirely on the conflict resolution strategy of the replication layer — not on any session guarantee. Session guarantees solve the "single client, multiple replicas" problem. The "multiple clients, multiple leaders" problem requires conflict resolution (see [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Multi-Leader_and_Conflict_Resolution]]). A system that implements both gives you the combination: your own writes are always visible to you (session guarantee), and concurrent writes from others converge to a consistent value (conflict resolution).
 
 ## Implementation Patterns
 
@@ -155,12 +155,12 @@ sequenceDiagram
 
 ## Connections
 
-- [[Consistency Spectrum]] — Session guarantees sit between eventual consistency and linearizability on the spectrum
-- [[CAP Theorem and PACELC]] — Session guarantees make the EL side of PACELC (eventual consistency + low latency) practically usable
-- [[Database Replication]] — Replication lag is the root cause of all session guarantee violations
-- [[Cache Patterns and Strategies]] — Cache staleness creates the same problems; similar solutions apply (versioned cache entries, TTL-based freshness)
-- [[Logical Clocks and Ordering]] — Session tokens often use logical timestamps to track the "read position"
-- [[Load Balancing Fundamentals]] — Sticky sessions for session guarantees interact with load balancing strategies
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — Session guarantees sit between eventual consistency and linearizability on the spectrum
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__CAP_Theorem_and_PACELC]] — Session guarantees make the EL side of PACELC (eventual consistency + low latency) practically usable
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Replication lag is the root cause of all session guarantee violations
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — Cache staleness creates the same problems; similar solutions apply (versioned cache entries, TTL-based freshness)
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering]] — Session tokens often use logical timestamps to track the "read position"
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — Sticky sessions for session guarantees interact with load balancing strategies
 
 ## Reflection Prompts
 

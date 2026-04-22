@@ -120,10 +120,10 @@ graph TD
 
 ## Connections
 
-- [[Consensus and Raft]] — Raft circumvents FLP by using timeouts (partial synchrony assumption) and randomized election timeouts
-- [[Paxos and Its Legacy]] — Paxos has the same relationship to FLP; it guarantees safety but not liveness in purely asynchronous settings
-- [[CAP Theorem and PACELC]] — FLP is the theoretical underpinning of why CAP's trade-offs exist
-- [[Consistency Spectrum]] — FLP constrains which consistency levels are achievable with what guarantees
+- [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft]] — Raft circumvents FLP by using timeouts (partial synchrony assumption) and randomized election timeouts
+- [[02-Phase-2-Distribution__Module-09-Consensus__Paxos_and_Its_Legacy]] — Paxos has the same relationship to FLP; it guarantees safety but not liveness in purely asynchronous settings
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__CAP_Theorem_and_PACELC]] — FLP is the theoretical underpinning of why CAP's trade-offs exist
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — FLP constrains which consistency levels are achievable with what guarantees
 
 ## Reflection Prompts
 

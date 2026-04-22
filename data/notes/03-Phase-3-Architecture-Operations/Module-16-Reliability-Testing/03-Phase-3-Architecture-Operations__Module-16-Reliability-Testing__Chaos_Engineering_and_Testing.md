@@ -38,7 +38,7 @@ Netflix formalized the discipline in their "Principles of Chaos Engineering":
 
 ### Blast Radius Control
 
-**Start small**: Inject failures affecting a single instance, not the whole cluster. In [[Cell-Based Architecture]], inject into one cell.
+**Start small**: Inject failures affecting a single instance, not the whole cluster. In [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]], inject into one cell.
 
 **Monitor continuously**: Watch SLIs (latency, error rate) throughout the experiment. Define abort conditions: "if p99 latency exceeds 2× baseline or error rate exceeds SLO, stop immediately."
 
@@ -140,9 +140,9 @@ graph TD
 
 ## Connections
 
-- [[Resilience Patterns]] — Chaos engineering verifies that circuit breakers, bulkheads, and retries work
-- [[SLOs SLIs and Error Budgets]] — Chaos experiments should be bounded by error budget
-- [[Deployment and Release Engineering]] — Shadow testing and canary analysis catch regressions before they reach users
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns]] — Chaos engineering verifies that circuit breakers, bulkheads, and retries work
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — Chaos experiments should be bounded by error budget
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering]] — Shadow testing and canary analysis catch regressions before they reach users
 
 ## Reflection Prompts
 

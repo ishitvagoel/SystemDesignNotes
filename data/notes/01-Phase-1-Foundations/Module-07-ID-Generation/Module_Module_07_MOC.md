@@ -11,16 +11,16 @@ This module also introduces **logical clocks** — the foundational mechanism fo
 ## Notes in This Module
 
 ### ID Formats
-- [[ID Generation Strategies]] — UUIDs (v4, v7), Snowflake IDs, ULID, TSID — trade-offs in sortability, size, collision resistance, and coordination requirements
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__ID_Generation_Strategies]] — UUIDs (v4, v7), Snowflake IDs, ULID, TSID — trade-offs in sortability, size, collision resistance, and coordination requirements
 
 ### Ordering & Causality
-- [[Logical Clocks and Ordering]] — Lamport timestamps, vector clocks, and hybrid logical clocks — how to order events when you can't trust wall clocks
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering]] — Lamport timestamps, vector clocks, and hybrid logical clocks — how to order events when you can't trust wall clocks
 
 ## Prerequisites
-- [[_Module 03 MOC]] — Storage Engines (ID format impacts B-tree vs LSM-tree performance)
-- [[_Module 04 MOC]] — Databases (ID choice affects indexing, partitioning, and replication)
+- [[Module_Module_03_MOC]] — Storage Engines (ID format impacts B-tree vs LSM-tree performance)
+- [[Module_Module_04_MOC]] — Databases (ID choice affects indexing, partitioning, and replication)
 
 ## Where This Leads
-- [[_Module 08 MOC]] — Consistency Models (logical clocks are the foundation for reasoning about consistency)
-- [[_Module 11 MOC]] — Replication & Conflict Resolution (version vectors and causal ordering)
-- [[_Module 10 MOC]] — Distributed Transactions (transaction ordering depends on clock mechanisms)
+- [[Module_Module_08_MOC]] — Consistency Models (logical clocks are the foundation for reasoning about consistency)
+- [[Module_Module_11_MOC]] — Replication & Conflict Resolution (version vectors and causal ordering)
+- [[Module_Module_10_MOC]] — Distributed Transactions (transaction ordering depends on clock mechanisms)

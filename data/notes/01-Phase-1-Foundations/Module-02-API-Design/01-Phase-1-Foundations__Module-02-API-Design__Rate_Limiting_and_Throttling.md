@@ -75,7 +75,7 @@ Rate limiting by different keys serves different purposes:
 - **Per-user/API key**: The most common. Each authenticated consumer gets their own quota. Prevents any single user from hogging resources.
 - **Per-IP**: Useful for unauthenticated endpoints (login pages, public APIs). Less accurate — users behind NAT or VPNs share an IP.
 - **Per-endpoint**: Different limits for different operations. `GET /users` might allow 1,000 req/min; `POST /users` might allow 10 req/min. Expensive write operations deserve tighter limits.
-- **Per-tenant**: In multi-tenant systems, each tenant (organization, account) gets a limit regardless of how many individual users they have. See [[Multi-Tenancy and Isolation]].
+- **Per-tenant**: In multi-tenant systems, each tenant (organization, account) gets a limit regardless of how many individual users they have. See [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]].
 - **Global**: A hard cap on total system throughput. Last line of defense before overload.
 
 These can be layered: a request must pass per-user AND per-IP AND per-endpoint AND global limits.
@@ -180,11 +180,11 @@ graph TD
 
 ## Connections
 
-- [[API Gateway Patterns]] — Rate limiting is one of the core responsibilities of an API gateway
-- [[Circuit Breakers and Bulkheads]] — Rate limiting prevents overload from consumers; circuit breakers prevent overload from dependencies. Complementary patterns.
-- [[Multi-Tenancy and Isolation]] — Per-tenant rate limiting is a core isolation mechanism in multi-tenant systems
-- [[Load Balancing Fundamentals]] — Rate limiting interacts with load balancing — limited requests still consume LB capacity
-- [[Idempotency]] — Rate-limited clients retry; idempotency makes those retries safe
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — Rate limiting is one of the core responsibilities of an API gateway
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads]] — Rate limiting prevents overload from consumers; circuit breakers prevent overload from dependencies. Complementary patterns.
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]] — Per-tenant rate limiting is a core isolation mechanism in multi-tenant systems
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — Rate limiting interacts with load balancing — limited requests still consume LB capacity
+- [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] — Rate-limited clients retry; idempotency makes those retries safe
 
 ## Reflection Prompts
 

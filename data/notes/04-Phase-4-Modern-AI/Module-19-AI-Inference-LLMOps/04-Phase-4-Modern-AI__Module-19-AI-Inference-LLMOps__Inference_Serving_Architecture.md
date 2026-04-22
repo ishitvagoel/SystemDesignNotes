@@ -140,10 +140,10 @@ graph TD
 
 ## Connections
 
-- [[AI Gateway and LLM Operations]] — The routing, caching, and governance layer above inference serving
-- [[Load Balancing Fundamentals]] — GPU load balancing shares principles but has unique constraints (model loading, KV cache locality)
-- [[Cache Patterns and Strategies]] — KV cache is a specialized cache; prefix caching parallels CDN origin shield
-- [[Cost Engineering and FinOps]] — GPU cost dominates AI infrastructure spend
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__AI_Gateway_and_LLM_Operations]] — The routing, caching, and governance layer above inference serving
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — GPU load balancing shares principles but has unique constraints (model loading, KV cache locality)
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — KV cache is a specialized cache; prefix caching parallels CDN origin shield
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — GPU cost dominates AI infrastructure spend
 
 ## Cost Per Token Benchmarks (2025–2026)
 

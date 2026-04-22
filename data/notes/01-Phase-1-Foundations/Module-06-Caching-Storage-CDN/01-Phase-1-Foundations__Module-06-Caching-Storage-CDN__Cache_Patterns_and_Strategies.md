@@ -98,7 +98,7 @@ Every cached entry expires after a fixed duration. Simple and effective as a saf
 
 When the source data changes, actively invalidate (or update) the cache entry. This provides near-real-time consistency without relying on TTL expiry.
 
-**Implementation**: Database trigger or CDC ([[Change Data Capture]]) emits a change event. A consumer invalidates the cache key corresponding to the changed data. This decouples the write path from cache management.
+**Implementation**: Database trigger or CDC ([[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Change_Data_Capture]]) emits a change event. A consumer invalidates the cache key corresponding to the changed data. This decouples the write path from cache management.
 
 **Trade-off**: More complex to implement. Requires reliable event delivery (if the invalidation event is lost, the cache stays stale until TTL). But provides much better freshness than TTL alone.
 
@@ -126,13 +126,13 @@ Each layer is closer to the user but further from the source of truth:
 
 1. **Browser cache**: HTTP cache headers (`Cache-Control`, `ETag`, `Last-Modified`). Free — no server resources consumed. But you can't invalidate it (once cached by the browser, it stays until expiry or hard refresh).
 
-2. **CDN edge cache**: Caches static assets and cacheable API responses at edge PoPs worldwide. Low latency for users, reduces origin traffic. Invalidation via purge APIs. See [[CDN Architecture]].
+2. **CDN edge cache**: Caches static assets and cacheable API responses at edge PoPs worldwide. Low latency for users, reduces origin traffic. Invalidation via purge APIs. See [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]].
 
 3. **API gateway / reverse proxy cache**: Nginx, Varnish, or gateway-level caching. Caches full HTTP responses. Effective for repeated identical requests. Requires cache-friendly URL design.
 
-4. **Application cache** (Redis, Memcached): Caches computed results, database query results, session data. Application-controlled, fine-grained. The most flexible caching layer. See [[Distributed Caching]].
+4. **Application cache** (Redis, Memcached): Caches computed results, database query results, session data. Application-controlled, fine-grained. The most flexible caching layer. See [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Distributed_Caching]].
 
-5. **Database buffer pool**: Caches data pages in memory. Transparent to the application. See [[Buffer Pool and Page Cache]].
+5. **Database buffer pool**: Caches data pages in memory. Transparent to the application. See [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]].
 
 **The multi-layer invalidation problem**: Updating a product price must invalidate the price in Redis, purge the product page from the CDN, and the browser cache is stale until its TTL expires (or the user hard-refreshes). Each layer has a different invalidation mechanism and latency. Complete end-to-end consistency across all layers is effectively impossible — you manage staleness windows at each layer.
 
@@ -195,12 +195,12 @@ graph TD
 
 ## Connections
 
-- [[Distributed Caching]] — Redis Cluster and Memcached: the infrastructure for application-level caching
-- [[CDN Architecture]] — The edge caching layer in the multi-layer caching stack
-- [[Buffer Pool and Page Cache]] — The database's own internal caching layer
-- [[Object Storage Fundamentals]] — Cache object storage responses to reduce egress costs and latency
-- [[Database Replication]] — Read replicas are a form of caching (stale reads from replicas = cached data)
-- [[Consistency Spectrum]] — Cache staleness is a form of eventual consistency
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Distributed_Caching]] — Redis Cluster and Memcached: the infrastructure for application-level caching
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — The edge caching layer in the multi-layer caching stack
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]] — The database's own internal caching layer
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals]] — Cache object storage responses to reduce egress costs and latency
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Read replicas are a form of caching (stale reads from replicas = cached data)
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — Cache staleness is a form of eventual consistency
 
 ## Reflection Prompts
 

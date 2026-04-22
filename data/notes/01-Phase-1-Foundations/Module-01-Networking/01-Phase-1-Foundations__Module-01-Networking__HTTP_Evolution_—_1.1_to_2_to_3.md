@@ -143,12 +143,12 @@ graph TD
 
 ## Connections
 
-- [[TCP Deep Dive]] — HTTP/1.1 and HTTP/2 run over TCP; understanding TCP's congestion control and HOL blocking explains why HTTP/3 needed to move to UDP
-- [[TCP vs UDP]] — HTTP/3/QUIC is the canonical example of building reliability on UDP
-- [[Connection Pooling and Keep-Alive]] — HTTP/2 multiplexing reduces the need for connection pools, but they still matter for HTTP/1.1 backends
-- [[gRPC vs REST vs GraphQL]] — gRPC runs on HTTP/2 by design; understanding multiplexing explains why gRPC performs well for streaming
-- [[Load Balancing Fundamentals]] — L7 load balancers terminate HTTP and can inspect application data; protocol version affects load balancer behavior
-- [[CDN Architecture]] — CDNs are the largest deployers of HTTP/3
+- [[01-Phase-1-Foundations__Module-01-Networking__TCP_Deep_Dive]] — HTTP/1.1 and HTTP/2 run over TCP; understanding TCP's congestion control and HOL blocking explains why HTTP/3 needed to move to UDP
+- [[01-Phase-1-Foundations__Module-01-Networking__TCP_vs_UDP]] — HTTP/3/QUIC is the canonical example of building reliability on UDP
+- [[01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive]] — HTTP/2 multiplexing reduces the need for connection pools, but they still matter for HTTP/1.1 backends
+- [[01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL]] — gRPC runs on HTTP/2 by design; understanding multiplexing explains why gRPC performs well for streaming
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — L7 load balancers terminate HTTP and can inspect application data; protocol version affects load balancer behavior
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — CDNs are the largest deployers of HTTP/3
 
 ## Reflection Prompts
 

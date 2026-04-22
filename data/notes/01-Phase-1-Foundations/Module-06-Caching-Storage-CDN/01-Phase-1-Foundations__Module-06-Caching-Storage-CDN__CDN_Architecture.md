@@ -92,7 +92,7 @@ When content changes, you need to remove the old version from the CDN. This is c
 
 CDNs have evolved beyond static caching:
 
-**Edge compute** (Cloudflare Workers, Fastly Compute@Edge, AWS CloudFront Functions): Run JavaScript/Wasm at the edge. A/B testing, request routing, authentication, header manipulation, response transformation — all at the edge, before reaching the origin. See [[Serverless and Edge Computing]].
+**Edge compute** (Cloudflare Workers, Fastly Compute@Edge, AWS CloudFront Functions): Run JavaScript/Wasm at the edge. A/B testing, request routing, authentication, header manipulation, response transformation — all at the edge, before reaching the origin. See [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing]].
 
 **Image optimization**: Resize, compress, and format-convert images at the edge. Serve WebP to browsers that support it, AVIF to those that support that, and JPEG as fallback. Cloudflare Images, Imgix, CloudFront Image Optimization.
 
@@ -155,13 +155,13 @@ graph TD
 
 ## Connections
 
-- [[Cache Patterns and Strategies]] — CDN is the edge layer in the multi-layer caching stack
-- [[Object Storage Fundamentals]] — CDNs sit in front of object storage to reduce egress costs
-- [[Anycast and GeoDNS]] — CDNs use anycast to route users to the nearest edge PoP
-- [[DNS Resolution Chain]] — CDN DNS configuration (CNAME to CDN, or anycast) is the first routing step
-- [[HTTP Evolution — 1.1 to 2 to 3]] — CDNs are leading adopters of HTTP/3 and edge-to-origin HTTP/2
-- [[Serverless and Edge Computing]] — Edge compute (Cloudflare Workers, etc.) runs at CDN PoPs
-- [[Cost Engineering and FinOps]] — CDN costs (bandwidth pricing, request pricing) and CDN as egress cost saver
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — CDN is the edge layer in the multi-layer caching stack
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals]] — CDNs sit in front of object storage to reduce egress costs
+- [[01-Phase-1-Foundations__Module-01-Networking__Anycast_and_GeoDNS]] — CDNs use anycast to route users to the nearest edge PoP
+- [[01-Phase-1-Foundations__Module-01-Networking__DNS_Resolution_Chain]] — CDN DNS configuration (CNAME to CDN, or anycast) is the first routing step
+- [[01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3]] — CDNs are leading adopters of HTTP/3 and edge-to-origin HTTP/2
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing]] — Edge compute (Cloudflare Workers, etc.) runs at CDN PoPs
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — CDN costs (bandwidth pricing, request pricing) and CDN as egress cost saver
 
 ## Reflection Prompts
 

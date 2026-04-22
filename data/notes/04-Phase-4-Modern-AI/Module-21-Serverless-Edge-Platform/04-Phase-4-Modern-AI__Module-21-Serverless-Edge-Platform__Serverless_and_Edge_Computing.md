@@ -46,7 +46,7 @@ The "stateless" framing of serverless doesn't mean you can't have state — it m
 
 **External state store**: DynamoDB, Redis (ElastiCache), or S3 are the natural home for per-request and session state. The function reads and writes to the external store on each invocation. This is simple and works for most use cases, but adds latency (a DynamoDB read adds ~2–5ms per call) and cost (API calls are metered separately).
 
-**Durable execution (Temporal / Azure Durable Functions)**: For multi-step workflows that span minutes or hours (order processing, data pipelines, approval flows), a function's 15-minute timeout is fatal. Durable execution frameworks persist workflow state to a database after each step, allowing the function to "sleep" between steps without holding compute. The workflow resumes on a new function instance when the next step is ready. This is the serverless-native answer to long-running processes — see [[Saga Pattern]] for how orchestration patterns map here.
+**Durable execution (Temporal / Azure Durable Functions)**: For multi-step workflows that span minutes or hours (order processing, data pipelines, approval flows), a function's 15-minute timeout is fatal. Durable execution frameworks persist workflow state to a database after each step, allowing the function to "sleep" between steps without holding compute. The workflow resumes on a new function instance when the next step is ready. This is the serverless-native answer to long-running processes — see [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] for how orchestration patterns map here.
 
 **Edge state (Cloudflare Durable Objects)**: A Durable Object is a single-threaded stateful actor that runs at a specific edge location. Each object has a unique ID, strong consistency within the object, and persistent storage. They're ideal for: WebSocket hubs (a chat room is one Durable Object), rate limiters (one object per user), and collaborative editing cursors (one object per document). Crucially, this is *not* eventually consistent across edge nodes — the object is the single authoritative point, located where the first request for that ID lands.
 
@@ -56,7 +56,7 @@ The serverless cost and operational model excels for some workloads and is a poo
 
 **Avoid serverless when:**
 - **Long-running batch jobs**: Lambda's 15-minute maximum execution time disqualifies it for jobs that run hours. Use containers (AWS Batch, ECS) or a durable execution framework (Temporal).
-- **GPU-intensive AI inference**: Lambda has no GPU support. AI inference requires dedicated GPU instances — see [[Inference Serving Architecture]]. Edge Workers have even stricter constraints (no GPU, no model loading beyond small Wasm binaries).
+- **GPU-intensive AI inference**: Lambda has no GPU support. AI inference requires dedicated GPU instances — see [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture]]. Edge Workers have even stricter constraints (no GPU, no model loading beyond small Wasm binaries).
 - **Consistent sub-50ms latency requirements**: Cold starts are non-deterministic (100ms to several seconds). For strict p99 latency SLOs, provisioned concurrency eliminates cold starts — but provisioned concurrency is essentially always-on compute at a premium price, eroding the serverless cost model.
 - **Applications needing OS-level control**: Custom kernel modules, raw socket access, or specific tuning flags require a full VM. Serverless functions run in a managed sandbox.
 - **Stateful long-lived connections**: A WebSocket game server maintaining thousands of persistent connections needs a long-lived process, not ephemeral functions. Even Durable Objects have compute limits (30-second CPU time per request, 128MB memory).
@@ -152,13 +152,13 @@ graph TD
 
 ## Connections
 
-- [[Kubernetes and Platform Engineering]] — The alternative to serverless for workloads needing long-lived processes, GPU support, or OS-level control; understanding both is required to make the right choice.
-- [[Cost Engineering and FinOps]] — The cost crossover between serverless ($/invocation) and containers ($/hour) depends on your request volume and function duration; understand the math before committing.
-- [[Event-Driven Architecture Patterns]] — Serverless is naturally event-driven; the function handler is a consumer in an event-driven system. The patterns (fan-out, filtering, dead-letter queues) apply directly.
-- [[Circuit Breakers and Bulkheads]] — Resilience patterns work differently in serverless: circuit breakers must be implemented in the function itself or at the gateway layer; bulkheads map to reserved concurrency per function.
-- [[Saga Pattern]] — Long-running sagas with serverless functions require durable execution (Temporal, Durable Functions) to survive function timeouts and failures mid-workflow.
-- [[Inference Serving Architecture]] — AI inference is explicitly a poor fit for current serverless due to GPU requirements and cold start sensitivity; this contrast clarifies when serverless is not the answer.
-- [[CDN Architecture]] — Edge compute (Workers, Lambda@Edge) is an extension of the CDN — understanding CDN PoP architecture explains why edge compute has the latency profile it does.
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering]] — The alternative to serverless for workloads needing long-lived processes, GPU support, or OS-level control; understanding both is required to make the right choice.
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — The cost crossover between serverless ($/invocation) and containers ($/hour) depends on your request volume and function duration; understand the math before committing.
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns]] — Serverless is naturally event-driven; the function handler is a consumer in an event-driven system. The patterns (fan-out, filtering, dead-letter queues) apply directly.
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads]] — Resilience patterns work differently in serverless: circuit breakers must be implemented in the function itself or at the gateway layer; bulkheads map to reserved concurrency per function.
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] — Long-running sagas with serverless functions require durable execution (Temporal, Durable Functions) to survive function timeouts and failures mid-workflow.
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture]] — AI inference is explicitly a poor fit for current serverless due to GPU requirements and cold start sensitivity; this contrast clarifies when serverless is not the answer.
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — Edge compute (Workers, Lambda@Edge) is an extension of the CDN — understanding CDN PoP architecture explains why edge compute has the latency profile it does.
 
 ## Canonical Sources
 

@@ -11,19 +11,19 @@ Consistency models are the vocabulary for answering this question precisely. Wit
 ## Notes in This Module
 
 ### Core Models
-- [[Consistency Spectrum]] — Linearizability, sequential consistency, causal consistency, eventual consistency — with concrete examples of when each matters and what breaks without them
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — Linearizability, sequential consistency, causal consistency, eventual consistency — with concrete examples of when each matters and what breaks without them
 
 ### Theorems & Frameworks
-- [[CAP Theorem and PACELC]] — What CAP actually says vs how it's misused, and why PACELC is the more useful framework for real systems
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__CAP_Theorem_and_PACELC]] — What CAP actually says vs how it's misused, and why PACELC is the more useful framework for real systems
 
 ### Practical Guarantees
-- [[Session Guarantees]] — Read-your-writes, monotonic reads, consistent prefix — the session-level guarantees that matter in practice
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees]] — Read-your-writes, monotonic reads, consistent prefix — the session-level guarantees that matter in practice
 
 ## Prerequisites
-- [[_Module 04 MOC]] — Database Replication (replication creates the consistency problem)
-- [[_Module 07 MOC]] — Logical Clocks and Ordering (the formal tools for reasoning about event order)
+- [[Module_Module_04_MOC]] — Database Replication (replication creates the consistency problem)
+- [[Module_Module_07_MOC]] — Logical Clocks and Ordering (the formal tools for reasoning about event order)
 
 ## Where This Leads
-- [[_Module 09 MOC]] — Consensus & Coordination (how to achieve strong consistency when you need it)
-- [[_Module 10 MOC]] — Distributed Transactions (transactions across consistency boundaries)
-- [[_Module 11 MOC]] — Replication & Conflict Resolution (what to do when consistency is relaxed)
+- [[Module_Module_09_MOC]] — Consensus & Coordination (how to achieve strong consistency when you need it)
+- [[Module_Module_10_MOC]] — Distributed Transactions (transactions across consistency boundaries)
+- [[Module_Module_11_MOC]] — Replication & Conflict Resolution (what to do when consistency is relaxed)

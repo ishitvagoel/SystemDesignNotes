@@ -111,12 +111,12 @@ graph TD
 
 ## Connections
 
-- [[RAG Architecture]] — RAG is the retrieval component that many agents use for knowledge access
-- [[AI Gateway and LLM Operations]] — The gateway manages token budgets, routing, and governance for agent LLM calls
-- [[Observability and Alerting]] — Agent-specific observability extends traditional distributed tracing
-- [[Semantic Caching and Prompt Caching]] — Agent tool results can be semantically cached; provider-side prompt caching reduces cost for repeated reasoning prefixes
-- [[Idempotency]] — Tool calls with side effects require idempotency keys to support safe retry
-- [[Agent Reliability Patterns]] — Detailed treatment of retry/backoff, idempotency key design, circuit breakers for LLM APIs, and the graceful degradation ladder
+- [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__RAG_Architecture]] — RAG is the retrieval component that many agents use for knowledge access
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__AI_Gateway_and_LLM_Operations]] — The gateway manages token budgets, routing, and governance for agent LLM calls
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Agent-specific observability extends traditional distributed tracing
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Semantic_Caching_and_Prompt_Caching]] — Agent tool results can be semantically cached; provider-side prompt caching reduces cost for repeated reasoning prefixes
+- [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] — Tool calls with side effects require idempotency keys to support safe retry
+- [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agent_Reliability_Patterns]] — Detailed treatment of retry/backoff, idempotency key design, circuit breakers for LLM APIs, and the graceful degradation ladder
 
 ## Canonical Sources
 

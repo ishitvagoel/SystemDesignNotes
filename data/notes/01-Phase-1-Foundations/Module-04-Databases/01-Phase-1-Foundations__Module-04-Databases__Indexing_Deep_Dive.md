@@ -16,7 +16,7 @@ The trade-off is the same too: a bigger index at the back of the book means more
 
 ### B-Tree Index (The Default)
 
-The workhorse. When you say `CREATE INDEX` without specifying a type, you get a B-tree index. The index stores key values in a sorted B-tree structure (see [[B-Tree vs LSM-Tree]]), with leaf nodes pointing to the table rows.
+The workhorse. When you say `CREATE INDEX` without specifying a type, you get a B-tree index. The index stores key values in a sorted B-tree structure (see [[01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree]]), with leaf nodes pointing to the table rows.
 
 **What it's good for**: Equality lookups (`WHERE id = 123`), range queries (`WHERE created_at > '2024-01-01'`), sorting (`ORDER BY name`), prefix matching (`WHERE name LIKE 'Ali%'`). Because keys are sorted, B-tree indexes handle all of these efficiently.
 
@@ -180,13 +180,13 @@ graph TD
 
 ## Connections
 
-- [[B-Tree vs LSM-Tree]] — B-tree indexes are literally B-trees; understanding their structure explains index behavior
-- [[SQL vs NoSQL Decision Framework]] — Index capabilities are a key differentiator between database types
-- [[Buffer Pool and Page Cache]] — Index pages live in the buffer pool; hot indexes should be fully cached
-- [[MVCC Deep Dive]] — Index entries must account for MVCC visibility (Postgres includes dead tuples in indexes)
-- [[Partitioning and Sharding]] — Partition pruning + local indexes vs global indexes is a key design decision
-- [[Full-Text Search Architecture]] — GIN indexes power full-text search in Postgres
-- [[Query Optimization and EXPLAIN]] — How the cost-based optimizer uses index statistics to choose access methods; EXPLAIN output interpretation
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree]] — B-tree indexes are literally B-trees; understanding their structure explains index behavior
+- [[01-Phase-1-Foundations__Module-04-Databases__SQL_vs_NoSQL_Decision_Framework]] — Index capabilities are a key differentiator between database types
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]] — Index pages live in the buffer pool; hot indexes should be fully cached
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive]] — Index entries must account for MVCC visibility (Postgres includes dead tuples in indexes)
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Partition pruning + local indexes vs global indexes is a key design decision
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Full-Text_Search_Architecture]] — GIN indexes power full-text search in Postgres
+- [[01-Phase-1-Foundations__Module-04-Databases__Query_Optimization_and_EXPLAIN]] — How the cost-based optimizer uses index statistics to choose access methods; EXPLAIN output interpretation
 
 ## Reflection Prompts
 

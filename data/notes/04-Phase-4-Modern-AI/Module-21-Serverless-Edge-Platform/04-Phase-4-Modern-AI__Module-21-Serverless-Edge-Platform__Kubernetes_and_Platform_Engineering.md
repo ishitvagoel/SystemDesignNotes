@@ -11,7 +11,7 @@ Kubernetes is a harbor master for container ships. Each container (pod) carries 
 
 ## Kubernetes Architecture (Brief)
 
-**Control plane**: API server (the interface), etcd (the brain — stores all cluster state via [[Coordination Services|Raft consensus]]), scheduler (assigns pods to nodes), controller manager (reconciliation loops that ensure actual state matches desired state).
+**Control plane**: API server (the interface), etcd (the brain — stores all cluster state via [[02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services|Raft consensus]]), scheduler (assigns pods to nodes), controller manager (reconciliation loops that ensure actual state matches desired state).
 
 **Worker nodes**: kubelet (manages pods on the node), container runtime (containerd, CRI-O), kube-proxy (networking rules).
 
@@ -19,7 +19,7 @@ Kubernetes is a harbor master for container ships. Each container (pod) carries 
 
 ## Orchestration Patterns
 
-**Sidecar**: A helper container alongside the main container in the same pod. Handles cross-cutting concerns (logging, mTLS proxy, config reload) without modifying the main application. Envoy as a sidecar proxy is the foundation of service meshes ([[Strangler Fig and Migration Patterns]]).
+**Sidecar**: A helper container alongside the main container in the same pod. Handles cross-cutting concerns (logging, mTLS proxy, config reload) without modifying the main application. Envoy as a sidecar proxy is the foundation of service meshes ([[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Strangler_Fig_and_Migration_Patterns]]).
 
 **Init container**: Runs before the main container starts. Used for setup tasks: wait for a dependency to be ready, fetch secrets from Vault, run database migrations.
 
@@ -99,10 +99,10 @@ graph TD
 
 ## Connections
 
-- [[Serverless and Edge Computing]] — Kubernetes vs serverless: K8s for persistent workloads, serverless for event-driven
-- [[Deployment and Release Engineering]] — K8s enables blue-green, canary, and GitOps deployments natively
-- [[Observability and Alerting]] — Platform engineering includes per-service observability setup
-- [[Strangler Fig and Migration Patterns]] — Sidecar pattern and service mesh are K8s-native
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing]] — Kubernetes vs serverless: K8s for persistent workloads, serverless for event-driven
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering]] — K8s enables blue-green, canary, and GitOps deployments natively
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Platform engineering includes per-service observability setup
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Strangler_Fig_and_Migration_Patterns]] — Sidecar pattern and service mesh are K8s-native
 
 ## Canonical Sources
 

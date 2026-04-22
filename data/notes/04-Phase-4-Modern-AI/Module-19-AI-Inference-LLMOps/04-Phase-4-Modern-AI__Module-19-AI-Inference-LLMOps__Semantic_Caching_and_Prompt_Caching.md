@@ -137,11 +137,11 @@ flowchart TD
 
 ## Connections
 
-- [[AI Gateway and LLM Operations]] — Semantic caching is typically implemented at the AI gateway layer
-- [[Cache Patterns and Strategies]] — Semantic caching extends traditional caching (TTL, invalidation, eviction) with vector similarity
-- [[RAG Architecture]] — RAG queries benefit from semantic caching of (query → retrieved chunks → answer) triples; invalidation driven by source document updates
-- [[Inference Serving Architecture]] — KV cache management in the inference engine is separate from but complementary to semantic caching at the application layer
-- [[Vector Search and Hybrid Retrieval]] — Semantic cache uses the same approximate nearest neighbor algorithms (HNSW, IVF) as vector search
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__AI_Gateway_and_LLM_Operations]] — Semantic caching is typically implemented at the AI gateway layer
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — Semantic caching extends traditional caching (TTL, invalidation, eviction) with vector similarity
+- [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__RAG_Architecture]] — RAG queries benefit from semantic caching of (query → retrieved chunks → answer) triples; invalidation driven by source document updates
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture]] — KV cache management in the inference engine is separate from but complementary to semantic caching at the application layer
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval]] — Semantic cache uses the same approximate nearest neighbor algorithms (HNSW, IVF) as vector search
 
 ## Reflection Prompts
 

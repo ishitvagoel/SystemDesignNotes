@@ -50,7 +50,7 @@ The hardest part of REST design isn't choosing methods or status codes — it's 
 
 *PATCH is not idempotent by spec, but can be made idempotent in practice (e.g., "set name to X" is idempotent; "append to list" is not).
 
-**Why idempotency matters here**: GET, PUT, and DELETE are defined as idempotent — repeating the same request produces the same result. This means clients can safely retry them on network failure without worrying about duplicate side effects. POST is *not* idempotent, which is why you need [[Idempotency]] keys for operations like payment creation.
+**Why idempotency matters here**: GET, PUT, and DELETE are defined as idempotent — repeating the same request produces the same result. This means clients can safely retry them on network failure without worrying about duplicate side effects. POST is *not* idempotent, which is why you need [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] keys for operations like payment creation.
 
 **Why safety matters**: GET and HEAD are "safe" — they don't modify server state. This means caches, prefetchers, and crawlers can call them freely. If your GET endpoint has side effects (logging a page view, incrementing a counter), you'll get unexpected behavior when a CDN caches it or a browser prefetches it.
 
@@ -70,7 +70,7 @@ Don't use status codes as a creative expression channel. A small, consistent sub
 - `404 Not Found` — Resource doesn't exist (also used to hide the existence of resources from unauthorized users)
 - `409 Conflict` — Request conflicts with current state (e.g., creating a resource that already exists, concurrent modification)
 - `422 Unprocessable Entity` — Request is syntactically valid but semantically wrong (useful distinction from 400)
-- `429 Too Many Requests` — Rate limited (see [[Rate Limiting and Throttling]])
+- `429 Too Many Requests` — Rate limited (see [[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]])
 
 **Server errors (5xx)**:
 - `500 Internal Server Error` — Something broke server-side
@@ -180,13 +180,13 @@ graph TD
 
 ## Connections
 
-- [[gRPC vs REST vs GraphQL]] — REST in context with the other major paradigms
-- [[gRPC Deep Dive]] — When to replace REST with gRPC for internal service communication; streaming patterns REST cannot match
-- [[API Versioning and Compatibility]] — How to evolve REST APIs without breaking consumers
-- [[Idempotency]] — Why HTTP method semantics (idempotent vs not) matter for retry safety
-- [[Rate Limiting and Throttling]] — Protecting REST endpoints from abuse
-- [[API Gateway Patterns]] — Gateways add cross-cutting REST concerns (auth, rate limiting, transformation)
-- [[Schema Evolution]] — The data-layer parallel to API contract evolution
+- [[01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL]] — REST in context with the other major paradigms
+- [[01-Phase-1-Foundations__Module-01-Networking__gRPC_Deep_Dive]] — When to replace REST with gRPC for internal service communication; streaming patterns REST cannot match
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility]] — How to evolve REST APIs without breaking consumers
+- [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] — Why HTTP method semantics (idempotent vs not) matter for retry safety
+- [[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]] — Protecting REST endpoints from abuse
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — Gateways add cross-cutting REST concerns (auth, rate limiting, transformation)
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] — The data-layer parallel to API contract evolution
 
 ## Reflection Prompts
 

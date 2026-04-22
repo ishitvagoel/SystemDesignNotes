@@ -41,7 +41,7 @@ The difference between L4 and L7 load balancing is how much the traffic cop look
 | **Random** | Pick a random server | Surprisingly effective at scale; avoids herd behavior | Slight imbalance with small server counts |
 | **Random-two-choice** | Pick two random servers, send to the one with fewer connections | Best of both random and least-connections; used by Nginx | Slightly more overhead than pure random |
 | **IP hash** | Hash the client IP to pick a server | Simple session affinity (same client → same server) | Uneven distribution if traffic sources are skewed; doesn't handle server count changes gracefully |
-| **Consistent hashing** | Hash clients onto a ring with virtual nodes | Caching layers (minimize cache invalidation on server changes) | More complex; see [[Consistent Hashing]] for full treatment |
+| **Consistent hashing** | Hash clients onto a ring with virtual nodes | Caching layers (minimize cache invalidation on server changes) | More complex; see [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]] for full treatment |
 
 **The underrated algorithm**: Random-two-choice (also called "power of two choices") deserves special attention. It was proven by Mitzenmacher (1996) that choosing between just two random options is exponentially better than choosing one random option. Nginx uses this. It avoids the thundering-herd problem of least-connections (where all new traffic floods a newly added server) while providing nearly optimal distribution.
 
@@ -53,7 +53,7 @@ Load balancers must detect when a backend is unhealthy and stop sending it traff
 
 **Active health checks**: The load balancer sends periodic probe requests (`GET /health`) to each backend. If a backend fails N consecutive checks, it's removed from the pool. Faster detection, but adds probe traffic. The health check endpoint should verify meaningful health — not just "process is running" but "I can reach my database and my dependencies are responding."
 
-**The health check death spiral**: A backend is slow (not dead) due to GC pressure or a slow dependency. The health check passes (it responds, just slowly). The load balancer keeps sending traffic. The traffic makes the slowness worse. Eventually it times out, gets marked unhealthy, and its traffic shifts to other backends — which may then become overloaded, cascading the failure. Mitigation: health checks that include latency thresholds, not just success/failure. Also: [[Circuit Breakers and Bulkheads]].
+**The health check death spiral**: A backend is slow (not dead) due to GC pressure or a slow dependency. The health check passes (it responds, just slowly). The load balancer keeps sending traffic. The traffic makes the slowness worse. Eventually it times out, gets marked unhealthy, and its traffic shifts to other backends — which may then become overloaded, cascading the failure. Mitigation: health checks that include latency thresholds, not just success/failure. Also: [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads]].
 
 ### Connection Draining (Graceful Shutdown)
 
@@ -71,7 +71,7 @@ TLS termination can happen at the load balancer or at the backend. Both have tra
 | **TLS passthrough** (L4 LB) | End-to-end encryption; LB never sees plaintext | LB can't inspect HTTP (no L7 routing, no content-based decisions); certificate management distributed to every backend |
 | **TLS re-encryption** | End-to-end encryption + L7 features at LB | Double the crypto overhead (decrypt at LB, re-encrypt to backend); certificate management in two places |
 
-Most production setups use TLS termination at the L7 load balancer, with mTLS between the LB and backends within a trusted network boundary. See [[TLS and Certificate Management]].
+Most production setups use TLS termination at the L7 load balancer, with mTLS between the LB and backends within a trusted network boundary. See [[03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management]].
 
 ## Failure Modes
 
@@ -124,13 +124,13 @@ graph TD
 
 ## Connections
 
-- [[DNS Resolution Chain]] — DNS-based load balancing (multiple A records) is the coarsest level; it lacks health checks and has TTL-based update delays
-- [[Anycast and GeoDNS]] — Global-scale "load balancing" at the DNS/network layer
-- [[TCP Deep Dive]] — L4 LBs operate at the TCP level; understanding connections and congestion windows explains LB behavior
-- [[HTTP Evolution — 1.1 to 2 to 3]] — HTTP/2 multiplexing changes the relationship between connections and requests, affecting LB distribution
-- [[Connection Pooling and Keep-Alive]] — Long-lived pooled connections interact with LB distribution algorithms
-- [[Consistent Hashing]] — The algorithm behind cache-aware load balancing and minimal redistribution on topology changes
-- [[API Gateway Patterns]] — API gateways are L7 load balancers with additional capabilities (auth, rate limiting, transformation)
+- [[01-Phase-1-Foundations__Module-01-Networking__DNS_Resolution_Chain]] — DNS-based load balancing (multiple A records) is the coarsest level; it lacks health checks and has TTL-based update delays
+- [[01-Phase-1-Foundations__Module-01-Networking__Anycast_and_GeoDNS]] — Global-scale "load balancing" at the DNS/network layer
+- [[01-Phase-1-Foundations__Module-01-Networking__TCP_Deep_Dive]] — L4 LBs operate at the TCP level; understanding connections and congestion windows explains LB behavior
+- [[01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3]] — HTTP/2 multiplexing changes the relationship between connections and requests, affecting LB distribution
+- [[01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive]] — Long-lived pooled connections interact with LB distribution algorithms
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]] — The algorithm behind cache-aware load balancing and minimal redistribution on topology changes
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — API gateways are L7 load balancers with additional capabilities (auth, rate limiting, transformation)
 
 ## Reflection Prompts
 

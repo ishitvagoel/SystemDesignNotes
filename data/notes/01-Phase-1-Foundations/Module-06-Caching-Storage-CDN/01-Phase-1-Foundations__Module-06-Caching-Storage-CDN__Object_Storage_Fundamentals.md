@@ -164,11 +164,11 @@ graph TD
 
 ## Connections
 
-- [[Cache Patterns and Strategies]] — Object storage responses should be cached aggressively (CDN, browser cache)
-- [[CDN Architecture]] — CDNs sit in front of object storage to reduce egress costs and improve latency
-- [[Cost Engineering and FinOps]] — Storage tiering and lifecycle policies are primary FinOps levers
-- [[Storage Engine Selection]] — Object storage is for blobs; databases are for structured data. Don't conflate them.
-- [[Distributed Caching]] — Caching object storage responses in Redis or Memcached for hot objects
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — Object storage responses should be cached aggressively (CDN, browser cache)
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — CDNs sit in front of object storage to reduce egress costs and improve latency
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — Storage tiering and lifecycle policies are primary FinOps levers
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Storage_Engine_Selection]] — Object storage is for blobs; databases are for structured data. Don't conflate them.
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Distributed_Caching]] — Caching object storage responses in Redis or Memcached for hot objects
 
 ## Reflection Prompts
 

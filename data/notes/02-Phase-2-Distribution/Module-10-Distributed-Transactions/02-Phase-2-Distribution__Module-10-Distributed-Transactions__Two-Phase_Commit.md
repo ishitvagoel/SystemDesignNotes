@@ -100,7 +100,7 @@ In a microservice architecture, participants are independent services with their
 - Lock contention crosses service boundaries (one slow service blocks transactions in all other services).
 - Service independence is lost — you can't deploy, scale, or fail a service without considering its impact on in-flight 2PC transactions.
 
-This violates the core principle of microservice architecture: independent deployability. Instead, microservices use the [[Saga Pattern]], which achieves eventual consistency through compensating transactions without cross-service locks.
+This violates the core principle of microservice architecture: independent deployability. Instead, microservices use the [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]], which achieves eventual consistency through compensating transactions without cross-service locks.
 
 ## Trade-Off Analysis
 
@@ -165,11 +165,11 @@ sequenceDiagram
 
 ## Connections
 
-- [[Saga Pattern]] — The alternative to 2PC for multi-service transactions
-- [[Outbox Pattern]] — Reliable event publishing without 2PC between the database and message broker
-- [[Consensus and Raft]] — Raft-replicated coordinators mitigate 2PC's SPOF problem
-- [[NewSQL and Globally Distributed Databases]] — Spanner uses 2PC within its infrastructure, with Raft-replicated participants
-- [[Distributed Locks and Fencing]] — 2PC's prepare phase is essentially a distributed lock across participants
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] — The alternative to 2PC for multi-service transactions
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] — Reliable event publishing without 2PC between the database and message broker
+- [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft]] — Raft-replicated coordinators mitigate 2PC's SPOF problem
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — Spanner uses 2PC within its infrastructure, with Raft-replicated participants
+- [[02-Phase-2-Distribution__Module-09-Consensus__Distributed_Locks_and_Fencing]] — 2PC's prepare phase is essentially a distributed lock across participants
 
 ## Reflection Prompts
 

@@ -10,16 +10,16 @@ Modern deployment has evolved far beyond "push to prod and pray." Progressive de
 
 ## Notes in This Module
 
-- [[Observability and Alerting]] — The three pillars (metrics, logs, traces), OpenTelemetry as the convergence standard, eBPF-powered deep observability, burn-rate alerting, and why dashboards are not observability
-- [[Distributed Tracing Deep Dive]] — Span data model, context propagation (W3C traceparent), OpenTelemetry collector architecture, head-based vs tail-based vs adaptive sampling, trace storage backends, and cardinality pitfalls
-- [[eBPF and Kernel Observability]] — eBPF program types (kprobe, XDP, LSM), the verifier safety model, BPF maps, CO-RE portability, and production use cases (Cilium, Parca, Falco, Cloudflare XDP)
-- [[Feature Flags and Safe Deployment]] — Flag types, evaluation semantics, progressive delivery integration, stale flag cleanup, and circuit breaker interaction
-- [[Deployment and Release Engineering]] — Blue-green, canary, feature flags, progressive delivery, GitOps with ArgoCD/Flux, automated rollback strategies, and the critical difference between deployment and release
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — The three pillars (metrics, logs, traces), OpenTelemetry as the convergence standard, eBPF-powered deep observability, burn-rate alerting, and why dashboards are not observability
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Distributed_Tracing_Deep_Dive]] — Span data model, context propagation (W3C traceparent), OpenTelemetry collector architecture, head-based vs tail-based vs adaptive sampling, trace storage backends, and cardinality pitfalls
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__eBPF_and_Kernel_Observability]] — eBPF program types (kprobe, XDP, LSM), the verifier safety model, BPF maps, CO-RE portability, and production use cases (Cilium, Parca, Falco, Cloudflare XDP)
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Feature_Flags_and_Safe_Deployment]] — Flag types, evaluation semantics, progressive delivery integration, stale flag cleanup, and circuit breaker interaction
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering]] — Blue-green, canary, feature flags, progressive delivery, GitOps with ArgoCD/Flux, automated rollback strategies, and the critical difference between deployment and release
 
 ## Prerequisites
-- [[_Module 16 MOC]] — SLOs drive alerting strategy; reliability patterns determine what to monitor
-- [[_Module 12 MOC]] — Microservices multiply the deployment and observability surface area
+- [[Module_Module_16_MOC]] — SLOs drive alerting strategy; reliability patterns determine what to monitor
+- [[Module_Module_12_MOC]] — Microservices multiply the deployment and observability surface area
 
 ## Where This Leads
-- [[_Module 18 MOC]] — Cost engineering requires cost observability; geo-distribution requires deployment across regions
-- [[_Module 16 MOC]] — Chaos engineering tests require observability to validate hypotheses
+- [[Module_Module_18_MOC]] — Cost engineering requires cost observability; geo-distribution requires deployment across regions
+- [[Module_Module_16_MOC]] — Chaos engineering tests require observability to validate hypotheses

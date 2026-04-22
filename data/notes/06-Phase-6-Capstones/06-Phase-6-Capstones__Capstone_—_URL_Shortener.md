@@ -97,7 +97,7 @@ graph TD
 
 ### Deep Dive 1: Short Code Generation
 
-This is the core [[ID Generation Strategies]] problem. The short code must be unique, compact, and hard to guess (predictable codes enable enumeration attacks).
+This is the core [[01-Phase-1-Foundations__Module-07-ID-Generation__ID_Generation_Strategies]] problem. The short code must be unique, compact, and hard to guess (predictable codes enable enumeration attacks).
 
 **Option A — Counter-based (Base62 encoding)**:
 Maintain a global counter. Each new URL gets `counter++`, encoded as Base62 (`[a-zA-Z0-9]`). A 7-character Base62 code supports 62^7 = ~3.5 trillion unique URLs.
@@ -137,7 +137,7 @@ Hash the long URL (MD5 or SHA-256), take the first 7 Base62 characters. Determin
 
 At 11K reads/sec peak, the database can handle this directly (Postgres on good hardware does 50K+ reads/sec with proper indexing). But caching reduces latency from ~5ms (DB) to <1ms (Redis) and protects the DB from traffic spikes.
 
-**Cache pattern**: [[Cache Patterns and Strategies|Cache-aside]]. On redirect, check Redis first. On miss, query DB, populate Redis. On URL creation, don't pre-populate cache (most URLs are never clicked — avoid caching the long tail).
+**Cache pattern**: [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies|Cache-aside]]. On redirect, check Redis first. On miss, query DB, populate Redis. On URL creation, don't pre-populate cache (most URLs are never clicked — avoid caching the long tail).
 
 **Cache key**: The short code (`abc123`).
 **Cache value**: The long URL.
@@ -294,13 +294,13 @@ graph TD
 ## Connections
 
 **Core concepts applied:**
-- [[ID Generation Strategies]] — Short code generation (Base62 encoding, collision handling)
-- [[Cache Patterns and Strategies]] — Heavy read caching for URL lookups
-- [[Database Replication]] — Read replicas for redirect lookups at scale
-- [[Rate Limiting and Throttling]] — Abuse prevention on URL creation
-- [[CDN Architecture]] — Serving redirects from edge locations
-- [[Batch Processing and Data Pipelines]] — Analytics pipeline for click tracking
-- [[Partitioning and Sharding]] — Database sharding by short code hash
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__ID_Generation_Strategies]] — Short code generation (Base62 encoding, collision handling)
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — Heavy read caching for URL lookups
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Read replicas for redirect lookups at scale
+- [[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]] — Abuse prevention on URL creation
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — Serving redirects from edge locations
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Batch_Processing_and_Data_Pipelines]] — Analytics pipeline for click tracking
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Database sharding by short code hash
 
 ## Canonical Sources
 

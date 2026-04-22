@@ -18,7 +18,7 @@ A chain of newspapers. The **leader** (primary) is the main newsroom where artic
 
 ### Single-Leader Replication
 
-The most common topology. One node (the leader/primary) accepts all writes. It streams changes to followers (replicas/secondaries) via the [[Write-Ahead Log]] or a logical replication stream.
+The most common topology. One node (the leader/primary) accepts all writes. It streams changes to followers (replicas/secondaries) via the [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] or a logical replication stream.
 
 ```mermaid
 graph LR
@@ -46,7 +46,7 @@ Asynchronous is the default for most deployments. Synchronous replication adds l
 - **Monotonic read violations**: Two consecutive reads go to different replicas at different lag points. The second read shows *older* data than the first. Time appears to go backward.
 - **Stale reads in replicated transactions**: A service writes to the leader, then calls another service that reads from a replica. The second service sees stale data.
 
-**Mitigations**: Read from the leader for recently-written data (route by session), use `pg_last_xact_replay_timestamp()` to check replica freshness, or accept the lag and design the application around eventual consistency. These are covered in depth in [[Consistency Spectrum]].
+**Mitigations**: Read from the leader for recently-written data (route by session), use `pg_last_xact_replay_timestamp()` to check replica freshness, or accept the lag and design the application around eventual consistency. These are covered in depth in [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]].
 
 **Failover**: When the leader fails, a replica must be promoted. This involves detecting the failure (heartbeat timeout), choosing the most up-to-date replica, reconfiguring clients to write to the new leader, and catching up other replicas. Automated failover (Patroni for Postgres, MySQL Group Replication, RDS Multi-AZ) handles this but is notoriously tricky:
 
@@ -63,10 +63,10 @@ Multiple nodes accept writes. Each leader replicates to the others. Used for mul
 
 - **Last-write-wins (LWW)**: Use timestamps; the later write wins. Simple, but loses data (the earlier write is silently discarded). Timestamps can also be unreliable across data centers.
 - **Merge/converge**: Application-specific logic merges the two values. Complex but lossless.
-- **Conflict-free replicated data types (CRDTs)**: Data structures designed to merge without conflicts. See [[CRDTs]].
+- **Conflict-free replicated data types (CRDTs)**: Data structures designed to merge without conflicts. See [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs]].
 - **Custom resolution**: Flag the conflict and let the application (or user) resolve it. Google Docs shows both edits and lets users sort it out.
 
-Multi-leader replication is covered in depth in [[Replication Deep Dive]].
+Multi-leader replication is covered in depth in [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Replication_Deep_Dive]].
 
 ### Leaderless Replication (Dynamo-Style)
 
@@ -142,12 +142,12 @@ graph TD
 
 ## Connections
 
-- [[Write-Ahead Log]] — WAL shipping is the mechanism behind physical replication
-- [[Consistency Spectrum]] — Replication topology determines what consistency guarantees are achievable
-- [[Partitioning and Sharding]] — Replication and partitioning are orthogonal: you can replicate each partition independently
-- [[NewSQL and Globally Distributed Databases]] — Spanner and CockroachDB use consensus-based replication (Raft per partition) for strong consistency
-- [[Replication Deep Dive]] — Deep dive into multi-leader conflict resolution, CRDTs, and version vectors
-- [[MVCC Deep Dive]] — Replicas run MVCC independently; snapshot isolation on a replica is against the replica's current state, not the leader's
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — WAL shipping is the mechanism behind physical replication
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — Replication topology determines what consistency guarantees are achievable
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Replication and partitioning are orthogonal: you can replicate each partition independently
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — Spanner and CockroachDB use consensus-based replication (Raft per partition) for strong consistency
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Replication_Deep_Dive]] — Deep dive into multi-leader conflict resolution, CRDTs, and version vectors
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive]] — Replicas run MVCC independently; snapshot isolation on a replica is against the replica's current state, not the leader's
 
 ## Reflection Prompts
 

@@ -63,7 +63,7 @@ Flink's checkpointing is based on the Chandy-Lamport distributed snapshot algori
 
 **Transactional produces** (Kafka Streams): Tie consumption, processing, and production into a single Kafka transaction. If the processor fails, the transaction is rolled back — both the consumed offsets and the produced output messages are rolled back atomically.
 
-**The limitation**: Exactly-once applies to the stream processing topology. If the processor writes to an external system (database, API), exactly-once doesn't extend there — you need [[Idempotent Consumers]] at the external system boundary.
+**The limitation**: Exactly-once applies to the stream processing topology. If the processor writes to an external system (database, API), exactly-once doesn't extend there — you need [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers]] at the external system boundary.
 
 ## Stream Processing Engines
 
@@ -138,9 +138,9 @@ graph TD
 
 ## Connections
 
-- [[Message Queues vs Event Streams]] — Kafka is the standard input/output for stream processing
-- [[Batch Processing and Data Pipelines]] — Flink and Spark unify batch + stream; the batch/stream boundary is dissolving
-- [[Event-Driven Architecture Patterns]] — Stream processing consumes events from EDA
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams]] — Kafka is the standard input/output for stream processing
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Batch_Processing_and_Data_Pipelines]] — Flink and Spark unify batch + stream; the batch/stream boundary is dissolving
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns]] — Stream processing consumes events from EDA
 
 ## Reflection Prompts
 

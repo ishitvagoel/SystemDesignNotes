@@ -50,9 +50,9 @@ Data model fit isn't the whole story. Consider:
 
 **Transaction requirements**: If you need multi-row, multi-table transactions with ACID guarantees (payments, inventory, financial records), relational databases are the default. Some NoSQL databases offer limited transaction support (MongoDB multi-document transactions, DynamoDB TransactWriteItems), but they're typically more constrained and less mature. If transactions are critical, start with Postgres.
 
-**Consistency requirements**: Relational databases default to strong consistency. Many NoSQL databases default to eventual consistency (Cassandra, DynamoDB) with tunable levels. If you need "read your own writes" and "no stale reads" without application-level complexity, strong consistency is easier with SQL. See [[Consistency Spectrum]].
+**Consistency requirements**: Relational databases default to strong consistency. Many NoSQL databases default to eventual consistency (Cassandra, DynamoDB) with tunable levels. If you need "read your own writes" and "no stale reads" without application-level complexity, strong consistency is easier with SQL. See [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]].
 
-**Scale requirements**: If your data fits on one machine (up to ~1TB of active data, ~50,000 QPS with good hardware), a single Postgres instance is usually sufficient. Replication handles read scaling. Sharding is needed only when a single node can't handle the write throughput or data volume. Many teams shard too early — it adds enormous operational complexity ([[Partitioning and Sharding]]).
+**Scale requirements**: If your data fits on one machine (up to ~1TB of active data, ~50,000 QPS with good hardware), a single Postgres instance is usually sufficient. Replication handles read scaling. Sharding is needed only when a single node can't handle the write throughput or data volume. Many teams shard too early — it adds enormous operational complexity ([[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]]).
 
 **Schema flexibility**: If your data structure genuinely varies across records (different products have different attributes, user-generated content with arbitrary fields), document databases handle this more naturally than relational schemas with nullable columns or EAV patterns. But Postgres's JSONB column type gives you document-store flexibility within a relational database — often good enough.
 
@@ -150,13 +150,13 @@ flowchart TD
 
 ## Connections
 
-- [[Storage Engine Selection]] — The storage engine (B-tree vs LSM) is often determined by the database choice
-- [[Indexing Deep Dive]] — Index capabilities vary dramatically across database types
-- [[Data Model Selection]] — The data modeling note in Module 5 goes deeper into relational vs document vs graph model choices
-- [[Database Replication]] — Different databases offer different replication models
-- [[Partitioning and Sharding]] — Scaling strategy depends on the database's native partitioning capabilities
-- [[NewSQL and Globally Distributed Databases]] — The "third way" that combines SQL's consistency with NoSQL's horizontal scaling
-- [[Consistency Spectrum]] — NoSQL databases' tunable consistency is a feature and a foot-gun
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Storage_Engine_Selection]] — The storage engine (B-tree vs LSM) is often determined by the database choice
+- [[01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive]] — Index capabilities vary dramatically across database types
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Data_Model_Selection]] — The data modeling note in Module 5 goes deeper into relational vs document vs graph model choices
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Different databases offer different replication models
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Scaling strategy depends on the database's native partitioning capabilities
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — The "third way" that combines SQL's consistency with NoSQL's horizontal scaling
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — NoSQL databases' tunable consistency is a feature and a foot-gun
 
 ## Reflection Prompts
 

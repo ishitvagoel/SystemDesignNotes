@@ -11,22 +11,22 @@ Understanding the difference between a message queue and an event stream is one 
 ## Notes in This Module
 
 ### Messaging Primitives
-- [[Message Queues vs Event Streams]] — The fundamental distinction: queues deliver messages to one consumer (competing consumers pattern); streams store events durably for many consumers. RabbitMQ vs Kafka, SQS vs Kinesis.
-- [[Change Data Capture]] — Turning database changes into event streams without application changes. Debezium, WAL tailing, the outbox pattern bridge.
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams]] — The fundamental distinction: queues deliver messages to one consumer (competing consumers pattern); streams store events durably for many consumers. RabbitMQ vs Kafka, SQS vs Kinesis.
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Change_Data_Capture]] — Turning database changes into event streams without application changes. Debezium, WAL tailing, the outbox pattern bridge.
 
 ### Architecture Patterns
-- [[Event-Driven Architecture Patterns]] — Event notification, event-carried state transfer, and event sourcing. When to use each, and the coupling trade-offs.
-- [[Stream Processing]] — Windowing, watermarks, exactly-once semantics, and the engines that make it work (Flink, Kafka Streams).
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns]] — Event notification, event-carried state transfer, and event sourcing. When to use each, and the coupling trade-offs.
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Stream_Processing]] — Windowing, watermarks, exactly-once semantics, and the engines that make it work (Flink, Kafka Streams).
 
 ### Data Infrastructure
-- [[Batch Processing and Data Pipelines]] — Lambda vs Kappa, lakehouses, ETL vs ELT, data contracts for cross-team reliability.
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Batch_Processing_and_Data_Pipelines]] — Lambda vs Kappa, lakehouses, ETL vs ELT, data contracts for cross-team reliability.
 
 ## Prerequisites
-- [[_Module 02 MOC]] — API contracts (synchronous before asynchronous)
-- [[_Module 10 MOC]] — Distributed transactions (sagas and outbox patterns use messaging)
-- [[_Module 03 MOC]] — Write-ahead logs (Kafka's storage model is essentially a distributed WAL)
+- [[Module_Module_02_MOC]] — API contracts (synchronous before asynchronous)
+- [[Module_Module_10_MOC]] — Distributed transactions (sagas and outbox patterns use messaging)
+- [[Module_Module_03_MOC]] — Write-ahead logs (Kafka's storage model is essentially a distributed WAL)
 
 ## Where This Leads
-- [[_Module 12 MOC]] — Event sourcing and CQRS (architectural patterns that build on event streams)
-- [[_Module 14 MOC]] — Search systems (often fed by CDC or event streams)
-- [[_Module 20 MOC]] — Real-time collaboration and data pipelines for AI/RAG
+- [[Module_Module_12_MOC]] — Event sourcing and CQRS (architectural patterns that build on event streams)
+- [[Module_Module_14_MOC]] — Search systems (often fed by CDC or event streams)
+- [[Module_Module_20_MOC]] — Real-time collaboration and data pipelines for AI/RAG

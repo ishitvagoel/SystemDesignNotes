@@ -101,10 +101,10 @@ graph TD
 
 ## Connections
 
-- [[Cost Engineering and FinOps]] — The broader FinOps cultural framework this fits within
-- [[Serverless and Edge Computing]] — Serverless pricing (pay-per-invocation) is an alternative optimization model; the cost crossover between serverless and always-on containers is a key FinOps decision
-- [[Inference Serving Architecture]] — GPU compute dominates AI workload costs; spot GPUs are increasingly viable for batch inference
-- [[Monitoring and Alerting]] — Cost monitoring requires the same observability infrastructure as performance monitoring
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — The broader FinOps cultural framework this fits within
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing]] — Serverless pricing (pay-per-invocation) is an alternative optimization model; the cost crossover between serverless and always-on containers is a key FinOps decision
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture]] — GPU compute dominates AI workload costs; spot GPUs are increasingly viable for batch inference
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Cost monitoring requires the same observability infrastructure as performance monitoring
 
 ## Reflection Prompts
 

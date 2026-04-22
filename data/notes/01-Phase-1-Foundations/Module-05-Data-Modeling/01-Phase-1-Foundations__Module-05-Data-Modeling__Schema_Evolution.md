@@ -6,7 +6,7 @@ Data schemas change. A field is added (tracking a new attribute), a field is rem
 
 Consider: Service A writes events with schema v2 to Kafka. Service B still reads with schema v1 (it hasn't been deployed yet). Service C reads with schema v3 (it deployed ahead of schedule). Three services, three schema versions, all active simultaneously. If the schemas aren't compatible, messages are silently corrupted or loudly rejected.
 
-Schema evolution is the discipline of changing data formats over time while maintaining compatibility between producers and consumers that may be on different versions at the same time. It's the data-layer equivalent of [[API Versioning and Compatibility]].
+Schema evolution is the discipline of changing data formats over time while maintaining compatibility between producers and consumers that may be on different versions at the same time. It's the data-layer equivalent of [[01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility]].
 
 ## Mental Model
 
@@ -92,11 +92,11 @@ Compatibility is checked on schema registration — if a new schema version brea
 
 ## Evolution Strategies for Different Systems
 
-**Database schemas**: Handled through SQL migrations (ALTER TABLE). Covered in [[Zero-Downtime Schema Migrations]].
+**Database schemas**: Handled through SQL migrations (ALTER TABLE). Covered in [[01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations]].
 
 **Event schemas (Kafka, event sourcing)**: Use Avro or Protobuf with a schema registry. Enforce compatibility at the registry level. Events are immutable once written, so you can't update old events — the schema must be backward compatible so that new consumers can read old events.
 
-**API schemas (REST, gRPC)**: Covered in [[API Versioning and Compatibility]]. Protobuf handles gRPC evolution naturally. REST/JSON uses versioning strategies.
+**API schemas (REST, gRPC)**: Covered in [[01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility]]. Protobuf handles gRPC evolution naturally. REST/JSON uses versioning strategies.
 
 **Configuration schemas**: Use JSON Schema or a typed configuration library. Version the configuration format alongside the application code.
 
@@ -122,7 +122,7 @@ Compatibility is checked on schema registration — if a new schema version brea
 
 - **Accidental field number reuse (Protobuf)**: A developer deletes field 3, then later adds a new field with number 3. Old data's field 3 (with the old type) is now misinterpreted as the new field's type. Silent data corruption. Mitigation: mark deleted field numbers as `reserved`.
 
-- **The NOT NULL column migration trap (SQL)**: A developer adds a required column to a large table: `ALTER TABLE users ADD COLUMN user_tier VARCHAR(20) NOT NULL DEFAULT 'free'`. On their local database with 10,000 rows, this runs in 200ms. In production with 50 million rows, it acquires an `ACCESS EXCLUSIVE` lock on `users`, blocks all reads and writes, and runs for 18 minutes rewriting every row. The application suffers a complete outage. This trap catches engineers on PostgreSQL versions before 11 (which required full rewrites for all default columns) and still catches engineers on any Postgres version when using non-constant defaults like `DEFAULT gen_random_uuid()` or `DEFAULT now()` — these always require a table rewrite regardless of version. The safe pattern: (1) add the column as nullable with `DEFAULT 'free'` (instant in Postgres 11+), (2) backfill existing rows in batches with a `WHERE user_tier IS NULL` clause, (3) add the NOT NULL constraint via `ALTER TABLE users ADD CONSTRAINT user_tier_not_null CHECK (user_tier IS NOT NULL) NOT VALID` followed by `ALTER TABLE users VALIDATE CONSTRAINT user_tier_not_null` in a separate transaction — the `NOT VALID` + `VALIDATE` pattern holds only a `SHARE UPDATE EXCLUSIVE` lock during validation, which does not block reads or writes. See [[Zero-Downtime Schema Migrations]] for the full staged migration patterns.
+- **The NOT NULL column migration trap (SQL)**: A developer adds a required column to a large table: `ALTER TABLE users ADD COLUMN user_tier VARCHAR(20) NOT NULL DEFAULT 'free'`. On their local database with 10,000 rows, this runs in 200ms. In production with 50 million rows, it acquires an `ACCESS EXCLUSIVE` lock on `users`, blocks all reads and writes, and runs for 18 minutes rewriting every row. The application suffers a complete outage. This trap catches engineers on PostgreSQL versions before 11 (which required full rewrites for all default columns) and still catches engineers on any Postgres version when using non-constant defaults like `DEFAULT gen_random_uuid()` or `DEFAULT now()` — these always require a table rewrite regardless of version. The safe pattern: (1) add the column as nullable with `DEFAULT 'free'` (instant in Postgres 11+), (2) backfill existing rows in batches with a `WHERE user_tier IS NULL` clause, (3) add the NOT NULL constraint via `ALTER TABLE users ADD CONSTRAINT user_tier_not_null CHECK (user_tier IS NOT NULL) NOT VALID` followed by `ALTER TABLE users VALIDATE CONSTRAINT user_tier_not_null` in a separate transaction — the `NOT VALID` + `VALIDATE` pattern holds only a `SHARE UPDATE EXCLUSIVE` lock during validation, which does not block reads or writes. See [[01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations]] for the full staged migration patterns.
 
 ## Architecture Diagram
 
@@ -167,11 +167,11 @@ graph LR
 
 ## Connections
 
-- [[API Versioning and Compatibility]] — Schema evolution is the data-layer parallel of API evolution
-- [[gRPC vs REST vs GraphQL]] — gRPC uses Protobuf evolution natively; GraphQL deprecation is another approach
-- [[Zero-Downtime Schema Migrations]] — Database schema evolution through SQL migrations
-- [[Event Sourcing and CQRS]] — Immutable event logs require forward-compatible schema evolution
-- [[Data Model Selection]] — Schema evolution behaves differently across relational, document, and graph models
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility]] — Schema evolution is the data-layer parallel of API evolution
+- [[01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL]] — gRPC uses Protobuf evolution natively; GraphQL deprecation is another approach
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations]] — Database schema evolution through SQL migrations
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]] — Immutable event logs require forward-compatible schema evolution
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Data_Model_Selection]] — Schema evolution behaves differently across relational, document, and graph models
 
 ## Reflection Prompts
 

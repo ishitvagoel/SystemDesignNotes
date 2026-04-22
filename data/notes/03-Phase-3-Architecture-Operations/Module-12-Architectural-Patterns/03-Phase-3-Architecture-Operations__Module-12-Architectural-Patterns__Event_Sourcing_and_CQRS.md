@@ -41,7 +41,7 @@ Events are **immutable** — once written, they're never modified or deleted. Co
 
 - **Simple CRUD**: If your application is just create/read/update/delete with no audit needs, event sourcing adds complexity for zero benefit.
 - **Querying**: "Show me all users with balance > $1000" requires replaying every user's events to compute their balance. This is why CQRS exists — you build optimized read models.
-- **Schema evolution**: Events are immutable. If the event schema changes, old events still have the old schema. You need upcasting (transforming old events to the new schema on read) or versioned event handlers. See [[Schema Evolution]].
+- **Schema evolution**: Events are immutable. If the event schema changes, old events still have the old schema. You need upcasting (transforming old events to the new schema on read) or versioned event handlers. See [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]].
 - **Event log growth**: The log grows forever. Snapshotting (periodically storing the computed state, replaying only events after the snapshot) mitigates this, but adds complexity.
 
 ## CQRS
@@ -59,7 +59,7 @@ The read side can have multiple projections: one for the user dashboard, one for
 
 The read model is eventually consistent with the write model. After a command produces an event, there's a delay before the projection is updated. A user who creates an order might not immediately see it in their order list (the projection hasn't processed the event yet).
 
-This is the same [[Session Guarantees]] problem from Module 8 — and the same solutions apply: read-your-writes routing, polling until the projection catches up, or accepting the lag with appropriate UI (optimistic updates).
+This is the same [[02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees]] problem from Module 8 — and the same solutions apply: read-your-writes routing, polling until the projection catches up, or accepting the lag with appropriate UI (optimistic updates).
 
 ### CQRS Without Event Sourcing
 
@@ -127,11 +127,11 @@ graph TD
 
 ## Connections
 
-- [[Write-Ahead Log]] — The WAL is conceptually an event log; event sourcing makes this explicit at the application level
-- [[Saga Pattern]] — Sagas are natural in event-sourced systems: each saga step produces events
-- [[Outbox Pattern]] — Events can be published via outbox for reliable delivery to projections and other consumers
-- [[Schema Evolution]] — Event schema evolution is especially challenging because events are immutable
-- [[Relational Modeling and Normalization]] — Projections are denormalized read models; the event log is the normalized source of truth
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — The WAL is conceptually an event log; event sourcing makes this explicit at the application level
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] — Sagas are natural in event-sourced systems: each saga step produces events
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] — Events can be published via outbox for reliable delivery to projections and other consumers
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] — Event schema evolution is especially challenging because events are immutable
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Relational_Modeling_and_Normalization]] — Projections are denormalized read models; the event log is the normalized source of truth
 
 ## Reflection Prompts
 

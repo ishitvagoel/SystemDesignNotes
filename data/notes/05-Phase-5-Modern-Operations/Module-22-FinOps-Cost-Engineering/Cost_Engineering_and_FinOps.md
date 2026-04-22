@@ -18,7 +18,7 @@ The most expensive mistake is treating cost as a post-deployment problem. An arc
 
 **The principle**: Budget cost the same way you budget latency. When you set a p99 latency SLO of 200ms, you design away from architectures that structurally can't meet it. Apply the same discipline to cost: define a target cost per unit (per request, per user, per GB processed) at design time, and reject architectures that structurally exceed it.
 
-This is where FinOps connects to [[FinOps Observability and Unit Economics]] — measuring cost per business unit is the feedback signal that tells you whether your architecture's cost model is healthy as you scale.
+This is where FinOps connects to [[FinOps_Observability_and_Unit_Economics]] — measuring cost per business unit is the feedback signal that tells you whether your architecture's cost model is healthy as you scale.
 
 **When FinOps culture fails**: Teams that only review the bill at the end of the month are in reactive mode. The high-leverage interventions happen during code review ("this query scans the whole table on every request"), during architecture design ("this fan-out pattern amplifies write cost by the follower count"), and during capacity planning ("the new feature doubles egress for every user"). Cost-conscious cultures embed this at each stage; cost-unaware cultures retrofit it after the first surprise bill.
 
@@ -50,7 +50,7 @@ Networking costs are often counter-intuitive. In AWS, for example:
 **Optimization Strategies:**
 *   **VPC Endpoints:** Route traffic to S3 or DynamoDB through the AWS private network instead of the NAT Gateway. NAT Gateway processing charges ($0.045/GB) can easily exceed the cost of the compute itself.
 *   **Single-AZ Traffic Affinity:** For high-throughput services like Kafka or large-scale microservices, use "topology-aware routing" to keep traffic within the same AZ whenever possible.
-*   **Aggressive Caching:** Use CDNs ([[CDN Architecture]]) to serve data from the edge. Origin egress is expensive; CDN egress is cheaper (and often zero-cost with providers like Cloudflare).
+*   **Aggressive Caching:** Use CDNs ([[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]]) to serve data from the edge. Origin egress is expensive; CDN egress is cheaper (and often zero-cost with providers like Cloudflare).
 
 ### 3. Storage Tiers: Matching Value to Latency
 
@@ -120,13 +120,13 @@ graph LR
 
 ## Connections
 
-- [[Object Storage Fundamentals]] — The underlying mechanics of storage tiers (Standard, Glacier, Intelligent-Tiering) and when each is cost-appropriate.
-- [[CDN Architecture]] — A primary tool for reducing expensive origin egress; CDN egress is often 5–10× cheaper than origin egress.
-- [[Serverless and Edge Computing]] — The pay-per-invocation model creates a fundamentally different cost structure than always-on instances; cost crossover analysis applies.
-- [[Observability and Alerting]] — Cost metrics (spend/day, unit cost, anomaly detection) are first-class observability signals, not just finance reports.
-- [[Resource Right-Sizing and Autoscaling]] — The companion note covering the mechanics of autoscaling policies, HPA, and Karpenter for automated right-sizing.
-- [[FinOps Observability and Unit Economics]] — The companion note on building cost dashboards, showback/chargeback models, and tracking cost per business unit.
-- [[Partitioning and Sharding]] — Sharding strategy determines data locality, which determines cross-AZ and cross-region transfer costs at scale.
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals]] — The underlying mechanics of storage tiers (Standard, Glacier, Intelligent-Tiering) and when each is cost-appropriate.
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — A primary tool for reducing expensive origin egress; CDN egress is often 5–10× cheaper than origin egress.
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing]] — The pay-per-invocation model creates a fundamentally different cost structure than always-on instances; cost crossover analysis applies.
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Cost metrics (spend/day, unit cost, anomaly detection) are first-class observability signals, not just finance reports.
+- [[Resource_Right-Sizing_and_Autoscaling]] — The companion note covering the mechanics of autoscaling policies, HPA, and Karpenter for automated right-sizing.
+- [[FinOps_Observability_and_Unit_Economics]] — The companion note on building cost dashboards, showback/chargeback models, and tracking cost per business unit.
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Sharding strategy determines data locality, which determines cross-AZ and cross-region transfer costs at scale.
 
 ## Reflection Prompts
 

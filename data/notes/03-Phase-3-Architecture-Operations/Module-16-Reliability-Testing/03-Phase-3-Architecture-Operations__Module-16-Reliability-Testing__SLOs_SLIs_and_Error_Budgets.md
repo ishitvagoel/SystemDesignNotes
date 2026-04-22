@@ -147,10 +147,10 @@ graph TD
 
 ## Connections
 
-- [[Resilience Patterns]] — Circuit breakers, bulkheads, and degradation are the mechanisms for staying within SLO
-- [[Observability and Alerting]] — SLI measurement requires instrumentation; burn-rate alerts require alerting infrastructure
-- [[Incident Management]] — Error budget exhaustion triggers incident response and reliability focus
-- [[Deployment and Release Engineering]] — Error budget influences deploy velocity and canary bake time
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns]] — Circuit breakers, bulkheads, and degradation are the mechanisms for staying within SLO
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — SLI measurement requires instrumentation; burn-rate alerts require alerting infrastructure
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Incident_Management]] — Error budget exhaustion triggers incident response and reliability focus
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering]] — Error budget influences deploy velocity and canary bake time
 
 ## Reflection Prompts
 

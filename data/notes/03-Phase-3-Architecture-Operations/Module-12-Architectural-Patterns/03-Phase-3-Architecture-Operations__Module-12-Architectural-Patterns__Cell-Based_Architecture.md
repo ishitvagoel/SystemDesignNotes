@@ -118,10 +118,10 @@ graph TD
 
 ## Connections
 
-- [[Partitioning and Sharding]] — Cell architecture is sharding at the infrastructure level, not just the data level
-- [[Multi-Tenancy and Isolation]] — Cells provide the strongest form of tenant isolation
-- [[Resilience Patterns]] — Cell architecture is a blast-radius control mechanism
-- [[Monolith vs Microservices]] — Cell architecture is orthogonal to service decomposition; you can cell-partition a monolith or a microservice architecture
+- [[01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding]] — Cell architecture is sharding at the infrastructure level, not just the data level
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]] — Cells provide the strongest form of tenant isolation
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns]] — Cell architecture is a blast-radius control mechanism
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Monolith_vs_Microservices]] — Cell architecture is orthogonal to service decomposition; you can cell-partition a monolith or a microservice architecture
 
 ## Reflection Prompts
 

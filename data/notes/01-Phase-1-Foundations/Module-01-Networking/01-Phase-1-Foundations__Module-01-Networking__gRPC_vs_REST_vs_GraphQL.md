@@ -33,7 +33,7 @@ gRPC is a high-performance RPC framework built on HTTP/2 and Protocol Buffers. Y
 
 **What gRPC gets right**:
 - **Performance**: Protocol Buffers are a binary format — 3–10× smaller than JSON and faster to serialize/deserialize. HTTP/2 multiplexing means multiple concurrent RPCs over one connection.
-- **Strong typing**: `.proto` files are the contract. The compiler catches type mismatches at build time, not at runtime. Schema evolution is built into Protobuf (see [[Schema Evolution]]).
+- **Strong typing**: `.proto` files are the contract. The compiler catches type mismatches at build time, not at runtime. Schema evolution is built into Protobuf (see [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]]).
 - **Streaming**: gRPC natively supports four patterns: unary (request-response), server streaming (one request, stream of responses), client streaming (stream of requests, one response), and bidirectional streaming. This is first-class, not bolted on.
 - **Code generation**: Client libraries in 10+ languages generated from the same `.proto` file. No hand-written HTTP clients, no URL construction, no JSON parsing.
 - **Deadlines and cancellation**: Propagated across service boundaries. If a client sets a 500ms deadline, every downstream service in the chain knows and can abandon work early when the deadline expires.
@@ -62,7 +62,7 @@ GraphQL is a query language for APIs. Clients specify exactly what data they nee
 
 **GraphQL Federation — the enterprise-scale pattern**: At companies with many backend teams (Netflix, LinkedIn, Airbnb), a single monolithic GraphQL schema doesn't work. GraphQL Federation (Apollo Federation is the dominant implementation) lets each team own a subgraph for their domain (Users, Products, Orders), and a gateway composes them into a unified supergraph. Clients query the gateway; the gateway decomposes queries and routes sub-queries to the appropriate subgraphs.
 
-This is a first-class architectural pattern, not a niche technique. Netflix's Studio Edge API, LinkedIn's main API, and Airbnb's client-facing API layer all use federation. It aligns well with domain-driven service decomposition (see [[Service Decomposition and Bounded Contexts]]) because each bounded context owns its subgraph.
+This is a first-class architectural pattern, not a niche technique. Netflix's Studio Edge API, LinkedIn's main API, and Airbnb's client-facing API layer all use federation. It aligns well with domain-driven service decomposition (see [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Service_Decomposition_and_Bounded_Contexts]]) because each bounded context owns its subgraph.
 
 **Federation trade-offs**: The gateway is a critical path component (potential bottleneck, SPOF). Cross-subgraph joins require careful design (entity references, `@key` directives). Query planning in the gateway adds latency. Schema composition can have conflicts that are only detected at build time.
 
@@ -90,13 +90,13 @@ This is a first-class architectural pattern, not a niche technique. Netflix's St
 - **Server-Sent Events (SSE)**: A long-lived HTTP response where the server streams events over a single connection. Built into the browser (`EventSource` API). One-directional (server → client only). Best for: live dashboards, feed updates, progress streaming.
 - **WebSockets**: A persistent, full-duplex TCP connection upgraded from HTTP. Bidirectional. Best for: chat, collaborative editing, multiplayer games.
 
-The choice among webhooks/SSE/WebSockets is **orthogonal** to the choice among REST/gRPC/GraphQL — they address the async push dimension that all three synchronous protocols lack natively. See [[Event-Driven Architecture Patterns]] for how these integrate with event-driven backends.
+The choice among webhooks/SSE/WebSockets is **orthogonal** to the choice among REST/gRPC/GraphQL — they address the async push dimension that all three synchronous protocols lack natively. See [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns]] for how these integrate with event-driven backends.
 
 **gRPC**: Internal service-to-service communication, especially when latency and throughput matter. Microservice mesh (100+ services calling each other). Streaming use cases (real-time event feeds, bidirectional communication). Polyglot environments where code generation eliminates hand-written clients.
 
 **GraphQL**: Client-facing API layer with diverse clients (mobile, web, third-party). Product teams that ship fast and can't wait for backend endpoint changes. Large organizations with many backend services that need a unified API (via federation).
 
-**You can mix them.** A common pattern: gRPC for east-west (service-to-service), REST or GraphQL for north-south (client-to-server). An API gateway ([[API Gateway Patterns]]) translates between them.
+**You can mix them.** A common pattern: gRPC for east-west (service-to-service), REST or GraphQL for north-south (client-to-server). An API gateway ([[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]]) translates between them.
 
 ## Failure Modes
 
@@ -158,12 +158,12 @@ graph LR
 
 ## Connections
 
-- [[HTTP Evolution — 1.1 to 2 to 3]] — gRPC requires HTTP/2; understanding multiplexing explains gRPC's streaming performance
-- [[API Versioning and Compatibility]] — REST, gRPC, and GraphQL handle versioning very differently
-- [[API Gateway Patterns]] — Gateways often translate between protocols (REST externally, gRPC internally)
-- [[Schema Evolution]] — Protobuf and GraphQL have built-in schema evolution; REST relies on conventions
-- [[Load Balancing Fundamentals]] — gRPC's long-lived connections create specific load balancing challenges
-- [[Service Decomposition and Bounded Contexts]] — GraphQL Federation aligns with bounded context ownership
+- [[01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3]] — gRPC requires HTTP/2; understanding multiplexing explains gRPC's streaming performance
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility]] — REST, gRPC, and GraphQL handle versioning very differently
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — Gateways often translate between protocols (REST externally, gRPC internally)
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] — Protobuf and GraphQL have built-in schema evolution; REST relies on conventions
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — gRPC's long-lived connections create specific load balancing challenges
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Service_Decomposition_and_Bounded_Contexts]] — GraphQL Federation aligns with bounded context ownership
 
 ## Reflection Prompts
 

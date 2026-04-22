@@ -39,7 +39,7 @@ OAuth2 tells you "this token grants access to these resources." OIDC adds: "and 
 
 **Token lifecycle**: Access tokens are short-lived (15 minutes – 1 hour). They're passed in the `Authorization: Bearer <token>` header. Refresh tokens are long-lived (days – weeks) and used to get new access tokens without re-authenticating. Store refresh tokens securely (server-side or encrypted local storage — never in cookies accessible to JavaScript).
 
-**JWT validation at the gateway**: The [[API Gateway Patterns|API gateway]] validates the JWT signature (using the IdP's public key), checks expiry, extracts claims (user_id, roles), and passes them to downstream services as trusted headers (`X-User-Id`, `X-User-Roles`). Downstream services trust these headers because the gateway is the trust boundary. **Critical**: downstream services must reject requests that arrive without going through the gateway (network policies enforce this).
+**JWT validation at the gateway**: The [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns|API gateway]] validates the JWT signature (using the IdP's public key), checks expiry, extracts claims (user_id, roles), and passes them to downstream services as trusted headers (`X-User-Id`, `X-User-Roles`). Downstream services trust these headers because the gateway is the trust boundary. **Critical**: downstream services must reject requests that arrive without going through the gateway (network policies enforce this).
 
 ## Authorization Models
 
@@ -85,7 +85,7 @@ Authorization based on relationships between entities: "Allow if user is a membe
 
 Beyond user auth, services must authenticate to each other:
 
-**mTLS** ([[TLS and Certificate Management]]): Cryptographic identity at the transport layer. Strongest, but requires certificate management infrastructure (SPIFFE/SPIRE).
+**mTLS** ([[03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management]]): Cryptographic identity at the transport layer. Strongest, but requires certificate management infrastructure (SPIFFE/SPIRE).
 
 **Service tokens**: Each service has a JWT signed by a trusted authority, passed in request headers. Simpler than mTLS but requires token issuance and rotation.
 
@@ -158,11 +158,11 @@ sequenceDiagram
 
 ## Connections
 
-- [[TLS and Certificate Management]] — mTLS for service identity
-- [[API Gateway Patterns]] — Auth offloading is a primary gateway responsibility
-- [[Multi-Tenancy and Isolation]] — Tenant-scoped authorization prevents cross-tenant access
-- [[Threat Modeling for Distributed Systems]] — Auth failures are the most common attack vector
-- [[Zero-Trust Architecture]] — How SPIFFE/SPIRE service identity and OPA policy engines extend auth to every service-to-service call
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management]] — mTLS for service identity
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — Auth offloading is a primary gateway responsibility
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]] — Tenant-scoped authorization prevents cross-tenant access
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Threat_Modeling_for_Distributed_Systems]] — Auth failures are the most common attack vector
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Zero_Trust_Architecture]] — How SPIFFE/SPIRE service identity and OPA policy engines extend auth to every service-to-service call
 
 ## Reflection Prompts
 

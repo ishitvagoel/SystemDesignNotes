@@ -43,7 +43,7 @@ Documents are chunked, embedded, and stored in a vector database before any quer
 
 ### Step 2: Retrieval (Online)
 
-Use [[Vector Search and Hybrid Retrieval|hybrid search]]: run the user's query through both BM25 (keyword) and vector search (semantic) in parallel. BM25 catches exact matches (product names, error codes, acronyms). Vector search catches semantic matches (paraphrases, related concepts).
+Use [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval|hybrid search]]: run the user's query through both BM25 (keyword) and vector search (semantic) in parallel. BM25 catches exact matches (product names, error codes, acronyms). Vector search catches semantic matches (paraphrases, related concepts).
 
 Merge results using **Reciprocal Rank Fusion (RRF)**: a score-agnostic method that combines ranked lists from different retrieval methods. Documents ranked highly by both methods get the highest combined scores.
 
@@ -111,7 +111,7 @@ Embed each chunk with a brief document-level summary prepended: "This chunk is f
 
 **Tiered retrieval** (cost optimization): Cheap filter (metadata filter + BM25, <10ms) → medium-cost retrieval (vector search, ~50ms) → expensive re-rank (cross-encoder, ~150ms). Each stage reduces the candidate set, keeping total cost manageable. At 1M queries/day, skipping re-ranking for simple queries (where BM25 alone gives high-confidence results) can save significant compute.
 
-**Streaming/real-time RAG**: For knowledge bases that change frequently (support tickets, news, live dashboards), use [[Event-Driven Architecture Patterns|CDC]] to keep the vector index updated in near-real-time. Database change → embedding pipeline → vector store update, all within minutes.
+**Streaming/real-time RAG**: For knowledge bases that change frequently (support tickets, news, live dashboards), use [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns|CDC]] to keep the vector index updated in near-real-time. Database change → embedding pipeline → vector store update, all within minutes.
 
 ## Evaluation
 
@@ -213,11 +213,11 @@ graph TD
 
 ## Connections
 
-- [[Vector Search and Hybrid Retrieval]] — The retrieval backbone of RAG. That note covers the indexing algorithms (HNSW, IVF, PQ) and vector database selection; this note covers how to use retrieval within a generation pipeline
-- [[Full-Text Search Architecture]] — BM25 keyword search in the hybrid retrieval step. That note covers inverted indexes and ranking algorithms; this note covers how BM25 complements dense retrieval in hybrid RAG
-- [[Inference Serving Architecture]] — The LLM serving layer that generates responses
-- [[AI Gateway and LLM Operations]] — Semantic caching, model routing, and cost management for RAG
-- [[Cache Patterns and Strategies]] — Semantic caching can cache RAG responses for repeated similar queries
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval]] — The retrieval backbone of RAG. That note covers the indexing algorithms (HNSW, IVF, PQ) and vector database selection; this note covers how to use retrieval within a generation pipeline
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Full-Text_Search_Architecture]] — BM25 keyword search in the hybrid retrieval step. That note covers inverted indexes and ranking algorithms; this note covers how BM25 complements dense retrieval in hybrid RAG
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture]] — The LLM serving layer that generates responses
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__AI_Gateway_and_LLM_Operations]] — Semantic caching, model routing, and cost management for RAG
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — Semantic caching can cache RAG responses for repeated similar queries
 
 ## Reflection Prompts
 

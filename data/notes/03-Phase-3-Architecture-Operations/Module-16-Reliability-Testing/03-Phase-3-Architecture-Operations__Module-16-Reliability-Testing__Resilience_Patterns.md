@@ -128,10 +128,10 @@ graph TD
 
 ## Connections
 
-- [[SLOs SLIs and Error Budgets]] — Resilience patterns help you stay within SLO
-- [[Rate Limiting and Throttling]] — Rate limiting prevents consumers from overloading; resilience patterns prevent dependencies from dragging you down
-- [[Load Balancing Fundamentals]] — Health checks remove unhealthy backends; circuit breakers handle slow backends
-- [[Connection Pooling and Keep-Alive]] — Pool exhaustion is a primary cascading failure vector
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — Resilience patterns help you stay within SLO
+- [[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]] — Rate limiting prevents consumers from overloading; resilience patterns prevent dependencies from dragging you down
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — Health checks remove unhealthy backends; circuit breakers handle slow backends
+- [[01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive]] — Pool exhaustion is a primary cascading failure vector
 
 ## Reflection Prompts
 

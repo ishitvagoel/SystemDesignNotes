@@ -107,10 +107,10 @@ graph TD
 
 ## Connections
 
-- [[Cost Engineering and FinOps]] — The FinOps framework this observability practice supports
-- [[Cloud Cost Optimization]] — Optimization actions informed by cost observability
-- [[Monitoring and Alerting]] — Cost anomaly detection uses the same alerting infrastructure as operational monitoring
-- [[SLOs, SLIs, and Error Budgets]] — Unit economics are a cost SLI; budget overruns are a "cost error budget" violation
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — The FinOps framework this observability practice supports
+- [[Cloud_Cost_Optimization]] — Optimization actions informed by cost observability
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Cost anomaly detection uses the same alerting infrastructure as operational monitoring
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — Unit economics are a cost SLI; budget overruns are a "cost error budget" violation
 
 ## Reflection Prompts
 

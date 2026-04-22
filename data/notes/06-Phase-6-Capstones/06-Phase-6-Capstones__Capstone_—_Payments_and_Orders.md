@@ -48,7 +48,7 @@ graph TD
 
 ### Deep Dive 1: The Order Saga
 
-An **orchestrated saga** ([[Saga Pattern]]) manages the checkout flow. The orchestrator (a Temporal/Cadence workflow, or a state machine in the Order Service) directs each step:
+An **orchestrated saga** ([[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]]) manages the checkout flow. The orchestrator (a Temporal/Cadence workflow, or a state machine in the Order Service) directs each step:
 
 ```
 Step 1: Create order           (Order DB)    Compensate: Cancel order
@@ -64,7 +64,7 @@ Step 5: Send confirmation      (Email/SMS)    — (non-compensatable, last)
 
 ### Deep Dive 2: Idempotency (The Critical Detail)
 
-Payment APIs are the canonical example of why [[Idempotency]] matters. Scenario:
+Payment APIs are the canonical example of why [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] matters. Scenario:
 
 1. Our Payment Service sends `charge $50` to Stripe with idempotency key `order_123_payment_1`
 2. Stripe processes the charge. The response is in flight.
@@ -139,7 +139,7 @@ INSERT INTO ledger_entries VALUES
     ('tx_def', 'customer_123', 'CREDIT', 5000, 'USD');  -- Customer refunded
 ```
 
-The original payment entries remain — the audit trail is immutable. This is [[Event Sourcing and CQRS]] applied to finance: the ledger entries are the events, and the current balance is a derived view.
+The original payment entries remain — the audit trail is immutable. This is [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]] applied to finance: the ledger entries are the events, and the current balance is a derived view.
 
 ### Deep Dive 4: Inventory Reservation
 
@@ -155,7 +155,7 @@ WHERE product_id = 'prod_123' AND available >= 1;
 -- If 0 rows affected → out of stock
 ```
 
-This is an [[MVCC Deep Dive|optimistic concurrency]] approach — the `WHERE available >= 1` check and the update are atomic within a single SQL statement. No distributed lock needed.
+This is an [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive|optimistic concurrency]] approach — the `WHERE available >= 1` check and the update are atomic within a single SQL statement. No distributed lock needed.
 
 ## 5. Failure Analysis
 
@@ -219,13 +219,13 @@ sequenceDiagram
 ## Connections
 
 **Core concepts applied:**
-- [[Saga Pattern]] — Order-to-payment-to-fulfillment orchestration
-- [[Idempotency]] — Idempotency keys on all payment mutations
-- [[Idempotent Consumers]] — Exactly-once payment processing
-- [[Outbox Pattern]] — Reliable event publishing from payment transactions
-- [[Two-Phase Commit]] — Why 2PC is avoided; sagas preferred
-- [[Event-Driven Architecture Patterns]] — Event-carried state transfer for order status
-- [[SLOs, SLIs, and Error Budgets]] — Payment success rate as a critical SLI
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern]] — Order-to-payment-to-fulfillment orchestration
+- [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] — Idempotency keys on all payment mutations
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers]] — Exactly-once payment processing
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] — Reliable event publishing from payment transactions
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]] — Why 2PC is avoided; sagas preferred
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns]] — Event-carried state transfer for order status
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — Payment success rate as a critical SLI
 
 ## Canonical Sources
 

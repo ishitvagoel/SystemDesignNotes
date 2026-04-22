@@ -149,11 +149,11 @@ flowchart TD
 
 ## Connections
 
-- [[Authentication and Authorization]] — User identity (OAuth2/OIDC) and service identity (mTLS/SPIFFE) are complementary layers
-- [[TLS and Certificate Management]] — mTLS is the transport mechanism; SPIFFE/SPIRE is the identity framework on top of it
-- [[Threat Modeling for Distributed Systems]] — Zero-trust addresses lateral movement threats (STRIDE: Elevation of Privilege, Spoofing)
-- [[gRPC Deep Dive]] — gRPC interceptors enforce mTLS and SVID validation for every service call
-- [[eBPF and Kernel Observability]] — eBPF LSM hooks provide the enforcement plane for network micro-segmentation and runtime security policy
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization]] — User identity (OAuth2/OIDC) and service identity (mTLS/SPIFFE) are complementary layers
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management]] — mTLS is the transport mechanism; SPIFFE/SPIRE is the identity framework on top of it
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Threat_Modeling_for_Distributed_Systems]] — Zero-trust addresses lateral movement threats (STRIDE: Elevation of Privilege, Spoofing)
+- [[01-Phase-1-Foundations__Module-01-Networking__gRPC_Deep_Dive]] — gRPC interceptors enforce mTLS and SVID validation for every service call
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__eBPF_and_Kernel_Observability]] — eBPF LSM hooks provide the enforcement plane for network micro-segmentation and runtime security policy
 
 ## Reflection Prompts
 

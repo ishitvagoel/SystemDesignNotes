@@ -133,14 +133,14 @@ graph TD
 
 ## Connections
 
-- [[Authentication and Authorization]] — Access control is the enforcement layer for data classification: role-based access determines who can de-tokenize PII.
-- [[Encryption at Rest and in Transit]] — The cryptographic foundation for crypto-shredding and PII vault security.
-- [[Event Sourcing and CQRS]] — Event sourcing creates an immutable log; RTBF requires crypto-shredding at the aggregate level rather than physical deletion.
-- [[Cell-Based Architecture]] — The primary architectural pattern for data residency compliance; each cell contains data for one jurisdiction.
-- [[Geo-Distribution and Data Sovereignty]] — The companion note on routing, failover, and cross-border transfer restrictions.
-- [[Audit Logging and Compliance]] — The technical implementation of immutable audit trails (QLDB, signed S3, append-only ledgers).
-- [[Write-Ahead Log]] — WALs and CDC logs are a hidden RTBF surface area; binlogs persist PII even after database deletion.
-- [[Change Data Capture]] — CDC pipelines capture every row mutation, including PII fields, and propagate to downstream consumers that may retain data beyond the primary database's retention period.
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization]] — Access control is the enforcement layer for data classification: role-based access determines who can de-tokenize PII.
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Encryption_at_Rest_and_in_Transit]] — The cryptographic foundation for crypto-shredding and PII vault security.
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]] — Event sourcing creates an immutable log; RTBF requires crypto-shredding at the aggregate level rather than physical deletion.
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]] — The primary architectural pattern for data residency compliance; each cell contains data for one jurisdiction.
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty]] — The companion note on routing, failover, and cross-border transfer restrictions.
+- [[Audit_Logging_and_Compliance]] — The technical implementation of immutable audit trails (QLDB, signed S3, append-only ledgers).
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — WALs and CDC logs are a hidden RTBF surface area; binlogs persist PII even after database deletion.
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Change_Data_Capture]] — CDC pipelines capture every row mutation, including PII fields, and propagate to downstream consumers that may retain data beyond the primary database's retention period.
 
 ## Reflection Prompts
 

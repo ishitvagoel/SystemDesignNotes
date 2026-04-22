@@ -32,7 +32,7 @@ Before you can respond, you need to know how bad it is. Define severity levels u
 
 ### The Response Sequence
 
-**1. Detect** (automated): An alert fires (ideally a [[SLOs SLIs and Error Budgets|burn-rate alert]] on an SLO). The on-call engineer is paged.
+**1. Detect** (automated): An alert fires (ideally a [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets|burn-rate alert]] on an SLO). The on-call engineer is paged.
 
 **2. Triage** (2 minutes): Confirm the alert is real (not a false positive). Assess severity. If P1/P2, declare an incident and page the IC.
 
@@ -165,10 +165,10 @@ graph TD
 
 ## Connections
 
-- [[SLOs SLIs and Error Budgets]] — Error budget exhaustion triggers reliability focus
-- [[Resilience Patterns]] — The mechanisms that contain failures before they become incidents
-- [[Observability and Alerting]] — Detection and diagnosis depend on observability
-- [[Deployment and Release Engineering]] — Most incidents are caused by changes; fast rollback is the first mitigation
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — Error budget exhaustion triggers reliability focus
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns]] — The mechanisms that contain failures before they become incidents
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Detection and diagnosis depend on observability
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering]] — Most incidents are caused by changes; fast rollback is the first mitigation
 
 ## Reflection Prompts
 

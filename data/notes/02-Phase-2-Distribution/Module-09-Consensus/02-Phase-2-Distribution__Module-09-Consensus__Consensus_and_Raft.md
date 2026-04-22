@@ -85,7 +85,7 @@ Raft's safety guarantee: **if a log entry has been committed, it will be present
 
 **Read latency**: Reads through the leader are linearizable (the leader knows the committed state). Reads from followers may be stale. **Lease-based reads**: The leader holds a lease (a time-bounded promise that no election will occur). During the lease, it can serve reads locally without consulting followers — lower latency, still linearizable as long as clocks are reasonably synchronized.
 
-**Throughput**: Raft's throughput is bounded by the leader — all writes go through one node. This is the fundamental bottleneck. For higher throughput, partition the data and run a separate Raft group per partition (this is what CockroachDB and TiKV do — see [[NewSQL and Globally Distributed Databases]]).
+**Throughput**: Raft's throughput is bounded by the leader — all writes go through one node. This is the fundamental bottleneck. For higher throughput, partition the data and run a separate Raft group per partition (this is what CockroachDB and TiKV do — see [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]]).
 
 ### Common Misconceptions
 
@@ -164,13 +164,13 @@ stateDiagram-v2
 
 ## Connections
 
-- [[Paxos and Its Legacy]] — Raft and Paxos solve the same problem; Raft was designed as an understandable alternative
-- [[Coordination Services]] — etcd, ZooKeeper, and Consul are built on Raft (etcd, Consul) or ZAB (ZooKeeper, a Paxos variant)
-- [[Distributed Locks and Fencing]] — Consensus enables safe distributed locks
-- [[FLP Impossibility]] — Why Raft uses timeouts (it needs partial synchrony assumptions to make progress)
-- [[NewSQL and Globally Distributed Databases]] — CockroachDB, TiKV use Multi-Raft (one Raft group per range)
-- [[Database Replication]] — Raft-based replication is strongly consistent, unlike async leader-follower replication
-- [[Consistency Spectrum]] — Raft provides linearizability for the replicated log
+- [[02-Phase-2-Distribution__Module-09-Consensus__Paxos_and_Its_Legacy]] — Raft and Paxos solve the same problem; Raft was designed as an understandable alternative
+- [[02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services]] — etcd, ZooKeeper, and Consul are built on Raft (etcd, Consul) or ZAB (ZooKeeper, a Paxos variant)
+- [[02-Phase-2-Distribution__Module-09-Consensus__Distributed_Locks_and_Fencing]] — Consensus enables safe distributed locks
+- [[02-Phase-2-Distribution__Module-09-Consensus__FLP_Impossibility]] — Why Raft uses timeouts (it needs partial synchrony assumptions to make progress)
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — CockroachDB, TiKV use Multi-Raft (one Raft group per range)
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Raft-based replication is strongly consistent, unlike async leader-follower replication
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — Raft provides linearizability for the replicated log
 
 ## Reflection Prompts
 

@@ -13,7 +13,7 @@ Encryption in transit is an armored truck — the data is protected while it's m
 
 ## Encryption in Transit
 
-Every network communication uses TLS 1.3 (see [[TLS and Certificate Management]]). Internal service-to-service traffic uses mTLS — both sides present certificates. The era of "plaintext inside the VPC is fine" is over; zero-trust architectures encrypt everything.
+Every network communication uses TLS 1.3 (see [[03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management]]). Internal service-to-service traffic uses mTLS — both sides present certificates. The era of "plaintext inside the VPC is fine" is over; zero-trust architectures encrypt everything.
 
 **The common gap**: Database connections. Many applications connect to Postgres or MySQL over plaintext within a VPC. If an attacker gains VPC access (cloud misconfiguration makes this more common than people think), they can sniff queries and results. Mitigation: `sslmode=require` (Postgres) or `require_secure_transport=ON` (MySQL).
 
@@ -129,12 +129,12 @@ graph TD
 
 ## Connections
 
-- [[TLS and Certificate Management]] — TLS is encryption in transit; this note covers the key management and at-rest side
-- [[Authentication and Authorization]] — Secrets (API keys, tokens) are a form of encrypted credential managed by the systems described here
-- [[Threat Modeling for Distributed Systems]] — Information disclosure (STRIDE) is the primary threat encryption mitigates
-- [[Object Storage Fundamentals]] — S3 server-side encryption (SSE-S3, SSE-KMS, SSE-C) uses the envelope encryption pattern described here
-- [[Multi-Tenancy and Isolation]] — Per-tenant encryption keys provide cryptographic isolation between tenants
-- [[Software Supply Chain Security]] — Signing keys for artifacts and containers rely on the same KMS and key management practices
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management]] — TLS is encryption in transit; this note covers the key management and at-rest side
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization]] — Secrets (API keys, tokens) are a form of encrypted credential managed by the systems described here
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Threat_Modeling_for_Distributed_Systems]] — Information disclosure (STRIDE) is the primary threat encryption mitigates
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals]] — S3 server-side encryption (SSE-S3, SSE-KMS, SSE-C) uses the envelope encryption pattern described here
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]] — Per-tenant encryption keys provide cryptographic isolation between tenants
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Software_Supply_Chain_Security]] — Signing keys for artifacts and containers rely on the same KMS and key management practices
 
 ## Canonical Sources
 

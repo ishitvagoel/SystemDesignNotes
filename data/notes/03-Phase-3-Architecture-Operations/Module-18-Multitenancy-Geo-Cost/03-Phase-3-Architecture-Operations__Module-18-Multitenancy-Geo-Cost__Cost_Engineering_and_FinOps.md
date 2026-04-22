@@ -45,13 +45,13 @@ Total Cost of Ownership goes far beyond the cloud bill:
 
 ### Storage Optimization
 
-**Lifecycle policies** ([[Object Storage Fundamentals]]): Automatically tier data from hot (S3 Standard, $0.023/GB) to warm (IA, $0.0125/GB) to cold (Glacier, $0.004/GB) based on age. A lifecycle policy that moves data to IA after 30 days and Glacier after 90 days can reduce storage costs by 60–80%.
+**Lifecycle policies** ([[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals]]): Automatically tier data from hot (S3 Standard, $0.023/GB) to warm (IA, $0.0125/GB) to cold (Glacier, $0.004/GB) based on age. A lifecycle policy that moves data to IA after 30 days and Glacier after 90 days can reduce storage costs by 60–80%.
 
 **Delete what you don't need**: Old log archives, unused snapshots, orphaned EBS volumes, incomplete multipart uploads. AWS Cost Explorer and tools like `cloud-nuke` identify abandoned resources.
 
 ### Network Optimization
 
-**Egress is expensive**: $0.09/GB from AWS to the internet. At 100TB/month, that's $9,000/month in pure egress. CDNs ([[CDN Architecture]]) reduce origin egress by 80–95%. Cloudflare R2 has zero egress fees — for egress-heavy workloads, it can eliminate the largest cost component.
+**Egress is expensive**: $0.09/GB from AWS to the internet. At 100TB/month, that's $9,000/month in pure egress. CDNs ([[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]]) reduce origin egress by 80–95%. Cloudflare R2 has zero egress fees — for egress-heavy workloads, it can eliminate the largest cost component.
 
 **Cross-region transfer**: $0.02/GB between AWS regions. Co-locate services that communicate frequently. A service in US-East calling a dependency in EU-West at 1,000 req/sec with 10KB responses = 10MB/sec × $0.02/GB = ~$500/month just in inter-region transfer.
 
@@ -65,7 +65,7 @@ Total Cost of Ownership goes far beyond the cloud bill:
 
 **Chargeback/showback**: Showback (inform teams of their costs) changes behavior more than centralized cost management. Teams that see "$15,000/month for the staging environment that nobody uses" tend to clean it up. Chargeback (teams actually pay from their budget) is stronger but politically harder.
 
-**Per-tenant cost attribution** ([[Multi-Tenancy and Isolation]]): Track compute, storage, and network per tenant. This enables usage-based pricing, identifies tenants whose usage doesn't justify their plan, and reveals cross-subsidization (free-tier tenant consuming 10× the resources of a paying tenant).
+**Per-tenant cost attribution** ([[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]]): Track compute, storage, and network per tenant. This enables usage-based pricing, identifies tenants whose usage doesn't justify their plan, and reveals cross-subsidization (free-tier tenant consuming 10× the resources of a paying tenant).
 
 **Budget enforcement**: Set per-team or per-environment budgets. Alert at 80%, hard-cap at 100% for non-production environments (automatically terminate resources). Terraform and Kubernetes resource quotas enforce guardrails at the infrastructure level.
 
@@ -138,11 +138,11 @@ graph TD
 
 ## Connections
 
-- [[Object Storage Fundamentals]] — Storage tiering is a primary cost lever
-- [[CDN Architecture]] — CDNs reduce egress costs dramatically
-- [[Multi-Tenancy and Isolation]] — Per-tenant cost attribution enables pricing optimization
-- [[Serverless and Edge Computing]] — Serverless cost model (per-invocation) vs containers (per-provision)
-- [[Geo-Distribution and Data Sovereignty]] — Multi-region multiplies infrastructure cost
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals]] — Storage tiering is a primary cost lever
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — CDNs reduce egress costs dramatically
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]] — Per-tenant cost attribution enables pricing optimization
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing]] — Serverless cost model (per-invocation) vs containers (per-provision)
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty]] — Multi-region multiplies infrastructure cost
 
 ## Reflection Prompts
 

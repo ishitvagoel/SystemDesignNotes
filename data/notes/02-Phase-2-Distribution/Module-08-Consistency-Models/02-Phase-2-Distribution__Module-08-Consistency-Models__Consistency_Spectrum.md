@@ -31,7 +31,7 @@ Every operation appears to take effect atomically at some point between its invo
 - **Unique constraints**: If two users register the same username concurrently, linearizability ensures only one succeeds.
 - **Financial balances**: If a balance is $100 and two concurrent withdrawals of $80 arrive, linearizability ensures only one succeeds (not both, leaving a -$60 balance).
 
-**Where it's provided**: Single-node databases (trivially — one copy, one timeline). Spanner (via TrueTime — see [[NewSQL and Globally Distributed Databases]]). ZooKeeper and etcd (via consensus — see [[Consensus and Raft]]). DynamoDB with `ConsistentRead=true` (for single-item reads only).
+**Where it's provided**: Single-node databases (trivially — one copy, one timeline). Spanner (via TrueTime — see [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]]). ZooKeeper and etcd (via consensus — see [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft]]). DynamoDB with `ConsistentRead=true` (for single-item reads only).
 
 **The cost**: Linearizability requires coordination between nodes. In a geo-distributed system, this means cross-region round-trips on every operation — adding 100–300ms of latency. During network partitions, linearizable systems must reject operations to preserve correctness (they choose consistency over availability — the "C" in CAP).
 
@@ -45,7 +45,7 @@ All operations are ordered in a single sequence, and each process's operations a
 
 ### Causal Consistency
 
-If event A causally precedes event B (A → B in the happens-before relation from [[Logical Clocks and Ordering]]), then everyone sees A before B. Concurrent events (neither caused the other) can be seen in any order by different observers.
+If event A causally precedes event B (A → B in the happens-before relation from [[01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering]]), then everyone sees A before B. Concurrent events (neither caused the other) can be seen in any order by different observers.
 
 **What this means concretely**: If Alice posts a photo and Bob comments on it, everyone sees the photo before the comment. But if Alice and Charlie post photos independently at the same time, some people might see Alice's first and others might see Charlie's first.
 
@@ -63,7 +63,7 @@ If no new writes occur, all replicas will *eventually* converge to the same valu
 
 **What can go wrong**:
 - A user updates their email. The next page load reads from a stale replica and shows the old email. The user updates again, confused. Now there are three versions floating around.
-- A counter is incremented on two replicas simultaneously. Both read `5`, both write `6`. The counter should be `7` but converges to `6`. (This is the lost update problem, solvable with CRDTs — see [[Replication Deep Dive]].)
+- A counter is incremented on two replicas simultaneously. Both read `5`, both write `6`. The counter should be `7` but converges to `6`. (This is the lost update problem, solvable with CRDTs — see [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Replication_Deep_Dive]].)
 - An item is added to a shopping cart on one replica and removed on another. Depending on convergence order, the item might reappear after being removed.
 
 **Eventual consistency is not chaos**: It's a well-defined guarantee — convergence is guaranteed. The challenge is that the convergence window can expose inconsistencies that break user expectations. The application must be designed to tolerate or mask these inconsistencies.
@@ -147,13 +147,13 @@ graph LR
 
 ## Connections
 
-- [[CAP Theorem and PACELC]] — The theoretical framework for understanding why you can't have strong consistency + high availability + partition tolerance simultaneously
-- [[Session Guarantees]] — Practical, client-visible guarantees layered on top of eventual consistency
-- [[Logical Clocks and Ordering]] — The formal tools (Lamport timestamps, vector clocks) for implementing causal ordering
-- [[Database Replication]] — Replication topology determines which consistency models are achievable
-- [[NewSQL and Globally Distributed Databases]] — Spanner provides external consistency (stronger than linearizability); CockroachDB provides serializable isolation
-- [[MVCC Deep Dive]] — Snapshot isolation relates to consistency — it provides a consistent point-in-time view within a single node
-- [[Consensus and Raft]] — Consensus protocols are the mechanism for achieving linearizability in a distributed system
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__CAP_Theorem_and_PACELC]] — The theoretical framework for understanding why you can't have strong consistency + high availability + partition tolerance simultaneously
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees]] — Practical, client-visible guarantees layered on top of eventual consistency
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering]] — The formal tools (Lamport timestamps, vector clocks) for implementing causal ordering
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Replication topology determines which consistency models are achievable
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — Spanner provides external consistency (stronger than linearizability); CockroachDB provides serializable isolation
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive]] — Snapshot isolation relates to consistency — it provides a consistent point-in-time view within a single node
+- [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft]] — Consensus protocols are the mechanism for achieving linearizability in a distributed system
 
 ## Reflection Prompts
 

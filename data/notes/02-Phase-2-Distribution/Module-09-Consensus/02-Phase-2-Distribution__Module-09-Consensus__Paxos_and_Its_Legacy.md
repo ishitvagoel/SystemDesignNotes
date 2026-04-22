@@ -140,10 +140,10 @@ sequenceDiagram
 
 ## Connections
 
-- [[Consensus and Raft]] — Raft was explicitly designed as a more understandable alternative to Paxos
-- [[Coordination Services]] — ZooKeeper uses ZAB (Paxos-derived); etcd and Consul use Raft
-- [[FLP Impossibility]] — Both Paxos and Raft work around FLP by using timeouts (partial synchrony)
-- [[NewSQL and Globally Distributed Databases]] — Spanner originally used Multi-Paxos; CockroachDB and TiKV use Raft
+- [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft]] — Raft was explicitly designed as a more understandable alternative to Paxos
+- [[02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services]] — ZooKeeper uses ZAB (Paxos-derived); etcd and Consul use Raft
+- [[02-Phase-2-Distribution__Module-09-Consensus__FLP_Impossibility]] — Both Paxos and Raft work around FLP by using timeouts (partial synchrony)
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — Spanner originally used Multi-Paxos; CockroachDB and TiKV use Raft
 
 ## Reflection Prompts
 

@@ -72,7 +72,7 @@ Compare: A[0]=3 > B[0]=2, but A[1]=1 < B[1]=4
 Neither is strictly ≤ the other → CONCURRENT
 ```
 
-**The key advantage over Lamport**: Vector clocks can detect concurrency. If two writes to the same key have concurrent vector clocks, you know they're conflicting — and you need conflict resolution (merge, LWW, user intervention). See [[Replication Deep Dive]].
+**The key advantage over Lamport**: Vector clocks can detect concurrency. If two writes to the same key have concurrent vector clocks, you know they're conflicting — and you need conflict resolution (merge, LWW, user intervention). See [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Replication_Deep_Dive]].
 
 **The key disadvantage**: Vector size is O(N) where N is the number of processes. In a system with 1,000 nodes, each vector clock is 1,000 integers — transmitted with every message. This doesn't scale.
 
@@ -90,7 +90,7 @@ Each HLC has two components: `(physical_time, logical_counter)`.
 
 **Why this matters**: HLCs give you the causal ordering guarantee of Lamport timestamps PLUS timestamps that are close to wall-clock time (within the clock uncertainty bound). This means HLC timestamps are usable for time-based queries ("give me all events in the last hour") while still providing causal ordering.
 
-**Used by**: CockroachDB (for transaction timestamps — see [[NewSQL and Globally Distributed Databases]]). MongoDB (for replica set oplog ordering).
+**Used by**: CockroachDB (for transaction timestamps — see [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]]). MongoDB (for replica set oplog ordering).
 
 ### Comparison
 
@@ -178,13 +178,13 @@ graph TD
 
 ## Connections
 
-- [[ID Generation Strategies]] — Time-sorted IDs (Snowflake, UUIDv7) use wall clocks for approximate ordering; logical clocks provide causal ordering
-- [[Consistency Spectrum]] — Causal consistency is defined in terms of the happens-before relation
-- [[Replication Deep Dive]] — Vector clocks detect concurrent writes; conflict resolution handles them
-- [[NewSQL and Globally Distributed Databases]] — CockroachDB uses HLCs; Spanner uses TrueTime (bounded physical time)
-- [[MVCC Deep Dive]] — Spanner's MVCC uses real timestamps for version ordering; CockroachDB uses HLC timestamps
-- [[Two-Phase Commit]] — Transaction ordering in distributed databases depends on clock mechanisms
-- [[Consensus and Raft]] — Consensus protocols establish ordering for replicated logs, complementing logical clocks
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__ID_Generation_Strategies]] — Time-sorted IDs (Snowflake, UUIDv7) use wall clocks for approximate ordering; logical clocks provide causal ordering
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — Causal consistency is defined in terms of the happens-before relation
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Replication_Deep_Dive]] — Vector clocks detect concurrent writes; conflict resolution handles them
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — CockroachDB uses HLCs; Spanner uses TrueTime (bounded physical time)
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive]] — Spanner's MVCC uses real timestamps for version ordering; CockroachDB uses HLC timestamps
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]] — Transaction ordering in distributed databases depends on clock mechanisms
+- [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft]] — Consensus protocols establish ordering for replicated logs, complementing logical clocks
 
 ## Reflection Prompts
 

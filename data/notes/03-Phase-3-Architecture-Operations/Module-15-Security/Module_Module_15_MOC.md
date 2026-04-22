@@ -10,17 +10,17 @@ This module covers the full security stack: transport security (TLS, mTLS), iden
 
 ## Notes in This Module
 
-- [[TLS and Certificate Management]] — TLS 1.3 handshake, mTLS for service-to-service auth, SPIFFE/SPIRE identity, certificate rotation at scale with cert-manager
-- [[Authentication and Authorization]] — OAuth2/OIDC flows, RBAC vs ABAC vs ReBAC, token management, and the critical difference between authn and authz
-- [[Encryption at Rest and in Transit]] — Envelope encryption, KMS architecture, secret management with Vault/SOPS
-- [[Threat Modeling for Distributed Systems]] — STRIDE framework, zero-trust principles, attack surface analysis for microservices
-- [[Software Supply Chain Security]] — SLSA levels, Sigstore, SBOMs, and protecting your build pipeline from compromise
-- [[Zero-Trust Architecture]] — "Never trust, always verify": SPIFFE/SPIRE service identity, mTLS enforcement, OPA policy engine, micro-segmentation, and BeyondCorp reference architecture
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management]] — TLS 1.3 handshake, mTLS for service-to-service auth, SPIFFE/SPIRE identity, certificate rotation at scale with cert-manager
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization]] — OAuth2/OIDC flows, RBAC vs ABAC vs ReBAC, token management, and the critical difference between authn and authz
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Encryption_at_Rest_and_in_Transit]] — Envelope encryption, KMS architecture, secret management with Vault/SOPS
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Threat_Modeling_for_Distributed_Systems]] — STRIDE framework, zero-trust principles, attack surface analysis for microservices
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Software_Supply_Chain_Security]] — SLSA levels, Sigstore, SBOMs, and protecting your build pipeline from compromise
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Zero_Trust_Architecture]] — "Never trust, always verify": SPIFFE/SPIRE service identity, mTLS enforcement, OPA policy engine, micro-segmentation, and BeyondCorp reference architecture
 
 ## Prerequisites
-- [[_Module 02 MOC]] — API design (authentication and authorization are API-layer concerns)
-- [[_Module 01 MOC]] — TLS runs on top of TCP; understanding the transport layer helps understand TLS overhead
+- [[Module_Module_02_MOC]] — API design (authentication and authorization are API-layer concerns)
+- [[Module_Module_01_MOC]] — TLS runs on top of TCP; understanding the transport layer helps understand TLS overhead
 
 ## Where This Leads
-- [[_Module 16 MOC]] — Reliability (security incidents are reliability incidents)
-- [[_Module 12 MOC]] — Service decomposition (more services = more security boundaries to manage)
+- [[Module_Module_16_MOC]] — Reliability (security incidents are reliability incidents)
+- [[Module_Module_12_MOC]] — Service decomposition (more services = more security boundaries to manage)

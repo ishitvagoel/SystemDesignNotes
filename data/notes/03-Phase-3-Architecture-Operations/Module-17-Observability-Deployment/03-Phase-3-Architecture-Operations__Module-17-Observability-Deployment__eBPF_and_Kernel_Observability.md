@@ -201,10 +201,10 @@ flowchart TD
 
 ## Connections
 
-- [[Observability and Alerting]] — eBPF is one of three observability data sources (alongside application instrumentation and infra metrics); zero-instrumentation observability enables the "measure everything" ideal
-- [[Distributed Tracing Deep Dive]] — eBPF network traces can be correlated with application spans via connection-level metadata (source/dest pod, port, latency)
-- [[Zero-Trust Architecture]] — eBPF LSM hooks enforce policy at the kernel level, providing the enforcement plane for network micro-segmentation and runtime security
-- [[Kubernetes and Platform Engineering]] — Cilium eBPF networking replaces kube-proxy; eBPF is increasingly the foundation of the Kubernetes data plane
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — eBPF is one of three observability data sources (alongside application instrumentation and infra metrics); zero-instrumentation observability enables the "measure everything" ideal
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Distributed_Tracing_Deep_Dive]] — eBPF network traces can be correlated with application spans via connection-level metadata (source/dest pod, port, latency)
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Zero_Trust_Architecture]] — eBPF LSM hooks enforce policy at the kernel level, providing the enforcement plane for network micro-segmentation and runtime security
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering]] — Cilium eBPF networking replaces kube-proxy; eBPF is increasingly the foundation of the Kubernetes data plane
 
 ## Reflection Prompts
 

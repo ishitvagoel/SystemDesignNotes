@@ -9,23 +9,23 @@ Databases store structured data. But most of the internet's bytes are unstructur
 ## Notes in This Module
 
 ### Object Storage
-- [[Object Storage Fundamentals]]
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals]]
 
 ### Distribution
-- [[Consistent Hashing]] — Hash ring algorithm that minimizes key redistribution when cache or storage nodes change. Used by Redis Cluster, Cassandra, DynamoDB, and CDNs — S3-style storage, consistency models, lifecycle policies, tiering, content-addressable storage, and erasure coding
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]] — Hash ring algorithm that minimizes key redistribution when cache or storage nodes change. Used by Redis Cluster, Cassandra, DynamoDB, and CDNs — S3-style storage, consistency models, lifecycle policies, tiering, content-addressable storage, and erasure coding
 
 ### Caching
-- [[Cache Patterns and Strategies]] — Cache-aside, read-through, write-through, write-behind, invalidation strategies, cache stampede, and multi-layer caching
-- [[Distributed Caching]] — Redis Cluster, Memcached, consistent hashing for cache sharding
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — Cache-aside, read-through, write-through, write-behind, invalidation strategies, cache stampede, and multi-layer caching
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Distributed_Caching]] — Redis Cluster, Memcached, consistent hashing for cache sharding
 
 ### Content Delivery
-- [[CDN Architecture]] — Edge caching, origin shield, cache hierarchy, purge strategies, and modern edge compute
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — Edge caching, origin shield, cache hierarchy, purge strategies, and modern edge compute
 
 ## Prerequisites
-- [[_Module 01 MOC]] — Networking (DNS, HTTP caching headers, load balancing)
-- [[_Module 04 MOC]] — Databases (understanding when to cache vs when to optimize queries)
+- [[Module_Module_01_MOC]] — Networking (DNS, HTTP caching headers, load balancing)
+- [[Module_Module_04_MOC]] — Databases (understanding when to cache vs when to optimize queries)
 
 ## Where This Leads
-- [[_Module 14 MOC]] — Search Systems (search indexes can be viewed as a form of specialized cache)
-- [[_Module 18 MOC]] — Multi-Tenancy, Geo-Distribution & Cost (CDN and tiering are core cost levers)
-- [[_Module 19 MOC]] — AI Inference (KV cache, model weight storage, semantic caching)
+- [[Module_Module_14_MOC]] — Search Systems (search indexes can be viewed as a form of specialized cache)
+- [[Module_Module_18_MOC]] — Multi-Tenancy, Geo-Distribution & Cost (CDN and tiering are core cost levers)
+- [[Module_Module_19_MOC]] — AI Inference (KV cache, model weight storage, semantic caching)

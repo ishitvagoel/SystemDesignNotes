@@ -137,9 +137,9 @@ graph TD
 
 ## Connections
 
-- [[Full-Text Search Architecture]] — BM25 keyword search, the complement to vector search in hybrid systems
-- [[RAG Architecture]] — Vector search is the retrieval backbone of RAG pipelines. This note covers indexing and retrieval algorithms; RAG Architecture covers the end-to-end pipeline (chunking, retrieval, re-ranking, generation) for LLM applications
-- [[Indexing Deep Dive]] — HNSW and IVF are index types, analogous to B-tree and hash indexes for different access patterns
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Full-Text_Search_Architecture]] — BM25 keyword search, the complement to vector search in hybrid systems
+- [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__RAG_Architecture]] — Vector search is the retrieval backbone of RAG pipelines. This note covers indexing and retrieval algorithms; RAG Architecture covers the end-to-end pipeline (chunking, retrieval, re-ranking, generation) for LLM applications
+- [[01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive]] — HNSW and IVF are index types, analogous to B-tree and hash indexes for different access patterns
 
 ## Reflection Prompts
 

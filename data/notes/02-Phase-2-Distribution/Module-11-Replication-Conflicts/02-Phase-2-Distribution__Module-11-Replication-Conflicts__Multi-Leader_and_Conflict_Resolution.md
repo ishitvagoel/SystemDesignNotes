@@ -35,7 +35,7 @@ Compare:
 
 If one version vector dominates the other (every component ≥), the dominant version supersedes — no conflict. If neither dominates (they disagree on who's ahead), the versions are concurrent and must be resolved.
 
-This is the same comparison logic as [[Logical Clocks and Ordering]] vector clocks, applied to data versions rather than events.
+This is the same comparison logic as [[01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering]] vector clocks, applied to data versions rather than events.
 
 ## Resolution Strategies
 
@@ -63,7 +63,7 @@ The application provides a custom merge function that combines conflicting versi
 
 - **Text fields**: Show both values to the user and let them choose (Google Docs conflict dialog).
 - **Sets**: Union the two sets (add-wins semantics). If A added item X and B added item Y, the merged result contains both.
-- **Counters**: Use a CRDT counter ([[CRDTs]]) that merges by taking the max per-replica counter.
+- **Counters**: Use a CRDT counter ([[02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs]]) that merges by taking the max per-replica counter.
 - **JSON documents**: Deep merge with field-level conflict detection.
 
 **Pros**: No data loss. Application-specific semantics can be preserved.
@@ -72,7 +72,7 @@ The application provides a custom merge function that combines conflicting versi
 
 ### Conflict-Free Resolution (CRDTs)
 
-Design the data structure so that all concurrent operations automatically merge without conflicts. This is the subject of [[CRDTs]] — the most elegant solution but limited to specific data types.
+Design the data structure so that all concurrent operations automatically merge without conflicts. This is the subject of [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs]] — the most elegant solution but limited to specific data types.
 
 ### OT vs CRDTs: When to Use Which
 
@@ -175,11 +175,11 @@ graph LR
 
 ## Connections
 
-- [[Replication Deep Dive]] — Single-leader replication avoids conflicts entirely by funneling all writes through one node
-- [[Leaderless Replication]] — Leaderless systems face similar conflict issues, resolved via read-repair and anti-entropy
-- [[CRDTs]] — The conflict-free alternative to manual resolution
-- [[Logical Clocks and Ordering]] — Version vectors are the mechanism for detecting concurrent writes
-- [[Geo-Distribution and Data Sovereignty]] — Multi-leader is primarily motivated by multi-region deployment
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Replication_Deep_Dive]] — Single-leader replication avoids conflicts entirely by funneling all writes through one node
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Leaderless_Replication]] — Leaderless systems face similar conflict issues, resolved via read-repair and anti-entropy
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs]] — The conflict-free alternative to manual resolution
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering]] — Version vectors are the mechanism for detecting concurrent writes
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty]] — Multi-leader is primarily motivated by multi-region deployment
 
 ## Reflection Prompts
 

@@ -6,7 +6,7 @@ You have a database. Other systems need to react to changes in that database: a 
 
 Change Data Capture (CDC) solves this by turning database changes into a stream of events. Instead of asking "what changed?" you subscribe and receive every insert, update, and delete as it happens. CDC bridges the gap between the database (system of record) and everything else that needs to know about changes.
 
-CDC is the backbone of the [[Outbox Pattern]], the enabler of real-time [[Event-Driven Architecture Patterns]], and the mechanism that keeps [[Full-Text Search Architecture]] indexes and [[Cache Patterns and Strategies]] in sync without dual-write bugs.
+CDC is the backbone of the [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]], the enabler of real-time [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns]], and the mechanism that keeps [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Full-Text_Search_Architecture]] indexes and [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] in sync without dual-write bugs.
 
 ## Mental Model
 
@@ -82,7 +82,7 @@ Poll the database periodically using a timestamp or incrementing ID column: `SEL
 
 ### The Outbox Pattern with CDC
 
-Instead of publishing events directly from your application (dual-write problem), write events to an "outbox" table in the same database transaction as the business data. CDC reads the outbox table and publishes events to Kafka. This gives you exactly-once semantics: if the transaction commits, the event is captured; if it rolls back, nothing is published. See [[Outbox Pattern]] for details.
+Instead of publishing events directly from your application (dual-write problem), write events to an "outbox" table in the same database transaction as the business data. CDC reads the outbox table and publishes events to Kafka. This gives you exactly-once semantics: if the transaction commits, the event is captured; if it rolls back, nothing is published. See [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] for details.
 
 ### Event Sourcing via CDC
 
@@ -90,7 +90,7 @@ Use CDC to create an event log from a traditional database. The database remains
 
 ### Zero-Downtime Migrations
 
-CDC enables migrating from one database to another without downtime: set up CDC from the old database, replicate all changes to the new database in real time, and cut over when they're in sync. See [[Zero-Downtime Schema Migrations]].
+CDC enables migrating from one database to another without downtime: set up CDC from the old database, replicate all changes to the new database in real time, and cut over when they're in sync. See [[01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations]].
 
 ## Trade-Off Analysis
 
@@ -153,18 +153,18 @@ graph LR
 ## Connections
 
 **Prerequisites:**
-- [[Write-Ahead Log]] — CDC reads the WAL; understanding WAL mechanics is essential
-- [[Message Queues vs Event Streams]] — CDC typically publishes to Kafka (an event stream)
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] — CDC reads the WAL; understanding WAL mechanics is essential
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams]] — CDC typically publishes to Kafka (an event stream)
 
 **Enables:**
-- [[Outbox Pattern]] — CDC + outbox = reliable event publishing without dual writes
-- [[Event-Driven Architecture Patterns]] — CDC is how you get events out of a database into an EDA
-- [[Full-Text Search Architecture]] — CDC keeps search indexes in sync with the database
-- [[Cache Patterns and Strategies]] — CDC-driven cache invalidation is more reliable than TTL-based
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] — CDC + outbox = reliable event publishing without dual writes
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns]] — CDC is how you get events out of a database into an EDA
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Full-Text_Search_Architecture]] — CDC keeps search indexes in sync with the database
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — CDC-driven cache invalidation is more reliable than TTL-based
 
 **Related:**
-- [[Database Replication]] — CDC is conceptually similar to replication; it's just replicating to non-database consumers
-- [[Stream Processing]] — CDC events are a natural input to stream processing pipelines
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — CDC is conceptually similar to replication; it's just replicating to non-database consumers
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Stream_Processing]] — CDC events are a natural input to stream processing pipelines
 
 ## Reflection Prompts
 

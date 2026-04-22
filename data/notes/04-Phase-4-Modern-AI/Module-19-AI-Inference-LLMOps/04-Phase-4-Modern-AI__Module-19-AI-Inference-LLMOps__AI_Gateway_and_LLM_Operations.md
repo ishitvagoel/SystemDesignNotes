@@ -2,7 +2,7 @@
 
 ## Why This Exists
 
-Most applications don't host their own LLMs — they call external providers (OpenAI, Anthropic, Google, or self-hosted endpoints). Without a gateway, each service team independently manages API keys, retry logic, rate limits, cost tracking, and failover. The same problems that led to [[API Gateway Patterns|API gateways]] for microservices apply to LLM integration, but with LLM-specific concerns: token-based cost, semantic caching, model quality evaluation, and prompt governance.
+Most applications don't host their own LLMs — they call external providers (OpenAI, Anthropic, Google, or self-hosted endpoints). Without a gateway, each service team independently manages API keys, retry logic, rate limits, cost tracking, and failover. The same problems that led to [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns|API gateways]] for microservices apply to LLM integration, but with LLM-specific concerns: token-based cost, semantic caching, model quality evaluation, and prompt governance.
 
 An AI gateway is the single control plane for all LLM interactions. It provides routing, caching, cost management, safety guardrails, and observability — the cross-cutting concerns that every LLM-consuming service needs but none should implement independently.
 
@@ -20,7 +20,7 @@ Route LLM requests across providers based on cost, latency, quality, or availabi
 
 **Latency-based routing**: For real-time applications (autocomplete, inline suggestions), route to the lowest-latency provider. For async tasks (batch summarization, report generation), route to the cheapest.
 
-**Availability-based failover**: If the primary provider returns 5xx errors or exceeds latency thresholds, automatically route to a backup provider. The application never sees the outage. This is the same circuit breaker pattern from [[Resilience Patterns]], applied to LLM providers.
+**Availability-based failover**: If the primary provider returns 5xx errors or exceeds latency thresholds, automatically route to a backup provider. The application never sees the outage. This is the same circuit breaker pattern from [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns]], applied to LLM providers.
 
 **Quality-based routing**: Some queries require specific model capabilities. Code generation routes to models with strong coding benchmarks. Multilingual queries route to models with strong language support. The gateway maintains a capability matrix and routes accordingly.
 
@@ -65,7 +65,7 @@ LLM costs scale with tokens. Without controls, a runaway prompt (a user pastes a
 - **Prompt compression**: Strip redundant context, truncate overly long user inputs, summarize conversation history instead of passing the full transcript. Reducing input tokens by 30% reduces cost by ~30%.
 - **Model tiering** (see routing above): The single most effective cost lever. Route 70% of queries to a model that costs 10× less.
 
-**Cost attribution**: Track tokens consumed per user, per feature, per team, per tenant. This is the FinOps principle ([[Cost Engineering and FinOps]]) applied to AI — you can't optimize what you don't measure. The gateway logs token counts per request with metadata (user, tenant, model, feature) for aggregation.
+**Cost attribution**: Track tokens consumed per user, per feature, per team, per tenant. This is the FinOps principle ([[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]]) applied to AI — you can't optimize what you don't measure. The gateway logs token counts per request with metadata (user, tenant, model, feature) for aggregation.
 
 ### Governance and Safety
 
@@ -78,7 +78,7 @@ LLM costs scale with tokens. Without controls, a runaway prompt (a user pastes a
 
 **Output guardrails**: Before returning to the user:
 - Content filtering: Scan for harmful content, hallucinated claims, or policy violations.
-- Factual grounding check: For RAG queries, verify that the answer is supported by the retrieved context (see [[RAG Architecture]] evaluation section).
+- Factual grounding check: For RAG queries, verify that the answer is supported by the retrieved context (see [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__RAG_Architecture]] evaluation section).
 - Format validation: If the output should be JSON, validate the structure before returning.
 
 **Model version management**: LLM providers update models without notice. A model update can change output quality, tone, format, and refusal behavior. The gateway pins to specific model versions (e.g., `gpt-4o-2024-08-06`), tests new versions against an evaluation suite, and promotes only after quality verification.
@@ -104,7 +104,7 @@ If the provider updates their model (or you update your prompts), output charact
 
 ### A/B Testing Model Versions
 
-Route a percentage of traffic to a new model version. Compare quality metrics, latency, cost, and user feedback between the control (current model) and the treatment (new model). Promote if quality is equivalent or better; rollback if it regresses. This is the same [[Deployment and Release Engineering|canary release]] pattern applied to models.
+Route a percentage of traffic to a new model version. Compare quality metrics, latency, cost, and user feedback between the control (current model) and the treatment (new model). Promote if quality is equivalent or better; rollback if it regresses. This is the same [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering|canary release]] pattern applied to models.
 
 ## Trade-Off Analysis
 
@@ -179,13 +179,13 @@ graph TD
 
 ## Connections
 
-- [[Inference Serving Architecture]] — The serving layer that the gateway routes to (for self-hosted models)
-- [[API Gateway Patterns]] — AI gateways are specialized API gateways with LLM-specific features
-- [[Cache Patterns and Strategies]] — Semantic caching extends traditional caching with embedding-based similarity
-- [[Semantic Caching and Prompt Caching]] — Deep dive on vector similarity cache architecture, similarity threshold tuning, provider-side prompt caching, and cache invalidation strategies
-- [[Rate Limiting and Throttling]] — Token-based rate limiting for LLM APIs
-- [[Cost Engineering and FinOps]] — LLM cost management is a FinOps concern
-- [[Observability and Alerting]] — LLM-specific monitoring (token usage, quality metrics, drift detection)
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture]] — The serving layer that the gateway routes to (for self-hosted models)
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — AI gateways are specialized API gateways with LLM-specific features
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies]] — Semantic caching extends traditional caching with embedding-based similarity
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Semantic_Caching_and_Prompt_Caching]] — Deep dive on vector similarity cache architecture, similarity threshold tuning, provider-side prompt caching, and cache invalidation strategies
+- [[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]] — Token-based rate limiting for LLM APIs
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — LLM cost management is a FinOps concern
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — LLM-specific monitoring (token usage, quality metrics, drift detection)
 
 ## Reflection Prompts
 

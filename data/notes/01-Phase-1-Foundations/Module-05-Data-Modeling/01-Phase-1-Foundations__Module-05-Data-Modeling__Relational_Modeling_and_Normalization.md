@@ -80,9 +80,9 @@ Store running aggregates alongside detailed data. Instead of computing `SUM(quan
 
 ### Read Replicas as Denormalization
 
-Use a read replica ([[Database Replication]]) with a different index set or even materialized views optimized for read patterns. The primary is normalized for write correctness; the replica is augmented for read performance.
+Use a read replica ([[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]]) with a different index set or even materialized views optimized for read patterns. The primary is normalized for write correctness; the replica is augmented for read performance.
 
-This separation is the operational version of CQRS (Command Query Responsibility Segregation, covered in [[Event Sourcing and CQRS]]).
+This separation is the operational version of CQRS (Command Query Responsibility Segregation, covered in [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]]).
 
 ### Embedding (Document-Style Denormalization in SQL)
 
@@ -178,12 +178,12 @@ graph TD
 
 ## Connections
 
-- [[Data Model Selection]] — This note assumes a relational model; that note covers when to choose document or graph instead
-- [[Schema Evolution]] — Denormalized schemas are harder to evolve because changes touch more tables
-- [[Zero-Downtime Schema Migrations]] — The practical mechanics of changing a normalized or denormalized schema in production
-- [[Indexing Deep Dive]] — Indexes are the other performance tool; often an index eliminates the need for denormalization
-- [[Database Replication]] — Read replicas can serve as a denormalization layer
-- [[Event Sourcing and CQRS]] — CQRS formalizes the normalized-write-model / denormalized-read-model split
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Data_Model_Selection]] — This note assumes a relational model; that note covers when to choose document or graph instead
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution]] — Denormalized schemas are harder to evolve because changes touch more tables
+- [[01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations]] — The practical mechanics of changing a normalized or denormalized schema in production
+- [[01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive]] — Indexes are the other performance tool; often an index eliminates the need for denormalization
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Read replicas can serve as a denormalization layer
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]] — CQRS formalizes the normalized-write-model / denormalized-read-model split
 
 ## Reflection Prompts
 

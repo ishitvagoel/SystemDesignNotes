@@ -78,7 +78,7 @@ Compensation is the hardest part of saga design. Not every action is easily reve
 **Non-reversible actions**: Send an email (can't unsend). Charge a credit card (must issue a refund, which is a different operation). Ship a physical product (must initiate a return process). Post to a public feed (must post a retraction).
 
 **Principles**:
-- Compensating transactions must be **idempotent** ([[Idempotency]]). The compensation might be retried if the first attempt fails or its acknowledgment is lost.
+- Compensating transactions must be **idempotent** ([[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]]). The compensation might be retried if the first attempt fails or its acknowledgment is lost.
 - Compensating transactions are **not** rollbacks. A rollback undoes a transaction as if it never happened. A compensation is a new transaction that semantically reverses the effect — the original and the compensation are both visible in the history.
 - Some steps are **non-compensatable**. For these, place them last in the saga (after all compensatable steps succeed), or use a "pivot transaction" — the point of no return after which the saga must complete forward, never backward.
 
@@ -154,11 +154,11 @@ graph TD
 
 ## Connections
 
-- [[Two-Phase Commit]] — Sagas are the alternative to 2PC; they trade atomicity for availability and decoupling
-- [[Outbox Pattern]] — Reliable event publishing for saga choreography
-- [[Idempotent Consumers]] — Every saga step and compensation must be idempotent
-- [[Idempotency]] — Foundation for safe retries in saga execution
-- [[Event Sourcing and CQRS]] — Event sourcing provides a natural saga audit trail
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]] — Sagas are the alternative to 2PC; they trade atomicity for availability and decoupling
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] — Reliable event publishing for saga choreography
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers]] — Every saga step and compensation must be idempotent
+- [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] — Foundation for safe retries in saga execution
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]] — Event sourcing provides a natural saga audit trail
 
 ## Reflection Prompts
 

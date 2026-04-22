@@ -91,7 +91,7 @@ Redlock is an algorithm proposed by Redis's creator (Salvatore Sanfilippo) for d
 
 **Use for correctness (strict lock)**: Mutual exclusion for data integrity. Use consensus-based locks (etcd, ZooKeeper) with fencing tokens. Accept the latency cost.
 
-**Don't use at all if possible**: Distributed locks add complexity and failure modes. Consider alternatives: idempotent operations ([[Idempotency]]) that are safe to execute multiple times, optimistic concurrency control (version numbers, CAS operations), or partitioning the work so no coordination is needed.
+**Don't use at all if possible**: Distributed locks add complexity and failure modes. Consider alternatives: idempotent operations ([[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]]) that are safe to execute multiple times, optimistic concurrency control (version numbers, CAS operations), or partitioning the work so no coordination is needed.
 
 ## Trade-Off Analysis
 
@@ -158,11 +158,11 @@ sequenceDiagram
 
 ## Connections
 
-- [[Consensus and Raft]] — Consensus-based lock services (etcd, ZooKeeper) derive their safety from consensus
-- [[Coordination Services]] — The practical systems that provide distributed lock primitives
-- [[Idempotency]] — If operations are idempotent, you may not need locks at all
-- [[Consistency Spectrum]] — Distributed locks require linearizability of the lock state
-- [[MVCC Deep Dive]] — Optimistic concurrency control (compare-and-swap) is an alternative to locks
+- [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft]] — Consensus-based lock services (etcd, ZooKeeper) derive their safety from consensus
+- [[02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services]] — The practical systems that provide distributed lock primitives
+- [[01-Phase-1-Foundations__Module-02-API-Design__Idempotency]] — If operations are idempotent, you may not need locks at all
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum]] — Distributed locks require linearizability of the lock state
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive]] — Optimistic concurrency control (compare-and-swap) is an alternative to locks
 
 ## Reflection Prompts
 

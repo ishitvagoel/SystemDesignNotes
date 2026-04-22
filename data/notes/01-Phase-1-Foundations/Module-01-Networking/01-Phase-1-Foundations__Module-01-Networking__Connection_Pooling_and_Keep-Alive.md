@@ -118,11 +118,11 @@ sequenceDiagram
 
 ## Connections
 
-- [[TCP Deep Dive]] — Connection pooling exists because TCP handshakes and slow start are expensive; understanding these costs explains why pooling matters
-- [[HTTP Evolution — 1.1 to 2 to 3]] — HTTP/2 multiplexing reduces the need for HTTP connection pools; HTTP/1.1 still needs them
-- [[Load Balancing Fundamentals]] — Persistent connections interact with load balancing: long-lived connections can cause uneven distribution
-- [[Circuit Breakers and Bulkheads]] — Circuit breakers protect connection pools from being drained by slow dependencies
-- [[Database Replication]] — Read replicas require separate pools or smart routing (read pool vs write pool)
+- [[01-Phase-1-Foundations__Module-01-Networking__TCP_Deep_Dive]] — Connection pooling exists because TCP handshakes and slow start are expensive; understanding these costs explains why pooling matters
+- [[01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3]] — HTTP/2 multiplexing reduces the need for HTTP connection pools; HTTP/1.1 still needs them
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — Persistent connections interact with load balancing: long-lived connections can cause uneven distribution
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads]] — Circuit breakers protect connection pools from being drained by slow dependencies
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Read replicas require separate pools or smart routing (read pool vs write pool)
 
 ## Reflection Prompts
 

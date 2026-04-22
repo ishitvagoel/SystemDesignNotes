@@ -10,15 +10,15 @@ This module covers the engineering trade-offs at the intersection: how to isolat
 
 ## Notes in This Module
 
-- [[Multi-Tenancy and Isolation]] — The isolation spectrum from shared-everything to dedicated-everything, noisy neighbor problems, tenant-aware routing, and data isolation strategies
-- [[Geo-Distribution and Data Sovereignty]] — Multi-region topologies (active-active, active-passive), geo-routing, GDPR/data residency requirements, and the latency-consistency trade-off across regions
-- [[Cost Engineering and FinOps]] — TCO thinking, reserved vs spot vs on-demand, right-sizing, sustainability, and building cost awareness into engineering culture
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]] — The isolation spectrum from shared-everything to dedicated-everything, noisy neighbor problems, tenant-aware routing, and data isolation strategies
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty]] — Multi-region topologies (active-active, active-passive), geo-routing, GDPR/data residency requirements, and the latency-consistency trade-off across regions
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — TCO thinking, reserved vs spot vs on-demand, right-sizing, sustainability, and building cost awareness into engineering culture
 
 ## Prerequisites
-- [[_Module 04 MOC]] — Database partitioning and replication (multi-tenancy and geo-distribution are partitioning problems)
-- [[_Module 08 MOC]] — Consistency models (geo-distributed systems face consistency vs latency trade-offs)
-- [[_Module 17 MOC]] — Observability (per-tenant and per-region monitoring is essential)
+- [[Module_Module_04_MOC]] — Database partitioning and replication (multi-tenancy and geo-distribution are partitioning problems)
+- [[Module_Module_08_MOC]] — Consistency models (geo-distributed systems face consistency vs latency trade-offs)
+- [[Module_Module_17_MOC]] — Observability (per-tenant and per-region monitoring is essential)
 
 ## Where This Leads
-- [[_Module 12 MOC]] — Cell-based architecture is the natural evolution of multi-tenancy at scale
+- [[Module_Module_12_MOC]] — Cell-based architecture is the natural evolution of multi-tenancy at scale
 - Every capstone — Cost analysis and multi-region considerations appear in all capstone designs

@@ -164,10 +164,10 @@ flowchart TD
 
 ## Connections
 
-- [[Deployment and Release Engineering]] — Feature flags are the "release" half of the deploy-vs-release separation
-- [[Circuit Breakers and Bulkheads]] — Kill-switch flags and circuit breakers serve the same purpose (fast path disablement) at different granularities
-- [[Observability and Alerting]] — Flag evaluation events feed into experiment analysis and error rate monitoring per variant
-- [[Distributed Tracing Deep Dive]] — Flag assignment should be captured as span attributes for debugging variant-specific latency
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering]] — Feature flags are the "release" half of the deploy-vs-release separation
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads]] — Kill-switch flags and circuit breakers serve the same purpose (fast path disablement) at different granularities
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Flag evaluation events feed into experiment analysis and error rate monitoring per variant
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Distributed_Tracing_Deep_Dive]] — Flag assignment should be captured as span attributes for debugging variant-specific latency
 
 ## Reflection Prompts
 

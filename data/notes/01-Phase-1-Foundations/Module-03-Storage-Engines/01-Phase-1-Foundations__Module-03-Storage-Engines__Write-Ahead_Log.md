@@ -56,7 +56,7 @@ A WAL record typically contains:
 - **After image** or **delta**: The change itself. Needed for REDO operations (replaying committed transactions during recovery).
 - **Record type**: INSERT, UPDATE, DELETE, COMMIT, ABORT, CHECKPOINT, etc.
 
-**Physical vs logical WAL records**: Physical records describe exact byte changes on specific pages ("set bytes 120–128 of page 42 to X"). Logical records describe higher-level operations ("insert row with key=123 and value=..."). Physical records are simpler to replay but larger and less portable. Postgres uses a mix (physical for data, logical for certain operations). Logical WAL records are the basis for logical replication (see [[Database Replication]]).
+**Physical vs logical WAL records**: Physical records describe exact byte changes on specific pages ("set bytes 120–128 of page 42 to X"). Logical records describe higher-level operations ("insert row with key=123 and value=..."). Physical records are simpler to replay but larger and less portable. Postgres uses a mix (physical for data, logical for certain operations). Logical WAL records are the basis for logical replication (see [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]]).
 
 ### WAL-Based Recovery (ARIES Algorithm)
 
@@ -74,13 +74,13 @@ After recovery, the database is in a consistent state: all committed transaction
 
 The WAL has become a versatile building block:
 
-**Replication**: Streaming the WAL to a replica is the simplest form of replication. The replica applies WAL records to maintain a copy of the primary. Postgres streaming replication works exactly this way. See [[Database Replication]].
+**Replication**: Streaming the WAL to a replica is the simplest form of replication. The replica applies WAL records to maintain a copy of the primary. Postgres streaming replication works exactly this way. See [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]].
 
 **Point-in-time recovery (PITR)**: By archiving WAL segments, you can restore a database to any point in time — restore a base backup, then replay WAL up to the desired timestamp. Essential for recovering from "oops, someone dropped the production table."
 
-**Change Data Capture (CDC)**: The WAL is a real-time log of every change. CDC systems (Debezium, for example) read the WAL and publish changes as events to Kafka or other streaming platforms. This enables event-driven architectures without modifying application code. See [[Change Data Capture]].
+**Change Data Capture (CDC)**: The WAL is a real-time log of every change. CDC systems (Debezium, for example) read the WAL and publish changes as events to Kafka or other streaming platforms. This enables event-driven architectures without modifying application code. See [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Change_Data_Capture]].
 
-**Event sourcing parallel**: The WAL is conceptually similar to an [[Event Sourcing and CQRS]] event log — an append-only record of all state changes. The key difference: WAL records are physical (page-level) while event sourcing events are domain-level. But the principle — "the log is the source of truth, the current state is a derived view" — is the same. Jay Kreps' "The Log" essay makes this connection explicitly.
+**Event sourcing parallel**: The WAL is conceptually similar to an [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]] event log — an append-only record of all state changes. The key difference: WAL records are physical (page-level) while event sourcing events are domain-level. But the principle — "the log is the source of truth, the current state is a derived view" — is the same. Jay Kreps' "The Log" essay makes this connection explicitly.
 
 ## Trade-Off Analysis
 
@@ -137,13 +137,13 @@ sequenceDiagram
 
 ## Connections
 
-- [[B-Tree vs LSM-Tree]] — Both use WAL for durability; LSM-trees' memtable is backed by WAL
-- [[Buffer Pool and Page Cache]] — WAL enables the buffer pool to hold dirty pages in memory safely
-- [[MVCC Deep Dive]] — Transaction isolation is tracked via WAL transaction IDs
-- [[Database Replication]] — WAL shipping is the foundation of physical replication
-- [[Event Sourcing and CQRS]] — Conceptual parallel: append-only log as the source of truth
-- [[Change Data Capture]] — CDC reads the WAL to emit change events without application changes
-- [[Resilience Patterns]] — WAL archival enables point-in-time recovery
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree]] — Both use WAL for durability; LSM-trees' memtable is backed by WAL
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]] — WAL enables the buffer pool to hold dirty pages in memory safely
+- [[01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive]] — Transaction isolation is tracked via WAL transaction IDs
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — WAL shipping is the foundation of physical replication
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS]] — Conceptual parallel: append-only log as the source of truth
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Change_Data_Capture]] — CDC reads the WAL to emit change events without application changes
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns]] — WAL archival enables point-in-time recovery
 
 ## Reflection Prompts
 

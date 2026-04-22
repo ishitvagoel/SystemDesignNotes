@@ -171,11 +171,11 @@ sequenceDiagram
 
 ## Connections
 
-- [[Observability and Alerting]] — The three-pillars overview; tracing is the third pillar alongside metrics and logs
-- [[SLOs SLIs and Error Budgets]] — SLI latency measurement is powered by trace p99 data
-- [[Incident Management]] — Traces provide the diagnostic path during incident response
-- [[gRPC Deep Dive]] — gRPC metadata propagation carries trace context across service calls
-- [[Deployment and Release Engineering]] — Canary analysis compares trace error rates between old and new versions
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — The three-pillars overview; tracing is the third pillar alongside metrics and logs
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — SLI latency measurement is powered by trace p99 data
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Incident_Management]] — Traces provide the diagnostic path during incident response
+- [[01-Phase-1-Foundations__Module-01-Networking__gRPC_Deep_Dive]] — gRPC metadata propagation carries trace context across service calls
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering]] — Canary analysis compares trace error rates between old and new versions
 
 ## Reflection Prompts
 

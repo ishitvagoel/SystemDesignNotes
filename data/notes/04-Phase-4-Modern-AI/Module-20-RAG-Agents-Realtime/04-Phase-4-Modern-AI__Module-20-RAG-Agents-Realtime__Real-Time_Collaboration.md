@@ -59,7 +59,7 @@ Each editing operation (insert character at position 5, delete character at posi
 
 ### CRDTs — the Figma approach
 
-[[CRDTs|Conflict-free Replicated Data Types]] are data structures designed so that concurrent operations always merge correctly, without a central sequencer. Each client maintains a local replica. Edits are applied locally (instant feedback) and broadcast to other clients. Merging is deterministic — any order of message delivery produces the same final state.
+[[02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs|Conflict-free Replicated Data Types]] are data structures designed so that concurrent operations always merge correctly, without a central sequencer. Each client maintains a local replica. Edits are applied locally (instant feedback) and broadcast to other clients. Merging is deterministic — any order of message delivery produces the same final state.
 
 **How it works for text editing**: Each character has a unique, immutable ID and a position defined relative to its neighbors (not absolute position). Inserting between characters A and B creates a new character with an ID that sorts between A and B. Deletions mark characters as tombstones rather than removing them. This means positions never shift — concurrent inserts at the same position both succeed and interleave deterministically.
 
@@ -90,7 +90,7 @@ Each editing operation (insert character at position 5, delete character at posi
 
 ## Real-Time Data Pipelines: CDC to Frontend
 
-[[Write-Ahead Log|Change Data Capture]] can power real-time UI updates without polling:
+[[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log|Change Data Capture]] can power real-time UI updates without polling:
 
 ```
 Database change → CDC (Debezium) → Kafka → WebSocket Service → Client UI
@@ -200,11 +200,11 @@ graph TD
 
 ## Connections
 
-- [[CRDTs]] — The data structures enabling conflict-free collaborative editing
-- [[Load Balancing Fundamentals]] — WebSocket connections are long-lived; sticky sessions or L7-aware balancing needed
-- [[TCP Deep Dive]] — WebSocket runs over TCP; connection keepalive and lifecycle matter
-- [[HTTP Evolution — 1.1 to 2 to 3]] — SSE benefits from HTTP/2 multiplexing; WebSocket negotiation starts as HTTP
-- [[Cell-Based Architecture]] — Durable Objects model maps naturally to cell-based isolation per room/document
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs]] — The data structures enabling conflict-free collaborative editing
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — WebSocket connections are long-lived; sticky sessions or L7-aware balancing needed
+- [[01-Phase-1-Foundations__Module-01-Networking__TCP_Deep_Dive]] — WebSocket runs over TCP; connection keepalive and lifecycle matter
+- [[01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3]] — SSE benefits from HTTP/2 multiplexing; WebSocket negotiation starts as HTTP
+- [[03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture]] — Durable Objects model maps naturally to cell-based isolation per room/document
 
 ## Reflection Prompts
 

@@ -148,9 +148,9 @@ graph LR
 
 ## Connections
 
-- [[Threat Modeling for Distributed Systems]] — Supply chain attacks are a top threat vector (Tampering in STRIDE)
-- [[Deployment and Release Engineering]] — Sigstore and SLSA integrate into CI/CD pipelines
-- [[Kubernetes and Platform Engineering]] — Admission controllers enforce signature verification at deploy time
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Threat_Modeling_for_Distributed_Systems]] — Supply chain attacks are a top threat vector (Tampering in STRIDE)
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering]] — Sigstore and SLSA integrate into CI/CD pipelines
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering]] — Admission controllers enforce signature verification at deploy time
 
 ## Reflection Prompts
 

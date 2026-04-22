@@ -30,7 +30,7 @@ Data is split into contiguous key ranges. Each partition owns a range: partition
 
 ### Hash Partitioning
 
-Apply a hash function to the partition key, then assign each hash range to a partition. `partition = hash(key) mod N` (simple modular hashing) or consistent hashing (see [[Consistent Hashing]]).
+Apply a hash function to the partition key, then assign each hash range to a partition. `partition = hash(key) mod N` (simple modular hashing) or consistent hashing (see [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]]).
 
 **Strengths**: Uniform distribution. Even if keys are sequential (auto-incrementing IDs, timestamps), the hash scatters them across partitions. Hotspots are rare unless the actual values are skewed (one user has 1 million records).
 
@@ -66,7 +66,7 @@ As data grows or nodes are added/removed, partitions must be redistributed. This
 
 **Dynamic splitting**: Start with one partition per range. When a partition exceeds a size threshold, split it in two. When a partition shrinks, merge adjacent ones. Used by HBase, Spanner. Adapts to data size naturally but splitting/merging adds operational complexity.
 
-**Consistent hashing with virtual nodes**: Each physical node owns many "virtual nodes" (positions on the hash ring). Adding a physical node means redistributing some virtual nodes from existing nodes. Only a small fraction of data moves. See [[Consistent Hashing]].
+**Consistent hashing with virtual nodes**: Each physical node owns many "virtual nodes" (positions on the hash ring). Adding a physical node means redistributing some virtual nodes from existing nodes. Only a small fraction of data moves. See [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]].
 
 **The rebalancing danger — data movement storms**: Moving partitions between nodes means transferring potentially gigabytes of data over the network. If too many partitions move simultaneously, the network is saturated, and the cluster's performance degrades during rebalancing. Mitigation: throttle rebalancing speed, rebalance during off-peak hours, use incremental rebalancing.
 
@@ -78,7 +78,7 @@ Partitioning creates boundaries that queries must respect. Operations that cross
 
 **Cross-partition joins**: Joining `orders` (partitioned by `user_id`) with `products` (partitioned by `product_id`) requires shuffling data between partitions. This is why joins are limited or absent in most sharded databases. Denormalization (storing a copy of product data in the orders table) avoids the join at the cost of storage and update complexity.
 
-**Cross-partition transactions**: A transaction spanning two partitions requires distributed coordination (2PC or similar). This is expensive and complex — see [[Two-Phase Commit]]. Many sharded databases don't support cross-partition transactions at all (Cassandra), or support them with significant performance overhead (CockroachDB, Spanner).
+**Cross-partition transactions**: A transaction spanning two partitions requires distributed coordination (2PC or similar). This is expensive and complex — see [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]]. Many sharded databases don't support cross-partition transactions at all (Cassandra), or support them with significant performance overhead (CockroachDB, Spanner).
 
 **Secondary indexes across partitions**: Two approaches:
 - **Local indexes** (document-partitioned): Each partition has its own index covering only its data. A query on the secondary index must scatter to all partitions. Used by MongoDB, Cassandra.
@@ -144,13 +144,13 @@ graph TD
 
 ## Connections
 
-- [[Database Replication]] — Replication and partitioning are orthogonal; each partition is typically replicated for fault tolerance
-- [[Consistent Hashing]] — The hash ring algorithm that minimizes data movement when nodes are added/removed
-- [[SQL vs NoSQL Decision Framework]] — Partitioning capabilities differ dramatically between databases
-- [[Indexing Deep Dive]] — Local vs global secondary indexes on partitioned data
-- [[Two-Phase Commit]] — Cross-partition transactions require distributed coordination
-- [[NewSQL and Globally Distributed Databases]] — Automatic range partitioning with Raft-based replication
-- [[ID Generation Strategies]] — ID design (sequential vs random, embedded partition key) directly affects partition balance
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Replication and partitioning are orthogonal; each partition is typically replicated for fault tolerance
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]] — The hash ring algorithm that minimizes data movement when nodes are added/removed
+- [[01-Phase-1-Foundations__Module-04-Databases__SQL_vs_NoSQL_Decision_Framework]] — Partitioning capabilities differ dramatically between databases
+- [[01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive]] — Local vs global secondary indexes on partitioned data
+- [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]] — Cross-partition transactions require distributed coordination
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — Automatic range partitioning with Raft-based replication
+- [[01-Phase-1-Foundations__Module-07-ID-Generation__ID_Generation_Strategies]] — ID design (sequential vs random, embedded partition key) directly affects partition balance
 
 ## Reflection Prompts
 

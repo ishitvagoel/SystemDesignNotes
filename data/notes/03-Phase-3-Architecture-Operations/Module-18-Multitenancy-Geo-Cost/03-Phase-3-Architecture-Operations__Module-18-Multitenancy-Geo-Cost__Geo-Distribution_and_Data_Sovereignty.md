@@ -26,7 +26,7 @@ Multiple regions accept writes simultaneously. Each region has a complete stack.
 
 **Traffic flow**: All operations → local region (low latency). Background replication synchronizes writes between regions.
 
-**The conflict problem**: Two regions simultaneously modifying the same record creates a write conflict (see [[Multi-Leader and Conflict Resolution]]). This adds complexity — you need conflict detection (version vectors) and resolution (LWW, application merge, CRDTs). This complexity is the primary cost of active-active.
+**The conflict problem**: Two regions simultaneously modifying the same record creates a write conflict (see [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Multi-Leader_and_Conflict_Resolution]]). This adds complexity — you need conflict detection (version vectors) and resolution (LWW, application merge, CRDTs). This complexity is the primary cost of active-active.
 
 **When to use**: Applications requiring low-latency writes in multiple regions AND where conflict resolution is manageable (shopping carts with LWW, collaborative editing with CRDTs, messaging where ordering per-conversation is sufficient).
 
@@ -53,7 +53,7 @@ Route users to specific regions based on their IP geolocation. "EU users → EU 
 
 **Implementation**: At the CDN or API gateway level. Cloudflare, CloudFront, and Route 53 all support geolocation-based routing. The routing decision is typically: determine user's country from IP → map country to region → route to that region's endpoint.
 
-### Anycast (covered in [[Anycast and GeoDNS]])
+### Anycast (covered in [[01-Phase-1-Foundations__Module-01-Networking__Anycast_and_GeoDNS]])
 
 All regions advertise the same IP. BGP routes to the nearest. Natural, automatic, but coarse-grained (BGP "nearest" is hop-count, not latency).
 
@@ -153,12 +153,12 @@ graph TD
 
 ## Connections
 
-- [[Multi-Tenancy and Isolation]] — Tenant location determines data residency requirements
-- [[Database Replication]] — Cross-region replication enables read scaling and disaster recovery
-- [[NewSQL and Globally Distributed Databases]] — CockroachDB and Spanner natively support geo-partitioned data placement
-- [[CDN Architecture]] — CDNs serve static content from the nearest edge, reducing latency globally
-- [[Multi-Leader and Conflict Resolution]] — Active-active writes create cross-region conflicts
-- [[Cost Engineering and FinOps]] — Multi-region infrastructure multiplies costs; cross-region egress is expensive
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation]] — Tenant location determines data residency requirements
+- [[01-Phase-1-Foundations__Module-04-Databases__Database_Replication]] — Cross-region replication enables read scaling and disaster recovery
+- [[01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases]] — CockroachDB and Spanner natively support geo-partitioned data placement
+- [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture]] — CDNs serve static content from the nearest edge, reducing latency globally
+- [[02-Phase-2-Distribution__Module-11-Replication-Conflicts__Multi-Leader_and_Conflict_Resolution]] — Active-active writes create cross-region conflicts
+- [[03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps]] — Multi-region infrastructure multiplies costs; cross-region egress is expensive
 
 ## Reflection Prompts
 

@@ -147,16 +147,16 @@ graph TD
 ## Connections
 
 **Prerequisites:**
-- [[Resilience Patterns]] — Circuit breakers and bulkheads are the two most important resilience patterns
-- [[Connection Pooling and Keep-Alive]] — Connection pools can be bulkheaded per dependency
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns]] — Circuit breakers and bulkheads are the two most important resilience patterns
+- [[01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive]] — Connection pools can be bulkheaded per dependency
 
 **Builds on:**
-- [[Rate Limiting and Throttling]] — Rate limiting protects a service from its callers; circuit breakers protect a service from its dependencies
-- [[Load Balancing Fundamentals]] — Load balancers can circuit-break unhealthy backends via health checks
+- [[01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling]] — Rate limiting protects a service from its callers; circuit breakers protect a service from its dependencies
+- [[01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals]] — Load balancers can circuit-break unhealthy backends via health checks
 
 **Where This Leads:**
-- [[Chaos Engineering and Testing]] — Chaos experiments test whether circuit breakers actually trip correctly
-- [[SLOs, SLIs, and Error Budgets]] — Circuit breaker state transitions are key SLI signals
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Chaos_Engineering_and_Testing]] — Chaos experiments test whether circuit breakers actually trip correctly
+- [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — Circuit breaker state transitions are key SLI signals
 
 ## Reflection Prompts
 

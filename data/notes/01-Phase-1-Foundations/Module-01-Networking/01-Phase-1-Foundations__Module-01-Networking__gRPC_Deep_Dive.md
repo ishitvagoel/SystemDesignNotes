@@ -185,11 +185,11 @@ sequenceDiagram
 
 ## Connections
 
-- [[gRPC vs REST vs GraphQL]] — Comparison of communication paradigms; when to choose gRPC
-- [[HTTP Evolution — 1.1 to 2 to 3]] — gRPC runs over HTTP/2; HTTP/2's multiplexing is fundamental to gRPC's streaming model
-- [[API Gateway Patterns]] — gRPC-Web proxies translate browser-accessible HTTP/1.1 to gRPC; gateways enforce deadlines
-- [[Distributed Tracing Deep Dive]] — gRPC metadata headers carry trace context (W3C traceparent); interceptors inject it
-- [[Zero-Trust Architecture]] — mTLS enforcement in gRPC uses interceptors; SPIFFE SVIDs authenticate service identity
+- [[01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL]] — Comparison of communication paradigms; when to choose gRPC
+- [[01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3]] — gRPC runs over HTTP/2; HTTP/2's multiplexing is fundamental to gRPC's streaming model
+- [[01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns]] — gRPC-Web proxies translate browser-accessible HTTP/1.1 to gRPC; gateways enforce deadlines
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Distributed_Tracing_Deep_Dive]] — gRPC metadata headers carry trace context (W3C traceparent); interceptors inject it
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Zero_Trust_Architecture]] — mTLS enforcement in gRPC uses interceptors; SPIFFE SVIDs authenticate service identity
 
 ## Reflection Prompts
 
