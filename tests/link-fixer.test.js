@@ -20,4 +20,18 @@ function testResolution() {
   }
 }
 
+function testPipedResolution() {
+  console.log("Running testPipedResolution...");
+  const content = "Check [[TCP Deep Dive|this note]].";
+  const expected = "Check [[01-Foundations__TCP|this note]].";
+  const result = fixLinks(content, mockIndex);
+  if (result === expected) {
+    console.log("✅ testPipedResolution passed");
+  } else {
+    console.error(`❌ testPipedResolution failed\nExpected: ${expected}\nGot:      ${result}`);
+    process.exit(1);
+  }
+}
+
 testResolution();
+testPipedResolution();

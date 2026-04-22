@@ -77,7 +77,7 @@ git commit -m "test: add failing test for link resolution"
 - Modify: `scripts/fix-links-lib.js`
 - Modify: `tests/link-fixer.test.js`
 
-- [ ] **Step 1: Implement the resolution logic**
+- [x] **Step 1: Implement the resolution logic**
 Update `scripts/fix-links-lib.js` to match titles to IDs.
 
 ```javascript
@@ -106,11 +106,11 @@ function fixLinks(content, vaultIndex) {
 module.exports = { fixLinks };
 ```
 
-- [ ] **Step 2: Run test to verify it passes**
+- [x] **Step 2: Run test to verify it passes**
 Run: `node tests/link-fixer.test.js`
 Expected: PASS
 
-- [ ] **Step 3: Add test case for piped links**
+- [x] **Step 3: Add test case for piped links**
 Update `tests/link-fixer.test.js` to handle `[[Title|Display]]`.
 
 ```javascript
@@ -130,11 +130,11 @@ function testPipedResolution() {
 testPipedResolution();
 ```
 
-- [ ] **Step 4: Run tests to verify all pass**
+- [x] **Step 4: Run tests to verify all pass**
 Run: `node tests/link-fixer.test.js`
 Expected: PASS for both tests
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 ```bash
 git add scripts/fix-links-lib.js tests/link-fixer.test.js
 git commit -m "feat: implement wiki-link title-to-id resolution"
