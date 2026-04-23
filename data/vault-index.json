@@ -780,6 +780,16 @@
     "module": 11
   },
   {
+    "id": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Modular_Monoliths",
+    "title": "Modular Monoliths",
+    "folder": "03-Phase-3-Architecture-Operations",
+    "subfolder": null,
+    "filename": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Modular_Monoliths.md",
+    "is_moc": false,
+    "phase": 3,
+    "module": 0
+  },
+  {
     "id": "03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture",
     "title": "Cell-Based Architecture",
     "folder": "03-Phase-3-Architecture-Operations",
@@ -1170,6 +1180,16 @@
     "module": 18
   },
   {
+    "id": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Small_Language_Models",
+    "title": "Small Language Models (SLMs)",
+    "folder": "04-Phase-4-Modern-AI",
+    "subfolder": null,
+    "filename": "04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Small_Language_Models.md",
+    "is_moc": false,
+    "phase": 4,
+    "module": 0
+  },
+  {
     "id": "04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__AI_Gateway_and_LLM_Operations",
     "title": "AI Gateway and LLM Operations",
     "folder": "04-Phase-4-Modern-AI",
@@ -1298,6 +1318,16 @@
     "is_moc": true,
     "phase": 4,
     "module": 21
+  },
+  {
+    "id": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering__Green_Software_Engineering",
+    "title": "Green Software Engineering",
+    "folder": "05-Phase-5-Modern-Operations",
+    "subfolder": null,
+    "filename": "05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering__Green_Software_Engineering.md",
+    "is_moc": false,
+    "phase": 5,
+    "module": 0
   },
   {
     "id": "Cloud_Cost_Optimization",
