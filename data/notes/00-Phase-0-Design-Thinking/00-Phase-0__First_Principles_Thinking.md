@@ -8,6 +8,16 @@ First principles thinking is the discipline of decomposing a problem to its fund
 
 ## Mental Model
 
+```mermaid
+graph LR
+    System((System Design))
+    
+    System --- CA[Consistency vs Availability]
+    System --- LT[Latency vs Throughput]
+    System --- SF[Simplicity vs Flexibility]
+    System --- CP[Cost vs Performance]
+```
+
 > **System design is applied physics — you are managing forces, not picking tools.**
 
 Every design decision is a choice of where to stand along one or more tension axes. The forces are always present. Ignoring them does not make them go away; it just means you discover them in production instead of at the whiteboard.

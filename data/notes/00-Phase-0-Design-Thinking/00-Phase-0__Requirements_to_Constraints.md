@@ -8,6 +8,17 @@ The discipline of requirements-to-constraints is the conversion process: taking 
 
 ## Mental Model
 
+```mermaid
+graph LR
+    Req[Vague Requirements] --> Filter{Constraint Filter}
+    Filter --> C1[Read/Write Ratio]
+    Filter --> C2[Data Volume]
+    Filter --> C3[Latency Budget]
+    C1 --> Arch[Concrete Architecture]
+    C2 --> Arch
+    C3 --> Arch
+```
+
 > **If the numbers don't matter, the decision doesn't depend on scale. If the numbers DO matter, you need them before choosing.**
 
 Constraints are not obstacles — they are gifts. Every constraint you identify eliminates options you don't have to evaluate. The more constrained the problem, the fewer viable solutions remain, and the more defensible your choice becomes.

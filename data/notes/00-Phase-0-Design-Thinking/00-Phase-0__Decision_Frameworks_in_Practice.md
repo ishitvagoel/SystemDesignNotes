@@ -10,6 +10,17 @@ The goal is not to hand you answers — it is to show the reasoning process so y
 
 ## The Decision Checklist (1-Page Reference)
 
+```mermaid
+graph TD
+    Req[1. Requirements] --> Con[2. Constraints]
+    Con --> Dom[3. Dominant Constraint]
+    Dom --> Opt[4. Enumerate Options]
+    Opt --> Trade[5. Trade-offs & Veto]
+    Trade --> Sec[6. Second-Order Effects]
+    Sec --> Door[7. 1-Way vs 2-Way Door]
+    Door --> Scale[8. 10x Scale Check]
+```
+
 For any architectural decision, work through these 8 questions in order. You do not need to spend equal time on each — but you should have an answer to each before committing.
 
 ```

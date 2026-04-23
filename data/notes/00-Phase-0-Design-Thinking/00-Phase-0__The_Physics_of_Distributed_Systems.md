@@ -2,6 +2,14 @@
 
 ## Why This Exists
 
+```mermaid
+graph LR
+    Physics[Physics Principles] --> DistSys[Distributed Systems]
+    Thermodynamics --> Entropy[State Degradation]
+    Thermodynamics --> Heat[Load Dissipation]
+    PhaseTransitions --> Thresholds[Non-linear Failure]
+```
+
 Distributed systems are hard to reason about because their failure modes are non-obvious and their behaviour is emergent. Physics provides a set of well-understood, deeply intuitive mental models for exactly this kind of situation — systems where local rules produce global behaviour, and where conservation laws constrain what is possible.
 
 The isomorphisms below are not metaphors to be discarded once you "really understand" the system. They are load-bearing analogies that continue to be predictively useful. When your queue is building up, "backpressure" is not just a pretty word — the fluid dynamics intuition tells you *where the obstruction is* and *what will happen if you don't address it*.

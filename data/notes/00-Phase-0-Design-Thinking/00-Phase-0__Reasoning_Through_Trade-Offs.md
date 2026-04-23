@@ -16,6 +16,15 @@ In physics, a system at equilibrium is in the lowest energy state accessible giv
 
 ## The 6-Step Decision Process
 
+```mermaid
+graph TD
+    S1[1. Enumerate Options] --> S2[2. Score vs Constraints]
+    S2 --> S3[3. Analyse 2nd-Order Effects]
+    S3 --> S4[4. 1-Way vs 2-Way Door]
+    S4 --> S5[5. Make the Decision]
+    S5 --> S6[6. Document the Why]
+```
+
 ### Step 1: Enumerate Options
 
 List 2–4 credible choices. Credible means "could plausibly work given the constraints." If an option has a clear fatal flaw against the dominant constraint, remove it immediately — do not carry obvious non-starters into the analysis.

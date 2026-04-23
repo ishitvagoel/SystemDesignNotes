@@ -6,6 +6,18 @@ The hardest bugs in system design are not technical — they are cognitive. Smar
 
 This note catalogues 8 recurring anti-patterns in design reasoning, each with a physics or context analogy to make it memorable, and a practical detection test.
 
+```mermaid
+graph TD
+    Start[Design Decision] --> CargoCult[Cargo Culting]
+    Start --> Resume[Resume-Driven]
+    Start --> Premature[Premature Optimisation]
+    Start --> Other[...]
+    
+    CargoCult -.->|Detection| C1[What exact problem did they solve?]
+    Resume -.->|Detection| C2[Which specific constraint does this solve?]
+    Premature -.->|Detection| C3[Do we actually have this scale today?]
+```
+
 ---
 
 ## 1. Resume-Driven Development
