@@ -73,3 +73,12 @@ Tracing a single action through the graph:
 6. **Distributed TX**: A `Saga` begins: Reserve Stock -> Charge Card -> Ship.
 7. **Storage**: Data hits the `WAL`, then the `B-Tree` pages in the `Buffer Pool`.
 8. **Observability**: `SLI` metrics update the `Error Budget` dashboard.
+
+## Why This Exists
+
+System design is inherently interconnected. Understanding how concepts like caching, consensus, and replication relate across different layers of an architecture is crucial. This overview visualizes those connections, preventing the isolation of concepts into silos.
+
+## Reflection Prompts
+
+1. Pick two unconnected modules (e.g., Search and Messaging). Can you think of a scenario where they would interact?
+2. How does the concept of "Idempotency" thread through API Design, Messaging, and Distributed Transactions?

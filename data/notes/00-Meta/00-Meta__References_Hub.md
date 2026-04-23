@@ -88,3 +88,12 @@ Container patterns, K8s, AI inference → M21, M19
 | Uber | Geospatial, Cadence/Temporal, Schemaless | M10 |
 | LinkedIn | Kafka, GraphQL federation | M1, M13 |
 | Jay Kreps | "The Log" essay, Kafka, event streaming | M3, M12, M13 |
+
+## Why This Exists
+
+The knowledge in this vault is curated from foundational papers, industry-standard books, and battle-tested engineering blogs. This hub exists to provide the primary sources, allowing you to trace concepts back to their origins and explore topics in greater depth.
+
+## Reflection Prompts
+
+1. Have you read any of the primary papers listed here (e.g., the Dynamo paper or the Raft paper)?
+2. Why is it important to cross-reference vendor blogs with independent academic papers?

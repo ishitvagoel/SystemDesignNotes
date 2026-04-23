@@ -66,3 +66,13 @@ Some modules build on concepts from earlier modules. Use this dependency map to 
 - Describe the trade-offs from memory
 - Identify which pattern to use in a new scenario you haven't seen before
 - Explain why an alternative pattern would be worse for that specific scenario
+
+
+## Why This Exists
+
+A structured study plan transforms a disjointed collection of notes into a cohesive learning journey. This note exists to provide a recommended path, highlighting dependencies and ensuring prerequisite knowledge is acquired before tackling advanced topics.
+
+## Reflection Prompts
+
+1. Are you following the recommended 22-week study plan, or charting your own course? Why?
+2. Which module do you feel is your strongest area? Which is your weakest?

@@ -127,3 +127,13 @@ graph TD
 - **Kafka (KRaft Migration)**: Kafka's multi-year effort to remove ZooKeeper (KRaft) showed that even the most successful distributed systems eventually buckle under the operational complexity of "coordination sprawl." Modern systems strive for self-contained consensus.
 
 ## Connections
+
+
+## Why This Exists
+
+Martin Kleppmann's DDIA is the foundational text for distributed systems, but the landscape evolves rapidly. This note bridges the gap between the book's publication (2017) and current (2026) industry practices, particularly regarding AI, Edge computing, and modern consensus shifts.
+
+## Reflection Prompts
+
+1. How has the transition from ZooKeeper to KRaft in Kafka simplified operations?
+2. What distributed systems challenges have been introduced by the rise of Large Language Models (LLMs)?

@@ -65,3 +65,13 @@ pie title Knowledge Distribution
 
 ---
 *Last content update: April 2026. Vault covers developments through early 2026 including Kafka 4.0/KRaft, reasoning models, EAGLE-3 speculative decoding, GraphRAG, ColBERT late interaction, MCP/A2A protocols, passkeys/FIDO2, post-quantum cryptography standards, WASI 0.2 Component Model, zero-trust architecture (SPIFFE/SPIRE, OPA), eBPF kernel observability, and agent reliability patterns.*
+
+
+## Why This Exists
+
+Self-assessment is a critical component of learning. This checklist provides a concrete, measurable way to track your progress and honestly evaluate your understanding of the material against the "Mastery Bar" heuristics.
+
+## Reflection Prompts
+
+1. Which module's mastery checklist items make you the most nervous?
+2. Try the "Explain it to a Junior" test for one topic right now. Were you able to do it without jargon?

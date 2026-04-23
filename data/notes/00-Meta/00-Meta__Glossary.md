@@ -107,3 +107,12 @@ Core terms used across this vault. For deeper treatment, follow the backlink to 
 **WAL** — Write-Ahead Log. Durability mechanism: log changes before modifying data. See [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]].
 
 **2PC** — Two-Phase Commit. Protocol for atomic commit across multiple participants. See [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit]].
+
+## Why This Exists
+
+This glossary serves as the canonical reference for the vocabulary used throughout the System Design Vault. It ensures consistent terminology and provides quick definitions for core concepts without needing to dive deep into a specific module.
+
+## Reflection Prompts
+
+1. Which of these terms were you unfamiliar with before starting?
+2. Can you define "Idempotency" and "Linearizability" in your own words?
