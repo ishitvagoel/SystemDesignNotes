@@ -245,3 +245,13 @@ graph TD
 - Joseph Gentle, "xi-editor: CRDT for text editing" — Rope-based CRDT design
 - Figma Engineering, "How Figma's Multiplayer Technology Works" (2019)
 - Alex Xu, *System Design Interview* Vol 2 — Collaborative editing design
+
+
+## Why This Exists
+
+Building a collaborative editor like Google Docs is the quintessential test of dealing with distributed concurrency. It requires a deep understanding of conflict resolution (CRDTs vs OT), WebSockets for real-time communication, and managing state across multiple active clients.
+
+## Reflection Prompts
+
+1. Why might you choose a CRDT over Operational Transformation for this specific use case?
+2. How does your design handle a client who goes offline for 30 minutes, continues editing, and then reconnects?

@@ -216,3 +216,13 @@ graph TD
 - Alex Xu, *System Design Interview* Vol 1 — Chapter 11: Design a News Feed System
 - Facebook Engineering, "Scaling the News Feed" (TAO, Memcache)
 - Twitter Engineering Blog, "How We Index Tweets" and "Timelines at Scale"
+
+
+## Why This Exists
+
+The News Feed is a foundational system design problem. It tests your ability to handle massive fan-out (both push and pull models), caching strategies, and optimizing read-heavy feeds while maintaining acceptable write latency for celebrity accounts.
+
+## Reflection Prompts
+
+1. For an account with 50 million followers, how do you handle the fan-out-on-write without overwhelming the system?
+2. What metric would tell you that your feed caching strategy is ineffective?

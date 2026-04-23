@@ -232,3 +232,13 @@ sequenceDiagram
 - Chris Richardson, *Microservices Patterns* — Chapters 4-5 (Sagas, CQRS)
 - Stripe Engineering Blog — Idempotency, distributed transactions
 - Alex Xu, *System Design Interview* Vol 2 — Payment system design
+
+
+## Why This Exists
+
+Payment systems have zero tolerance for lost data or double-charging. This capstone demands rigorous application of idempotency, distributed transactions (Sagas), and strong durability guarantees above all other constraints.
+
+## Reflection Prompts
+
+1. Explain how you ensure idempotency if a client retries a payment request after experiencing a network timeout.
+2. If the third-party payment gateway goes down, how does your system gracefully degrade or queue pending transactions?

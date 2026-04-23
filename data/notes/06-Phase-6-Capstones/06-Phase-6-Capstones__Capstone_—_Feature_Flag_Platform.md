@@ -208,3 +208,13 @@ The Knight Capital disaster ($440M in 45 minutes) was partly caused by an old co
 - [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams]] — Evaluation event pipeline and config change propagation via Kafka
 - [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Evaluation events feed experiment analysis; error rates per variant are a key SLI
 - [[03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets]] — 99.99% availability SLO for the flag evaluation path; propagation latency as an SLI
+
+
+## Why This Exists
+
+A feature flag platform at scale requires serving rule evaluations with extreme low latency (<1ms) across thousands of applications. This capstone tests your ability to design highly available, read-heavy, geo-distributed systems with minimal staleness.
+
+## Reflection Prompts
+
+1. How do you propagate a feature flag toggle from the management dashboard to 10,000 application servers in under 5 seconds?
+2. What is the impact on your target applications if the feature flag evaluation service goes down completely?

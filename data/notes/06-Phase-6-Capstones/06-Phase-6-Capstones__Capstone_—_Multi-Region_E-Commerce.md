@@ -163,3 +163,13 @@ graph TD
 - Werner Vogels, "Life is Not Fair: The Economics of Geo-Distribution" (re:Invent 2023)
 - DoorDash Engineering, "Building a Multi-Region Architecture" (2022)
 - Alex Xu, *System Design Interview* Vol 2 — Multi-region design patterns
+
+
+## Why This Exists
+
+E-commerce is a classic system design domain, but scaling it across multiple regions introduces significant challenges around data sovereignty, cross-region replication latency, and consistency vs availability trade-offs.
+
+## Reflection Prompts
+
+1. Which parts of the e-commerce system strictly require strong consistency, and which can tolerate eventual consistency?
+2. How do you handle a user whose profile resides in the EU region, but they are currently shopping while traveling in the US?

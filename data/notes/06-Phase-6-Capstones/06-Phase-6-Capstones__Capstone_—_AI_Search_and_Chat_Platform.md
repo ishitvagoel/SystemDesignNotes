@@ -197,3 +197,13 @@ graph TD
 - Lewis et al., "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks" (2020)
 - Alex Xu, *Generative AI System Design Interview* (2024)
 - Perplexity AI Engineering Blog — Architecture of AI search
+
+
+## Why This Exists
+
+This capstone tests your ability to design a modern, AI-integrated architecture. It forces you to combine traditional search paradigms with LLM inference, embedding generation, and vector retrieval while managing the high latency and cost associated with AI workloads.
+
+## Reflection Prompts
+
+1. How would your design change if the LLM provider's API latency spiked to 10 seconds? What fallback mechanisms would you employ?
+2. In your proposed architecture, where is the semantic cache located, and what is its eviction policy?

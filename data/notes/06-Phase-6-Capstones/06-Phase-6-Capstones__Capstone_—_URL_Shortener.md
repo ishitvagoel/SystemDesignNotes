@@ -306,3 +306,13 @@ graph TD
 
 - Alex Xu, *System Design Interview* Vol 1 — Chapter 8: Design a URL Shortener
 - Real-world reference: Bitly Engineering Blog
+
+
+## Why This Exists
+
+The URL Shortener is often the first system design interview question candidates face. It is deceptively simple, serving as a playground to discuss scale estimations, ID generation strategies, and basic redirection and caching mechanics.
+
+## Reflection Prompts
+
+1. Walk through the math: How much storage will you need to store 100 million new URLs per month for 5 years?
+2. What are the trade-offs between using an auto-incrementing database ID vs a distributed ID generator (like Snowflake) for your short codes?
