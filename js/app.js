@@ -97,6 +97,96 @@ function saveRatings() { localStorage.setItem('sdn-ratings', JSON.stringify(stud
 // Suppress pushState when we're already handling a popstate navigation
 let _historyNavigating = false;
 
+// ── MERMAID RENDERING (Global) ──
+function renderMermaidElement(el) {
+  let rawText = el.dataset.rawText || el.textContent.trim();
+  const id = `mermaid-diag-${Math.random().toString(36).substring(2, 11)}`;
+
+  // 1. Fix common syntax errors in memory
+  if (rawText.startsWith('graph ') || rawText.startsWith('flowchart ')) {
+    rawText = rawText.replace(/ --\|/g, ' -->|');
+    rawText = rawText.replace(/ --x /g, ' -->x ');
+    rawText = rawText.replace(/ --o /g, ' -->o ');
+  }
+
+  // 2. Replace CSS variables with actual values
+  const isLight = document.body.classList.contains('light-mode');
+  const themeVars = {
+    '--bg': isLight ? '#fdfdfc' : '#0d0f0e',
+    '--bg2': isLight ? '#f5f5f3' : '#121512',
+    '--bg3': isLight ? '#efefec' : '#171a16',
+    '--surface': isLight ? '#ffffff' : '#1c201b',
+    '--surface2': isLight ? '#f0f0ed' : '#222622',
+    '--border': isLight ? '#e0e0db' : '#2a2e29',
+    '--border2': isLight ? '#d4d4cd' : '#333733',
+    '--text': isLight ? '#1a1c1a' : '#d4d8d3',
+    '--text2': isLight ? '#4a4d4a' : '#8a9088',
+    '--text3': isLight ? '#7a7d7a' : '#5a5f58',
+    '--accent': isLight ? '#2d8a4e' : '#6bde8c',
+    '--accent2': isLight ? '#1e6334' : '#4ab86a'
+  };
+
+  rawText = rawText.replace(/var\(\s*(--[a-zA-Z0-9-]+)\s*\)/g, (match, varName) => {
+    return themeVars[varName] || match;
+  });
+
+  try {
+    mermaid.render(id, rawText).then(({svg}) => {
+      el.innerHTML = svg;
+      // Add copy button to wrapper
+      const wrapper = el.closest('.mermaid-wrapper');
+      if (wrapper && !wrapper.querySelector('.mermaid-copy-btn')) {
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'mermaid-copy-btn';
+        copyBtn.title = 'Copy SVG';
+        copyBtn.textContent = '\u{1F4CB}';
+        copyBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const svgEl = wrapper.querySelector('svg');
+          if (svgEl) {
+            navigator.clipboard.writeText(svgEl.outerHTML).then(() => {
+              copyBtn.classList.add('copied');
+              copyBtn.textContent = '\u2713';
+              setTimeout(() => { copyBtn.textContent = '\u{1F4CB}'; copyBtn.classList.remove('copied'); }, 1500);
+            });
+          }
+        });
+        wrapper.appendChild(copyBtn);
+        // Check for horizontal overflow
+        requestAnimationFrame(() => {
+          if (wrapper.scrollWidth > wrapper.clientWidth) {
+            wrapper.classList.add('has-overflow');
+          }
+        });
+      }
+    }).catch(err => {
+      console.error('Mermaid render error:', err);
+      el.innerHTML = buildMermaidError(err.message, rawText);
+    });
+  } catch(e) {
+    console.error('Mermaid sync error:', e);
+  }
+}
+
+function buildMermaidError(message, rawText) {
+  let hint = 'Check your diagram syntax for errors.';
+  const msgLower = (message || '').toLowerCase();
+  if (msgLower.includes('parse') || msgLower.includes('syntax') || msgLower.includes('expect')) {
+    hint = 'Check for missing arrows (use <code>--&gt;</code> not <code>--</code>), unclosed brackets, or unescaped special characters.';
+  } else if (msgLower.includes('duplicate')) {
+    hint = 'Two nodes have the same ID &mdash; rename one to make them unique.';
+  } else if (msgLower.includes('unknown diagram') || msgLower.includes('not a valid')) {
+    hint = 'The diagram type is not recognized. Supported types: flowchart, sequence, class, state, er, gantt, pie, journey, etc.';
+  }
+  const escaped = rawText.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return `<div class="mermaid-error">
+    <div class="mermaid-error-hint">${hint}</div>
+    <button class="mermaid-error-toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">Show raw source \u25BC</button>
+    <div class="mermaid-error-raw">${escaped}\n\n${(message || '').replace(/</g,'&lt;')}</div>
+    <a class="mermaid-error-link" href="https://mermaid.js.org/intro/" target="_blank" rel="noopener">Mermaid syntax reference \u2197</a>
+  </div>`;
+}
+
 function resolveNoteFromSlug(slug) {
   if (!slug) return null;
   const raw = decodeURIComponent(slug).trim();
@@ -575,6 +665,8 @@ function updateSidebarActive() {
 }
 
 // ── RENDER NOTE ──
+let mermaidObserver = null;
+
 function renderNote(id) {
   const note = FILTERED_INDEX.find(n => n.id === id);
   const content = NOTE_CACHE[id] || '';
@@ -584,6 +676,22 @@ function renderNote(id) {
   document.getElementById('note-screen').style.display = 'flex';
   if (outlineActive) {
     document.getElementById('outline-screen').style.display = 'flex';
+  }
+
+  if (!mermaidObserver) {
+    const contentPane = document.getElementById('content-pane');
+    mermaidObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target.querySelector('.mermaid');
+          if (el && !el.dataset.rendered) {
+            el.dataset.rendered = 'true';
+            renderMermaidElement(el);
+          }
+          mermaidObserver.unobserve(entry.target);
+        }
+      });
+    }, { root: contentPane, rootMargin: '200px' });
   }
 
   // breadcrumb
@@ -786,120 +894,33 @@ function renderNote(id) {
     tocContainer.style.display = 'none';
   }
 
-  // Render mermaid diagrams (lazy via IntersectionObserver)
-  const contentPane = document.getElementById('content-pane');
-  const mermaidObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target.querySelector('.mermaid');
-        if (el && !el.dataset.rendered) {
-          el.dataset.rendered = 'true';
-          renderMermaidElement(el);
-        }
-        mermaidObserver.unobserve(entry.target);
-      }
-    });
-  }, { root: contentPane, rootMargin: '200px' });
-
+  // Observe all mermaid wrappers in the new content
   body.querySelectorAll('.mermaid-wrapper').forEach(wrapper => {
     const el = wrapper.querySelector('.mermaid');
-    if (el) {
+    if (el && !el.dataset.rendered) {
       // Show placeholder text while waiting
-      const raw = el.textContent.trim();
+      const raw = el.dataset.rawText || el.textContent.trim();
       el.dataset.rawText = raw;
       el.innerHTML = '<div class="mermaid-placeholder">Loading diagram...</div>';
       mermaidObserver.observe(wrapper);
     }
   });
 
-  function renderMermaidElement(el) {
-    let rawText = el.dataset.rawText || el.textContent.trim();
-    const id = `mermaid-diag-${Math.random().toString(36).substring(2, 11)}`;
-
-    // 1. Fix common syntax errors in memory
-    if (rawText.startsWith('graph ') || rawText.startsWith('flowchart ')) {
-      rawText = rawText.replace(/ --\|/g, ' -->|');
-      rawText = rawText.replace(/ --x /g, ' -->x ');
-      rawText = rawText.replace(/ --o /g, ' -->o ');
-    }
-
-    // 2. Replace CSS variables with actual values
-    const isLight = document.body.classList.contains('light-mode');
-    const themeVars = {
-      '--bg': isLight ? '#fdfdfc' : '#0d0f0e',
-      '--bg2': isLight ? '#f5f5f3' : '#121512',
-      '--bg3': isLight ? '#efefec' : '#171a16',
-      '--surface': isLight ? '#ffffff' : '#1c201b',
-      '--surface2': isLight ? '#f0f0ed' : '#222622',
-      '--border': isLight ? '#e0e0db' : '#2a2e29',
-      '--border2': isLight ? '#d4d4cd' : '#333733',
-      '--text': isLight ? '#1a1c1a' : '#d4d8d3',
-      '--text2': isLight ? '#4a4d4a' : '#8a9088',
-      '--text3': isLight ? '#7a7d7a' : '#5a5f58',
-      '--accent': isLight ? '#2d8a4e' : '#6bde8c',
-      '--accent2': isLight ? '#1e6334' : '#4ab86a'
-    };
-
-    rawText = rawText.replace(/var\(\s*(--[a-zA-Z0-9-]+)\s*\)/g, (match, varName) => {
-      return themeVars[varName] || match;
-    });
-
-    try {
-      mermaid.render(id, rawText).then(({svg}) => {
-        el.innerHTML = svg;
-        // Add copy button to wrapper
-        const wrapper = el.closest('.mermaid-wrapper');
-        if (wrapper && !wrapper.querySelector('.mermaid-copy-btn')) {
-          const copyBtn = document.createElement('button');
-          copyBtn.className = 'mermaid-copy-btn';
-          copyBtn.title = 'Copy SVG';
-          copyBtn.textContent = '\u{1F4CB}';
-          copyBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const svgEl = wrapper.querySelector('svg');
-            if (svgEl) {
-              navigator.clipboard.writeText(svgEl.outerHTML).then(() => {
-                copyBtn.classList.add('copied');
-                copyBtn.textContent = '\u2713';
-                setTimeout(() => { copyBtn.textContent = '\u{1F4CB}'; copyBtn.classList.remove('copied'); }, 1500);
-              });
-            }
-          });
-          wrapper.appendChild(copyBtn);
-          // Check for horizontal overflow
-          requestAnimationFrame(() => {
-            if (wrapper.scrollWidth > wrapper.clientWidth) {
-              wrapper.classList.add('has-overflow');
-            }
-          });
-        }
-      }).catch(err => {
-        console.error('Mermaid render error:', err);
-        el.innerHTML = buildMermaidError(err.message, rawText);
+  // Handle wikilinks — make them clickable
+  body.querySelectorAll('a').forEach(a => {
+    const href = a.getAttribute('href');
+    if (!href || href.startsWith('http')) return;
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const title = decodeURIComponent(href).replace(/\.md$/, '').replace(/^.*\//, '');
+      const target = FILTERED_INDEX.find(n => {
+        const normalize = s => s.replace(/[,;:—–]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+        return n.title === title || n.filename.replace('.md','') === title
+          || normalize(n.title) === normalize(title);
       });
-    } catch(e) {
-      console.error('Mermaid sync error:', e);
-    }
-  }
-
-  function buildMermaidError(message, rawText) {
-    let hint = 'Check your diagram syntax for errors.';
-    const msgLower = (message || '').toLowerCase();
-    if (msgLower.includes('parse') || msgLower.includes('syntax') || msgLower.includes('expect')) {
-      hint = 'Check for missing arrows (use <code>--&gt;</code> not <code>--</code>), unclosed brackets, or unescaped special characters.';
-    } else if (msgLower.includes('duplicate')) {
-      hint = 'Two nodes have the same ID &mdash; rename one to make them unique.';
-    } else if (msgLower.includes('unknown diagram') || msgLower.includes('not a valid')) {
-      hint = 'The diagram type is not recognized. Supported types: flowchart, sequence, class, state, er, gantt, pie, journey, etc.';
-    }
-    const escaped = rawText.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    return `<div class="mermaid-error">
-      <div class="mermaid-error-hint">${hint}</div>
-      <button class="mermaid-error-toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">Show raw source \u25BC</button>
-      <div class="mermaid-error-raw">${escaped}\n\n${(message || '').replace(/</g,'&lt;')}</div>
-      <a class="mermaid-error-link" href="https://mermaid.js.org/intro/" target="_blank" rel="noopener">Mermaid syntax reference \u2197</a>
-    </div>`;
-  }
+      if (target) openNote(target.id);
+    });
+  });
 
   // Global click delegation for mermaid modal (more reliable than per-element)
   if (!body.dataset.mermaidListener) {
@@ -926,22 +947,6 @@ function renderNote(id) {
   pane.onscroll = () => {
     if (openTabs[id]) openTabs[id].scrollTop = pane.scrollTop;
   };
-
-  // Handle wikilinks — make them clickable
-  body.querySelectorAll('a').forEach(a => {
-    const href = a.getAttribute('href');
-    if (!href || href.startsWith('http')) return;
-    a.addEventListener('click', e => {
-      e.preventDefault();
-      const title = decodeURIComponent(href).replace(/\.md$/, '').replace(/^.*\//, '');
-      const target = FILTERED_INDEX.find(n => {
-        const normalize = s => s.replace(/[,;:—–]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
-        return n.title === title || n.filename.replace('.md','') === title
-          || normalize(n.title) === normalize(title);
-      });
-      if (target) openNote(target.id);
-    });
-  });
 }
 
 function showWelcome() {
@@ -2106,7 +2111,6 @@ document.getElementById('btn-export').addEventListener('click', async function()
 });
 
 // ── MERMAID MODAL WITH ZOOM/PAN/EXPORT ──
-const mermaidModal = document.getElementById('mermaid-modal');
 let mmZoom = 1, mmPanX = 0, mmPanY = 0;
 let mmDragging = false, mmDragStart = { x: 0, y: 0 }, mmPanStart = { x: 0, y: 0 };
 
@@ -2221,24 +2225,28 @@ mmSvgContainer.addEventListener('touchend', () => {
 });
 
 function closeMermaidModal() {
-  mermaidModal.style.display = 'none';
+  const modal = document.getElementById('mermaid-modal');
+  if (modal) modal.style.display = 'none';
 }
 
-mermaidModal.addEventListener('click', (e) => {
-  const isCloseButton = e.target.id === 'mermaid-modal-close' || e.target.closest('#mermaid-modal-close');
-  const isBackground = e.target === mermaidModal;
-  if (isCloseButton || isBackground) {
-    closeMermaidModal();
-  }
-});
+const modalEl = document.getElementById('mermaid-modal');
+if (modalEl) {
+  modalEl.addEventListener('click', (e) => {
+    const isCloseButton = e.target.id === 'mermaid-modal-close' || e.target.closest('#mermaid-modal-close');
+    const isBackground = e.target === modalEl;
+    if (isCloseButton || isBackground) {
+      closeMermaidModal();
+    }
+  });
+}
 
 window.addEventListener('keydown', (e) => {
-  if (mermaidModal.style.display === 'flex') {
-    if (e.key === 'Escape') { closeMermaidModal(); return; }
-    if (e.key === '+' || e.key === '=') { mmSetZoom(mmZoom * 1.25); return; }
-    if (e.key === '-') { mmSetZoom(mmZoom / 1.25); return; }
-    if (e.key === '0') { mmZoom = 1; mmPanX = 0; mmPanY = 0; applyMmTransform(); return; }
-  }
+  const modal = document.getElementById('mermaid-modal');
+  if (!modal || modal.style.display !== 'flex') return;
+  if (e.key === 'Escape') { closeMermaidModal(); return; }
+  if (e.key === '+' || e.key === '=') { mmSetZoom(mmZoom * 1.25); return; }
+  if (e.key === '-') { mmSetZoom(mmZoom / 1.25); return; }
+  if (e.key === '0') { mmZoom = 1; mmPanX = 0; mmPanY = 0; applyMmTransform(); return; }
 });
 
 // ── STUDY MODE KEYBOARD NAVIGATION ──
