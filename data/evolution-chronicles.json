@@ -10,11 +10,30 @@
           "scale": "10K Users",
           "narrative": "A simple CRUD app using Ruby on Rails. Bottleneck: Single DB lock contention.",
           "nodes": [
-            { "id": "n1", "type": "app", "label": "Rails Monolith", "x": 400, "y": 200, "capacity": 1000, "load": 0 },
-            { "id": "n2", "type": "db", "label": "MySQL", "x": 400, "y": 400, "capacity": 500, "load": 0 }
+            {
+              "id": "n1",
+              "type": "app",
+              "label": "Rails Monolith",
+              "x": 400,
+              "y": 200,
+              "capacity": 1000,
+              "load": 0
+            },
+            {
+              "id": "n2",
+              "type": "db",
+              "label": "MySQL",
+              "x": 400,
+              "y": 400,
+              "capacity": 500,
+              "load": 0
+            }
           ],
           "links": [
-            { "source": "n1", "target": "n2" }
+            {
+              "source": "n1",
+              "target": "n2"
+            }
           ]
         },
         {
@@ -23,13 +42,43 @@
           "scale": "1M Users",
           "narrative": "Introduced Kestrel MQ and migrated core services to Scala/Finagle to handle asynchronous fan-out.",
           "nodes": [
-            { "id": "n1", "type": "app", "label": "Scala Service", "x": 300, "y": 200, "capacity": 5000, "load": 0 },
-            { "id": "n3", "type": "queue", "label": "Kestrel MQ", "x": 500, "y": 200, "capacity": 10000, "load": 0 },
-            { "id": "n2", "type": "db", "label": "MySQL Cluster", "x": 400, "y": 400, "capacity": 5000, "load": 0 }
+            {
+              "id": "n1",
+              "type": "app",
+              "label": "Scala Service",
+              "x": 300,
+              "y": 200,
+              "capacity": 5000,
+              "load": 0
+            },
+            {
+              "id": "n3",
+              "type": "queue",
+              "label": "Kestrel MQ",
+              "x": 500,
+              "y": 200,
+              "capacity": 10000,
+              "load": 0
+            },
+            {
+              "id": "n2",
+              "type": "db",
+              "label": "MySQL Cluster",
+              "x": 400,
+              "y": 400,
+              "capacity": 5000,
+              "load": 0
+            }
           ],
           "links": [
-            { "source": "n1", "target": "n3" },
-            { "source": "n3", "target": "n2" }
+            {
+              "source": "n1",
+              "target": "n3"
+            },
+            {
+              "source": "n3",
+              "target": "n2"
+            }
           ]
         }
       ]
@@ -44,11 +93,30 @@
           "scale": "1M Subscribers",
           "narrative": "Relied on vertical scaling in a single data center. A major hardware failure in 2008 prompted the cloud migration.",
           "nodes": [
-            { "id": "app", "type": "app", "label": "Monolithic App", "x": 400, "y": 200, "capacity": 5000, "load": 0 },
-            { "id": "db", "type": "db", "label": "Oracle DB", "x": 400, "y": 400, "capacity": 3000, "load": 0 }
+            {
+              "id": "app",
+              "type": "app",
+              "label": "Monolithic App",
+              "x": 400,
+              "y": 200,
+              "capacity": 5000,
+              "load": 0
+            },
+            {
+              "id": "db",
+              "type": "db",
+              "label": "Oracle DB",
+              "x": 400,
+              "y": 400,
+              "capacity": 3000,
+              "load": 0
+            }
           ],
           "links": [
-            { "source": "app", "target": "db" }
+            {
+              "source": "app",
+              "target": "db"
+            }
           ]
         },
         {
@@ -57,18 +125,73 @@
           "scale": "25M Subscribers",
           "narrative": "Migrated to AWS and decomposed into microservices. Introduced Eureka for discovery and Hystrix for resilience.",
           "nodes": [
-            { "id": "lb", "type": "lb", "label": "ELB", "x": 400, "y": 100, "capacity": 50000, "load": 0 },
-            { "id": "as", "type": "app", "label": "API Gateway", "x": 400, "y": 200, "capacity": 20000, "load": 0 },
-            { "id": "s1", "type": "app", "label": "Movie Service", "x": 250, "y": 350, "capacity": 10000, "load": 0 },
-            { "id": "s2", "type": "app", "label": "User Service", "x": 550, "y": 350, "capacity": 10000, "load": 0 },
-            { "id": "c1", "type": "db", "label": "Cassandra", "x": 400, "y": 500, "capacity": 30000, "load": 0 }
+            {
+              "id": "lb",
+              "type": "lb",
+              "label": "ELB",
+              "x": 400,
+              "y": 100,
+              "capacity": 50000,
+              "load": 0
+            },
+            {
+              "id": "as",
+              "type": "app",
+              "label": "API Gateway",
+              "x": 400,
+              "y": 200,
+              "capacity": 20000,
+              "load": 0
+            },
+            {
+              "id": "s1",
+              "type": "app",
+              "label": "Movie Service",
+              "x": 250,
+              "y": 350,
+              "capacity": 10000,
+              "load": 0
+            },
+            {
+              "id": "s2",
+              "type": "app",
+              "label": "User Service",
+              "x": 550,
+              "y": 350,
+              "capacity": 10000,
+              "load": 0
+            },
+            {
+              "id": "c1",
+              "type": "db",
+              "label": "Cassandra",
+              "x": 400,
+              "y": 500,
+              "capacity": 30000,
+              "load": 0
+            }
           ],
           "links": [
-            { "source": "lb", "target": "as" },
-            { "source": "as", "target": "s1" },
-            { "source": "as", "target": "s2" },
-            { "source": "s1", "target": "c1" },
-            { "source": "s2", "target": "c1" }
+            {
+              "source": "lb",
+              "target": "as"
+            },
+            {
+              "source": "as",
+              "target": "s1"
+            },
+            {
+              "source": "as",
+              "target": "s2"
+            },
+            {
+              "source": "s1",
+              "target": "c1"
+            },
+            {
+              "source": "s2",
+              "target": "c1"
+            }
           ]
         }
       ]
@@ -83,11 +206,30 @@
           "scale": "1K Bookings",
           "narrative": "A standard Rails app on Heroku. Easy to deploy, but difficult to scale as traffic surged.",
           "nodes": [
-            { "id": "rails", "type": "app", "label": "Rails App", "x": 400, "y": 200, "capacity": 2000, "load": 0 },
-            { "id": "pg", "type": "db", "label": "Postgres", "x": 400, "y": 400, "capacity": 1000, "load": 0 }
+            {
+              "id": "rails",
+              "type": "app",
+              "label": "Rails App",
+              "x": 400,
+              "y": 200,
+              "capacity": 2000,
+              "load": 0
+            },
+            {
+              "id": "pg",
+              "type": "db",
+              "label": "Postgres",
+              "x": 400,
+              "y": 400,
+              "capacity": 1000,
+              "load": 0
+            }
           ],
           "links": [
-            { "source": "rails", "target": "pg" }
+            {
+              "source": "rails",
+              "target": "pg"
+            }
           ]
         },
         {
@@ -96,15 +238,254 @@
           "scale": "100K Bookings",
           "narrative": "Introduced Elasticsearch to handle complex search queries and Redis for session caching.",
           "nodes": [
-            { "id": "rails", "type": "app", "label": "Rails App", "x": 400, "y": 200, "capacity": 10000, "load": 0 },
-            { "id": "redis", "type": "cache", "label": "Redis", "x": 250, "y": 300, "capacity": 20000, "load": 0 },
-            { "id": "es", "type": "db", "label": "Elasticsearch", "x": 550, "y": 300, "capacity": 15000, "load": 0 },
-            { "id": "pg", "type": "db", "label": "Postgres", "x": 400, "y": 450, "capacity": 5000, "load": 0 }
+            {
+              "id": "rails",
+              "type": "app",
+              "label": "Rails App",
+              "x": 400,
+              "y": 200,
+              "capacity": 10000,
+              "load": 0
+            },
+            {
+              "id": "redis",
+              "type": "cache",
+              "label": "Redis",
+              "x": 250,
+              "y": 300,
+              "capacity": 20000,
+              "load": 0
+            },
+            {
+              "id": "es",
+              "type": "db",
+              "label": "Elasticsearch",
+              "x": 550,
+              "y": 300,
+              "capacity": 15000,
+              "load": 0
+            },
+            {
+              "id": "pg",
+              "type": "db",
+              "label": "Postgres",
+              "x": 400,
+              "y": 450,
+              "capacity": 5000,
+              "load": 0
+            }
           ],
           "links": [
-            { "source": "rails", "target": "redis" },
-            { "source": "rails", "target": "es" },
-            { "source": "rails", "target": "pg" }
+            {
+              "source": "rails",
+              "target": "redis"
+            },
+            {
+              "source": "rails",
+              "target": "es"
+            },
+            {
+              "source": "rails",
+              "target": "pg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "discord",
+      "name": "Discord: The Database Evolution",
+      "snapshots": [
+        {
+          "id": "disc-1",
+          "label": "2015: The MongoDB Era",
+          "scale": "100M Messages",
+          "narrative": "Started with a single MongoDB replica set for messages. Quick to build, but soon hit limits with RAM/disk thrashing as message history grew.",
+          "nodes": [
+            {
+              "id": "api",
+              "type": "app",
+              "label": "Python API",
+              "x": 400,
+              "y": 200,
+              "capacity": 5000,
+              "load": 0
+            },
+            {
+              "id": "mongo",
+              "type": "db",
+              "label": "MongoDB Replica Set",
+              "x": 400,
+              "y": 400,
+              "capacity": 3000,
+              "load": 0
+            }
+          ],
+          "links": [
+            {
+              "source": "api",
+              "target": "mongo"
+            }
+          ]
+        },
+        {
+          "id": "disc-2",
+          "label": "2017: Cassandra Migration",
+          "scale": "Billion+ Messages",
+          "narrative": "Migrated to Cassandra for horizontal scalability. Gained massive write throughput but struggled with garbage collection (GC) pauses and tombstones.",
+          "nodes": [
+            {
+              "id": "api",
+              "type": "app",
+              "label": "Elixir API",
+              "x": 400,
+              "y": 200,
+              "capacity": 20000,
+              "load": 0
+            },
+            {
+              "id": "cass",
+              "type": "db",
+              "label": "Cassandra Cluster",
+              "x": 400,
+              "y": 400,
+              "capacity": 15000,
+              "load": 0
+            }
+          ],
+          "links": [
+            {
+              "source": "api",
+              "target": "cass"
+            }
+          ]
+        },
+        {
+          "id": "disc-3",
+          "label": "2022: ScyllaDB & Rust",
+          "scale": "Trillions of Messages",
+          "narrative": "Replaced Cassandra with ScyllaDB (C++) to solve GC issues. Rewrote critical data services from Go/Elixir to Rust for predictable, low-latency performance.",
+          "nodes": [
+            {
+              "id": "api",
+              "type": "app",
+              "label": "Rust Services",
+              "x": 300,
+              "y": 200,
+              "capacity": 50000,
+              "load": 0
+            },
+            {
+              "id": "gateway",
+              "type": "app",
+              "label": "Elixir Gateway",
+              "x": 500,
+              "y": 200,
+              "capacity": 50000,
+              "load": 0
+            },
+            {
+              "id": "scylla",
+              "type": "db",
+              "label": "ScyllaDB Cluster",
+              "x": 400,
+              "y": 400,
+              "capacity": 40000,
+              "load": 0
+            }
+          ],
+          "links": [
+            {
+              "source": "gateway",
+              "target": "api"
+            },
+            {
+              "source": "api",
+              "target": "scylla"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "whatsapp",
+      "name": "WhatsApp: Massive Vertical Scaling",
+      "snapshots": [
+        {
+          "id": "wa-1",
+          "label": "2010: Erlang & Ejabberd",
+          "scale": "10M Users",
+          "narrative": "Used Ejabberd (XMPP) on FreeBSD. The Erlang VM's lightweight processes allowed millions of concurrent WebSockets per physical server.",
+          "nodes": [
+            {
+              "id": "users",
+              "type": "app",
+              "label": "Mobile Clients",
+              "x": 400,
+              "y": 100,
+              "capacity": 10000,
+              "load": 0
+            },
+            {
+              "id": "erlang",
+              "type": "app",
+              "label": "Erlang Server",
+              "x": 400,
+              "y": 300,
+              "capacity": 50000,
+              "load": 0
+            }
+          ],
+          "links": [
+            {
+              "source": "users",
+              "target": "erlang"
+            }
+          ]
+        },
+        {
+          "id": "wa-2",
+          "label": "2014: Bare Metal Optimization",
+          "scale": "500M Users",
+          "narrative": "Pushed vertical scaling to the absolute limit. Custom OS tuning and custom memory allocators handled 2M+ connections on a single machine.",
+          "nodes": [
+            {
+              "id": "users",
+              "type": "app",
+              "label": "Mobile Clients",
+              "x": 400,
+              "y": 100,
+              "capacity": 100000,
+              "load": 0
+            },
+            {
+              "id": "erlang",
+              "type": "app",
+              "label": "Erlang Server (Tuned)",
+              "x": 400,
+              "y": 300,
+              "capacity": 100000,
+              "load": 0
+            },
+            {
+              "id": "mnesia",
+              "type": "db",
+              "label": "Mnesia DB",
+              "x": 400,
+              "y": 500,
+              "capacity": 20000,
+              "load": 0
+            }
+          ],
+          "links": [
+            {
+              "source": "users",
+              "target": "erlang"
+            },
+            {
+              "source": "erlang",
+              "target": "mnesia"
+            }
           ]
         }
       ]
