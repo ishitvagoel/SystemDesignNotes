@@ -1006,24 +1006,6 @@ pre:hover .copy-code-btn { opacity: 1; }
   min-height: 120px;
 }
 
-/* modal container */
-#mermaid-modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(13, 15, 14, 0.92);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 2000;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  user-select: none;
-}
-
 /* modal toolbar */
 #mermaid-modal-toolbar {
   position: absolute;
@@ -1072,6 +1054,11 @@ pre:hover .copy-code-btn { opacity: 1; }
 /* modal SVG container for zoom/pan */
 #mermaid-modal-svg {
   transform-origin: center center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 #mermaid-modal-svg svg {
   width: auto !important;
