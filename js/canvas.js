@@ -134,6 +134,11 @@ class CanvasEngine {
     document.getElementById('hud-scale').textContent = snapshot.scale;
     document.getElementById('hud-text').textContent = snapshot.narrative;
     
+    const eraLabel = document.getElementById('slider-label');
+    if (eraLabel) {
+      eraLabel.textContent = `Era ${this.currentSnapshotIndex + 1}`;
+    }
+    
     const sliderLabel = document.getElementById('canvas-scale-label');
     if (sliderLabel) {
       sliderLabel.textContent = snapshot.scale;
@@ -449,6 +454,7 @@ class CanvasEngine {
       .attr('transform', d => `translate(${d.x},${d.y})`);
     
     nodeMerge.select('.node-label').text(d => d.label);
+    nodeMerge.select('.node-icon').text(d => NODE_ICONS[d.type] || '🔲');
     nodeMerge.select('rect')
       .attr('fill', d => {
         if (d.load > d.capacity) return 'rgba(222,107,138,0.3)'; // Red

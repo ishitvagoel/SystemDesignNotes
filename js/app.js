@@ -1232,17 +1232,6 @@ async function init() {
   buildSidebar();
   renderWelcomeStats();
 
-  // Evolution Slider
-  const evolutionSlider = document.getElementById('evolution-slider');
-  if (evolutionSlider) {
-    evolutionSlider.addEventListener('input', (e) => {
-      if (typeof playgroundA !== 'undefined' && playgroundA && playgroundA.currentChronicle) {
-        playgroundA.setSnapshot(parseInt(e.target.value));
-        const label = document.getElementById('slider-label');
-        if (label) label.textContent = `Era ${parseInt(e.target.value) + 1}`;
-      }
-    });
-  }
   // Background loads for heavy features
   fetch('data/search-index.json').then(r => r.json()).then(data => SEARCH_INDEX = data).catch(console.error);
   fetch('data/graph-edges.json').then(r => r.json()).then(data => GRAPH_EDGES = data).catch(console.error);
@@ -1293,6 +1282,16 @@ async function init() {
   // Register service worker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  // Evolution Slider
+  const evolutionSlider = document.getElementById('evolution-slider');
+  if (evolutionSlider) {
+    evolutionSlider.addEventListener('input', (e) => {
+      if (typeof playgroundA !== 'undefined' && playgroundA && playgroundA.currentChronicle) {
+        playgroundA.setSnapshot(parseInt(e.target.value));
+      }
+    });
   }
 }
 init();
