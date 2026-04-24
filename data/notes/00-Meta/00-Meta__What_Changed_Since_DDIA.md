@@ -128,6 +128,16 @@ graph TD
 
 ## Connections
 
+- [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft]] — Raft's rise from "important alternative" to default consensus choice
+- [[02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services]] — ZooKeeper to etcd and KRaft is a coordination-story update
+- [[03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams]] — Kafka's KRaft shift materially updates the original DDIA-era mental model
+- [[03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval]] — Vector retrieval and hybrid search are major post-DDIA additions
+- [[04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture]] — LLM serving adds a new class of distributed systems concerns not covered in DDIA
+- [[04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__RAG_Architecture]] — RAG is one of the clearest examples of what modern systems added beyond DDIA's scope
+- [[04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing]] — Edge compute meaningfully changes placement and latency assumptions
+- [[03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting]] — Modern observability has become a first-class design axis since DDIA
+- [[03-Phase-3-Architecture-Operations__Module-15-Security__Zero_Trust_Architecture]] — Zero trust and software supply chain controls are now core architecture topics
+- [[00-Meta__What_Changed_Since_DDIA]] — Treat this note as a meta-index into newer notes where DDIA's assumptions no longer hold verbatim
 
 ## Why This Exists
 
