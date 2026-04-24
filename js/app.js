@@ -66,6 +66,49 @@ renderer.code = function(code, language) {
 };
 marked.setOptions({ renderer });
 
+function escapeHtml(text) {
+  return String(text).replace(/[&<>"']/g, (ch) => {
+    switch (ch) {
+      case '&': return '&amp;';
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '"': return '&quot;';
+      case '\'': return '&#39;';
+      default: return ch;
+    }
+  });
+}
+
+function sanitizeHtml(html) {
+  if (window.DOMPurify) {
+    return window.DOMPurify.sanitize(html);
+  }
+  return html;
+}
+
+function renderMarkdown(markdown) {
+  return sanitizeHtml(marked.parse(markdown));
+}
+
+function highlightEscapedText(text, terms) {
+  let output = escapeHtml(text);
+  for (const term of terms) {
+    const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    output = output.replace(new RegExp(escapedTerm, 'gi'), (match) => `<mark>${match}</mark>`);
+  }
+  return output;
+}
+
+function renderStudyActions() {
+  const actions = document.getElementById('study-actions');
+  actions.innerHTML = `
+    <button id="study-reveal" class="study-btn study-btn-primary">Reveal Answer</button>
+    <button id="study-next" class="study-btn study-btn-primary" style="display:none;">Next Prompt</button>
+    <button id="study-open" class="study-btn study-btn-secondary" style="display:none;">Open Note</button>
+    <div class="study-keyboard-hints"><kbd>Space</kbd> reveal / easy &middot; <kbd>1</kbd> again &middot; <kbd>2</kbd> hard &middot; <kbd>3</kbd> easy &middot; <kbd>&larr;</kbd> back &middot; <kbd>Enter</kbd> open note</div>
+  `;
+}
+
 // ── DATA (populated by init()) ──
 let VAULT_INDEX = [];
 let SEARCH_INDEX = {};
@@ -172,7 +215,7 @@ function buildMermaidError(message, rawText) {
   let hint = 'Check your diagram syntax for errors.';
   const msgLower = (message || '').toLowerCase();
   if (msgLower.includes('parse') || msgLower.includes('syntax') || msgLower.includes('expect')) {
-    hint = 'Check for missing arrows (use <code>--&gt;</code> not <code>--</code>), unclosed brackets, or unescaped special characters.';
+    hint = 'Check for missing arrows (use --&gt; not --), unclosed brackets, or unescaped special characters.';
   } else if (msgLower.includes('duplicate')) {
     hint = 'Two nodes have the same ID &mdash; rename one to make them unique.';
   } else if (msgLower.includes('unknown diagram') || msgLower.includes('not a valid')) {
@@ -181,8 +224,8 @@ function buildMermaidError(message, rawText) {
   const escaped = rawText.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   return `<div class="mermaid-error">
     <div class="mermaid-error-hint">${hint}</div>
-    <button class="mermaid-error-toggle" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'">Show raw source \u25BC</button>
-    <div class="mermaid-error-raw">${escaped}\n\n${(message || '').replace(/</g,'&lt;')}</div>
+    <button class="mermaid-error-toggle" type="button">Show raw source \u25BC</button>
+    <div class="mermaid-error-raw" style="display:none;">${escaped}\n\n${escapeHtml(message || '')}</div>
     <a class="mermaid-error-link" href="https://mermaid.js.org/intro/" target="_blank" rel="noopener">Mermaid syntax reference \u2197</a>
   </div>`;
 }
@@ -636,7 +679,7 @@ async function exportTabsToPdf() {
     if (!md) continue;
     const section = document.createElement('div');
     if (i > 0) section.style.pageBreakBefore = 'always';
-    section.innerHTML = `<h1 style="color:#2d8a4e; margin-bottom:8px;">${note ? note.title : id}</h1>` + marked.parse(md);
+    section.innerHTML = `<h1 style="color:#2d8a4e; margin-bottom:8px;">${escapeHtml(note ? note.title : id)}</h1>` + renderMarkdown(md);
     // Remove mermaid code blocks (they won't render in pdf context)
     section.querySelectorAll('pre.mermaid, code.language-mermaid').forEach(el => {
       const placeholder = document.createElement('div');
@@ -812,7 +855,7 @@ function renderNote(id) {
 
   // body
   const body = document.getElementById('note-body');
-  body.innerHTML = marked.parse(content);
+  body.innerHTML = renderMarkdown(content);
 
   // Study Mode: blur revealable sections
   if (studyModeActive) {
@@ -922,6 +965,16 @@ function renderNote(id) {
     });
   });
 
+  body.querySelectorAll('.mermaid-error-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const raw = btn.nextElementSibling;
+      if (!raw) return;
+      const open = raw.style.display === 'block';
+      raw.style.display = open ? 'none' : 'block';
+      btn.textContent = open ? 'Show raw source \u25BC' : 'Hide raw source \u25B2';
+    });
+  });
+
   // Global click delegation for mermaid modal (more reliable than per-element)
   if (!body.dataset.mermaidListener) {
     body.addEventListener('click', (e) => {
@@ -1010,7 +1063,7 @@ function doSearch(query) {
     if (snippetIdx !== -1) {
       const start = Math.max(0, snippetIdx - 80);
       const end = Math.min(contentLower.length, snippetIdx + 120);
-      snippet = contentLower.slice(start, end);
+      snippet = escapeHtml(contentLower.slice(start, end));
       if (start > 0) snippet = '…' + snippet;
       if (end < contentLower.length) snippet += '…';
       // highlight all terms
@@ -1025,7 +1078,7 @@ function doSearch(query) {
   results.sort((a, b) => b.score - a.score);
 
   const container = document.getElementById('search-results');
-  container.innerHTML = `<div class="search-header">${results.length} result${results.length !== 1 ? 's' : ''} for "<strong style="color:var(--text)">${query}</strong>"</div>`;
+  container.innerHTML = `<div class="search-header">${results.length} result${results.length !== 1 ? 's' : ''} for "<strong style="color:var(--text)">${escapeHtml(query)}</strong>"</div>`;
 
   if (results.length === 0) {
     container.innerHTML += '<div class="empty-state">No notes found.</div>';
@@ -1037,8 +1090,8 @@ function doSearch(query) {
     item.className = 'search-result-item animate-in';
     const cfg = PHASE_CONFIG[r.note.folder] || {};
     item.innerHTML = `
-      <div class="search-result-title">${terms.reduce((t, term) => t.replace(new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), m => `<mark>${m}</mark>`), r.note.title)}</div>
-      <div class="search-result-path">${cfg.label || r.note.folder}${r.note.subfolder ? ' › ' + r.note.subfolder.replace(/^Module-\d+-/, '').replace(/-/g, ' ') : ''}</div>
+      <div class="search-result-title">${highlightEscapedText(r.note.title, terms)}</div>
+      <div class="search-result-path">${escapeHtml((cfg.label || r.note.folder) + (r.note.subfolder ? ' › ' + r.note.subfolder.replace(/^Module-\d+-/, '').replace(/-/g, ' ') : ''))}</div>
       ${r.snippet ? `<div class="search-result-snippet">${r.snippet}</div>` : ''}
     `;
     item.addEventListener('click', () => {
@@ -1286,7 +1339,7 @@ async function init() {
 
   // Register service worker
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register(new URL('sw.js', window.location.href).pathname).catch(() => {});
   }
 
   // Evolution Slider
@@ -1835,7 +1888,13 @@ function renderStudyCard() {
     document.getElementById('study-note-label').textContent = '';
     document.getElementById('study-prompt').innerHTML = '';
     document.getElementById('study-answer').style.display = 'none';
-    document.getElementById('study-actions').innerHTML = `<button class="study-btn study-btn-primary" onclick="restartStudy()">Study Again</button>`;
+    const actions = document.getElementById('study-actions');
+    actions.innerHTML = '';
+    const restartBtn = document.createElement('button');
+    restartBtn.className = 'study-btn study-btn-primary';
+    restartBtn.textContent = 'Study Again';
+    restartBtn.addEventListener('click', restartStudy);
+    actions.appendChild(restartBtn);
     document.getElementById('study-prompt').innerHTML = `
       <div class="study-complete">
         <div class="study-complete-icon">✓</div>
@@ -1858,7 +1917,7 @@ function renderStudyCard() {
 
   document.getElementById('study-answer').style.display = 'none';
   if (prompt.mentalSnippet) {
-    document.getElementById('study-answer').innerHTML = `<div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Mental Model from this note</div>` + marked.parse(prompt.mentalSnippet);
+    document.getElementById('study-answer').innerHTML = `<div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Mental Model from this note</div>` + renderMarkdown(prompt.mentalSnippet);
   } else {
     document.getElementById('study-answer').innerHTML = '<em style="color:var(--text3)">Open the note for full context.</em>';
   }
@@ -1872,13 +1931,7 @@ function restartStudy() {
   studyPrompts = getFilteredPrompts(studyPhaseFilter);
   studyIndex = 0;
   renderStudyCard();
-  // Restore buttons
-  document.getElementById('study-actions').innerHTML = `
-    <button id="study-reveal" class="study-btn study-btn-primary">Reveal Answer</button>
-    <button id="study-next" class="study-btn study-btn-primary" style="display:none;">Next Prompt</button>
-    <button id="study-open" class="study-btn study-btn-secondary" style="display:none;">Open Note</button>
-    <div class="study-keyboard-hints"><kbd>Space</kbd> reveal / easy &middot; <kbd>1</kbd> again &middot; <kbd>2</kbd> hard &middot; <kbd>3</kbd> easy &middot; <kbd>&larr;</kbd> back &middot; <kbd>Enter</kbd> open note</div>
-  `;
+  renderStudyActions();
   bindStudyButtons();
 }
 
@@ -1910,13 +1963,7 @@ function showRatingButtons() {
     }
     studyIndex++;
     renderStudyCard();
-    // Restore buttons after re-render
-    document.getElementById('study-actions').innerHTML = `
-      <button id="study-reveal" class="study-btn study-btn-primary">Reveal Answer</button>
-      <button id="study-next" class="study-btn study-btn-primary" style="display:none;">Next Prompt</button>
-      <button id="study-open" class="study-btn study-btn-secondary" style="display:none;">Open Note</button>
-      <div class="study-keyboard-hints"><kbd>Space</kbd> reveal / easy &middot; <kbd>1</kbd> again &middot; <kbd>2</kbd> hard &middot; <kbd>3</kbd> easy &middot; <kbd>&larr;</kbd> back &middot; <kbd>Enter</kbd> open note</div>
-    `;
+    renderStudyActions();
     bindStudyButtons();
   }
 

@@ -25,13 +25,13 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          git diff --quiet data/ && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+          git diff --quiet data/ sitemap.xml && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
 
       - name: Commit and push updated indexes
         if: steps.changes.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/vault-index.json data/search-index.json data/graph-edges.json data/study-prompts.json
+          git add data/vault-index.json data/search-index.json data/graph-edges.json data/study-prompts.json sitemap.xml
           git commit -m "chore: auto-rebuild data indexes [skip ci]"
           git push

@@ -2,16 +2,24 @@
 const fs = require('fs');
 const path = require('path');
 const { JSDOM } = require('jsdom');
+const { VirtualConsole } = require('jsdom');
 
 async function runHarness() {
   console.log('Running Canvas Test Harness in JSDOM (Injection mode)...');
   
   const html = fs.readFileSync(path.resolve(__dirname, 'canvas_test_harness.html'), 'utf8');
+  const virtualConsole = new VirtualConsole();
+  const uncaughtErrors = [];
+  virtualConsole.sendTo(console);
+  virtualConsole.on('jsdomError', (error) => {
+    uncaughtErrors.push(error);
+  });
   const dom = new JSDOM(html, {
     url: "http://localhost/tests/canvas_test_harness.html",
     runScripts: "dangerously",
     resources: "usable",
-    pretendToBeVisual: true
+    pretendToBeVisual: true,
+    virtualConsole
   });
 
   // Mock SVG getBoundingClientRect
@@ -21,6 +29,24 @@ async function runHarness() {
   dom.window.Element.prototype.getBoundingClientRect = function() {
     return { width: 800, height: 600, top: 0, left: 0, bottom: 600, right: 800 };
   };
+  Object.defineProperty(dom.window.SVGElement.prototype, 'transform', {
+    configurable: true,
+    get() {
+      return {
+        baseVal: {
+          consolidate() {
+            return null;
+          }
+        }
+      };
+    }
+  });
+  dom.window.addEventListener('error', (event) => {
+    uncaughtErrors.push(event.error || new Error(event.message));
+  });
+  dom.window.addEventListener('unhandledrejection', (event) => {
+    uncaughtErrors.push(event.reason instanceof Error ? event.reason : new Error(String(event.reason)));
+  });
 
   // Mock fetch
   dom.window.fetch = (url) => {
@@ -40,7 +66,7 @@ async function runHarness() {
   };
 
   // Inject D3
-  const d3Code = fs.readFileSync(path.resolve(__dirname, '../node_modules/d3/dist/d3.min.js'), 'utf8');
+  const d3Code = fs.readFileSync(path.resolve(__dirname, '../vendor/d3.min.js'), 'utf8');
   const d3Script = dom.window.document.createElement('script');
   d3Script.textContent = d3Code;
   dom.window.document.head.appendChild(d3Script);
@@ -61,6 +87,11 @@ async function runHarness() {
     process.exit(1);
   }
 
+  if (uncaughtErrors.length > 0) {
+    uncaughtErrors.forEach((error) => console.error('❌ Uncaught runtime error:', error));
+    process.exit(1);
+  }
+
   let failed = 0;
   results.forEach(r => {
     if (r.success) {
@@ -73,9 +104,11 @@ async function runHarness() {
 
   if (failed > 0) {
     console.error(`\nFound ${failed} failures.`);
+    dom.window.close();
     process.exit(1);
   } else {
     console.log('\nAll tests passed!');
+    dom.window.close();
   }
 }
 

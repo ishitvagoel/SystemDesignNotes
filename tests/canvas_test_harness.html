@@ -125,6 +125,8 @@
       } catch (e) {
         console.error('Test execution failed:', e);
         window.testResults = [{ success: false, message: 'Test crashed: ' + e.message + '\n' + e.stack }];
+      } finally {
+        window.__testsFinished = true;
       }
     }
 

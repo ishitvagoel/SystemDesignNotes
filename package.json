@@ -1,0 +1,17 @@
+{
+  "name": "system-design-vault",
+  "private": true,
+  "version": "2.1.0",
+  "description": "Interactive system design study environment",
+  "scripts": {
+    "test": "bash run_tests.sh",
+    "rebuild:data": "node scripts/rebuild-data.js",
+    "fix:links": "node scripts/fix-links.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "jsdom": "26.1.0"
+  }
+}

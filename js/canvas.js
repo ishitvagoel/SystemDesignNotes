@@ -3,6 +3,19 @@
  * Manages D3-based drag-and-drop architecture canvas.
  */
 
+function escapeCanvasHtml(text) {
+  return String(text).replace(/[&<>"']/g, (ch) => {
+    switch (ch) {
+      case '&': return '&amp;';
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '"': return '&quot;';
+      case '\'': return '&#39;';
+      default: return ch;
+    }
+  });
+}
+
 class CanvasEngine {
   constructor(svgId, stateKey = 'system-design-canvas-state', isPrimary = false) {
     this.svgId = svgId;
@@ -170,12 +183,12 @@ class CanvasEngine {
     modal.style.cssText = 'max-width:480px; background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:32px; box-shadow:0 20px 50px rgba(0,0,0,0.5);';
     modal.innerHTML = `
       <div style="font-family:\'IBM Plex Mono\',monospace; font-size:11px; color:var(--yellow); text-transform:uppercase; margin-bottom:12px;">Architectural Decision Needed</div>
-      <h2 style="font-size:18px; color:var(--text); line-height:1.4; margin-bottom:24px;">${scenario.text}</h2>
+      <h2 style="font-size:18px; color:var(--text); line-height:1.4; margin-bottom:24px;">${escapeCanvasHtml(scenario.text)}</h2>
       <div style="display:flex; flex-direction:column; gap:12px;">
         ${scenario.choices.map(c => `
-          <button class="decision-btn" data-choice="${c.id}" style="text-align:left; padding:16px; background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text2); cursor:pointer; transition:all 0.15s;">
-            <div style="font-weight:600; color:var(--text); margin-bottom:4px;">${c.text}</div>
-            <div style="font-size:11px; opacity:0.8;">${c.impact}</div>
+          <button class="decision-btn" data-choice="${escapeCanvasHtml(c.id)}" style="text-align:left; padding:16px; background:var(--surface); border:1px solid var(--border); border-radius:8px; color:var(--text2); cursor:pointer; transition:all 0.15s;">
+            <div style="font-weight:600; color:var(--text); margin-bottom:4px;">${escapeCanvasHtml(c.text)}</div>
+            <div style="font-size:11px; opacity:0.8;">${escapeCanvasHtml(c.impact)}</div>
           </button>
         `).join('')}
       </div>
@@ -249,7 +262,7 @@ class CanvasEngine {
         color: var(--yellow);
         transition: all 0.15s;
       `;
-      el.innerHTML = `<span>🏆</span> <span>${q.title}</span>`;
+      el.innerHTML = `<span>🏆</span> <span>${escapeCanvasHtml(q.title)}</span>`;
       el.onclick = () => this.startQuest(q);
       list.appendChild(el);
     });
@@ -275,14 +288,18 @@ class CanvasEngine {
     const content = document.getElementById('props-content');
     props.style.display = 'block';
     content.innerHTML = `
-      <div style="color:var(--yellow); font-weight:600; margin-bottom:8px;">${q.title}</div>
-      <p style="font-size:12px; color:var(--text2); line-height:1.5; margin-bottom:12px;">${q.description}</p>
+      <div style="color:var(--yellow); font-weight:600; margin-bottom:8px;">${escapeCanvasHtml(q.title)}</div>
+      <p style="font-size:12px; color:var(--text2); line-height:1.5; margin-bottom:12px;">${escapeCanvasHtml(q.description)}</p>
       <div style="font-size:10px; color:var(--text3); text-transform:uppercase; margin-bottom:8px;">Objectives</div>
       <ul style="font-size:11px; color:var(--text2); padding-left:16px; margin-bottom:16px;">
-        ${q.objectives.map(o => `<li>${o}</li>`).join('')}
+        ${q.objectives.map(o => `<li>${escapeCanvasHtml(o)}</li>`).join('')}
       </ul>
-      <button class="graph-ctrl-btn" style="width:100%" onclick="activePlayground.activeQuest=null; activePlayground.updateProps()">Exit Quest</button>
+      <button id="exit-quest-btn" class="graph-ctrl-btn" style="width:100%">Exit Quest</button>
     `;
+    content.querySelector('#exit-quest-btn').addEventListener('click', () => {
+      activePlayground.activeQuest = null;
+      activePlayground.updateProps();
+    });
 
     this.render();
   }
@@ -317,7 +334,7 @@ class CanvasEngine {
         color: var(--text2);
         transition: all 0.15s;
       `;
-      el.innerHTML = `<span>${c.icon}</span><span>${c.label}</span>`;
+      el.innerHTML = `<span>${c.icon}</span><span>${escapeCanvasHtml(c.label)}</span>`;
       el.onclick = () => activePlayground.addComponent(c.type, c.label);
       el.addEventListener('pointerenter', () => el.style.borderColor = 'var(--accent)');
       el.addEventListener('pointerleave', () => el.style.borderColor = 'var(--border)');
@@ -498,7 +515,7 @@ class CanvasEngine {
     nodeMerge.on('mouseover', (e, d) => {
       const util = d.capacity > 0 ? Math.round((d.load / d.capacity) * 100) : 0;
       const status = d.load > d.capacity ? '🔴 Overloaded' : d.load > d.capacity * 0.7 ? '🟡 High' : '🟢 OK';
-      tooltip.innerHTML = `<strong>${d.label}</strong><br>Capacity: ${d.capacity} RPS<br>Load: ${Math.round(d.load)} RPS (${util}%)<br>Status: ${status}`;
+      tooltip.innerHTML = `<strong>${escapeCanvasHtml(d.label)}</strong><br>Capacity: ${d.capacity} RPS<br>Load: ${Math.round(d.load)} RPS (${util}%)<br>Status: ${escapeCanvasHtml(status)}`;
       tooltip.style.display = 'block';
       tooltip.style.left = (e.pageX + 14) + 'px';
       tooltip.style.top = (e.pageY - 10) + 'px';
@@ -605,7 +622,7 @@ class CanvasEngine {
     content.innerHTML = `
       <div style="margin-bottom:12px;">
         <label style="display:block; font-size:10px; color:var(--text3); margin-bottom:4px;">NAME</label>
-        <input id="prop-name" type="text" value="${this.selectedNode.label}" style="width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:6px; border-radius:4px; font-size:12px; outline:none;">
+        <input id="prop-name" type="text" value="${escapeCanvasHtml(this.selectedNode.label)}" style="width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:6px; border-radius:4px; font-size:12px; outline:none;">
       </div>
       <div style="margin-bottom:12px;">
         <label style="display:block; font-size:10px; color:var(--text3); margin-bottom:4px;">CAPACITY (RPS)</label>
@@ -632,7 +649,7 @@ class CanvasEngine {
       const target = l.source.id === this.selectedNode.id ? l.target : l.source;
       const row = document.createElement('div');
       row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--text2); margin-bottom:4px; background:var(--surface); padding:4px 8px; border-radius:4px;';
-      row.innerHTML = `<span>→ ${target.label}</span> <span class="link-del" style="color:var(--pink); cursor:pointer;">×</span>`;
+      row.innerHTML = `<span>→ ${escapeCanvasHtml(target.label)}</span> <span class="link-del" style="color:var(--pink); cursor:pointer;">×</span>`;
       row.querySelector('.link-del').onclick = () => {
         this.links = this.links.filter(link => link !== l);
         this.updateProps();

@@ -201,7 +201,7 @@ async function rebuild() {
   const SITE_URL = 'https://ishitvagoel.github.io/SystemDesignNotes';
   const today = new Date().toISOString().split('T')[0];
   const sitemapEntries = vaultIndex.map(note =>
-    `  <url>\n    <loc>${SITE_URL}/#note/${note.id}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`
+    `  <url>\n    <loc>${SITE_URL}/?note=${encodeURIComponent(note.id)}</loc>\n    <lastmod>${today}</lastmod>\n  </url>`
   );
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url>\n    <loc>${SITE_URL}/</loc>\n    <lastmod>${today}</lastmod>\n    <priority>1.0</priority>\n  </url>\n${sitemapEntries.join('\n')}\n</urlset>\n`;
   const SITEMAP_FILE = path.join(__dirname, '../sitemap.xml');
@@ -211,4 +211,7 @@ async function rebuild() {
   console.log(`Generated ${INDEX_FILE}, ${SEARCH_INDEX_FILE}, ${GRAPH_EDGES_FILE}, ${STUDY_PROMPTS_FILE}, and ${SITEMAP_FILE}.`);
 }
 
-rebuild().catch(console.error);
+rebuild().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

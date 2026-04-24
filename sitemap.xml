@@ -2,611 +2,611 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ishitvagoel.github.io/SystemDesignNotes/</loc>
-    <lastmod>2026-04-23</lastmod>
+    <lastmod>2026-04-24</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Meta__Glossary</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Meta__Glossary</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Meta__How_to_Study_This_Vault</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Meta__How_to_Study_This_Vault</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Meta__Knowledge_Graph_Overview</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Meta__Knowledge_Graph_Overview</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Meta__Mastery_Checklist</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Meta__Mastery_Checklist</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Meta__Note_Template</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Meta__Note_Template</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Meta__References_Hub</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Meta__References_Hub</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Meta__What_Changed_Since_DDIA</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Meta__What_Changed_Since_DDIA</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Phase-0__Common_Decision_Pitfalls</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Phase-0__Common_Decision_Pitfalls</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Phase-0__Decision_Frameworks_in_Practice</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Phase-0__Decision_Frameworks_in_Practice</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Phase-0__Evolving_Designs_Over_Time</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Phase-0__Evolving_Designs_Over_Time</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Phase-0__First_Principles_Thinking</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Phase-0__First_Principles_Thinking</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Phase-0__Reasoning_Through_Trade-Offs</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Phase-0__Reasoning_Through_Trade-Offs</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Phase-0__Requirements_to_Constraints</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Phase-0__Requirements_to_Constraints</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/00-Phase-0__The_Physics_of_Distributed_Systems</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=00-Phase-0__The_Physics_of_Distributed_Systems</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Phase_0_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Phase_0_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-01-Networking__Anycast_and_GeoDNS</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-01-Networking__Anycast_and_GeoDNS</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-01-Networking__DNS_Resolution_Chain</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-01-Networking__DNS_Resolution_Chain</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_—_1.1_to_2_to_3</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-01-Networking__HTTP_Evolution_%E2%80%94_1.1_to_2_to_3</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-01-Networking__Load_Balancing_Fundamentals</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-01-Networking__TCP_Deep_Dive</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-01-Networking__TCP_Deep_Dive</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-01-Networking__TCP_vs_UDP</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-01-Networking__TCP_vs_UDP</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-01-Networking__gRPC_Deep_Dive</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-01-Networking__gRPC_Deep_Dive</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-01-Networking__gRPC_vs_REST_vs_GraphQL</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_01_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_01_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-02-API-Design__API_Gateway_Patterns</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-02-API-Design__API_Versioning_and_Compatibility</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-02-API-Design__Idempotency</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-02-API-Design__Idempotency</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-02-API-Design__RESTful_Design_Principles</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-02-API-Design__RESTful_Design_Principles</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-02-API-Design__Rate_Limiting_and_Throttling</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_02_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_02_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-03-Storage-Engines__B-Tree_vs_LSM-Tree</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-03-Storage-Engines__MVCC_Deep_Dive</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-03-Storage-Engines__Storage_Engine_Selection</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-03-Storage-Engines__Storage_Engine_Selection</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_03_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_03_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-04-Databases__Database_Replication</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-04-Databases__Database_Replication</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-04-Databases__Indexing_Deep_Dive</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-04-Databases__NewSQL_and_Globally_Distributed_Databases</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-04-Databases__Partitioning_and_Sharding</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-04-Databases__Query_Optimization_and_EXPLAIN</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-04-Databases__Query_Optimization_and_EXPLAIN</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-04-Databases__SQL_vs_NoSQL_Decision_Framework</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-04-Databases__SQL_vs_NoSQL_Decision_Framework</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_04_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_04_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-05-Data-Modeling__Data_Model_Selection</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-05-Data-Modeling__Data_Model_Selection</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-05-Data-Modeling__Relational_Modeling_and_Normalization</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-05-Data-Modeling__Relational_Modeling_and_Normalization</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-05-Data-Modeling__Schema_Evolution</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-05-Data-Modeling__Zero-Downtime_Schema_Migrations</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_05_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_05_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__CDN_Architecture</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Cache_Patterns_and_Strategies</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Distributed_Caching</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Distributed_Caching</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Object_Storage_Fundamentals</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_06_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_06_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-07-ID-Generation__ID_Generation_Strategies</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-07-ID-Generation__ID_Generation_Strategies</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=01-Phase-1-Foundations__Module-07-ID-Generation__Logical_Clocks_and_Ordering</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_07_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_07_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-08-Consistency-Models__CAP_Theorem_and_PACELC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-08-Consistency-Models__CAP_Theorem_and_PACELC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-08-Consistency-Models__Consistency_Spectrum</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_08_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_08_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-09-Consensus__Distributed_Locks_and_Fencing</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-09-Consensus__Distributed_Locks_and_Fencing</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-09-Consensus__FLP_Impossibility</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-09-Consensus__FLP_Impossibility</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-09-Consensus__Paxos_and_Its_Legacy</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-09-Consensus__Paxos_and_Its_Legacy</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_09_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_09_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-10-Distributed-Transactions__Idempotent_Consumers</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-10-Distributed-Transactions__Saga_Pattern</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-10-Distributed-Transactions__Two-Phase_Commit</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_10_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_10_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-11-Replication-Conflicts__CRDTs</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-11-Replication-Conflicts__Leaderless_Replication</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-11-Replication-Conflicts__Leaderless_Replication</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-11-Replication-Conflicts__Multi-Leader_and_Conflict_Resolution</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-11-Replication-Conflicts__Multi-Leader_and_Conflict_Resolution</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/02-Phase-2-Distribution__Module-11-Replication-Conflicts__Replication_Deep_Dive</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=02-Phase-2-Distribution__Module-11-Replication-Conflicts__Replication_Deep_Dive</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_11_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_11_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Modular_Monoliths</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Modular_Monoliths</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Cell-Based_Architecture</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Event_Sourcing_and_CQRS</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Monolith_vs_Microservices</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Monolith_vs_Microservices</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Service_Decomposition_and_Bounded_Contexts</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Service_Decomposition_and_Bounded_Contexts</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Strangler_Fig_and_Migration_Patterns</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Strangler_Fig_and_Migration_Patterns</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_12_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_12_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Batch_Processing_and_Data_Pipelines</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Batch_Processing_and_Data_Pipelines</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Change_Data_Capture</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Change_Data_Capture</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Event-Driven_Architecture_Patterns</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Message_Queues_vs_Event_Streams</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Stream_Processing</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-13-Messaging-Pipelines__Stream_Processing</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_13_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_13_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Full-Text_Search_Architecture</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Full-Text_Search_Architecture</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-14-Search-Systems__Vector_Search_and_Hybrid_Retrieval</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_14_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_14_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-15-Security__Authentication_and_Authorization</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-15-Security__Encryption_at_Rest_and_in_Transit</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-15-Security__Encryption_at_Rest_and_in_Transit</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-15-Security__Software_Supply_Chain_Security</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-15-Security__Software_Supply_Chain_Security</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-15-Security__TLS_and_Certificate_Management</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-15-Security__Threat_Modeling_for_Distributed_Systems</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-15-Security__Threat_Modeling_for_Distributed_Systems</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-15-Security__Zero_Trust_Architecture</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-15-Security__Zero_Trust_Architecture</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_15_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_15_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Chaos_Engineering_and_Testing</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Chaos_Engineering_and_Testing</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Circuit_Breakers_and_Bulkheads</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Disaster_Recovery_and_RTO_RPO</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Disaster_Recovery_and_RTO_RPO</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Incident_Management</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Incident_Management</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__Resilience_Patterns</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-16-Reliability-Testing__SLOs_SLIs_and_Error_Budgets</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_16_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_16_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Deployment_and_Release_Engineering</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Distributed_Tracing_Deep_Dive</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Distributed_Tracing_Deep_Dive</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Feature_Flags_and_Safe_Deployment</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Feature_Flags_and_Safe_Deployment</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__Observability_and_Alerting</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__eBPF_and_Kernel_Observability</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-17-Observability-Deployment__eBPF_and_Kernel_Observability</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_17_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_17_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Cost_Engineering_and_FinOps</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Geo-Distribution_and_Data_Sovereignty</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=03-Phase-3-Architecture-Operations__Module-18-Multitenancy-Geo-Cost__Multi-Tenancy_and_Isolation</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_18_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_18_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Small_Language_Models</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Small_Language_Models</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__AI_Gateway_and_LLM_Operations</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__AI_Gateway_and_LLM_Operations</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Inference_Serving_Architecture</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Semantic_Caching_and_Prompt_Caching</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=04-Phase-4-Modern-AI__Module-19-AI-Inference-LLMOps__Semantic_Caching_and_Prompt_Caching</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_19_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_19_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agent_Reliability_Patterns</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agent_Reliability_Patterns</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agentic_System_Architecture</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Agentic_System_Architecture</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__RAG_Architecture</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__RAG_Architecture</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Real-Time_Collaboration</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Real-Time_Collaboration</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_20_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_20_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Kubernetes_and_Platform_Engineering</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__Serverless_and_Edge_Computing</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__WebAssembly_and_WASI</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=04-Phase-4-Modern-AI__Module-21-Serverless-Edge-Platform__WebAssembly_and_WASI</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_Module_21_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_Module_21_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering__Green_Software_Engineering</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering__Green_Software_Engineering</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Cloud_Cost_Optimization</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Cloud_Cost_Optimization</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Cost_Engineering_and_FinOps</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Cost_Engineering_and_FinOps</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/FinOps_Observability_and_Unit_Economics</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=FinOps_Observability_and_Unit_Economics</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_22_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_22_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Resource_Right-Sizing_and_Autoscaling</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Resource_Right-Sizing_and_Autoscaling</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Audit_Logging_and_Compliance</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Audit_Logging_and_Compliance</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Data_Classification_and_Access_Control</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Data_Classification_and_Access_Control</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Data_Privacy_and_Compliance</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Data_Privacy_and_Compliance</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/GDPR_and_Data_Sovereignty</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=GDPR_and_Data_Sovereignty</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Module_23_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Module_23_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/06-Phase-6-Capstones__Capstone_—_AI_Search_and_Chat_Platform</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=06-Phase-6-Capstones__Capstone_%E2%80%94_AI_Search_and_Chat_Platform</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/06-Phase-6-Capstones__Capstone_—_Collaborative_Editor</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=06-Phase-6-Capstones__Capstone_%E2%80%94_Collaborative_Editor</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/06-Phase-6-Capstones__Capstone_—_Feature_Flag_Platform</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=06-Phase-6-Capstones__Capstone_%E2%80%94_Feature_Flag_Platform</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/06-Phase-6-Capstones__Capstone_—_Multi-Region_E-Commerce</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=06-Phase-6-Capstones__Capstone_%E2%80%94_Multi-Region_E-Commerce</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/06-Phase-6-Capstones__Capstone_—_News_Feed</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=06-Phase-6-Capstones__Capstone_%E2%80%94_News_Feed</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/06-Phase-6-Capstones__Capstone_—_Payments_and_Orders</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=06-Phase-6-Capstones__Capstone_%E2%80%94_Payments_and_Orders</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/06-Phase-6-Capstones__Capstone_—_URL_Shortener</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=06-Phase-6-Capstones__Capstone_%E2%80%94_URL_Shortener</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
   <url>
-    <loc>https://ishitvagoel.github.io/SystemDesignNotes/#note/Phase_6_MOC</loc>
-    <lastmod>2026-04-23</lastmod>
+    <loc>https://ishitvagoel.github.io/SystemDesignNotes/?note=Phase_6_MOC</loc>
+    <lastmod>2026-04-24</lastmod>
   </url>
 </urlset>
