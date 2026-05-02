@@ -72,6 +72,14 @@ Some modules build on concepts from earlier modules. Use this dependency map to 
 
 A structured study plan transforms a disjointed collection of notes into a cohesive learning journey. This note exists to provide a recommended path, highlighting dependencies and ensuring prerequisite knowledge is acquired before tackling advanced topics.
 
+## Connections
+
+- [[00-Meta__Knowledge_Graph_Overview]] — Pair the week-by-week path with the dependency graph when choosing what to study next.
+- [[00-Meta__Mastery_Checklist]] — Use the checklist after each module to decide whether to advance or revisit prerequisites.
+- [[00-Meta__Glossary]] — Keep the glossary nearby when module notes introduce terms you cannot explain plainly.
+- [[00-Meta__What_Changed_Since_DDIA]] — Read the DDIA update note after the foundation/distribution modules to understand which assumptions changed in modern systems.
+- [[00-Meta__References_Hub]] — Use the source hub when you want to go beyond the vault notes into papers, books, or engineering writeups.
+
 ## Reflection Prompts
 
 1. Are you following the recommended 22-week study plan, or charting your own course? Why?

@@ -93,6 +93,14 @@ Container patterns, K8s, AI inference → M21, M19
 
 The knowledge in this vault is curated from foundational papers, industry-standard books, and battle-tested engineering blogs. This hub exists to provide the primary sources, allowing you to trace concepts back to their origins and explore topics in greater depth.
 
+## Connections
+
+- [[00-Meta__How_to_Study_This_Vault]] — Use the study plan to decide which references are worth reading now versus later.
+- [[00-Meta__Mastery_Checklist]] — Use references to strengthen checklist items that are still shallow or memorized.
+- [[00-Meta__What_Changed_Since_DDIA]] — Use the DDIA update note to identify newer sources that complement the classic books and papers.
+- [[00-Meta__Glossary]] — Use glossary terms as entry points into the papers and books listed here.
+- [[00-Meta__Knowledge_Graph_Overview]] — Use the graph overview to see which modules each reference family supports.
+
 ## Reflection Prompts
 
 1. Have you read any of the primary papers listed here (e.g., the Dynamo paper or the Raft paper)?

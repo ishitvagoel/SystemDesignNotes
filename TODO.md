@@ -53,25 +53,25 @@
 - [x] Add `Mental Model` section to `00-Phase-0__Common_Decision_Pitfalls.md`
 - [x] Add `Mental Model` section to `00-Phase-0__Decision_Frameworks_in_Practice.md`
 - [x] Add `Mental Model` section to `00-Phase-0__The_Physics_of_Distributed_Systems.md`
-- [ ] Add `Connections` section to `00-Meta__Glossary.md`
-- [ ] Add `Connections` section to `00-Meta__How_to_Study_This_Vault.md`
-- [ ] Add `Connections` section to `00-Meta__Knowledge_Graph_Overview.md`
-- [ ] Add `Connections` section to `00-Meta__Mastery_Checklist.md`
-- [ ] Add `Connections` section to `00-Meta__References_Hub.md`
+- [x] Add `Connections` section to `00-Meta__Glossary.md`
+- [x] Add `Connections` section to `00-Meta__How_to_Study_This_Vault.md`
+- [x] Add `Connections` section to `00-Meta__Knowledge_Graph_Overview.md`
+- [x] Add `Connections` section to `00-Meta__Mastery_Checklist.md`
+- [x] Add `Connections` section to `00-Meta__References_Hub.md`
 
 ## Chunk 5: Link Density and Navigation
 
-- [ ] Add at least 3 meaningful wiki-links to `00-Meta__What_Changed_Since_DDIA.md`
-- [ ] Add at least 3 meaningful wiki-links to `03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Modular_Monoliths.md`
-- [ ] Add at least 3 meaningful wiki-links to `04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Small_Language_Models.md`
-- [ ] Add at least 3 meaningful wiki-links to `05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering__Green_Software_Engineering.md`
-- [ ] Review remaining Meta notes for sparse cross-linking
+- [x] Add at least 3 meaningful wiki-links to `00-Meta__What_Changed_Since_DDIA.md`
+- [x] Add at least 3 meaningful wiki-links to `03-Phase-3-Architecture-Operations__Module-12-Architectural-Patterns__Modular_Monoliths.md`
+- [x] Add at least 3 meaningful wiki-links to `04-Phase-4-Modern-AI__Module-20-RAG-Agents-Realtime__Small_Language_Models.md`
+- [x] Add at least 3 meaningful wiki-links to `05-Phase-5-Modern-Operations__Module-22-FinOps-Cost-Engineering__Green_Software_Engineering.md`
+- [x] Review remaining Meta notes for sparse cross-linking
 
 ## Suggested Session Order
 
 - [x] Session 1: `Small Language Models`
 - [x] Session 2: `Green Software Engineering`
 - [x] Session 3: `Modular Monoliths`
-- [ ] Session 4: `What Changed Since DDIA`
+- [x] Session 4: `What Changed Since DDIA`
 - [x] Session 5: Capstone `Mental Model` pass
-- [ ] Session 6: Phase 0 / Meta consistency pass
+- [x] Session 6: Phase 0 / Meta consistency pass

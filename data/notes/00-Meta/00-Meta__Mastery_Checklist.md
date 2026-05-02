@@ -71,6 +71,14 @@ pie title Knowledge Distribution
 
 Self-assessment is a critical component of learning. This checklist provides a concrete, measurable way to track your progress and honestly evaluate your understanding of the material against the "Mastery Bar" heuristics.
 
+## Connections
+
+- [[00-Meta__How_to_Study_This_Vault]] — Use the study plan to decide when to attempt each checklist section.
+- [[00-Meta__Knowledge_Graph_Overview]] — Use the graph overview to test whether you can connect mastered modules to adjacent topics.
+- [[00-Meta__Glossary]] — Use glossary definitions as the baseline for the "explain it plainly" mastery test.
+- [[00-Meta__References_Hub]] — Use primary sources when a checklist item feels memorized but not understood.
+- [[06-Phase-6-Capstones__Capstone_—_AI_Search_and_Chat_Platform]] — Use capstones as integration tests once individual module checks feel comfortable.
+
 ## Reflection Prompts
 
 1. Which module's mastery checklist items make you the most nervous?

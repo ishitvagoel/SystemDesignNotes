@@ -112,6 +112,13 @@ Core terms used across this vault. For deeper treatment, follow the backlink to 
 
 This glossary serves as the canonical reference for the vocabulary used throughout the System Design Vault. It ensures consistent terminology and provides quick definitions for core concepts without needing to dive deep into a specific module.
 
+## Connections
+
+- [[00-Meta__Knowledge_Graph_Overview]] — Use the graph overview to see how glossary terms cluster across modules.
+- [[00-Meta__How_to_Study_This_Vault]] — Use unfamiliar glossary terms as signals that you may need to revisit a prerequisite module.
+- [[00-Meta__Mastery_Checklist]] — Convert definitions into mastery checks by explaining each term, its trade-offs, and where it breaks at scale.
+- [[00-Meta__References_Hub]] — Follow the references hub when a glossary term needs a primary source or deeper treatment.
+
 ## Reflection Prompts
 
 1. Which of these terms were you unfamiliar with before starting?

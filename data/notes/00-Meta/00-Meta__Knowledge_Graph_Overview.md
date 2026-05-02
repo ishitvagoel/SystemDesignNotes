@@ -78,6 +78,14 @@ Tracing a single action through the graph:
 
 System design is inherently interconnected. Understanding how concepts like caching, consensus, and replication relate across different layers of an architecture is crucial. This overview visualizes those connections, preventing the isolation of concepts into silos.
 
+## Connections
+
+- [[00-Meta__How_to_Study_This_Vault]] — Use the study plan when the graph shows multiple possible paths and you need sequencing.
+- [[00-Meta__Glossary]] — Use the glossary to decode nodes and edge labels that are unfamiliar.
+- [[00-Meta__Mastery_Checklist]] — Use the checklist to turn graph navigation into concrete self-assessment.
+- [[00-Meta__What_Changed_Since_DDIA]] — Use the DDIA update note to see which modern topics extend the classic distributed-systems baseline.
+- [[Phase_0_MOC]] — Use Phase 0 to reason about trade-offs before jumping from one graph node to another.
+
 ## Reflection Prompts
 
 1. Pick two unconnected modules (e.g., Search and Messaging). Can you think of a scenario where they would interact?
