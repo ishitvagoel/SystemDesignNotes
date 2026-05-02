@@ -194,8 +194,8 @@ graph TD
         LLM --> Response[Grounded Response]
     end
 
-    style VDB fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Rerank fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style VDB fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Rerank fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

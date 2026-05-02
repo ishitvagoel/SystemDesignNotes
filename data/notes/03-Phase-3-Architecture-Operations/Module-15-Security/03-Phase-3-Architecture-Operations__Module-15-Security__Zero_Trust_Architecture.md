@@ -127,7 +127,7 @@ flowchart TD
     NetPol["Kubernetes NetworkPolicy\n(L4 micro-segmentation)"] --> |"Block unauthorized connections"| ServiceA
     NetPol --> ServiceB
 
-    style Trust fill:var(--surface),stroke:var(--accent),stroke-width:2px
+    style Trust fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px
 ```
 
 ## Back-of-the-Envelope Heuristics

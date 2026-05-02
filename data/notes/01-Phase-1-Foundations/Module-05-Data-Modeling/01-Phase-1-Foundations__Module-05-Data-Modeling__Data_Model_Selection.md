@@ -121,7 +121,7 @@ graph TD
     end
 
     subgraph "Document (JSON)"
-        D1[User Document: { id, orders: [ { product, total } ] }]
+        D1["User Document: { id, orders: [ { product, total } ] }"]
     end
 
     subgraph "Graph (Nodes & Edges)"
@@ -129,9 +129,9 @@ graph TD
         G1 -- "PURCHASED" --> G3((Product))
     end
 
-    style R2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style D1 fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
-    style G1 fill:var(--surface),stroke:var(--border),stroke-width:1px;
+    style R2 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style D1 fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
+    style G1 fill:#f6f8fa,stroke:#94a3b8,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics

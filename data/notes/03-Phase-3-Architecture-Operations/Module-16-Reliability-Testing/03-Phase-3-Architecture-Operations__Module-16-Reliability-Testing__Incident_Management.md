@@ -146,8 +146,8 @@ graph TD
     Resolve --> PM[5. Blameless Postmortem]
     PM --> Actions[6. Action Items / Fixes]
 
-    style IC fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style PM fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style IC fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style PM fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

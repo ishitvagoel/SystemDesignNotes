@@ -129,8 +129,8 @@ graph TD
         CA -->|5. Issue Short-lived Certs| S2
     end
 
-    style CA fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style LB fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style CA fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style LB fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

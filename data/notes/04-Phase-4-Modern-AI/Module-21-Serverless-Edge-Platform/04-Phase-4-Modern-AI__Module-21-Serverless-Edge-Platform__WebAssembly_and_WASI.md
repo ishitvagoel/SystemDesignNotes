@@ -135,8 +135,8 @@ flowchart TD
     WASI_Caps --> K8s
     WASI_Caps --> Lambda
 
-    style Sources fill:var(--surface),stroke:var(--accent),stroke-width:2px
-    style Runtimes fill:var(--surface),stroke:var(--accent2),stroke-width:2px
+    style Sources fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px
+    style Runtimes fill:#f6f8fa,stroke:#0969da,stroke-width:2px
 ```
 
 ## Back-of-the-Envelope Heuristics

@@ -144,8 +144,8 @@ graph TD
     Gateway -- "Route to" --> V1
     Gateway -- "Route to" --> V2
 
-    style Gateway fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style V1 fill:var(--surface),stroke:var(--border),stroke-dasharray: 5 5;
+    style Gateway fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style V1 fill:#f6f8fa,stroke:#94a3b8,stroke-dasharray: 5 5;
 ```
 
 ## Back-of-the-Envelope Heuristics

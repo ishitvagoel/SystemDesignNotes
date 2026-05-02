@@ -108,9 +108,9 @@ graph TD
         Function --> DB[(Aurora / DynamoDB)]
     end
 
-    style Edge fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Function fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
-    style EB fill:var(--surface),stroke:var(--accent2),stroke-dasharray: 5 5;
+    style Edge fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Function fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
+    style EB fill:#f6f8fa,stroke:#0969da,stroke-dasharray: 5 5;
 ```
 
 ## Back-of-the-Envelope Heuristics

@@ -97,8 +97,8 @@ graph TD
         Disk -->|5. Load into Buffer| BP
     end
 
-    style BP fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style HT fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style BP fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style HT fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

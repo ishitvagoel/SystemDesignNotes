@@ -158,9 +158,9 @@ graph TD
         HLC[Hybrid Logical Clocks] -->|Wall Time + Logical| Cockroach[CockroachDB]
     end
 
-    style Lamport fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Vector fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
-    style HLC fill:var(--surface),stroke:var(--border),stroke-width:2px;
+    style Lamport fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Vector fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
+    style HLC fill:#f6f8fa,stroke:#94a3b8,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

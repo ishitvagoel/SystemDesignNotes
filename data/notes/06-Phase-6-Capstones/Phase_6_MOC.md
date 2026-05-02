@@ -21,8 +21,8 @@ graph LR
     S3 --> S4[Deep Dives]
     S4 --> S5[Trade-offs & Bottlenecks]
     
-    style S3 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style S5 fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
+    style S3 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style S5 fill:#f6f8fa,stroke:#ff4d4d,stroke-width:2px;
 ```
 
 ## Senior Engineer's Interview Heuristic

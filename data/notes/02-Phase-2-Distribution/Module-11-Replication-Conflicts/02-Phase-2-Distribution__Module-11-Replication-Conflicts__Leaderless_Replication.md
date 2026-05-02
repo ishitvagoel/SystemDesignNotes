@@ -92,8 +92,8 @@ graph TD
         ClientR -->|Read Repair: Write v2| Node2
     end
 
-    style Node1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Node2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Node1 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Node2 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

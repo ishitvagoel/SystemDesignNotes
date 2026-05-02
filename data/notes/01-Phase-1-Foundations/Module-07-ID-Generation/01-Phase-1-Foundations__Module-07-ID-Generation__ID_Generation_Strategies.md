@@ -172,8 +172,8 @@ graph TD
         UUID[UUID v4 Generator] -->|Random 128-bit| ID3[ID: 550e...]
     end
 
-    style Snowflake1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style DB fill:var(--surface),stroke:var(--border),stroke-dasharray: 5 5;
+    style Snowflake1 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style DB fill:#f6f8fa,stroke:#94a3b8,stroke-dasharray: 5 5;
 ```
 
 ## Back-of-the-Envelope Heuristics

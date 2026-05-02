@@ -99,8 +99,8 @@ graph TD
         Release --> Cleanup[Cleanup: Remove Flag]
     end
 
-    style Monitor fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Rollback fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
+    style Monitor fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Rollback fill:#f6f8fa,stroke:#ff4d4d,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

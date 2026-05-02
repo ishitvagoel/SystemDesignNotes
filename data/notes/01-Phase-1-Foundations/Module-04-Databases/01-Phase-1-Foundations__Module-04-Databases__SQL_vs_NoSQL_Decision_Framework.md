@@ -129,8 +129,8 @@ flowchart TD
     H -- Yes --> I[Wide-Column Cassandra]
     H -- No --> J[Key-Value Redis]
     
-    classDef primary fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    classDef secondary fill:var(--bg2),stroke:var(--border),stroke-width:1px;
+    classDef primary fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    classDef secondary fill:#edf2f7,stroke:#94a3b8,stroke-width:1px;
     class A,B,C,D,H secondary;
     class E,F,G,I,J primary;
 ```

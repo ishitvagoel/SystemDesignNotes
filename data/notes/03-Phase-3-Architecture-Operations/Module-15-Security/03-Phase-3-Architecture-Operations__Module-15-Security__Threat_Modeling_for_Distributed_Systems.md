@@ -125,8 +125,8 @@ graph TD
     S1 -- "3. Elevation of Privilege" --> S2
     S2 -- "4. Info Disclosure" --> DB
 
-    style GW fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
-    style DB fill:var(--surface),stroke:#2d8a4e,stroke-width:2px;
+    style GW fill:#f6f8fa,stroke:#ff4d4d,stroke-width:2px;
+    style DB fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

@@ -131,8 +131,8 @@ graph TD
     
     L -.->|4. Notify Change| S2
     
-    style L fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style F1 fill:var(--surface),stroke:var(--border),stroke-width:1px;
+    style L fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style F1 fill:#f6f8fa,stroke:#94a3b8,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics

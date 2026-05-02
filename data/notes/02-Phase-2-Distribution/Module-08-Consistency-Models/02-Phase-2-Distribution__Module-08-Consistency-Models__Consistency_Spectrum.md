@@ -128,8 +128,8 @@ graph LR
         C3[Other Client] -->|3. Read| R1
     end
 
-    style Leader fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style P1 fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style Leader fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style P1 fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

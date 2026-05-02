@@ -109,8 +109,8 @@ graph TD
         M_Svc --> M_AI[LLM / Agent Gateway]
     end
 
-    style M_AI fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style M_DB fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style M_AI fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style M_DB fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

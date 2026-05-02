@@ -177,8 +177,8 @@ flowchart TD
 
     App -.->|"syscalls\n(transparent)"| Hook1
 
-    style Kernel fill:var(--surface),stroke:var(--accent),stroke-width:2px
-    style Userspace fill:var(--surface),stroke:var(--accent2),stroke-width:2px
+    style Kernel fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px
+    style Userspace fill:#f6f8fa,stroke:#0969da,stroke-width:2px
 ```
 
 ## Back-of-the-Envelope Heuristics

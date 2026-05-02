@@ -273,9 +273,9 @@ graph TD
         Flink --> S3[(S3 Archive)]
     end
 
-    style Edge fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Cache fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
-    style CH fill:var(--surface),stroke:var(--border),stroke-width:1px;
+    style Edge fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Cache fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
+    style CH fill:#f6f8fa,stroke:#94a3b8,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics

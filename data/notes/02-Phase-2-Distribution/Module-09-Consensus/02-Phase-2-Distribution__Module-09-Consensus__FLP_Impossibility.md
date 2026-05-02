@@ -102,8 +102,8 @@ graph TD
         RaftL -->|Heartbeat| F2[Follower 2]
     end
 
-    style NodeB fill:var(--surface),stroke:#ff4d4d,stroke-dasharray: 5 5;
-    style RaftL fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style NodeB fill:#f6f8fa,stroke:#ff4d4d,stroke-dasharray: 5 5;
+    style RaftL fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

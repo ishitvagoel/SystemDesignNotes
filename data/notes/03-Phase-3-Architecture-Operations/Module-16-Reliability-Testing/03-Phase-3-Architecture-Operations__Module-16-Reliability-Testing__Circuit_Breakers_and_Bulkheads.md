@@ -127,8 +127,8 @@ graph TD
         C_CB -->|Request| SvcC[Service C - OK]
     end
 
-    style B_CB fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
-    style C_CB fill:var(--surface),stroke:#2d8a4e,stroke-width:2px;
+    style B_CB fill:#f6f8fa,stroke:#ff4d4d,stroke-width:2px;
+    style C_CB fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

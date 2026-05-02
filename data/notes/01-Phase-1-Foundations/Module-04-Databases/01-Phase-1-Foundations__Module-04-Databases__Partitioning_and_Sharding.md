@@ -112,9 +112,9 @@ graph TD
     end
 
     subgraph "Sharded Database Cluster"
-        Router -->|hash(user_id) % 3 = 0| Shard1[Shard 1: Users A-G]
-        Router -->|hash(user_id) % 3 = 1| Shard2[Shard 2: Users H-P]
-        Router -->|hash(user_id) % 3 = 2| Shard3[Shard 3: Users Q-Z]
+        Router -->|"hash(user_id) % 3 = 0"| Shard1[Shard 1: Users A-G]
+        Router -->|"hash(user_id) % 3 = 1"| Shard2[Shard 2: Users H-P]
+        Router -->|"hash(user_id) % 3 = 2"| Shard3[Shard 3: Users Q-Z]
     end
 
     subgraph "Cross-Shard Query (Anti-Pattern)"
@@ -124,9 +124,9 @@ graph TD
         Shard1 & Shard2 & Shard3 --> Merge[Merge Results]
     end
 
-    style Shard1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Shard2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Shard3 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Shard1 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Shard2 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Shard3 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

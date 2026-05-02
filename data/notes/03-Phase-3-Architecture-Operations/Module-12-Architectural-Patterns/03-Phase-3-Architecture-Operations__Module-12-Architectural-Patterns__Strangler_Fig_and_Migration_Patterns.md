@@ -104,10 +104,10 @@ graph TD
     Router -->|1. Default / Legacy| Mono
     Router -->|2. Migrated: /v1/auth| Svc1
     
-    Mono -.->|3. Async Data Sync (CDC)| Svc1_DB
+    Mono -.->|"3. Async Data Sync (CDC)"| Svc1_DB
 
-    style Router fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Svc1 fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style Router fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Svc1 fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

@@ -108,8 +108,8 @@ graph TD
         end
     end
 
-    style Pool_VIP fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style R2 fill:var(--surface),stroke:var(--accent),stroke-dasharray: 5 5;
+    style Pool_VIP fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style R2 fill:#f6f8fa,stroke:#2d8a4e,stroke-dasharray: 5 5;
 ```
 
 ## Back-of-the-Envelope Heuristics

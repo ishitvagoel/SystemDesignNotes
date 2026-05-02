@@ -130,8 +130,8 @@ graph TD
     App_EU -- "Cross-Region Check" --> DB_US_Inv
     App_US -- "Cross-Region Check" --> DB_EU_Inv
 
-    style DB_US_Inv fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style DB_EU_Inv fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style DB_US_Inv fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style DB_EU_Inv fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

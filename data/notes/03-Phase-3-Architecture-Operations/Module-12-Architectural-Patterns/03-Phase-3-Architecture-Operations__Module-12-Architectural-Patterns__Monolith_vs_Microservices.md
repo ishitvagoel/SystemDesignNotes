@@ -78,8 +78,8 @@ graph TD
         S_Order -- "gRPC / Event" --> S_User
     end
 
-    style M_Logic fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style MS_Gateway fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style M_Logic fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style MS_Gateway fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

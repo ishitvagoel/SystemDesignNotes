@@ -66,8 +66,8 @@ graph TD
         S2 -.->|No ACK back| C2
     end
 
-    style S1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style S2 fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+    style S1 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style S2 fill:#f6f8fa,stroke:#0969da,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics

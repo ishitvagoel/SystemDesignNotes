@@ -212,8 +212,8 @@ graph TD
     C2 -.->|Queue Ops| C2
     C2 -- "Reconnect & Replay" --> WS
 
-    style Sync fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style WS fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style Sync fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style WS fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

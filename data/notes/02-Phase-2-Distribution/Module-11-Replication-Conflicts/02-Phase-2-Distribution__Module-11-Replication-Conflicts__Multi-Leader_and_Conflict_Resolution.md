@@ -156,8 +156,8 @@ graph LR
         L2 -- "Sync X" --> L2
     end
 
-    style L1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style L2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style L1 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style L2 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

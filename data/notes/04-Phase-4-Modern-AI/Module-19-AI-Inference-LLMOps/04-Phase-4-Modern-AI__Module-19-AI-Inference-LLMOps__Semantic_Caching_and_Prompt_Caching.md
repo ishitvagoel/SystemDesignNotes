@@ -115,7 +115,7 @@ flowchart TD
     Response --> User
     CachedResp --> User
 
-    style ProviderCache fill:var(--surface),stroke:var(--accent),stroke-width:2px
+    style ProviderCache fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px
 ```
 
 ## Back-of-the-Envelope Heuristics

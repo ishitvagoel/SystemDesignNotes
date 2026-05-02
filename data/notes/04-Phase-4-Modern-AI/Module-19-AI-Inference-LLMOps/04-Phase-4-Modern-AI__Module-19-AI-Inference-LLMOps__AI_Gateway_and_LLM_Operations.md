@@ -160,8 +160,8 @@ graph TD
         GW --> Eval[Eval Engine: Grounding Check]
     end
 
-    style GW fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Router fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style GW fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Router fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

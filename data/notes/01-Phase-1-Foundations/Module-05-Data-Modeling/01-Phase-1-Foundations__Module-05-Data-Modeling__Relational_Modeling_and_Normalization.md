@@ -159,8 +159,8 @@ graph TD
         Users & Orders & OrderItems -->|3. View| MV[Materialized View: RevenueReport]
     end
 
-    style Users fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style MV fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style Users fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style MV fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

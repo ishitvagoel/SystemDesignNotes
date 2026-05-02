@@ -145,8 +145,8 @@ graph TD
         CDN -->|Cache Miss| S3
     end
 
-    style S3 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style CDN fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style S3 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style CDN fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

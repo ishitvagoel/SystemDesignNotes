@@ -162,7 +162,7 @@ graph TD
     API -->|201 Created| Client2[POST /books]
     API -->|404 Not Found| Client3[GET /missing]
 
-    style API fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style API fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

@@ -125,8 +125,8 @@ graph TD
         Follower -- "200 OK\n(Stale Data: returns what it has)" --> User4
     end
 
-    style Leader fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Follower fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style Leader fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Follower fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

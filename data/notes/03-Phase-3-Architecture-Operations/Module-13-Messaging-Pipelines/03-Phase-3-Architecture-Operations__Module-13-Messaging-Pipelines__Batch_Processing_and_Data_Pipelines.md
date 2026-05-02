@@ -120,8 +120,8 @@ graph LR
         Warehouse --> Dashboard[BI Tool / ML Model]
     end
 
-    style Lake fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Warehouse fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style Lake fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Warehouse fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

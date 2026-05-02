@@ -125,8 +125,8 @@ graph TD
     
     Recursive -->|9. Final Answer| Client
     
-    style Recursive fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Auth fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style Recursive fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Auth fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

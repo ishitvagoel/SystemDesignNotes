@@ -109,8 +109,8 @@ graph TD
     end
 
     CB -- "Threshold > 50%" --> Open[OPEN: Fast Fail]
-    style CB fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style BH fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style CB fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style BH fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

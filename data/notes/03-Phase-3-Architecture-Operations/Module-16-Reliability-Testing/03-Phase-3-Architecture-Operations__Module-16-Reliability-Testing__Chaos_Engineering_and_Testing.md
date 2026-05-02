@@ -121,8 +121,8 @@ graph TD
         SLO -->|Yes| Halt[Stop & Rollback]
     end
 
-    style Engine fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style S2 fill:var(--surface),stroke:#ff4d4d,stroke-dasharray: 5 5;
+    style Engine fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style S2 fill:#f6f8fa,stroke:#ff4d4d,stroke-dasharray: 5 5;
 ```
 
 ## Back-of-the-Envelope Heuristics

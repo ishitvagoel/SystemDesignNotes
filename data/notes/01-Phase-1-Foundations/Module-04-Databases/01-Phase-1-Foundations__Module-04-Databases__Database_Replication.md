@@ -123,8 +123,8 @@ graph TD
     User[User] -->|Read| AsyncReplica
     User -->|Read| RemoteReplica
     
-    style Primary fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style SyncReplica fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+    style Primary fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style SyncReplica fill:#f6f8fa,stroke:#0969da,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics

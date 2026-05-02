@@ -125,8 +125,8 @@ graph TD
         Burn --> OnCall[PagerDuty / SRE]
     end
 
-    style SLO fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Reliability fill:var(--surface),stroke:#ff4d4d,stroke-width:2px;
+    style SLO fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Reliability fill:#f6f8fa,stroke:#ff4d4d,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

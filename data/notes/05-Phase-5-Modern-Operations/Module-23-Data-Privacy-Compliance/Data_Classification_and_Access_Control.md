@@ -103,8 +103,8 @@ graph TD
         Scanner -.-> Logs[Log Streams]
     end
 
-    style Policy fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Vault fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style Policy fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Vault fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

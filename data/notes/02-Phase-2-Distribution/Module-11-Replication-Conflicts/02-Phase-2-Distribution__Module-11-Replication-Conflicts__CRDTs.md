@@ -142,12 +142,12 @@ Extending CRDTs to JSON documents: each field is independently a CRDT (counter, 
 ```mermaid
 graph TD
     subgraph "Replica A (New York)"
-        StateA[State: {A:5, B:2}]
+        StateA["State: {A:5, B:2}"]
         OpA[Increment A] --> StateA
     end
 
     subgraph "Replica B (London)"
-        StateB[State: {A:4, B:3}]
+        StateB["State: {A:4, B:3}"]
         OpB[Increment B] --> StateB
     end
 
@@ -155,8 +155,8 @@ graph TD
     StateB -- "Gossip: {A:4, B:3}" --> MergeA
 
     subgraph "Merge Logic (Join Semi-Lattice)"
-        MergeA["Merge: max(A), max(B)"] --> FinalA[Final: {A:5, B:3}]
-        MergeB["Merge: max(A), max(B)"] --> FinalB[Final: {A:5, B:3}]
+        MergeA["Merge: max(A), max(B)"] --> FinalA["Final: {A:5, B:3}"]
+        MergeB["Merge: max(A), max(B)"] --> FinalB["Final: {A:5, B:3}"]
     end
 ```
 

@@ -139,8 +139,8 @@ graph TD
     CacheA -- "Miss" --> DB[(Primary DB)]
     CacheB -- "Miss" --> DB
     
-    classDef primary fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    classDef secondary fill:var(--bg2),stroke:var(--border),stroke-width:1px;
+    classDef primary fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    classDef secondary fill:#edf2f7,stroke:#94a3b8,stroke-width:1px;
     class Client,LB secondary;
     class App1,App2,DB primary;
     class CacheA,CacheB,CacheC primary;
@@ -178,8 +178,8 @@ graph TD
     
     CacheB -- "Miss" --> DB[(Primary DB)]
     
-    style CacheB fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style CacheC fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style CacheB fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style CacheC fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

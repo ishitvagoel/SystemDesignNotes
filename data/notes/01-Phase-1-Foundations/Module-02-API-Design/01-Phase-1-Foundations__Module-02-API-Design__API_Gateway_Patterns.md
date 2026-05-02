@@ -137,8 +137,8 @@ graph TD
         Gateway -->|gRPC| Payments[Payment Service]
     end
 
-    style Gateway fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Users fill:var(--surface),stroke:var(--border),stroke-width:1px;
+    style Gateway fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Users fill:#f6f8fa,stroke:#94a3b8,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics

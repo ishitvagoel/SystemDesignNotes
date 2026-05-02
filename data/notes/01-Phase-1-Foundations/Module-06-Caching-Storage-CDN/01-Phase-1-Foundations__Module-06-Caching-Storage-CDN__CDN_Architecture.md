@@ -136,8 +136,8 @@ graph TD
         Edge --> Serverless[Edge Workers / Logic]
     end
 
-    style Edge fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Shield fill:var(--surface),stroke:var(--accent2),stroke-dasharray: 5 5;
+    style Edge fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Shield fill:#f6f8fa,stroke:#0969da,stroke-dasharray: 5 5;
 ```
 
 ## Back-of-the-Envelope Heuristics

@@ -23,7 +23,9 @@ What goes wrong in practice. Realistic scenarios.
 Include a valid Mermaid.js diagram (sequence or flowchart). Rely on the theme variables defined in the application.
 
 ```mermaid
-(diagram here)
+flowchart TD
+    A[Context] --> B[Core mechanism]
+    B --> C[Trade-offs]
 ```
 
 ## Back-of-the-Envelope Heuristics

@@ -92,8 +92,8 @@ graph TD
         Plan -.-> Long[Long-term: Vector DB]
     end
 
-    style Plan fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Act fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style Plan fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Act fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

@@ -135,8 +135,8 @@ graph TD
         C_Pay -- "Failed Event" --> C_Stock_Comp[Release Stock]
     end
 
-    style Orch fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Pay fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+    style Orch fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Pay fill:#f6f8fa,stroke:#0969da,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics

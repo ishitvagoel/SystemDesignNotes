@@ -209,7 +209,7 @@ flowchart TD
     Executor --> AccessMethods
     AccessMethods --> Result["Result Set"]
 
-    style PlannerInternal fill:var(--surface),stroke:var(--accent),stroke-width:2px
+    style PlannerInternal fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px
 ```
 
 ## Back-of-the-Envelope Heuristics

@@ -134,8 +134,8 @@ graph TD
         DB_US -.->|Filtered Replication| DB_EU
     end
 
-    style Region_EU fill:var(--surface),stroke:#2d8a4e,stroke-width:2px;
-    style DB_EU fill:var(--surface),stroke:#2d8a4e,stroke-width:2px;
+    style Region_EU fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style DB_EU fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

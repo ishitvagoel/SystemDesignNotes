@@ -108,8 +108,8 @@ graph LR
         SvcB -->|5. Check Dedup| SvcB_DB[(Consumer DB)]
     end
 
-    style App fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style CDC fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style App fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style CDC fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

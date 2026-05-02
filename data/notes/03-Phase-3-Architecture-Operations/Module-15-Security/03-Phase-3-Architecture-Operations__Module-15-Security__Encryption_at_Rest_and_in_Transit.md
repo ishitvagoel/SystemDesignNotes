@@ -110,8 +110,8 @@ graph TD
         Storage --- E_DEK[Encrypted DEK]
     end
 
-    style KEK fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Cipher fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+    style KEK fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Cipher fill:#f6f8fa,stroke:#0969da,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics

@@ -121,8 +121,8 @@ graph TD
         Worker1 & Worker2 -.-> PrefixCache{Shared Prefix Cache}
     end
 
-    style GPU fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style PagedAttn fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style GPU fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style PagedAttn fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

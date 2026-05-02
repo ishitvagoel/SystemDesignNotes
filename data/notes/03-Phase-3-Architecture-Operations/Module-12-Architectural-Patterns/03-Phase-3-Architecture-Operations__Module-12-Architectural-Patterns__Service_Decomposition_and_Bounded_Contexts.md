@@ -95,9 +95,9 @@ graph TD
     S_C -.->|Event: Lead Won| B_C
     B_C -.->|Event: Payment Overdue| Sup_C
 
-    style S_C fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Sup_C fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
-    style B_C fill:var(--surface),stroke:var(--border),stroke-width:2px;
+    style S_C fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Sup_C fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
+    style B_C fill:#f6f8fa,stroke:#94a3b8,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

@@ -139,8 +139,8 @@ graph LR
     Order -- "gRPC (Unary)" --> User
     Order -- "gRPC (Streaming)" --> Inv
 
-    style Gateway fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Order fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+    style Gateway fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Order fill:#f6f8fa,stroke:#0969da,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics

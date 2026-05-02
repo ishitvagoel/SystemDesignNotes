@@ -125,8 +125,8 @@ graph TD
         C3 -- "Stream 2" --> S3
     end
 
-    style S2 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style S3 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style S2 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style S3 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

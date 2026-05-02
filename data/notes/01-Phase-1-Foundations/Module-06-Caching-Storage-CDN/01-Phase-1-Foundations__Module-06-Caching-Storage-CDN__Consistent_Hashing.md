@@ -102,8 +102,8 @@ graph LR
         NodeD --- Key2
     end
 
-    style NodeA fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style NodeB fill:var(--surface),stroke:var(--accent),stroke-width:2px;
+    style NodeA fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style NodeB fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

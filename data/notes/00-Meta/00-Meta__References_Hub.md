@@ -10,8 +10,8 @@ graph TD
     P2 -->|Structural Guidance| P3[Tertiary: Engineering Blogs]
     P3 -->|Real-world implementation| P4[Tactical: Docs & Tutorials]
     
-    style P1 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style P3 fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style P1 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style P3 fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Vetting Heuristics (The "Senior" Standard)

@@ -119,8 +119,8 @@ graph TD
         Visibility -->|Cost per Feature| Roadmap[Product Roadmap]
     end
 
-    style Visibility fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Resize fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+    style Visibility fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Resize fill:#f6f8fa,stroke:#0969da,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics

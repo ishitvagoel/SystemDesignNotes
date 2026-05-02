@@ -130,7 +130,7 @@ Compatibility is checked on schema registration — if a new schema version brea
 graph LR
     subgraph "Producer (App v2)"
         P[App Instance] -->|1. Register Schema| SR{Schema Registry}
-        P -->|2. Encode with ID| Msg[Message: {id: 105, data: bin}]
+        P -->|2. Encode with ID| Msg["Message: {id: 105, data: bin}"]
     end
 
     subgraph "Event Stream"
@@ -148,8 +148,8 @@ graph LR
         C2 -->|4. Resolve: All Fields| Read2[New Logic]
     end
 
-    style SR fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Kafka fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style SR fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Kafka fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

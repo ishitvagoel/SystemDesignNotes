@@ -158,8 +158,8 @@ graph TD
         Coord -->|Merge & Rank| Final[Ranked Results]
     end
 
-    style Index fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style Shard1 fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+    style Index fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style Shard1 fill:#f6f8fa,stroke:#0969da,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics

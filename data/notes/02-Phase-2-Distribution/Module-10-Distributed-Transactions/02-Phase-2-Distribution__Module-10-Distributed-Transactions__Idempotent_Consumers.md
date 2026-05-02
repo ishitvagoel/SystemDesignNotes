@@ -107,7 +107,7 @@ If the consumer crashes mid-processing, the Kafka transaction is rolled back —
 ```mermaid
 graph TD
     subgraph "Messaging Infrastructure"
-        Broker[Message Broker: Kafka/SQS] -->|1. Deliver (At-least-once)| Consumer[App Consumer]
+        Broker[Message Broker: Kafka/SQS] -->|"1. Deliver (At-least-once)"| Consumer[App Consumer]
     end
 
     subgraph "Idempotent Logic (Atomic Transaction)"
@@ -121,8 +121,8 @@ graph TD
         BizLogic -->|4. Call with ID| Notify[Email/Payment Svc]
     end
 
-    style Consumer fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style DB fill:var(--surface),stroke:var(--accent2),stroke-width:2px;
+    style Consumer fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style DB fill:#f6f8fa,stroke:#0969da,stroke-width:2px;
 ```
 
 ## Back-of-the-Envelope Heuristics

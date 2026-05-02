@@ -104,8 +104,8 @@ graph TD
     S1 -- "Health Check: /health" --> LB_L7_1
     S2 -- "Health Check: /health" --> LB_L7_1
 
-    style LB_L4 fill:var(--surface),stroke:var(--accent),stroke-width:2px;
-    style LB_L7_1 fill:var(--surface),stroke:var(--accent2),stroke-width:1px;
+    style LB_L4 fill:#f6f8fa,stroke:#2d8a4e,stroke-width:2px;
+    style LB_L7_1 fill:#f6f8fa,stroke:#0969da,stroke-width:1px;
 ```
 
 ## Back-of-the-Envelope Heuristics
