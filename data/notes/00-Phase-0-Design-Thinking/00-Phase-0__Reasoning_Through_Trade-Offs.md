@@ -14,6 +14,23 @@ In physics, a system at equilibrium is in the lowest energy state accessible giv
 
 ---
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Options[Credible Options] --> Score[Score Against Constraints]
+    Score --> Veto{Dominant Constraint Passes?}
+    Veto -->|No| Remove[Remove Option]
+    Veto -->|Yes| Effects[Second-Order Effects]
+    Effects --> Door{One-Way Door?}
+    Door -->|Yes| DeepReview[Prototype and Review]
+    Door -->|No| Timebox[Timebox Decision]
+    DeepReview --> Decision[Document Decision]
+    Timebox --> Decision
+```
+
+The process is designed to prevent false symmetry. Not every option deserves equal analysis, and not every decision deserves equal ceremony. Options that fail the dominant constraint are removed early. Two-way doors get timeboxed. One-way doors get deeper review because the cost of being wrong is higher.
+
 ## The 6-Step Decision Process
 
 ```mermaid
@@ -160,6 +177,20 @@ Constraints: payment processing takes 200–2000ms (variable), user latency budg
 Dominant constraint: latency budget makes synchronous impossible (2000ms > 300ms). Async with push result wins.
 
 ---
+
+## Back-of-the-Envelope Heuristics
+
+- **Two-way doors get a timer**: If a decision can be reversed in under a day with no data migration or client-visible contract change, timebox it to 30-60 minutes.
+- **One-way doors need adversarial review**: Data model, external API, event schema, and consistency model decisions should have an explicit "how would this fail?" review.
+- **A veto beats a weighted average**: A cheap option that violates the dominant constraint is not a bargain; it is wrong for this system.
+- **Second-order effects should name new work**: "Operational complexity" is vague. "Need dead-letter queues, replay tooling, and idempotent consumers" is actionable.
+- **The 10x bottleneck should be concrete**: "Database write primary saturates" is useful. "It might not scale" is not.
+
+## Real-World Case Studies
+
+- **Twitter feed architecture**: Pure fanout-on-write gives excellent read latency but fails for celebrity accounts. The hybrid push/pull model is a trade-off that accepts extra complexity to handle the dominant celebrity fanout constraint.
+- **Stripe API idempotency**: Payment APIs treat duplicate requests as a first-class failure mode. The trade-off is storing idempotency keys and replaying previous responses to avoid double charges.
+- **Shopify modular monolith**: Shopify did not treat "monolith vs microservices" as a binary ideology. It chose modular boundaries inside one deployable to balance team autonomy against operational simplicity.
 
 ## Connections
 

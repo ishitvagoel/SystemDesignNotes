@@ -4,6 +4,14 @@
 
 Design a feature flag platform used by 10,000 engineers to control feature rollouts, A/B experiments, and kill switches across a multi-service production system.
 
+## Mental Model
+
+> **A feature flag platform is a control plane that publishes config to many local data planes.**
+
+Flag evaluation must not depend on a network call to the central service. The control plane is where humans create rules, approvals, audit records, and experiment definitions. The data plane is the SDK running inside application processes, evaluating flags from a local in-memory snapshot in under a millisecond. Outages in the control plane should delay changes, not break production traffic.
+
+This split explains most design choices. Propagation is eventually consistent but bounded. Evaluation is local and deterministic. Kill switches need conservative fail-safe defaults. Experiments need stable bucketing so users do not jump between variants. Audit logs and analytics are append-only streams around the same core fact: changing runtime behavior is production deployment by another name.
+
 **Functional requirements**:
 - Create, update, and delete flags with targeting rules (user %, user ID list, org ID, plan tier, region)
 - Evaluate flags at request time with < 1ms p99 latency

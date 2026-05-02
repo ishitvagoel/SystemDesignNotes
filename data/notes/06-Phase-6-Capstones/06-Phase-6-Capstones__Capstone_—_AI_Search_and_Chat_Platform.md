@@ -2,6 +2,14 @@
 
 *RAG pipeline design, vector search, LLM gateway, semantic caching, and agentic tool use.*
 
+## Mental Model
+
+> **An AI search platform is a retrieval system first and a generation system second.**
+
+The LLM is the most visible component, but answer quality is usually bounded by retrieval quality, context assembly, and guardrails. The platform must find the right evidence, rank it, fit it into the model context, and only then generate. If retrieval returns weak context, a larger model mostly produces more confident wrong answers.
+
+Separate the system into ingestion, retrieval, orchestration, and generation. Ingestion controls freshness and document quality. Retrieval controls relevance. The AI gateway controls model choice, cost, caching, and fallbacks. Tool use expands capability but also expands failure modes, so every tool call needs permissions, idempotency, timeouts, and traceability.
+
 ## 1. Requirements
 
 ### Functional

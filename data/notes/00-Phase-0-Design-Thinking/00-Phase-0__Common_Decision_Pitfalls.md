@@ -6,6 +6,16 @@ The hardest bugs in system design are not technical — they are cognitive. Smar
 
 This note catalogues 8 recurring anti-patterns in design reasoning, each with a physics or context analogy to make it memorable, and a practical detection test.
 
+## Mental Model
+
+> **Bad architecture often starts as an accounting error: the decision ignores a real cost.**
+
+Each pitfall in this note hides a cost from the decision process. Resume-driven development hides operational cost. Cargo culting hides context mismatch. Premature optimisation hides opportunity cost. Consistency theater hides application-level race conditions. Premature abstraction hides interface and maintenance cost.
+
+The practical move is to make the hidden cost visible before the team commits. In a design review, ask: "What cost is this choice moving out of sight?" If the answer is unclear, slow down. A pattern that looks elegant on the architecture diagram may be borrowing complexity from operations, debugging, onboarding, migrations, or future reversibility.
+
+Use the pitfalls as review probes rather than accusations. The point is not to label a teammate as biased. The point is to create a shared checklist that helps the team catch predictable reasoning errors while the architecture is still cheap to change.
+
 ```mermaid
 graph TD
     Start[Design Decision] --> CargoCult[Cargo Culting]

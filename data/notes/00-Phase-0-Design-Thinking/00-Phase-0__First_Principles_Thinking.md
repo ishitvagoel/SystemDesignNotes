@@ -22,6 +22,23 @@ graph LR
 
 Every design decision is a choice of where to stand along one or more tension axes. The forces are always present. Ignoring them does not make them go away; it just means you discover them in production instead of at the whiteboard.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Req[Feature Request] --> Truths[Irreducible Truths]
+    Truths --> Tensions[Dominant Tension]
+    Tensions --> Options[Architecture Options]
+    Options --> Choice[Chosen Trade-off]
+
+    Truths --> Volume[Data Volume]
+    Truths --> Latency[Latency Budget]
+    Truths --> Failure[Failure Tolerance]
+    Truths --> Team[Team Capacity]
+```
+
+The important step is the middle one: translating a feature request into irreducible truths before naming tools. "Build chat" is not enough. "Messages must arrive within 100ms, tolerate mobile disconnects, preserve ordering per conversation, and support 10M daily users" is enough to start deriving architecture.
+
 ## The 5 Fundamental Tensions
 
 These are the "conservation laws" of system design. You cannot eliminate them — you can only decide where to take the cost.
@@ -83,6 +100,19 @@ Two teams interpret the requirements differently:
 All three are correct for different constraints. The same four words — "record user activity" — yield three completely different architectures depending on which tension dominates. This is why extracting constraints (see [[00-Phase-0__Requirements_to_Constraints]]) before choosing an architecture is non-negotiable.
 
 ---
+
+## Back-of-the-Envelope Heuristics
+
+- **Name the tension before naming the tool**: If the proposal starts with "use Kafka" or "use DynamoDB" before identifying the dominant tension, the reasoning is backwards.
+- **One dominant tension usually explains 80% of the architecture**: Low-latency trading systems are latency-first. Banking ledgers are consistency-first. Analytics pipelines are throughput-first.
+- **If two tensions both look dominant, split the workload**: A system may need a durable write path and a low-latency read path. That often means separate storage models or asynchronous projections.
+- **Do not optimise both ends of a tension at once**: "Strongly consistent, globally available, ultra-low-latency, cheap" is a wish list, not a design. Force the trade.
+
+## Real-World Case Studies
+
+- **Amazon Dynamo**: Dynamo chose availability and partition tolerance over strong consistency for shopping-cart-style workloads. The design made conflict resolution an application concern because availability was the dominant tension.
+- **Google Spanner**: Spanner chose external consistency for globally distributed transactions, accepting specialised clock infrastructure and commit-wait latency. It is a clear example of paying real cost for a specific consistency guarantee.
+- **Redis**: Redis optimises for in-memory speed and operational simplicity, accepting durability trade-offs depending on configuration. It is the right answer when latency dominates and the data model fits memory-resident access patterns.
 
 ## Connections
 

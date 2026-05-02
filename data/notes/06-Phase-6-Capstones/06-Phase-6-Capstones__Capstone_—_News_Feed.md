@@ -2,6 +2,14 @@
 
 *Fan-out strategies, ranking, caching at scale, and the read-heavy optimization problem.*
 
+## Mental Model
+
+> **A news feed is a precomputed inbox for normal users and an on-demand query for outliers.**
+
+The central design pressure is asymmetry. Most users have a modest follower graph, so fan-out-on-write gives fast reads by doing work when a post is created. A tiny number of celebrity accounts have millions of followers, so pure fan-out-on-write creates write storms. The winning architecture is usually hybrid: push posts from ordinary users into follower feed caches, and pull celebrity posts at read time.
+
+Think of the feed as a latency budget allocator. Reads are frequent and user-visible, so spend storage and background work to make them fast. Writes are less frequent, but they can explode for high-follower accounts, so cap their blast radius with special handling, queues, ranking stages, and cache invalidation discipline.
+
 ## 1. Requirements
 
 ### Functional

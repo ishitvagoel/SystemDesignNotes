@@ -23,6 +23,24 @@ graph LR
 
 Constraints are not obstacles — they are gifts. Every constraint you identify eliminates options you don't have to evaluate. The more constrained the problem, the fewer viable solutions remain, and the more defensible your choice becomes.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Prompt[Vague Product Ask] --> Functional[Functional Requirements]
+    Prompt --> NonFunctional[Non-Functional Requirements]
+    NonFunctional --> Numbers[Numbers and Budgets]
+    Numbers --> Dominant[Dominant Constraint]
+    Dominant --> Architecture[Architecture Direction]
+
+    Numbers --> Latency[p99 Latency]
+    Numbers --> Volume[Data Volume]
+    Numbers --> Availability[SLA]
+    Numbers --> Cost[Cost Ceiling]
+```
+
+The architecture direction should not emerge directly from the product ask. It should emerge from the numbers. "Send notifications" can be a cron job, a durable queue, a pub/sub system, or a multi-region event platform depending on loss tolerance, latency, fanout, and cost.
+
 ## Functional vs Non-Functional Requirements
 
 | Type | Definition | Example | Drives |
@@ -157,6 +175,20 @@ Back-of-envelope calculations are often taught as an interview skill. They are a
 **Design direction**: Event producers → durable queue → fanout workers (push vs email) → delivery APIs. The queue must persist to disk (durability) and have < 5s consumer lag on the push path.
 
 ---
+
+## Back-of-the-Envelope Heuristics
+
+- **Translate adjectives into numbers**: "Fast" becomes p99 < 100ms. "Reliable" becomes 99.9% availability or zero accepted data loss. "Large scale" becomes QPS, rows, GB/day, and active users.
+- **Ask for peak, not average**: A system with 100 QPS average and 5,000 QPS peak is a 5,000 QPS design problem.
+- **Separate loss tolerance from delay tolerance**: "Delayed for 5 minutes is fine" and "lost forever is unacceptable" point to durable asynchronous architecture.
+- **Cost can be the binding constraint**: A $500/month budget eliminates many managed multi-region or high-throughput services before architecture discussion begins.
+- **Growth rate matters more than current size**: 50GB today growing 1GB/month is different from 50GB today growing 1TB/month.
+
+## Real-World Case Studies
+
+- **YouTube video processing**: Upload completion and transcoding completion have different latency budgets. The upload API returns quickly, while durable background jobs handle transcoding and retries.
+- **Amazon S3 durability target**: S3's design is dominated by durability and availability, not low single-object write latency. Replication, checksums, and repair processes follow from that constraint.
+- **Slack-style messaging**: Interactive chat has tight user-visible latency, but search indexing and analytics can lag. Different constraints produce separate synchronous and asynchronous paths.
 
 ## Connections
 

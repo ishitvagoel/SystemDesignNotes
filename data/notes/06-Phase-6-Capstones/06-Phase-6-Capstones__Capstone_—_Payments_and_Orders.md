@@ -2,6 +2,14 @@
 
 *The system where getting consistency wrong costs real money. Distributed transactions, idempotency, saga patterns, and double-entry accounting.*
 
+## Mental Model
+
+> **Payments are a state machine plus a ledger; everything else exists to make retries safe.**
+
+The checkout flow crosses services, databases, and an external payment processor, so there is no single transaction boundary that can make the whole operation atomic. The design goal is not to make failure impossible. The design goal is to make every failure land in a durable, inspectable state that can be retried, compensated, or reconciled without double-charging the customer or losing money.
+
+Model the order as a saga state machine and the money movement as immutable ledger entries. Idempotency keys protect every command that might be retried. The ledger provides the truth needed for reconciliation. Inventory reservations and payment authorizations are temporary claims that must either be finalized or expired by background repair processes.
+
 ## 1. Requirements
 
 ### Functional

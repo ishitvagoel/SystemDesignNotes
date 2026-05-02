@@ -8,6 +8,23 @@ The goal is not to hand you answers — it is to show the reasoning process so y
 
 ---
 
+## Mental Model
+
+> **Architecture decisions are funnels, not debates. Start wide, then let constraints remove bad options until only defensible choices remain.**
+
+The decision framework works because it separates discovery from judgement. Early in the process, you are collecting facts: requirements, constraints, scale, risk, and reversibility. Only after those facts are visible do you compare options. This prevents the common failure mode where a team starts with a favourite technology and then reverse-engineers reasons to justify it.
+
+Think of the framework as a narrowing funnel:
+
+- Requirements define the problem boundary.
+- Constraints convert vague needs into measurable pressure.
+- The dominant constraint eliminates options that cannot satisfy the system's most important requirement.
+- Trade-off analysis compares the remaining options.
+- Reversibility determines how much review the decision deserves.
+- The 10x check tells you which future bottleneck you are accepting.
+
+The output is not "the perfect architecture." The output is a decision whose assumptions, risks, and trigger points are explicit enough that future engineers can revisit it without reconstructing the whole conversation.
+
 ## The Decision Checklist (1-Page Reference)
 
 ```mermaid

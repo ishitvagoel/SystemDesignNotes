@@ -2,6 +2,14 @@
 
 *Geo-distribution, data sovereignty, multi-tenancy, CDN strategy, and cost engineering across regions.*
 
+## Mental Model
+
+> **Multi-region commerce is not one replication strategy; it is a data classification problem.**
+
+The mistake is trying to make every piece of data globally fast, strongly consistent, and legally local. Product pages, carts, inventory, orders, payments, and user profiles have different consistency, latency, and sovereignty requirements. A good design classifies each data type and assigns it the weakest coordination model that is still correct.
+
+Public catalog data can be copied everywhere. Personal data should stay in the user's legal region. Inventory needs a clear authority to avoid overselling. Orders and payments need durable regional records and reconciliation. The architecture is a portfolio of per-data strategies connected by routing, caching, and event pipelines, not a single global database choice.
+
 ## 1. Requirements
 
 - **Global**: Serve customers in North America, Europe, and Asia-Pacific with <100ms page load time

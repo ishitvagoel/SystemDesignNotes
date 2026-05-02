@@ -2,6 +2,14 @@
 
 *CRDTs/OT, WebSockets, presence, conflict resolution, and cell-based isolation.*
 
+## Mental Model
+
+> **A collaborative editor is a replicated data structure with a real-time transport around it.**
+
+The hard part is not WebSockets. The hard part is preserving intent when edits arrive concurrently, out of order, and after offline periods. The transport moves operations quickly, but the document model decides whether replicas converge. CRDTs push more logic into the data type so clients can merge offline work. Operational Transformation centralizes more coordination and requires a server to transform operations against document history.
+
+Separate the system into three planes: durable document state, low-latency operation fanout, and ephemeral presence. Presence can be lost and recomputed. Operations cannot be lost. Document convergence is the invariant that matters most; every cache, WebSocket shard, and regional cell exists to preserve that invariant within the latency budget.
+
 ## 1. Requirements
 
 ### Functional

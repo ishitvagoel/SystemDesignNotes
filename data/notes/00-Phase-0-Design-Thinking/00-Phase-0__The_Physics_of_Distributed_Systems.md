@@ -18,6 +18,16 @@ Each isomorphism includes: the physical principle, the system design parallel, w
 
 ---
 
+## Mental Model
+
+> **Distributed systems fail when physical constraints are treated as implementation details.**
+
+Physics analogies are useful because they make invisible constraints visible. Latency is finite propagation speed. Queue growth is pressure. Hot paths are narrow pipes. Data gravity is migration energy. Entropy is the maintenance work required to keep a system understandable and efficient.
+
+When you reason this way, failures become less surprising. A queue that grows forever is not "temporarily behind"; it is a reservoir filling without a drain sized for inflow. A cross-region strong-consistency design is not "just one more network call"; it is information trying to outrun propagation delay. A system with no compaction, cleanup, or migration budget is not stable; it is accumulating disorder.
+
+The design habit is simple: for every architecture diagram, identify the conservation law it is fighting. Where does load accumulate? Where can information not arrive in time? Where does data become too massive to move? Where does entropy require active work? Those are the points where production incidents usually begin.
+
 ## Thermodynamics
 
 ### Entropy: Systems Degrade Without Active Maintenance

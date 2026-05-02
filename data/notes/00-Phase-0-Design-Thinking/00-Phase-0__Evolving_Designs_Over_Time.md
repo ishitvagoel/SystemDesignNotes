@@ -16,6 +16,23 @@ Software architecture obeys the same logic. Microservices are adaptive at 200+ e
 
 **The discipline**: Be aware of the environment you are in, watch for signals that the environment is shifting, and evolve in response to those signals — not in anticipation of hypothetical future environments.
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    Simple[Simple Working Design] --> Instrument[Instrument]
+    Instrument --> Signals[Measured Pressure Signals]
+    Signals --> Bottleneck[Identify Bottleneck]
+    Bottleneck --> Change[Targeted Evolution]
+    Change --> Validate[Validate New Fitness]
+    Validate --> Instrument
+
+    Signals -->|No strong signal| Stay[Keep Current Design]
+    Stay --> Instrument
+```
+
+Evolution should be a feedback loop, not a prophecy. The system starts simple, measurement reveals real pressure, and architecture changes target the bottleneck that actually appeared. If the signal is weak, the correct move is often to keep measuring rather than pre-building complexity.
+
 ---
 
 ## Start Simple, Measure, Then Optimise
@@ -157,6 +174,20 @@ Twitter's original Ruby on Rails monolith handled the first wave of growth but b
 **The lesson**: The Ruby monolith was the right choice at launch (fastest path to product-market fit). The JVM migration was the right choice at scale. Neither was the right choice at the other's scale.
 
 ---
+
+## Back-of-the-Envelope Heuristics
+
+- **Evolve on sustained signals, not single spikes**: A one-time traffic burst may need capacity or rate limiting; a repeated p99 breach needs architectural investigation.
+- **A migration needs a rollback shape before it starts**: If rollback requires restoring old data semantics, plan dual-writes, validation, and cutover checkpoints before moving traffic.
+- **Split when coordination cost exceeds runtime cost**: Service extraction is justified when deploy blocking, team ownership, or change coupling becomes more expensive than distributed operations.
+- **Delay sharding until the single-node path has a dated failure forecast**: Know when disk, write throughput, or maintenance windows will fail at the current growth rate.
+- **Keep escape hatches around one-way doors**: Event schemas need versioning. APIs need compatibility windows. Data migrations need backfills and comparison jobs.
+
+## Real-World Case Studies
+
+- **GitHub's Rails monolith**: GitHub kept a large monolith while investing in internal boundaries, background job infrastructure, and operational maturity. The system evolved by reducing coupling before chasing service count.
+- **Amazon retail service decomposition**: Amazon moved away from shared database-style coupling as team autonomy became the binding constraint. The evolution was driven by organisational scale, not just traffic.
+- **LinkedIn Kafka adoption**: LinkedIn's data integration needs outgrew point-to-point pipelines. Kafka evolved as a log-based substrate because many consumers needed durable, replayable event streams.
 
 ## Connections
 

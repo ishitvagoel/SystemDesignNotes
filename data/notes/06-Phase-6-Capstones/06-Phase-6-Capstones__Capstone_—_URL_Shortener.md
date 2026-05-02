@@ -2,6 +2,14 @@
 
 *Deceptively simple. A single redirect operation reveals estimation, storage trade-offs, ID generation, caching, and analytics pipeline design.*
 
+## Mental Model
+
+> **A URL shortener is a read-optimized redirect service with an analytics pipeline attached.**
+
+Do not over-center the write path. Creating short URLs is low volume compared with redirect traffic, and the core user experience is the redirect: resolve a tiny key to a long URL as fast and reliably as possible. The primary database is the source of truth, but the production system lives or dies by edge caching, Redis hit rate, and safe fallback when those caches miss.
+
+The clean split is: synchronous redirect lookup stays minimal, while analytics moves off the hot path. If click tracking blocks redirects, the design is backwards. If redirects depend on the analytics store, the design is backwards. Treat each click as two events: a user-facing redirect that must finish in milliseconds, and an analytical observation that can be processed asynchronously.
+
 ## 1. Requirements
 
 ### Functional
