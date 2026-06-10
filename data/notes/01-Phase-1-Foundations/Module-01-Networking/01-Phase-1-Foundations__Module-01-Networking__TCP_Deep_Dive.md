@@ -32,7 +32,7 @@ sequenceDiagram
 
 This costs **one full round-trip** before any data flows. On a cross-continent link (~150ms RTT), that's 150ms of pure overhead per new connection. This is why [[01-Phase-1-Foundations__Module-01-Networking__Connection_Pooling_and_Keep-Alive]] matters so much for high-throughput services.
 
-**TLS adds more round-trips**: TLS 1.2 adds two more round-trips (four total before data). TLS 1.3 reduces this to one additional round-trip (two total), and supports 0-RTT resumption for repeat connections — though 0-RTT is vulnerable to replay attacks.
+**TLS adds more round-trips**: TLS 1.2 adds two more round-trips (three total before data). TLS 1.3 reduces this to one additional round-trip (two total), and supports 0-RTT resumption for repeat connections — though 0-RTT is vulnerable to replay attacks.
 
 **TCP Fast Open (TFO)**: Allows data in the SYN packet on repeat connections using a cached cookie. Saves one RTT on the handshake. Adoption is patchy — middleboxes (firewalls, NATs) sometimes strip TFO options.
 
@@ -42,7 +42,7 @@ TCP doesn't just send as fast as it can. It probes the network's capacity and ba
 
 **The core concept — congestion window (cwnd)**: The sender maintains a window of how many bytes it can have "in flight" (sent but not yet acknowledged). This window grows and shrinks based on network feedback.
 
-**Slow start**: A new connection starts with a small cwnd (typically 10 segments = ~14KB). For every acknowledged segment, cwnd doubles — exponential growth. This sounds fast, but on a high-bandwidth link, it means TCP takes several round-trips to fully utilize available bandwidth. A fresh connection on a 1Gbps link with 50ms RTT takes ~500ms to reach full throughput.
+**Slow start**: A new connection starts with a small cwnd (typically 10 segments = ~14KB). For every acknowledged segment, cwnd grows by one segment — doubling every RTT, i.e., exponential growth. This sounds fast, but on a high-bandwidth link, it means TCP takes several round-trips to fully utilize available bandwidth. A fresh connection on a 1Gbps link with 50ms RTT takes ~500ms to reach full throughput.
 
 **Congestion avoidance**: Once cwnd exceeds a threshold (ssthresh), growth slows to linear — one segment per RTT. This phase probes for available bandwidth more cautiously.
 
