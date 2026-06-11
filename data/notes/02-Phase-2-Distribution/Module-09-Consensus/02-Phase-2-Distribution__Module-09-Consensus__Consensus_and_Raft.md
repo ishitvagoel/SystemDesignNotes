@@ -159,7 +159,7 @@ stateDiagram-v2
 ## Real-World Case Studies
 
 - **Kubernetes (etcd)**: The "brain" of Kubernetes, **etcd**, uses Raft to store all cluster state (Pods, ConfigMaps, Secrets). Because Raft ensures strong consistency, Kubernetes can guarantee that two controllers never try to manage the same resource simultaneously, preventing race conditions in cluster orchestration.
-- **CockroachDB (Multi-Raft)**: CockroachDB doesn't just run one Raft group; it runs **thousands**. Every 64MB "Range" of data is its own independent Raft group. This allows CockroachDB to scale horizontally—adding more nodes just means more Raft groups can be distributed across the cluster.
+- **CockroachDB (Multi-Raft)**: CockroachDB doesn't just run one Raft group; it runs **thousands**. Every "Range" of data (512MB by default in modern versions; 64MB originally) is its own independent Raft group. This allows CockroachDB to scale horizontally—adding more nodes just means more Raft groups can be distributed across the cluster.
 - **HashiCorp Consul**: Consul uses Raft for its highly-available key-value store and service discovery metadata. They famously documented how they use **Leases** on the Raft leader to allow high-performance, linearizable reads without needing a full consensus round-trip for every `GET` request.
 
 ## Connections

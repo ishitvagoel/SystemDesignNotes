@@ -63,7 +63,7 @@ Each editing operation (insert character at position 5, delete character at posi
 
 **How it works for text editing**: Each character has a unique, immutable ID and a position defined relative to its neighbors (not absolute position). Inserting between characters A and B creates a new character with an ID that sorts between A and B. Deletions mark characters as tombstones rather than removing them. This means positions never shift — concurrent inserts at the same position both succeed and interleave deterministically.
 
-**Figma's implementation**: Figma uses CRDTs for their multiplayer design tool. Each design element (rectangle, text block, path) is a CRDT object. Properties (position, color, size) are LWW-Registers (last-writer-wins per property). Adding/removing elements uses OR-Set semantics. The server acts as a relay and persistent store — not a sequencer.
+**Figma's implementation**: Figma uses a CRDT-inspired system for their multiplayer design tool (by their own account, not true CRDTs — a central server is authoritative). Each design element (rectangle, text block, path) is an object whose properties (position, color, size) behave like LWW-Registers (last-writer-wins per property). The server arbitrates conflicting property writes and is the persistent store.
 
 ### Decision Framework
 

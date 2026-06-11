@@ -37,7 +37,7 @@ A typical cloud bill is dominated by three primary pillars:
 *   **Right-Sizing:** Matching instance types to actual utilization. Most workloads run at <20% CPU. Moving from a `c5.4xlarge` to a `c5.xlarge` is a 75% instant saving.
 *   **Spot Instances:** Spare capacity sold at up to 90% discount. Ideal for stateless web tiers, CI/CD, and batch processing. 
     *   *Trade-off:* Requires "Spot-readiness"—the ability to handle a 2-minute termination notice.
-*   **Graviton (ARM) Migration:** AWS Graviton processors often provide 40% better price-performance than x86. Moving a Python, Go, or Java application to ARM is often a configuration change that yields 20% direct cost reduction.
+*   **Graviton (ARM) Migration:** AWS Graviton processors provide up to 40% better price-performance than x86 (AWS's headline figure; ~20% is a typical realized saving). Moving a Python, Go, or Java application to ARM is often a configuration change that yields 20% direct cost reduction.
 *   **Savings Plans & RIs:** Committing to a baseline level of spend for 1 or 3 years. Use this for the "floor" of your traffic, not the peaks.
 
 ### 2. Networking Cost Optimization: Taming Egress

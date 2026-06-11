@@ -295,7 +295,7 @@ graph TD
 
 ## Real-World Case Studies
 
-- **Bitly (Custom Sharding)**: Bitly handles over 25 billion clicks per month. They use a custom sharding strategy based on the short-code prefix. They also heavily utilize **Redis** not just for caching, but for real-time click counters, which are then asynchronously persisted to a permanent store.
+- **Bitly (Custom Sharding)**: Bitly handles over 10 billion clicks and scans per month. They use a custom sharding strategy based on the short-code prefix. They also heavily utilize **Redis** not just for caching, but for real-time click counters, which are then asynchronously persisted to a permanent store.
 - **Twitter (t.co)**: Twitter created `t.co` to protect users from malicious links and to save space. Like Bitly, Twitter uses **301 (Permanent) Redirects** for most links. This reduces their server load (browsers cache the result), but it makes their analytics less granular for repeat clicks from the same user.
 - **TinyURL (The OG)**: TinyURL was the first major shortener. Their original design was simple sequential IDs. This led to "Security by Obscurity" issues where users could easily guess other people's private short links by just incrementing the ID (enumeration attack). Modern shorteners use non-sequential or hashed IDs to prevent this.
 

@@ -85,7 +85,7 @@ MVCC enables multiple isolation levels by controlling *which snapshot* a transac
 | MySQL/InnoDB (undo log + in-place) | Lower — only changed fields in undo log | Reconstructs old versions on read (undo traversal) | Moderate — purge thread cleans undo | Write-heavy OLTP, mixed read/write workloads |
 | Oracle (undo tablespace) | Similar to InnoDB | Snapshot too old errors under extreme load | Moderate | Enterprise OLTP, long-running reporting |
 | CockroachDB/Spanner (intent + MVCC) | Low — intent keys + versioned KV | Good — timestamp-based reads | Distributed GC, more complex | Globally distributed OLTP |
-| Append-only (Datomic, LMDB) | None — never overwrites | Excellent — no reconstruction needed | Storage grows forever without compaction | Audit logs, event sourcing, immutable data |
+| Append-only / copy-on-write (Datomic, LMDB) | None — never overwrites in place | Excellent — no reconstruction needed | Datomic's history grows without compaction; LMDB recycles old pages via a free list | Audit logs, event sourcing, immutable data |
 
 **The GC problem is universal**: Every MVCC implementation accumulates old versions. The question is where the garbage lives (heap tuples, undo logs, version chains) and how it's cleaned up. Long-running transactions are the enemy of every approach — they pin old versions, preventing cleanup, which eventually degrades performance for everyone.
 

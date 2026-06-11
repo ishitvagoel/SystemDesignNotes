@@ -54,7 +54,7 @@ The operating system maintains its own cache of recently accessed file pages in 
 
 Smart buffer pool management goes beyond caching — it anticipates what data will be needed:
 
-**Sequential prefetching**: If the query is doing a sequential scan, the buffer pool can read ahead — prefetching the next N pages before they're requested. This converts random I/O (one page at a time) into sequential I/O (large batch reads), which is dramatically faster on both HDDs and SSDs. Postgres has `effective_io_concurrency` for this.
+**Sequential prefetching**: If the query is doing a sequential scan, the buffer pool can read ahead — prefetching the next N pages before they're requested. This converts random I/O (one page at a time) into sequential I/O (large batch reads), which is dramatically faster on both HDDs and SSDs. Postgres mostly relies on OS readahead for sequential scans; its `effective_io_concurrency` setting controls prefetch depth for bitmap heap scans.
 
 **Index prefetching**: When traversing a B-tree index and collecting row pointers, the engine can sort the pointers by physical location and read the corresponding heap pages in order — converting random I/O into sequential. This is called a "bitmap heap scan" in Postgres.
 

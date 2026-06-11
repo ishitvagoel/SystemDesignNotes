@@ -55,6 +55,10 @@ These concepts appear across many modules:
 
 Every module in Phases 2–4 answers one of these:
 
+1. **How do nodes agree?** (consensus, coordination, distributed transactions — M9, M10)
+2. **What does a reader see, and when?** (consistency models, replication, conflict resolution — M8, M11)
+3. **What happens when something fails?** (partial failure, retries, resilience, observability — M16, M17)
+
 ## Design Navigation Heuristics
 
 - **Start with the User (M1)**: Always begin your design at the user entry point. How do they find you (DNS)? How do they talk to you (API/Paradigms)?

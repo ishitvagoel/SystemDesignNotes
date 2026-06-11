@@ -52,7 +52,7 @@ This is the platform-independent "shipping container" model for software: compil
 ## Server-Side Use Cases
 
 ### 1. Edge Functions at Near-Zero Cold Start
-Cloudflare Workers, Fastly Compute@Edge, and Deno Deploy use WASM as the execution substrate. When a request arrives at an edge PoP, a new WASM isolate starts in **~5 microseconds** (vs. 100ms–1s for a Lambda cold start). This makes per-request isolation economical at edge scale.
+Cloudflare Workers, Fastly Compute@Edge, and Deno Deploy use WASM as the execution substrate. When a request arrives at an edge PoP, instantiating a pre-compiled WASM module takes **microseconds**, and a full isolate cold start is **~5 milliseconds** (vs. 100ms–1s for a Lambda cold start). This makes per-request isolation economical at edge scale.
 
 **The isolation model**: Each request gets a fresh WASM module instance (its own linear memory, no shared state). 10,000 concurrent requests = 10,000 isolated instances. There's no "noisy neighbor" memory corruption risk between requests on the same machine.
 
@@ -114,7 +114,7 @@ flowchart TD
     end
 
     subgraph Runtimes["Deployment Targets (same binary)"]
-        Edge["Cloudflare Workers\n(edge, ~5µs startup)"]
+        Edge["Cloudflare Workers\n(edge, ~5ms cold start)"]
         K8s["WasmEdge in K8s\n(container alternative)"]
         Plugin["Envoy Filter\n(plugin system)"]
         Lambda["Wasmtime on Lambda\n(serverless)"]
@@ -150,7 +150,7 @@ flowchart TD
 
 ## Real-World Case Studies
 
-- **Cloudflare Workers**: Cloudflare runs ~50 million WASM-isolated worker invocations per second globally. Their V8 isolate-per-request model (where WASM runs inside V8) achieves < 5ms cold start at any PoP. When Netflix CDN partners fail, Cloudflare Workers can rewrite origin requests in < 1ms at the edge — before the user's TCP connection even travels to origin.
+- **Cloudflare Workers**: Cloudflare serves tens of millions of requests per second across its global network, with Workers running in V8 isolates (where WASM runs inside V8) that achieve < 5ms cold start at any PoP. Because the code already lives at the edge, a Worker can rewrite or redirect an origin request in well under a millisecond of compute — before the request ever travels to origin.
 
 - **Envoy (gRPC/HTTP WASM Filters)**: Envoy's WASM filter SDK (released 2020) enabled organizations like Zalando and eBay to replace custom Lua filters (unsafe, hard to test) with WASM filters written in Rust or Go. The WASM sandbox prevents a filter crash from bringing down the proxy process — critical for a service mesh component handling all inter-service traffic.
 

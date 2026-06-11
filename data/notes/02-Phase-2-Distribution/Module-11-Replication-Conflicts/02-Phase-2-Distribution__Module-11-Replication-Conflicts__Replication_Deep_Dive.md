@@ -151,7 +151,7 @@ graph TD
 
 ## Real-World Case Studies
 
-- **GitHub (Orchestrator)**: GitHub uses **Orchestrator** to manage its massive MySQL fleet. They famously documented an incident where a network partition caused Orchestrator to promote a new leader while the old one was still alive. Because they used **consul-template** to update their load balancer configs, the split-brain was resolved in seconds by the control plane, minimizing data divergence.
+- **GitHub (Orchestrator)**: GitHub uses **Orchestrator** to manage its massive MySQL fleet. They famously documented an incident (October 2018) where a brief network partition caused Orchestrator to promote a new leader while the old one was still alive. Writes landed on both sides, and reconciling the divergent data degraded the site for roughly 24 hours — a reminder that automated failover can convert a seconds-long partition into a long recovery.
 - **GitLab (The 2017 Data Loss)**: GitLab suffered a major outage when a developer accidentally deleted the production database. The failover mechanism failed because the replicas were out of sync or misconfigured. This incident highlighted that **Replication is not Backup**—you need both asynchronous secondaries for HA and point-in-time snapshots for recovery.
 - **Zalando (Patroni)**: Zalando created **Patroni** to solve the "Postgres HA" problem. They used etcd as the source of truth for the leader's identity. If a Postgres node can't maintain its lease in etcd, it automatically steps down and shuts itself off, providing a robust software-based **STONITH** mechanism that works in any cloud environment.
 

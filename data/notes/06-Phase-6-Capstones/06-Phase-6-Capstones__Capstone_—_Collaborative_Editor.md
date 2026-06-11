@@ -233,7 +233,7 @@ graph TD
 
 ## Real-World Case Studies
 
-- **Figma (Live Design)**: Figma uses a specialized CRDT system to handle thousands of layers and properties. They found that standard CRDTs were too slow for complex design files, so they built a system where the "Scene Graph" is the CRDT. They also use **WebAssembly (Wasm)** on the client to ensure the CRDT merge logic is identical and high-performance across all browsers.
+- **Figma (Live Design)**: Figma uses a specialized CRDT-inspired system (server-authoritative, so not a true CRDT) to handle thousands of layers and properties. They found that standard CRDTs were too slow for complex design files, so they built a system where the "Scene Graph" carries per-property last-writer-wins semantics. They also use **WebAssembly (Wasm)** on the client to ensure the CRDT merge logic is identical and high-performance across all browsers.
 - **Google Docs (OT Heritage)**: Google Docs popularized **Operational Transformation (OT)**. Unlike CRDTs, OT requires a central server to sequence every edit and "transform" concurrent operations against each other. While complex to implement, it allows Google to maintain a single, authoritative version of the document on their servers, making features like "Suggesting Mode" easier to build.
 - **Miro (Canvas Collaboration)**: Miro uses a combination of WebSockets and an asynchronous message bus to handle millions of whiteboards. They use **Cell-Based Routing** to ensure that all editors of a specific board are connected to the same WebSocket server instance, eliminating the need for a complex distributed pub/sub layer for every keystroke.
 
