@@ -94,7 +94,7 @@ Postgres exposes `pg_last_wal_replay_lsn()` and `pg_last_xact_replay_timestamp()
 |-------------------|-----|---------------------|--------------------|----------|
 | Synchronous replication | Zero | Zero — committed means replicated | High — every write waits for replica | Financial data, systems of record |
 | Semi-synchronous (1 sync + N async) | Zero for 1 replica, lag for rest | Zero for 1 replica | Moderate | MySQL with semi-sync, production databases |
-| Asynchronous replication | Seconds to minutes | Possible — uncommitted writes lost on failover | Minimal — fire and forget | Read replicas, analytics, cross-region secondaries |
+| Asynchronous replication | Seconds to minutes | Possible — committed-but-unreplicated writes lost on failover | Minimal — fire and forget | Read replicas, analytics, cross-region secondaries |
 | Logical replication (row-level) | Seconds | Possible | Low — only changed rows | Cross-version upgrades, selective table replication |
 | Physical replication (WAL shipping) | Seconds | Possible | Minimal — streaming WAL bytes | Standby replicas, point-in-time recovery |
 | Change Data Capture (CDC) | Near real-time | Possible | Minimal — reads WAL | Event publishing, search index sync, data pipelines |
