@@ -61,7 +61,7 @@ Spanner uses MVCC with **true timestamps** from TrueTime (GPS + atomic clock-syn
 | Version storage | In heap table (inline) | Undo log (separate) | Versioned storage with timestamps |
 | Bloat / cleanup | VACUUM required | Purge thread (automatic) | Automatic (version retention window) |
 | Old version read cost | Direct (versions are in the heap) | Chain walk (undo log traversal) | Efficient (timestamped versions) |
-| Transaction ID size | 32-bit (wraparound risk) | 64-bit | Timestamps (no wraparound) |
+| Transaction ID size | 32-bit (wraparound risk) | 48-bit (6-byte) | Timestamps (no wraparound) |
 | Max isolation level | Serializable (SSI) | Repeatable Read (default), Serializable (via locking) | External consistency (linearizable) |
 | Distribution | Single-node (logical replication for multi-node) | Single-node (Group Replication for multi-node) | Globally distributed (native) |
 
