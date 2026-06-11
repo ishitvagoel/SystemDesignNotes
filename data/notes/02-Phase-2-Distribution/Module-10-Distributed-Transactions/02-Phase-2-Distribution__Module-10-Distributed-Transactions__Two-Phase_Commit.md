@@ -64,7 +64,7 @@ A coordinator crash is the canonical failure, but a network partition during Pha
 
 Unlike a coordinator crash (where the coordinator restarts and replays the decision), a partition involves a *live* coordinator that can retry. When the partition heals, the coordinator retries `COMMIT` to P3 and P4, and consistency is restored. But the recovery window is bounded by the partition duration — a 30-second partition means 30 seconds of lock contention on P3 and P4's rows, cascading into request timeouts across anything that needs those rows.
 
-This probability scales poorly in microservice deployments. With 5 services each at 99.9% availability, the chance that at least one is unreachable during a 2PC round is approximately `1 - (0.999)^5 ≈ 0.5%`. At 100 transactions per second, that is roughly one blocked transaction every 20 seconds — each holding locks in multiple services simultaneously.
+This probability scales poorly in microservice deployments. With 5 services each at 99.9% availability, the chance that at least one is unreachable during a 2PC round is approximately `1 - (0.999)^5 ≈ 0.5%`. At 100 transactions per second, that is roughly one blocked transaction every 2 seconds — each holding locks in multiple services simultaneously.
 
 ### Availability Impact
 

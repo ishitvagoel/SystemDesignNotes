@@ -111,12 +111,12 @@ graph TD
 
 - **RBAC scale limit**: Most organizations need **20–50 roles**. More than 100 roles usually indicates over-granular RBAC — consider switching to ABAC.
 - **RLS performance**: PostgreSQL RLS adds **<1ms overhead** per query for simple policies. Complex policies with joins may add more.
-- **PII scanning**: AWS Macie processes approximately **1TB for ~$1** in scanning costs. Run weekly scans on data stores.
+- **PII scanning**: AWS Macie sensitive data discovery costs approximately **$1 per GB scanned (~$1,000 per TB)** at the entry tier, with volume discounts. Scope and schedule scans accordingly.
 - **Token vault latency**: A PII vault lookup adds **10–50ms** per de-tokenization. Batch de-tokenization (e.g., for reports) reduces amortized latency to **<1ms per record**.
 
 ## Real-World Case Studies
 
-- **Google (Zanzibar / SpiceDB)**: Google built Zanzibar, a global authorization system that handles trillions of access checks per second across all Google products. It uses relationship-based access control (ReBAC), modeling permissions as relationships in a graph. SpiceDB is an open-source implementation inspired by Zanzibar, used by companies like Authzed, GitHub, and Airbnb.
+- **Google (Zanzibar / SpiceDB)**: Google built Zanzibar, a global authorization system that stores trillions of ACLs and handles millions of authorization checks per second across all Google products. It uses relationship-based access control (ReBAC), modeling permissions as relationships in a graph. SpiceDB is an open-source implementation inspired by Zanzibar, developed by AuthZed.
 - **Uber (Queryguard)**: Uber built an internal tool that intercepts database queries and dynamically masks PII based on the accessor's role and the data's classification. A support agent querying customer data sees masked SSNs and credit cards, while the billing service sees full values. All access is audit-logged with the accessor's identity and business justification.
 
 ## Connections

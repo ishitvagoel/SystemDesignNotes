@@ -116,7 +116,7 @@ graph TD
 ## Back-of-the-Envelope Heuristics
 
 - **Log volume**: Audit logs are typically **2–5× the volume** of operational logs if every data access is tracked. Use sampling for non-sensitive data access to manage volume.
-- **Hot storage cost**: Elasticsearch costs approximately **$0.10–0.30/GB/month**. At 1TB/day of audit logs, that's **$3K–9K/month** for 90-day hot retention.
+- **Hot storage cost**: Elasticsearch costs approximately **$0.10–0.30/GB/month**. At 1TB/day of audit logs (90TB retained), that's **$9K–27K/month** for 90-day hot retention.
 - **Cold storage cost**: S3 Glacier Deep Archive is **$0.00099/GB/month**. 7 years of 1TB/day audit logs costs **~$2,500/month** — 100× cheaper than hot storage.
 - **Query latency**: Hot storage (Elasticsearch): **milliseconds**. Cold storage (S3 + Athena): **seconds to minutes**.
 

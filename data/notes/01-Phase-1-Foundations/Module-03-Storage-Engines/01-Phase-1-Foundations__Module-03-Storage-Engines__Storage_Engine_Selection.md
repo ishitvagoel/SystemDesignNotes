@@ -94,7 +94,7 @@ Signals that you might need to re-evaluate:
 | Engine Type | Write Pattern | Read Pattern | Space Efficiency | Best For |
 |-------------|--------------|-------------|-----------------|----------|
 | B-Tree (InnoDB, PostgreSQL) | Moderate — random I/O, in-place updates | Excellent — O(log N) point lookups | Good — some fragmentation | OLTP, mixed read/write, range queries |
-| LSM-Tree (RocksDB, LevelDB, Cassandra) | Excellent — sequential writes, batch | Good for recent data, compaction tax for old | Lower — write amplification from compaction | Write-heavy, time-series, append-mostly |
+| LSM-Tree (RocksDB, LevelDB, Cassandra) | Excellent — sequential writes, batch | Good for recent data, compaction tax for old | Good — better compression, but transient space amplification during compaction | Write-heavy, time-series, append-mostly |
 | B-Tree + column store (Parquet, ClickHouse) | Batch-oriented | Excellent for analytics, poor for point lookups | Excellent — columnar compression | OLAP, analytics, data warehousing |
 | In-memory (Redis, Memcached, VoltDB) | Excellent — no disk I/O | Excellent — sub-millisecond | Poor — RAM is expensive | Caching, session store, real-time leaderboards |
 | Heap + WAL (PostgreSQL heap) | Good — append WAL, update heap | Requires indexing, heap can bloat | Moderate — dead tuples accumulate | General-purpose with proper VACUUM tuning |

@@ -13,7 +13,7 @@ Imagine three friends trying to agree on a restaurant via text messages, but pho
 
 ## What It Actually Says
 
-**Formal statement**: In an asynchronous distributed system with reliable message delivery (messages are not lost, but can be delayed arbitrarily), if even one process can fail by crashing, there is no deterministic algorithm that guarantees consensus in bounded time.
+**Formal statement**: In an asynchronous distributed system with reliable message delivery (messages are not lost, but can be delayed arbitrarily), if even one process can fail by crashing, there is no deterministic algorithm that guarantees consensus will be reached — not even given unbounded time.
 
 **Breaking it down**:
 

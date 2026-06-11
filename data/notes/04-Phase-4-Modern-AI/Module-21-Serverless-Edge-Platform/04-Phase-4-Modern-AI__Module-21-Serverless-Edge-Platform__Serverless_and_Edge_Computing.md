@@ -117,7 +117,7 @@ graph TD
 
 - **Cost Crossover**: Serverless is cheaper for **< 1-5 million requests/month**. Above this, reserved containers are 3-10x cheaper.
 - **Cold Start Latency**: Interpretive (Node/Python) ~100-300ms; Compiled (Java/C#) ~500ms to 10s.
-- **Memory/CPU**: In AWS Lambda, CPU scales with memory. **1,792 MB** = 1 full vCPU.
+- **Memory/CPU**: In AWS Lambda, CPU scales with memory. **1,769 MB** = 1 full vCPU.
 - **Edge Latency**: Edge compute (Workers) **< 20ms** RTT; Regional (Lambda) **~50-150ms**.
 - **Payload Limits**: API Gateway (10MB), Lambda (6MB sync).
 

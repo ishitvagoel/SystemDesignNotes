@@ -165,7 +165,7 @@ Redis dominates cost. The optimization lever is reducing feed cache size
 
 ## 7. Evolution at 100×
 
-At 5B feed reads/day and 10B posts/day: the feed cache grows to ~4 TB (multiple Redis Clusters). Fan-out writes reach 3.5M/sec. At this point, consider: a custom in-memory feed service (not Redis — purpose-built), tiered feed generation (only pre-compute feeds for users who logged in within the last 7 days), and a more aggressive celebrity threshold (push only for users with <1K followers, pull for everyone else).
+At 50B feed reads/day and 10B posts/day: the feed cache grows to ~40 TB (multiple Redis Clusters). Fan-out writes reach 34.5M/sec. At this point, consider: a custom in-memory feed service (not Redis — purpose-built), tiered feed generation (only pre-compute feeds for users who logged in within the last 7 days), and a more aggressive celebrity threshold (push only for users with <1K followers, pull for everyone else).
 
 ## Key Takeaways
 

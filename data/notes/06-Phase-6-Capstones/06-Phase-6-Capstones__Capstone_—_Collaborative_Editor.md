@@ -249,8 +249,8 @@ graph TD
 
 ## Canonical Sources
 
-- Martin Kluge et al., "Yjs: A CRDT Framework for Shared Editing" — https://yjs.dev
-- Joseph Gentle, "xi-editor: CRDT for text editing" — Rope-based CRDT design
+- Kevin Jahns et al., "Yjs: A CRDT Framework for Shared Editing" — https://yjs.dev
+- Raph Levien, "xi-editor: CRDT for text editing" — Rope-based CRDT design
 - Figma Engineering, "How Figma's Multiplayer Technology Works" (2019)
 - Alex Xu, *System Design Interview* Vol 2 — Collaborative editing design
 

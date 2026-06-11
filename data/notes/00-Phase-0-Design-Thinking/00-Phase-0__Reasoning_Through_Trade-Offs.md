@@ -208,7 +208,7 @@ Dominant constraint: latency budget makes synchronous impossible (2000ms > 300ms
 
 ## Canonical Sources
 
-- Bezos, Amazon "two-pizza team" memo — on two-way vs one-way doors (widely cited paraphrase)
+- Bezos, Amazon 2015 shareholder letter — on two-way vs one-way doors (Type 1/Type 2 decisions; widely cited paraphrase)
 - Hohpe & Woolf, *Enterprise Integration Patterns* — the canonical trade-off analysis for messaging patterns
 - Fowler, "MonolithFirst" (2015, martinfowler.com) — the worked case for monolith-first reasoning
 - Twitter engineering blog on the push/pull feed architecture — the celebrity problem in production

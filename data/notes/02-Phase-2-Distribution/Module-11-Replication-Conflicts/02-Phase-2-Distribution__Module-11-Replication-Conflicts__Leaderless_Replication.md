@@ -21,8 +21,8 @@ With N replicas, the client writes to W nodes and reads from R nodes.
 
 **Common configurations**:
 - `N=3, W=2, R=2`: Standard. Tolerates 1 node failure for both reads and writes. The overlap is 1 node.
-- `N=3, W=3, R=1`: Write-heavy optimization. Writes are slower (wait for all 3), reads are fast (1 node suffices). No write tolerance for node failure.
-- `N=3, W=1, R=3`: Read-heavy optimization. Writes are fast (1 node), reads check all 3. No read tolerance for node failure.
+- `N=3, W=3, R=1`: Read-heavy optimization. Writes are slower (wait for all 3), reads are fast (1 node suffices). No write tolerance for node failure.
+- `N=3, W=1, R=3`: Write-heavy optimization. Writes are fast (1 node), reads check all 3. No read tolerance for node failure.
 - `N=5, W=3, R=3`: Higher availability. Tolerates 2 node failures.
 
 **Why `W + R > N` works**: Write touches W nodes. Read touches R nodes. If W + R > N, the write set and read set must overlap by at least one node. That node has the latest write, so the reader can identify and return the newest version.
@@ -47,7 +47,7 @@ When reading from R nodes, the client may receive different values (some nodes h
 
 **The trade-off**: Sloppy quorums improve write availability (writes succeed even when designated replicas are down). But they weaken consistency — a read from the designated replicas might not find the write (it's on a non-designated node). The quorum condition `W + R > N` no longer guarantees freshness when sloppy quorums are in effect.
 
-**Cassandra's approach**: Sloppy quorums are configurable. `ConsistencyLevel.QUORUM` uses strict quorums. `ConsistencyLevel.ONE` or `ConsistencyLevel.ANY` allow sloppy quorums for maximum availability.
+**Cassandra's approach**: Sloppy quorums are configurable. `ConsistencyLevel.QUORUM` uses strict quorums. `ConsistencyLevel.ANY` allows a write to succeed with only a hint (sloppy behavior) for maximum availability — even `ONE` still requires a true replica to acknowledge.
 
 ### Anti-Entropy
 

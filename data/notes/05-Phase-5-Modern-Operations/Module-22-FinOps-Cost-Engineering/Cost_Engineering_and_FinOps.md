@@ -14,7 +14,7 @@ Imagine a professional kitchen where every chef (engineer) can order any ingredi
 
 ## FinOps as an Architecture-Time Constraint
 
-The most expensive mistake is treating cost as a post-deployment problem. An architecture that generates $0.10/request at 1K requests/day ($3/month) costs $30,000/month at 1M requests/day — a 10,000× increase in load with no fundamental architecture change. If the unit economics are broken by design, no amount of right-sizing rescues the situation.
+The most expensive mistake is treating cost as a post-deployment problem. An architecture that generates $0.10/request at 1K requests/day (~$3,000/month) costs ~$3,000,000/month at 1M requests/day — a 1,000× increase in load with no fundamental architecture change. If the unit economics are broken by design, no amount of right-sizing rescues the situation.
 
 **The principle**: Budget cost the same way you budget latency. When you set a p99 latency SLO of 200ms, you design away from architectures that structurally can't meet it. Apply the same discipline to cost: define a target cost per unit (per request, per user, per GB processed) at design time, and reject architectures that structurally exceed it.
 

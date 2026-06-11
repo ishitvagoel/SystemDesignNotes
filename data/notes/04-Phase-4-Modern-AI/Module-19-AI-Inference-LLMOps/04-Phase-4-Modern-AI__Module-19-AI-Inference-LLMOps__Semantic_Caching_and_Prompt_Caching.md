@@ -123,7 +123,7 @@ flowchart TD
 - **Embedding cost**: `text-embedding-3-small` at $0.02 per 1M tokens. A 50-word query ≈ 75 tokens → $0.0000015 per query. Negligible vs. LLM cost.
 - **Vector search latency**: ~1–10ms for Redis/pgvector with proper indexing; ~20–50ms for remote vector store (Pinecone). For real-time applications, use a local or in-region vector store.
 - **Semantic cache storage**: 1,536-dimensional float32 vector + metadata ≈ ~6 KB per cached response. 100,000 cached entries ≈ 600 MB. Fits comfortably in Redis.
-- **Prompt caching ROI**: A 20,000-token system prompt at $3/M input tokens = $0.06 per uncached call. At 1,000 calls/day: $60/day. With 80% cache hit rate: $12/day. **Savings: $48/day → $17,520/year** from prompt caching alone, for free (just add `cache_control`).
+- **Prompt caching ROI**: A 20,000-token system prompt at $3/M input tokens = $0.06 per uncached call. At 1,000 calls/day: $60/day. With 80% cache hit rate (hits billed at ~10%): ~$17/day. **Savings: ~$43/day → ~$15,700/year** from prompt caching alone, essentially for free (just add `cache_control`).
 - **Semantic cache hit rate sweet spot**: FAQ/support chatbots: 30–60% hit rate typical. Internal documentation search: 20–40%. Customer service: 40–70% (users ask the same questions repeatedly).
 - **Similarity search HNSW index**: For 1M cached entries, HNSW (Hierarchical Navigable Small World) search takes < 5ms with 95%+ recall. Rebuild time after bulk inserts: ~60 seconds per million vectors.
 
