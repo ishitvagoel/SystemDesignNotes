@@ -42,7 +42,7 @@ A typical cloud bill is dominated by three primary pillars:
 
 ### 2. Networking Cost Optimization: Taming Egress
 
-Networking costs are often counter-intuitive. In AWS, for example:
+Networking costs are often counter-intuitive. In AWS, for example (us-east-1 list prices as of 2026 — check current rates):
 *   **Data transfer within the same AZ:** Free.
 *   **Data transfer between AZs (Multi-AZ):** $0.01/GB in each direction.
 *   **Data transfer to the Internet (Egress):** ~$0.09/GB.
@@ -54,7 +54,7 @@ Networking costs are often counter-intuitive. In AWS, for example:
 
 ### 3. Storage Tiers: Matching Value to Latency
 
-| Tier | Cost (Approx) | Latency | Use Case |
+| Tier | Cost (Approx, per GB-month, as of 2026) | Latency | Use Case |
 | :--- | :--- | :--- | :--- |
 | **S3 Standard** | $0.023/GB | Milliseconds | Active web assets, "Hot" data |
 | **S3 Intelligent Tiering** | Variable | Milliseconds | Data with unpredictable access patterns |

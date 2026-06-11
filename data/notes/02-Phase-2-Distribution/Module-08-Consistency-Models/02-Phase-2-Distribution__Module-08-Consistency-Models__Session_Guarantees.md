@@ -9,7 +9,7 @@ These guarantees were formalized by Terry et al. (1994) at Xerox PARC. They're w
 
 ## Mental Model
 
-You're chatting with a support agent across multiple messages. You expect: (1) if you update your address, your next message reflects the new address (read-your-writes); (2) if you read message #5, you'll never see message #4 appear as "new" later (monotonic reads); (3) if you send message A before B, they arrive in that order (monotonic writes); (4) if you reply to message #3, you've definitely seen messages #1 and #2 (writes-follow-reads). These feel obvious in a single-server world, but when your messages might bounce between different servers (replicas), each guarantee requires explicit engineering. Session guarantees sit between "anything goes" (eventual consistency) and "everything is perfectly ordered" (linearizability) — they give you just enough consistency for a sane user experience.
+You're chatting with a support agent across multiple messages. You expect: (1) if you update your address, your next message reflects the new address (read-your-writes); (2) if you read message #5, you'll never see message #4 appear as "new" later (monotonic reads); (3) if you send message A before B, they arrive in that order (monotonic writes); (4) if you reply to message #3, your reply never appears to anyone before message #3 does (writes-follow-reads). These feel obvious in a single-server world, but when your messages might bounce between different servers (replicas), each guarantee requires explicit engineering. Session guarantees sit between "anything goes" (eventual consistency) and "everything is perfectly ordered" (linearizability) — they give you just enough consistency for a sane user experience.
 
 ## The Four Session Guarantees
 
@@ -45,17 +45,19 @@ You're chatting with a support agent across multiple messages. You expect: (1) i
 
 **Implementation**: Typically handled by the replication protocol itself — single-leader replication naturally preserves write order from a single client. Multi-leader or leaderless systems need to track causal dependencies between a client's writes.
 
-### Consistent Prefix (Writes Follow Reads)
+### Writes-Follow-Reads (WFR)
 
-**Guarantee**: If a sequence of writes occurs in a causal order, any reader observing those writes will see them in that order. You never see an effect without its cause.
+**Guarantee**: If a client reads a value and then performs a write, that write is ordered — on every replica — after the writes that produced the value it read. An effect is never separated from its cause.
 
 **The problem it solves**: A conversation in a chat app:
 - Alice: "What's for dinner?" (write W1)
-- Bob: "Pizza!" (write W2, causally after W1)
+- Bob reads W1, then replies: "Pizza!" (write W2, causally after W1)
 
-A reader on a stale replica sees W2 but not W1. They see "Pizza!" with no context. This is confusing and violates causal ordering.
+Without WFR, a replica might apply W2 before it has received W1. A reader on that replica sees "Pizza!" with no context. WFR ensures Bob's reply is ordered after the message he read, everywhere.
 
-**Implementation**: This is essentially causal consistency at the observation level. It requires tracking causal dependencies between writes and ensuring replicas apply them in order. Single-leader replication with ordered log shipping provides this naturally. Multi-leader systems need vector clocks or similar mechanisms.
+**Implementation**: Track what the session has read (a version vector or replication-log position) and attach it to subsequent writes as a causal dependency; replicas hold a write until its dependencies have been applied. Single-leader replication with ordered log shipping provides this naturally. Multi-leader systems need vector clocks or similar mechanisms.
+
+**The reader-side sibling — consistent prefix reads**: A closely related guarantee (DDIA's term, not one of Terry et al.'s four) says that any *reader* observes causally ordered writes in that order. WFR constrains where a session's write lands in the global order; consistent prefix reads constrains what a reader may observe. They attack the same anomaly from opposite ends — WFR is a session guarantee, consistent prefix is a property of the replication layer.
 
 **Where it's tricky**: In partitioned databases, writes to different partitions might arrive at a reader in different orders. If W1 and W2 go to different partitions, there's no built-in mechanism to ensure they're observed in order. This is one reason cross-partition consistency is hard.
 
@@ -92,7 +94,7 @@ The most general implementation:
 | Read-your-writes | Low (route to leader or wait for replica) | Low | Low-medium |
 | Monotonic reads | Low (sticky sessions or version tracking) | Low | Low |
 | Monotonic writes | None (usually provided by replication protocol) | None | None (usually free) |
-| Consistent prefix | Medium (causal tracking across partitions) | Medium | Medium-high |
+| Writes-follow-reads | Medium (causal tracking across partitions) | Medium | Medium-high |
 
 ## Trade-Off Analysis
 
