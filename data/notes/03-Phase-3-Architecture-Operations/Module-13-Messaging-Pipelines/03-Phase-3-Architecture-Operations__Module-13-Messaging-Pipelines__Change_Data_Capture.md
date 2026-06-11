@@ -82,7 +82,7 @@ Poll the database periodically using a timestamp or incrementing ID column: `SEL
 
 ### The Outbox Pattern with CDC
 
-Instead of publishing events directly from your application (dual-write problem), write events to an "outbox" table in the same database transaction as the business data. CDC reads the outbox table and publishes events to Kafka. This gives you exactly-once semantics: if the transaction commits, the event is captured; if it rolls back, nothing is published. See [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] for details.
+Instead of publishing events directly from your application (dual-write problem), write events to an "outbox" table in the same database transaction as the business data. CDC reads the outbox table and publishes events to Kafka. This gives you atomicity: if the transaction commits, the event is captured; if it rolls back, nothing is published. (Downstream delivery is still at-least-once, so consumers must be idempotent.) See [[02-Phase-2-Distribution__Module-10-Distributed-Transactions__Outbox_Pattern]] for details.
 
 ### Event Sourcing via CDC
 

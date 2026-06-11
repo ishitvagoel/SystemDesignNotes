@@ -78,7 +78,7 @@ The sampling decision is made **after the trace completes** based on trace chara
 
 **Cons**: Requires buffering all spans briefly (memory pressure). More complex infrastructure (stateful collector or dedicated sampler like Honeycomb Refinery or Grafana Tempo's tail sampler).
 
-**Sampling math**: If you have 10,000 RPS with 1% errors → 100 error traces/second. At 200 spans/trace, tail sampling buffers 10,000 × 200 = 2M spans/second for ~30 seconds before deciding. At ~500 bytes/span, that's 1 GB in-memory per sampler instance — plan accordingly.
+**Sampling math**: If you have 10,000 RPS with 1% errors → 100 error traces/second. At 200 spans/trace, tail sampling buffers 10,000 × 200 = 2M spans/second for ~30 seconds before deciding. At ~500 bytes/span, that's ~30 GB in-memory across your sampler fleet — plan accordingly.
 
 ### Adaptive / Dynamic Sampling
 
@@ -157,7 +157,7 @@ sequenceDiagram
 - **Span size**: ~500 bytes average per span (tags + timestamps + IDs). A request touching 10 services with 3 spans each = 15 spans × 500B = 7.5 KB/request.
 - **At 10,000 RPS**: 75 MB/second of raw span data before compression (typical 5–10× compression → 7–15 MB/s to storage).
 - **Tail-sampling buffer**: Buffer all spans for 30s before deciding. At 10,000 RPS × 15 spans/request × 500B = 2.25 GB in-memory per collector. Use 2–4 collector instances.
-- **Storage sizing (Grafana Tempo on S3)**: 7-day retention at 10,000 RPS ≈ 7 × 86,400 × 75 MB / 8 (compression) ≈ **5.7 TB/week**. S3 at $0.023/GB ≈ **$131/week** — remarkably cheap.
+- **Storage sizing (Grafana Tempo on S3)**: 7-day retention at 10,000 RPS ≈ 7 × 86,400 × 75 MB / 8 (compression) ≈ **5.7 TB/week**. S3 at $0.023/GB-month ≈ **$131/month** — remarkably cheap.
 - **Sampling rule of thumb**: 100% sample errors + 100% sample > 2× p99 + 1% sample everything else captures ~80% of useful traces at ~3% of the storage cost of 100% sampling.
 - **Header overhead**: W3C `traceparent` header adds ~55 bytes per HTTP request — negligible.
 

@@ -78,7 +78,7 @@ No designated leader. Any node accepts reads and writes. The client sends writes
 
 **Anti-entropy and read repair**: To keep replicas converged, the system periodically compares data across replicas (anti-entropy process using Merkle trees). Additionally, on every read, if replicas return different versions, the client repairs the stale replicas by writing the latest version back.
 
-**Used by**: Amazon DynamoDB, Apache Cassandra, ScyllaDB, Riak.
+**Used by**: Amazon's original Dynamo, Apache Cassandra, ScyllaDB, Riak.
 
 **Trade-offs**: Leaderless replication provides high availability and write scalability (any node accepts writes), but consistency is weaker (stale reads are possible even within a quorum, especially with sloppy quorums). There's no single source of truth — conflicts can occur and must be resolved.
 

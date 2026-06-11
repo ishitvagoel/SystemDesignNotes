@@ -146,7 +146,7 @@ flowchart TD
 
 - **Discord (MongoDB -> Cassandra -> ScyllaDB)**: Initially launched on MongoDB, but migrated to Cassandra as message volume hit billions per day. Recently migrated to ScyllaDB (C++) for better tail latency and fewer garbage collection pauses.
 - **Uber (Postgres -> Schemaless -> MySQL)**: Famously migrated away from Postgres due to write-amplification issues with secondary indexes (pre-Postgres 10). They built a NoSQL layer on top of MySQL to handle their specific scaling needs.
-- **Stack Overflow (Cassandra -> SQL Server)**: Achieves massive scale using a surprisingly traditional, vertically-scaled SQL Server setup, proving that NoSQL is not a strict requirement for high traffic if queries are heavily cached and well-indexed.
+- **Stack Overflow (SQL Server at Scale)**: Achieves massive scale using a surprisingly traditional, vertically-scaled SQL Server setup, proving that NoSQL is not a strict requirement for high traffic if queries are heavily cached and well-indexed.
 
 ## Connections
 

@@ -133,7 +133,7 @@ graph TD
 
 - **Instacart (Product Embeddings)**: Instacart uses vector search to power their "Search by Meaning" feature. They embed both user queries and product descriptions into the same vector space. This ensures that a search for "comfort food" can retrieve items like "mac and cheese" even if those words aren't in the product title.
 - **Notion (Q&A / RAG)**: Notion uses hybrid search for their AI assistant. They first retrieve candidate blocks using a combination of **BM25** (for exact title/tag matches) and **Vector Search** (for conceptual matching). They then use a cross-encoder model to re-rank the top 50 results to find the most relevant context for the LLM.
-- **Spotify (Discovery Weekly)**: Spotify uses vector embeddings not just for text, but for songs and users. By representing every song as a high-dimensional vector based on listening patterns, they can find "nearby" songs to create highly personalized recommendations, effectively using vector search as a global-scale collaborative filtering engine.
+- **Spotify (Discover Weekly)**: Spotify uses vector embeddings not just for text, but for songs and users. By representing every song as a high-dimensional vector based on listening patterns, they can find "nearby" songs to create highly personalized recommendations, effectively using vector search as a global-scale collaborative filtering engine.
 
 ## Connections
 
