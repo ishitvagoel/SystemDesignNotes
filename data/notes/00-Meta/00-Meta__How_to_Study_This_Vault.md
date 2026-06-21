@@ -10,7 +10,7 @@ graph LR
     S4 --> S5[5. Mastery: Can you explain it?]
 ```
 
-## Recommended 22-Week Study Plan
+## Recommended 24-Week Study Plan
 
 | Week | Phase | Topic | Modules |
 |------|-------|-------|---------|
@@ -82,5 +82,5 @@ A structured study plan transforms a disjointed collection of notes into a cohes
 
 ## Reflection Prompts
 
-1. Are you following the recommended 22-week study plan, or charting your own course? Why?
+1. Are you following the recommended 24-week study plan, or charting your own course? Why?
 2. Which module do you feel is your strongest area? Which is your weakest?

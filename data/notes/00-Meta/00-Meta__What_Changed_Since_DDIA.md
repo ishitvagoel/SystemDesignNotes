@@ -6,7 +6,7 @@
 
 **DDIA coverage**: ZooKeeper as the primary coordination service. Raft described but etcd not prominent.
 
-**What changed**: etcd became the dominant coordination service (Kubernetes made it ubiquitous). Kafka removed its ZooKeeper dependency (KRaft mode, GA in 2023). [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft|Raft]] is now the default consensus algorithm for new systems; Paxos is legacy. CockroachDB and TiDB brought Multi-Raft to production scale. See [[02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services|Coordination Services]] for the ZooKeeper → etcd/KRaft shift.
+**What changed**: etcd became the dominant coordination service (Kubernetes made it ubiquitous). Kafka removed its ZooKeeper dependency (KRaft mode, production-ready since Kafka 3.3 in late 2022). [[02-Phase-2-Distribution__Module-09-Consensus__Consensus_and_Raft|Raft]] is now the default consensus algorithm for new systems; Paxos is legacy. CockroachDB and TiDB brought Multi-Raft to production scale. See [[02-Phase-2-Distribution__Module-09-Consensus__Coordination_Services|Coordination Services]] for the ZooKeeper → etcd/KRaft shift.
 
 ## Distributed Databases
 

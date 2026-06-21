@@ -7,7 +7,7 @@ Authentication answers "who are you?" Authorization answers "what are you allowe
 
 ## Mental Model
 
-Authentication is checking someone's passport at the border — "Are you who you claim to be?" Authorization is checking their visa — "Now that I know who you are, are you allowed into this area?" They're often confused because they happen close together, but they're fundamentally different questions. You can authenticate perfectly (confirm someone's identity) and still deny authorization (they don't have the right permissions). OAuth2 is the standard protocol for the passport check. OIDC adds a standardized ID card. RBAC/ABAC are the rules that decide what the visa allows.
+Authentication is checking someone's passport at the border — "Are you who you claim to be?" Authorization is checking their visa — "Now that I know who you are, are you allowed into this area?" They're often confused because they happen close together, but they're fundamentally different questions. You can authenticate perfectly (confirm someone's identity) and still deny authorization (they don't have the right permissions). OAuth2 is the standard framework for the visa grant (delegated access); OIDC adds a standardized ID card for the passport check. RBAC/ABAC are the rules that decide what the visa allows.
 
 ## Authentication: OAuth2 and OIDC
 

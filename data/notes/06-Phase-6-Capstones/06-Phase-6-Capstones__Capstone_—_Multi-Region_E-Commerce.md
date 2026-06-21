@@ -168,7 +168,7 @@ graph TD
 
 ## Canonical Sources
 
-- Werner Vogels, "Life is Not Fair: The Economics of Geo-Distribution" (re:Invent 2023)
+- Werner Vogels, "The Frugal Architect" (thefrugalarchitect.com) — laws for cost-aware architecture, including geo-distribution economics
 - DoorDash Engineering, "Building a Multi-Region Architecture" (2022)
 - Alex Xu, *System Design Interview* Vol 2 — Multi-region design patterns
 

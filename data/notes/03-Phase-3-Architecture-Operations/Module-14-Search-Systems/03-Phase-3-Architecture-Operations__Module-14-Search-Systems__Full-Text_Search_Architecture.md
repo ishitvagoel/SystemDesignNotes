@@ -173,7 +173,7 @@ graph TD
 
 - **Wikipedia (Elasticsearch)**: Wikipedia uses Elasticsearch to power search for millions of articles in hundreds of languages. They rely heavily on **Stemming** and **Language-specific Analyzers** to ensure that a search for "learning" matches articles containing "learn" or "learned" across different linguistic contexts.
 - **Uber (Marketplace Search)**: Uber uses search architecture not just for text, but for **Geo-Spatial Search**. They index driver locations as documents and use Elasticsearch's BKD-tree based geo-indexes to find the "nearest available drivers" to a user in sub-100ms, effectively treating the city as a searchable document.
-- **Slack (Search at Scale)**: Slack built a custom search architecture called **SolrCloud** (and later moved toward specialized services). They face a unique challenge: every user has a different "View" of the data (only messages in channels they are in). They use **Routing** to ensure that a user's query only hits the shards containing their specific workspace's data, avoiding a global scatter-gather.
+- **Slack (Search at Scale)**: Slack built its search architecture on **SolrCloud** (Apache Solr's distributed mode) (and later moved toward specialized services). They face a unique challenge: every user has a different "View" of the data (only messages in channels they are in). They use **Routing** to ensure that a user's query only hits the shards containing their specific workspace's data, avoiding a global scatter-gather.
 
 ## Connections
 

@@ -2,7 +2,7 @@
 
 ## Why This Exists
 
-"Should we use Kafka or RabbitMQ?" is asked constantly, but it's the wrong framing. They solve fundamentally different problems. RabbitMQ is a **message broker** — it routes messages from producers to consumers and ensures each message is processed exactly once. Kafka is an **event log** — it durably stores an ordered sequence of events that multiple consumers can independently read.
+"Should we use Kafka or RabbitMQ?" is asked constantly, but it's the wrong framing. They solve fundamentally different problems. RabbitMQ is a **message broker** — it routes messages from producers to consumers and ensures each message is delivered to exactly one consumer. Kafka is an **event log** — it durably stores an ordered sequence of events that multiple consumers can independently read.
 
 The distinction matters: a message queue is about *task distribution*. An event stream is about *event history*.
 

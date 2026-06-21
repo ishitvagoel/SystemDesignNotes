@@ -94,7 +94,7 @@ Postgres exposes `pg_last_wal_replay_lsn()` and `pg_last_xact_replay_timestamp()
 |-------------------|-----|---------------------|--------------------|----------|
 | Synchronous replication | Zero | Zero — committed means replicated | High — every write waits for replica | Financial data, systems of record |
 | Semi-synchronous (1 sync + N async) | Zero for 1 replica, lag for rest | Zero for 1 replica | Moderate | MySQL with semi-sync, production databases |
-| Asynchronous replication | Seconds to minutes | Possible — uncommitted writes lost on failover | Minimal — fire and forget | Read replicas, analytics, cross-region secondaries |
+| Asynchronous replication | Seconds to minutes | Possible — committed-but-unreplicated writes lost on failover | Minimal — fire and forget | Read replicas, analytics, cross-region secondaries |
 | Logical replication (row-level) | Seconds | Possible | Low — only changed rows | Cross-version upgrades, selective table replication |
 | Physical replication (WAL shipping) | Seconds | Possible | Minimal — streaming WAL bytes | Standby replicas, point-in-time recovery |
 | Change Data Capture (CDC) | Near real-time | Possible | Minimal — reads WAL | Event publishing, search index sync, data pipelines |
@@ -151,7 +151,7 @@ graph TD
 
 ## Real-World Case Studies
 
-- **GitHub (Orchestrator)**: GitHub uses **Orchestrator** to manage its massive MySQL fleet. They famously documented an incident where a network partition caused Orchestrator to promote a new leader while the old one was still alive. Because they used **consul-template** to update their load balancer configs, the split-brain was resolved in seconds by the control plane, minimizing data divergence.
+- **GitHub (Orchestrator)**: GitHub uses **Orchestrator** to manage its massive MySQL fleet. They famously documented an incident (October 2018) where a brief network partition caused Orchestrator to promote a new leader while the old one was still alive. Writes landed on both sides, and reconciling the divergent data degraded the site for roughly 24 hours — a reminder that automated failover can convert a seconds-long partition into a long recovery.
 - **GitLab (The 2017 Data Loss)**: GitLab suffered a major outage when a developer accidentally deleted the production database. The failover mechanism failed because the replicas were out of sync or misconfigured. This incident highlighted that **Replication is not Backup**—you need both asynchronous secondaries for HA and point-in-time snapshots for recovery.
 - **Zalando (Patroni)**: Zalando created **Patroni** to solve the "Postgres HA" problem. They used etcd as the source of truth for the leader's identity. If a Postgres node can't maintain its lease in etcd, it automatically steps down and shuts itself off, providing a robust software-based **STONITH** mechanism that works in any cloud environment.
 

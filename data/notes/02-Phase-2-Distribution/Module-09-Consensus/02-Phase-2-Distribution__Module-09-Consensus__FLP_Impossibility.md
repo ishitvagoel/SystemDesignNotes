@@ -13,7 +13,7 @@ Imagine three friends trying to agree on a restaurant via text messages, but pho
 
 ## What It Actually Says
 
-**Formal statement**: In an asynchronous distributed system with reliable message delivery (messages are not lost, but can be delayed arbitrarily), if even one process can fail by crashing, there is no deterministic algorithm that guarantees consensus in bounded time.
+**Formal statement**: In an asynchronous distributed system with reliable message delivery (messages are not lost, but can be delayed arbitrarily), if even one process can fail by crashing, there is no deterministic algorithm that guarantees consensus will be reached — not even given unbounded time.
 
 **Breaking it down**:
 
@@ -115,7 +115,7 @@ graph TD
 ## Real-World Case Studies
 
 - **etcd (Kubernetes Heartbeats)**: etcd, the consensus store for Kubernetes, is a direct implementation of a system that "cheats" FLP using Raft timeouts. When etcd loses its leader, the entire Kubernetes control plane stops making progress (Liveness loss) to ensure that no two nodes are ever given the same IP or resource (Safety preservation).
-- **Cloudflare (The 2020 etcd Outage)**: Cloudflare suffered a major outage when their etcd cluster entered a "livelock" state. Due to high disk latency, the leader couldn't write heartbeats fast enough. Follower nodes timed out and started new elections, which further stressed the disks, preventing the new leaders from finishing their elections. This was FLP in action: the system couldn't reach consensus because the timing assumptions of the "partial synchrony" escape hatch were violated.
+- **Cloudflare (The 2020 etcd Outage)**: Cloudflare suffered a major outage when their etcd cluster entered a "livelock" state. A partially failed network switch (documented in their "A Byzantine Failure in the Real World" post-mortem) degraded connectivity just enough that followers timed out and started new elections, which kept deposing leaders before they could stabilize. This was FLP in action: the system couldn't reach consensus because the timing assumptions of the "partial synchrony" escape hatch were violated.
 - **ZooKeeper (ZAB vs FLP)**: Yahoo! engineers designed the ZAB protocol for ZooKeeper to be "eventually live." They acknowledged that under pathological network conditions, ZooKeeper might stop accepting writes forever, but they proved that as soon as the network returned to a "normal" state (synchrony restored), the system would immediately recover and reach consensus.
 
 ## Connections

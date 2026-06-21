@@ -14,7 +14,7 @@ Imagine a professional kitchen where every chef (engineer) can order any ingredi
 
 ## FinOps as an Architecture-Time Constraint
 
-The most expensive mistake is treating cost as a post-deployment problem. An architecture that generates $0.10/request at 1K requests/day ($3/month) costs $30,000/month at 1M requests/day — a 10,000× increase in load with no fundamental architecture change. If the unit economics are broken by design, no amount of right-sizing rescues the situation.
+The most expensive mistake is treating cost as a post-deployment problem. An architecture that generates $0.10/request at 1K requests/day (~$3,000/month) costs ~$3,000,000/month at 1M requests/day — a 1,000× increase in load with no fundamental architecture change. If the unit economics are broken by design, no amount of right-sizing rescues the situation.
 
 **The principle**: Budget cost the same way you budget latency. When you set a p99 latency SLO of 200ms, you design away from architectures that structurally can't meet it. Apply the same discipline to cost: define a target cost per unit (per request, per user, per GB processed) at design time, and reject architectures that structurally exceed it.
 
@@ -37,12 +37,12 @@ A typical cloud bill is dominated by three primary pillars:
 *   **Right-Sizing:** Matching instance types to actual utilization. Most workloads run at <20% CPU. Moving from a `c5.4xlarge` to a `c5.xlarge` is a 75% instant saving.
 *   **Spot Instances:** Spare capacity sold at up to 90% discount. Ideal for stateless web tiers, CI/CD, and batch processing. 
     *   *Trade-off:* Requires "Spot-readiness"—the ability to handle a 2-minute termination notice.
-*   **Graviton (ARM) Migration:** AWS Graviton processors often provide 40% better price-performance than x86. Moving a Python, Go, or Java application to ARM is often a configuration change that yields 20% direct cost reduction.
+*   **Graviton (ARM) Migration:** AWS Graviton processors provide up to 40% better price-performance than x86 (AWS's headline figure; ~20% is a typical realized saving). Moving a Python, Go, or Java application to ARM is often a configuration change that yields 20% direct cost reduction.
 *   **Savings Plans & RIs:** Committing to a baseline level of spend for 1 or 3 years. Use this for the "floor" of your traffic, not the peaks.
 
 ### 2. Networking Cost Optimization: Taming Egress
 
-Networking costs are often counter-intuitive. In AWS, for example:
+Networking costs are often counter-intuitive. In AWS, for example (us-east-1 list prices as of 2026 — check current rates):
 *   **Data transfer within the same AZ:** Free.
 *   **Data transfer between AZs (Multi-AZ):** $0.01/GB in each direction.
 *   **Data transfer to the Internet (Egress):** ~$0.09/GB.
@@ -54,7 +54,7 @@ Networking costs are often counter-intuitive. In AWS, for example:
 
 ### 3. Storage Tiers: Matching Value to Latency
 
-| Tier | Cost (Approx) | Latency | Use Case |
+| Tier | Cost (Approx, per GB-month, as of 2026) | Latency | Use Case |
 | :--- | :--- | :--- | :--- |
 | **S3 Standard** | $0.023/GB | Milliseconds | Active web assets, "Hot" data |
 | **S3 Intelligent Tiering** | Variable | Milliseconds | Data with unpredictable access patterns |

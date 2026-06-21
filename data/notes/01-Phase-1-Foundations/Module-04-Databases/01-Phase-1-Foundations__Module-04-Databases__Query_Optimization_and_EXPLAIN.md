@@ -215,9 +215,9 @@ flowchart TD
 ## Back-of-the-Envelope Heuristics
 
 - **Sequential scan speed**: ~1 GB/s from disk (NVMe), ~10 GB/s from buffer pool. A 10 GB table = 10 seconds from disk, 1 second from cache.
-- **Index seek**: ~0.1–1ms for a B-tree lookup regardless of table size (log₂ depth). A billion-row table with a B-tree index has depth ≈ 30 levels.
+- **Index seek**: ~0.1–1ms for a B-tree lookup regardless of table size (logarithmic depth with high fan-out). A billion-row table with a B-tree index has depth ≈ 4 levels (fan-out of several hundred entries per page).
 - **The 1% rule**: If a predicate selects > 1% of rows, the optimizer may prefer a sequential scan over an index scan (random I/O for 1% of a large table = more I/Os than a sequential scan). Indexes shine at < 1% selectivity.
-- **Statistics staleness**: `autovacuum` updates statistics after ~20% of rows change (default `autovacuum_analyze_scale_factor = 0.2`). For a 10M row table, statistics update only after 2M row changes — significant lag for fast-changing tables. Run `ANALYZE` manually after large bulk loads.
+- **Statistics staleness**: `autovacuum` updates statistics after ~10% of rows change (default `autovacuum_analyze_scale_factor = 0.1`). For a 10M row table, statistics update only after 1M row changes — significant lag for fast-changing tables. Run `ANALYZE` manually after large bulk loads.
 - **Covering index sweet spot**: If your top-5 most-used queries each need 3–5 columns, creating covering indexes for each can reduce query time by 5–50× by eliminating heap fetches.
 - **EXPLAIN cost units**: Not directly comparable to milliseconds. Compare plans *relative to each other*. A plan with cost 100 is roughly 10× faster than one with cost 1000.
 

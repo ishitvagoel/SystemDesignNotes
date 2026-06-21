@@ -20,7 +20,7 @@ This split explains most design choices. Propagation is eventually consistent bu
 - SDK support for server-side evaluation (Go, Python, Java) and client-side evaluation (browser, mobile)
 
 **Non-functional requirements**:
-- 50,000 flag evaluations/second (sustained); 200,000/second burst
+- 50,000 requests/second sustained (~250,000 flag evaluations/second); 200,000 requests/second burst
 - 99.99% availability for flag evaluation (flag service outage cannot block user traffic)
 - Audit trail: every flag change logged with who changed it and when
 - Flag change propagation to all SDKs in < 30 seconds
@@ -156,7 +156,7 @@ The SDK is the critical path. Every design decision is subordinate to: **evaluat
 4. Emit `{ flag_id, variant_a_rate, variant_b_rate, p_value, confidence_interval, is_significant }`
 5. Dashboard displays results with a "significant at p < 0.05" badge
 
-**Minimum detectable effect (MDE)**: Show engineers the sample size required before they start an experiment. For a 2% baseline conversion rate, detecting a 0.5% uplift at 95% confidence and 80% power requires ~60,000 users per variant. With 10,000 DAU, that's 6 days minimum.
+**Minimum detectable effect (MDE)**: Show engineers the sample size required before they start an experiment. For a 2% baseline conversion rate, detecting a 0.5 percentage-point uplift at 95% confidence and 80% power requires ~14,000 users per variant (~28,000 total). With 10,000 DAU, that's ~3 days minimum.
 
 **Guardrails**:
 - Disable "declare winner" button until statistical significance is reached

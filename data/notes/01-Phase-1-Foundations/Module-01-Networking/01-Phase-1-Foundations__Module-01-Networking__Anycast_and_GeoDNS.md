@@ -2,7 +2,7 @@
 
 ## Why This Exists
 
-You've built a globally distributed service. Users in Tokyo, São Paulo, and Frankfurt all hit the same domain name. But physics is unforgiving — a packet crossing the Atlantic takes ~70ms minimum (speed of light in fiber). You need a way to route each user to the *nearest* server without them knowing or caring. Two complementary techniques solve this: **anycast** (a network-layer trick) and **GeoDNS** (an application-layer DNS trick).
+You've built a globally distributed service. Users in Tokyo, São Paulo, and Frankfurt all hit the same domain name. But physics is unforgiving — a round trip across the Atlantic takes ~60ms minimum (speed of light in fiber). You need a way to route each user to the *nearest* server without them knowing or caring. Two complementary techniques solve this: **anycast** (a network-layer trick) and **GeoDNS** (an application-layer DNS trick).
 
 ## Mental Model
 

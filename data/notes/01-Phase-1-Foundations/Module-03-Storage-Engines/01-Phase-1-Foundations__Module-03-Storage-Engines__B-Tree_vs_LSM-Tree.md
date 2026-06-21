@@ -32,7 +32,7 @@ graph TD
     L3 --> D3["Data pages..."]
 ```
 
-**Read path**: Start at the root. At each level, do a binary search to find which child pointer to follow. For a tree with N keys and branching factor B, this takes O(log_B N) page reads. With a branching factor of 500 (typical for 8KB pages with smallish keys), a tree with 250 billion keys is only 4 levels deep. Four page reads — if the upper levels are cached in the [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]], it's often 1–2 disk reads.
+**Read path**: Start at the root. At each level, do a binary search to find which child pointer to follow. For a tree with N keys and branching factor B, this takes O(log_B N) page reads. With a branching factor of 500 (typical for 8KB pages with smallish keys), a tree with over 60 billion keys is only 4 levels deep. Four page reads — if the upper levels are cached in the [[01-Phase-1-Foundations__Module-03-Storage-Engines__Buffer_Pool_and_Page_Cache]], it's often 1–2 disk reads.
 
 **Write path**: Find the leaf page, update it in place. If the page is full, split it into two pages and update the parent pointer. Splits cascade upward in rare cases. Before any page modification, the change is recorded in the [[01-Phase-1-Foundations__Module-03-Storage-Engines__Write-Ahead_Log]] for crash recovery.
 

@@ -32,7 +32,7 @@ Traditional databases (Postgres, MySQL/InnoDB, Oracle) manage their own buffer p
 
 **Clock (approximation of LRU)**: Postgres uses a clock-sweep algorithm. Each page has a "usage count" (0–5). On access, increment (up to max). On eviction sweep, decrement each page's count; evict the first page with count 0. This approximates LRU without the overhead of maintaining a linked list.
 
-**LRU-K / ARC**: More sophisticated policies that track access frequency, not just recency. InnoDB uses a modified LRU with a "young" and "old" sublist — pages start in the old sublist and move to the young sublist only if accessed again within a time window. This prevents scan pollution: a sequential scan's pages stay in the old sublist and are quickly evicted.
+**LRU-K / ARC**: More sophisticated policies that track access frequency, not just recency. InnoDB uses a modified LRU with a "young" and "old" sublist — pages start in the old sublist and move to the young sublist only if accessed again after a minimum time window (`innodb_old_blocks_time`). This prevents scan pollution: a sequential scan's pages stay in the old sublist and are quickly evicted.
 
 **Sizing the buffer pool**: The single most important database tuning parameter. Common guidance:
 
@@ -54,7 +54,7 @@ The operating system maintains its own cache of recently accessed file pages in 
 
 Smart buffer pool management goes beyond caching — it anticipates what data will be needed:
 
-**Sequential prefetching**: If the query is doing a sequential scan, the buffer pool can read ahead — prefetching the next N pages before they're requested. This converts random I/O (one page at a time) into sequential I/O (large batch reads), which is dramatically faster on both HDDs and SSDs. Postgres has `effective_io_concurrency` for this.
+**Sequential prefetching**: If the query is doing a sequential scan, the buffer pool can read ahead — prefetching the next N pages before they're requested. This converts random I/O (one page at a time) into sequential I/O (large batch reads), which is dramatically faster on both HDDs and SSDs. Postgres mostly relies on OS readahead for sequential scans; its `effective_io_concurrency` setting controls prefetch depth for bitmap heap scans.
 
 **Index prefetching**: When traversing a B-tree index and collecting row pointers, the engine can sort the pointers by physical location and read the corresponding heap pages in order — converting random I/O into sequential. This is called a "bitmap heap scan" in Postgres.
 
@@ -110,7 +110,7 @@ graph TD
 
 ## Real-World Case Studies
 
-- **PostgreSQL (The "Two-Cache" Strategy)**: Postgres famously uses a smaller `shared_buffers` and relies heavily on the **OS Page Cache** for the rest. This simplifies the database code but can lead to "double-caching" (the same page in both caches). However, it makes Postgres remarkably resilient to OS-level reboots, as the page cache warms up quickly.
+- **PostgreSQL (The "Two-Cache" Strategy)**: Postgres famously uses a smaller `shared_buffers` and relies heavily on the **OS Page Cache** for the rest. This simplifies the database code but can lead to "double-caching" (the same page in both caches). However, it makes Postgres remarkably resilient to database restarts, as the OS page cache stays warm across a restart of the Postgres process.
 - **MySQL/InnoDB (Direct I/O)**: InnoDB prefers `O_DIRECT`, which bypasses the OS page cache entirely. This gives it "exclusive" control over its memory, preventing double-caching and allowing for more predictable eviction policies (like the "Midpoint Insertion" strategy to prevent sequential scans from wiping out the cache).
 - **LinkedIn (RocksDB Tuning)**: LinkedIn uses RocksDB for many of its internal key-value stores. They've written extensively about tuning the "Block Cache" (the LSM equivalent of a buffer pool) to balance between caching data, indexes, and Bloom filters, highlighting that for LSM-trees, caching the index is often more important than caching the data itself.
 

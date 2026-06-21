@@ -89,7 +89,7 @@ Created by HashiCorp (2014). Uses Raft for consensus but adds a gossip protocol 
 | Service | Consistency | Read Performance | Write Performance | Operational Complexity | Best For |
 |---------|------------|-----------------|-------------------|----------------------|----------|
 | ZooKeeper | Linearizable writes, sequential reads | High — followers serve reads | Moderate — leader only | High — JVM tuning, separate ensemble | Kafka (pre-KRaft), HBase, legacy Hadoop ecosystem |
-| etcd | Linearizable reads and writes | Moderate — all reads through leader (or leases) | Moderate — Raft-based | Medium — single binary, simpler ops | Kubernetes, small-to-medium coordination |
+| etcd | Linearizable reads and writes | Moderate — linearizable reads need a quorum check (ReadIndex) | Moderate — Raft-based | Medium — single binary, simpler ops | Kubernetes, small-to-medium coordination |
 | Consul | Linearizable writes, tunable reads | High — stale reads option | Moderate — Raft-based | Low-Medium — built-in service mesh, DNS | Service discovery, health checking, multi-DC |
 | Chubby (Google internal) | Linearizable | High with caching | Moderate | N/A — Google-only | Google's distributed lock service |
 

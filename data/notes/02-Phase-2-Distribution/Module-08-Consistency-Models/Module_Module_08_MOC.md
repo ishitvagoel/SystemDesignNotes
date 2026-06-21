@@ -17,7 +17,7 @@ Consistency models are the vocabulary for answering this question precisely. Wit
 - [[02-Phase-2-Distribution__Module-08-Consistency-Models__CAP_Theorem_and_PACELC]] — What CAP actually says vs how it's misused, and why PACELC is the more useful framework for real systems
 
 ### Practical Guarantees
-- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees]] — Read-your-writes, monotonic reads, consistent prefix — the session-level guarantees that matter in practice
+- [[02-Phase-2-Distribution__Module-08-Consistency-Models__Session_Guarantees]] — Read-your-writes, monotonic reads, monotonic writes, writes-follow-reads — the session-level guarantees that matter in practice
 
 ## Prerequisites
 - [[Module_Module_04_MOC]] — Database Replication (replication creates the consistency problem)

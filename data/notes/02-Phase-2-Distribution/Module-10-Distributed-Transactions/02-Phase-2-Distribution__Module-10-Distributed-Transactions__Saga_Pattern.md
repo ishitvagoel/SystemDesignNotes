@@ -101,7 +101,7 @@ Sagas do NOT provide isolation. Between steps, other transactions can see interm
 
 | Saga vs Alternative | Consistency | Isolation | Complexity | Best For |
 |--------------------|------------|-----------|------------|----------|
-| Distributed transaction (2PC) | Strong — atomic commit | Serializable | Medium — coordinator + locks | Short-lived, same-trust-domain transactions |
+| Distributed transaction (2PC) | Strong — atomic commit | From participants' locking (2PC itself adds none) | Medium — coordinator + locks | Short-lived, same-trust-domain transactions |
 | Saga with compensations | Eventual — compensations may fail | None — dirty reads possible (no isolation) | High — must design every compensation | Cross-service business processes |
 | Reservation pattern (try/confirm/cancel) | Eventual — but resources reserved | Soft isolation via reservations | Medium | Inventory, seat booking, resource allocation |
 
@@ -148,7 +148,7 @@ graph TD
 
 ## Real-World Case Studies
 
-- **Uber (Cadence/Temporal)**: Uber built **Cadence** (and later the community created **Temporal**) specifically to handle massive sagas like "Trip Lifecycle." A single trip involves dozens of services (pricing, matching, routing, payments, safety). They found that choreography was impossible to debug at their scale, so they moved to a centralized orchestrator that persists the state of every trip saga.
+- **Uber (Cadence/Temporal)**: Uber built **Cadence** (whose original authors later founded **Temporal**) specifically to handle massive sagas like "Trip Lifecycle." A single trip involves dozens of services (pricing, matching, routing, payments, safety). They found that choreography was impossible to debug at their scale, so they moved to a centralized orchestrator that persists the state of every trip saga.
 - **Booking.com (Hotel Reservations)**: Booking a hotel is a classic saga. You "reserve" a room (Step 1), then "pay" (Step 2). If the payment fails, the system must "release" the room. Because hotel systems are often slow or offline, these sagas can stay in a "Pending" state for minutes, requiring a robust orchestrator to handle timeouts and retries.
 - **Amazon (Order Fulfillment)**: When you click "Buy Now," Amazon kicks off a massive saga. If a warehouse discovers an item is damaged while packing (Step 3), the system must compensate by either finding another warehouse (Retry Step 3) or refunding the customer (Compensate Step 2).
 

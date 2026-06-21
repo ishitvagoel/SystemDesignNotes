@@ -14,7 +14,7 @@ Data sovereignty is like customs at international borders. Your data (goods) can
 
 | Regulation | Jurisdiction | Key Requirements | Penalty |
 |-----------|-------------|-----------------|---------|
-| **GDPR** | EU/EEA | Consent, right to erasure, data minimization, breach notification (72h), DPO requirement | Up to 4% global revenue or €20M |
+| **GDPR** | EU/EEA | Consent, right to erasure, data minimization, breach notification (72h), DPO for certain controllers (Art. 37) | Up to 4% global revenue or €20M |
 | **CCPA/CPRA** | California | Right to know, delete, opt-out of sale, data portability | $7,500/intentional violation |
 | **PIPL** | China | Data localization, consent for cross-border transfer, security assessments | Up to ¥50M or 5% revenue |
 | **LGPD** | Brazil | Similar to GDPR; data protection officer, consent basis | Up to 2% revenue or R$50M |
@@ -24,7 +24,7 @@ Data sovereignty is like customs at international borders. Your data (goods) can
 
 **Cell-based deployment**: Deploy independent regional cells (EU, US, APAC) that contain all services and data for users in that jurisdiction:
 
-1. **User registration**: Assign users to a home region based on their legal jurisdiction (not their IP address — a German citizen traveling in the US is still under GDPR)
+1. **User registration**: Assign users to a home region based on their legal jurisdiction (not their momentary IP address — a German resident doesn't lose GDPR protection while traveling in the US, since applicability follows the controller's EU establishment and where the user is based, not a single request's origin)
 2. **Request routing**: API gateway or DNS-based routing directs requests to the correct regional cell
 3. **Data isolation**: Each cell has its own database, cache, and object storage. No PII crosses cell boundaries
 4. **Global services**: Non-PII services (product catalog, static content) can be global. PII-containing services must be regional
@@ -37,7 +37,7 @@ Data sovereignty is like customs at international borders. Your data (goods) can
 
 ### Right to Erasure (Article 17 GDPR)
 
-When a user requests deletion, you must remove their personal data from all systems within 30 days. In a distributed system, this is architecturally challenging:
+When a user requests deletion, you must remove their personal data from all systems without undue delay — within one month, extendable by two further months for complex requests (Art. 12(3)). In a distributed system, this is architecturally challenging:
 
 **Crypto-shredding** (preferred at scale): Encrypt all of a user's PII with a user-specific key. To "delete" the user, destroy the key. All their data becomes unreadable across databases, backups, logs, and caches — without needing to find and delete every record.
 
@@ -91,7 +91,7 @@ graph TD
 
 ## Back-of-the-Envelope Heuristics
 
-- **GDPR deletion SLA**: 30 days maximum. Design for completion within **7 days** to allow for edge cases and retries.
+- **GDPR deletion SLA**: One month (extendable to three for complex requests). Design for completion within **7 days** to allow for edge cases and retries.
 - **Multi-region cost premium**: Running isolated cells in 3 regions costs approximately **2.5–3× a single-region deployment** (not 3× due to shared non-PII services).
 - **Consent check latency**: A consent service lookup adds **5–15ms per request**. Cache consent decisions locally with a **5-minute TTL** to reduce overhead.
 - **Data flow mapping**: A typical B2C application has **15–30 systems** that touch PII (databases, caches, logs, analytics, third-party integrations). All must be in the deletion path.

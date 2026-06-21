@@ -62,9 +62,9 @@ There's no universal solution. Hotspot mitigation is workload-specific and often
 
 As data grows or nodes are added/removed, partitions must be redistributed. This is rebalancing, and it's one of the most operationally complex aspects of sharding.
 
-**Fixed number of partitions**: Create many more partitions than nodes (e.g., 1000 partitions across 10 nodes = 100 partitions per node). When adding a node, move some partitions to it. No partition splitting needed. Used by Elasticsearch, Riak, CockroachDB. Downside: choosing the right initial partition count requires guessing future data size.
+**Fixed number of partitions**: Create many more partitions than nodes (e.g., 1000 partitions across 10 nodes = 100 partitions per node). When adding a node, move some partitions to it. No partition splitting needed. Used by Elasticsearch, Riak, Couchbase. Downside: choosing the right initial partition count requires guessing future data size.
 
-**Dynamic splitting**: Start with one partition per range. When a partition exceeds a size threshold, split it in two. When a partition shrinks, merge adjacent ones. Used by HBase, Spanner. Adapts to data size naturally but splitting/merging adds operational complexity.
+**Dynamic splitting**: Start with one partition per range. When a partition exceeds a size threshold, split it in two. When a partition shrinks, merge adjacent ones. Used by HBase, Spanner, CockroachDB. Adapts to data size naturally but splitting/merging adds operational complexity.
 
 **Consistent hashing with virtual nodes**: Each physical node owns many "virtual nodes" (positions on the hash ring). Adding a physical node means redistributing some virtual nodes from existing nodes. Only a small fraction of data moves. See [[01-Phase-1-Foundations__Module-06-Caching-Storage-CDN__Consistent_Hashing]].
 

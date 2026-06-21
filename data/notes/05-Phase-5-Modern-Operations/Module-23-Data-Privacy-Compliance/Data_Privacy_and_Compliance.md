@@ -36,7 +36,7 @@ Deleting a user's data in a distributed system is far harder than a single `DELE
 
 **Event sourcing challenge**: Event logs are immutable by design. If a `UserRegistered` event contains a name and email, you cannot delete it without breaking the log's integrity. Solution: crypto-shredding at the aggregate level — all events for aggregate `user_123` are encrypted under `user_123`'s key. Destroying the key "erases" the user from the entire event history without modifying immutable log entries. A side note in the event schema documents that some aggregates may have had their keys destroyed.
 
-**Backup rotation alignment**: GDPR requires deletion within 30 days. If your database backups are retained for 90 days, you're out of compliance unless you use crypto-shredding (so backup snapshots become meaningless for the deleted user). Align your backup retention policy to your RTBF SLA, or use key-based encryption for backups.
+**Backup rotation alignment**: GDPR requires deletion without undue delay — within one month, extendable for complex requests (Art. 12(3)). If your database backups are retained for 90 days, you're out of compliance unless you use crypto-shredding (so backup snapshots become meaningless for the deleted user). Align your backup retention policy to your RTBF SLA, or use key-based encryption for backups.
 
 **Tombstones and Soft Deletes**: Use tombstones to mark data as deleted in LSM-trees or event streams. Background compaction eventually physically removes the data. This is appropriate for systems where crypto-shredding is not feasible, but you must ensure compaction runs before the RTBF SLA deadline.
 
@@ -73,9 +73,9 @@ The three major frameworks have different scopes and impose different technical 
 
 | Dimension | GDPR (EU) | HIPAA (US Health) | CCPA/CPRA (California) |
 |-----------|-----------|-------------------|------------------------|
-| Scope | All EU residents' data, any processor worldwide | PHI (Protected Health Information) in the US | California residents' data |
-| Max fine | 4% of global annual turnover | Up to $1.9M/year per violation category | $7,500/intentional violation |
-| Right to erasure | Yes — 30-day SLA (Article 17) | Limited — 6-year retention required for PHI | Yes — 45-day SLA |
+| Scope | Data of people in the EU (presence-based, Art. 3), any processor worldwide | PHI (Protected Health Information) in the US | California residents' data |
+| Max fine | 4% of global annual turnover | ~$2M/year per violation category (inflation-adjusted) | $7,500/intentional violation |
+| Right to erasure | Yes — one-month SLA, extendable (Articles 17, 12(3)) | Limited — 6-year retention applies to compliance documentation; record retention is state law | Yes — 45-day SLA |
 | Key technical requirement | Privacy by design (Article 25), DPIA for high-risk processing | Encryption of PHI at rest and in transit, audit logs, BAAs with vendors | Right to opt out of sale/sharing, right to know, data portability |
 | Consent requirement | Explicit, granular, withdrawable | Authorization required for most disclosures | Opt-out model (not opt-in for most uses) |
 
@@ -87,7 +87,7 @@ A less obvious privacy risk: exact aggregate counts leak information about indiv
 
 **Differential privacy** adds calibrated random noise to aggregate query results, providing a mathematical privacy guarantee (ε-differential privacy) that no single individual's presence or absence in the dataset changes the query result by more than a bounded factor. Apple uses this for keyboard usage analytics; Google uses it in RAPPOR for Chrome statistics.
 
-**Practical implementation**: For in-product analytics, set minimum cohort size thresholds (suppress results for groups < 5 users) and consider adding Laplace noise to count queries. For ML model training, use DP-SGD (differentially private stochastic gradient descent) to prevent the model from memorizing individual training examples. Libraries: Google's dp-accounting, Apple's swift-dp-synthetic-data, OpenDP.
+**Practical implementation**: For in-product analytics, set minimum cohort size thresholds (suppress results for groups < 5 users) and consider adding Laplace noise to count queries. For ML model training, use DP-SGD (differentially private stochastic gradient descent) to prevent the model from memorizing individual training examples. Libraries: Google's differential-privacy / dp-accounting, OpenDP, PyTorch Opacus.
 
 **Trade-off**: Higher privacy (lower ε) requires more noise, reducing statistical accuracy. For large cohorts (millions of users), the noise is imperceptible. For small cohorts, DP results may be too noisy to be useful — at which point, the privacy-preserving decision is to not publish the result at all.
 
@@ -123,7 +123,7 @@ graph TD
 ```
 
 ## Back-of-the-Envelope Heuristics
-- **GDPR Deletion SLA**: Typically 30 days. Your "garbage collection" processes must run at least weekly.
+- **GDPR Deletion SLA**: One month (extendable for complex requests). Your "garbage collection" processes must run at least weekly.
 - **Tokenization Latency**: A call to a PII vault adds **10–50ms**. Batch de-tokenization is essential for reporting.
 - **Audit Log Volume**: Audit logs can be **2x-5x larger** than your actual data if every read is tracked. Use sampling for non-sensitive data.
 

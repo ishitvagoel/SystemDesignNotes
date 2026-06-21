@@ -136,7 +136,7 @@ graph TD
     - 99.9% = 43.2 minutes downtime/month.
     - 99.99% = 4.3 minutes downtime/month.
 - **Latency SLIs**: Always use percentiles (**p50, p90, p99**), never averages. A p99 of 1s means 1 in 100 users is having a terrible experience, even if the average is 50ms.
-- **Burn Rate**: A 14.4x burn rate means you will consume your **entire monthly error budget in 48 hours**. This should trigger an immediate critical alert.
+- **Burn Rate**: A 14.4x burn rate means you will consume your **entire monthly error budget in ~50 hours** (720h / 14.4). This should trigger an immediate critical alert.
 - **Budget Buffer**: Set your internal SLOs **10x stricter** than your external SLA (e.g., 99.9% internal for a 99% SLA) to give yourself room to react before paying penalties.
 
 ## Real-World Case Studies

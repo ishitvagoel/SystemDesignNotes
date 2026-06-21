@@ -134,7 +134,7 @@ graph TD
 
 **Service mesh overhead**: Envoy sidecars add ~10ms p99 latency and ~50MB memory per pod. At 1000 pods, that's 50GB of memory just for sidecars. Solution: evaluate whether you actually need a mesh (most teams under 50 services don't), and consider ambient mesh (Istio ambient) which removes sidecars.
 
-**Upgrade failures**: K8s releases quarterly. Skipping versions is not supported. An upgrade can break CRDs, admission webhooks, or deprecated APIs. Solution: maintain a staging cluster that mirrors production, test upgrades there first, and use tools like Pluto to detect deprecated APIs.
+**Upgrade failures**: K8s releases three times a year. Skipping versions is not supported. An upgrade can break CRDs, admission webhooks, or deprecated APIs. Solution: maintain a staging cluster that mirrors production, test upgrades there first, and use tools like Pluto to detect deprecated APIs.
 
 **Platform engineering pitfall — building too much**: Platform teams can spend years building an IDP that product teams don't actually want. Solution: start with the highest-pain developer workflows (deploy, observe, rollback), build the minimal platform, iterate based on actual developer feedback, and treat the platform as an internal product.
 

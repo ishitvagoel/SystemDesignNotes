@@ -51,7 +51,7 @@ Ask three questions:
 
 **Traditional OLTP (e-commerce, SaaS, CRUD apps)**: B-tree (Postgres, MySQL/InnoDB). Read-heavy with indexes. Predictable latency matters. This is the default choice for most applications, and the right one.
 
-**Time-series data (metrics, IoT, event logs)**: LSM-tree (TimescaleDB/Postgres for moderate scale, InfluxDB, or Cassandra/ScyllaDB for large scale). High write throughput, sequential timestamps, range scans by time window. LSM's sequential write pattern aligns perfectly.
+**Time-series data (metrics, IoT, event logs)**: LSM-tree (InfluxDB, or Cassandra/ScyllaDB for large scale), or time-partitioned Postgres via TimescaleDB (B-tree based) for moderate scale. High write throughput, sequential timestamps, range scans by time window. LSM's sequential write pattern aligns perfectly.
 
 **Key-value store (caching, session storage)**: Either. For pure key-value with point lookups, B-tree (e.g., BoltDB) is predictable. For high-throughput writes, LSM (RocksDB) is faster. Redis avoids the question entirely (in-memory).
 
@@ -94,7 +94,7 @@ Signals that you might need to re-evaluate:
 | Engine Type | Write Pattern | Read Pattern | Space Efficiency | Best For |
 |-------------|--------------|-------------|-----------------|----------|
 | B-Tree (InnoDB, PostgreSQL) | Moderate — random I/O, in-place updates | Excellent — O(log N) point lookups | Good — some fragmentation | OLTP, mixed read/write, range queries |
-| LSM-Tree (RocksDB, LevelDB, Cassandra) | Excellent — sequential writes, batch | Good for recent data, compaction tax for old | Lower — write amplification from compaction | Write-heavy, time-series, append-mostly |
+| LSM-Tree (RocksDB, LevelDB, Cassandra) | Excellent — sequential writes, batch | Good for recent data, compaction tax for old | Good — better compression, but transient space amplification during compaction | Write-heavy, time-series, append-mostly |
 | B-Tree + column store (Parquet, ClickHouse) | Batch-oriented | Excellent for analytics, poor for point lookups | Excellent — columnar compression | OLAP, analytics, data warehousing |
 | In-memory (Redis, Memcached, VoltDB) | Excellent — no disk I/O | Excellent — sub-millisecond | Poor — RAM is expensive | Caching, session store, real-time leaderboards |
 | Heap + WAL (PostgreSQL heap) | Good — append WAL, update heap | Requires indexing, heap can bloat | Moderate — dead tuples accumulate | General-purpose with proper VACUUM tuning |
@@ -109,7 +109,7 @@ Signals that you might need to re-evaluate:
 
 **Write amplification surprise in LSM-trees**: A single application write may be rewritten 10-30x due to compaction (write amplification). On SSDs with limited write endurance, this can shorten disk lifespan significantly. Teams discover this only when SSDs start reporting wear-out warnings. Solution: monitor actual disk write throughput (not just application writes), tune compaction to reduce write amplification, consider tiered compaction for write-heavy workloads.
 
-**Engine mismatch for workload evolution**: A system designed for write-heavy ingestion (LSM-tree) gradually shifts to read-heavy analytics. The compaction overhead that was acceptable during writes becomes a bottleneck for reads. Or a B-tree system designed for OLTP gets repurposed for bulk loading. Solution: re-evaluate engine choice as workload changes, consider migrating to a different engine (PostgreSQL supports this via `pg_migrator`, RocksDB options can be tuned).
+**Engine mismatch for workload evolution**: A system designed for write-heavy ingestion (LSM-tree) gradually shifts to read-heavy analytics. The compaction overhead that was acceptable during writes becomes a bottleneck for reads. Or a B-tree system designed for OLTP gets repurposed for bulk loading. Solution: re-evaluate engine choice as workload changes, consider migrating to a different engine (typically via logical replication or dump/restore — engines rarely support in-place conversion; RocksDB options can be tuned).
 
 **In-memory engine data loss**: An in-memory engine (Redis without persistence, Memcached) loses all data on crash or restart. Teams forget to enable persistence or configure it incorrectly (RDB snapshots too infrequent, AOF not fsynced). Solution: always enable AOF with `appendfsync everysec` for Redis if data matters, or treat in-memory stores as caches only — never the single source of truth.
 

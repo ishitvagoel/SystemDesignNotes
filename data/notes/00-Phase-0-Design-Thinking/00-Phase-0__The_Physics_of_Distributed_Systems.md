@@ -168,7 +168,7 @@ This is not a bug — it is a fundamental property of information moving at fini
 
 ## Canonical Sources
 
-- Vogels, "Eventually Consistent" (2009, ACM Queue) — the formal statement of the wave propagation model
+- Vogels, "Eventually Consistent" (2008, ACM Queue; revised 2009 in CACM) — the formal statement of the wave propagation model
 - Brewer, "CAP Twelve Years Later" (2012, IEEE Computer) — nuancing beyond the simple "pick two"
 - Kleppmann, *Designing Data-Intensive Applications*, Ch. 5 (Replication) and Ch. 9 (Consistency and Consensus)
 - Gilbert & Lynch, "Brewer's Conjecture and the Feasibility of Consistent, Available, Partition-Tolerant Web Services" (2002)

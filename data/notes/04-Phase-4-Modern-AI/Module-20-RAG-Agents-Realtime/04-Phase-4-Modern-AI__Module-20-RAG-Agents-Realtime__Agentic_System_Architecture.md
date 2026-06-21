@@ -154,7 +154,7 @@ graph TD
 
 ## Resilience Patterns for Agent Tool Calls
 
-Agentic tool calls are distributed system calls — they fail. Unlike LLM reasoning (which is deterministic given the same input), tool calls hit live APIs, databases, and services that are subject to transient failures, rate limits, and timeouts. Agents need the same resilience patterns as microservices.
+Agentic tool calls are distributed system calls — they fail. Unlike LLM reasoning (which fails by producing bad output, not by transient errors), tool calls hit live APIs, databases, and services that are subject to transient failures, rate limits, and timeouts. Agents need the same resilience patterns as microservices.
 
 ### Tool Call Idempotency
 

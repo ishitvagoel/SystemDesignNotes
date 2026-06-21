@@ -99,7 +99,7 @@ The WAL has become a versatile building block:
 
 - **Replication lag from WAL shipping**: Replicas that can't keep up with WAL production fall behind. If WAL segments are archived and recycled before the replica reads them, the replica becomes unrecoverable and must be rebuilt from scratch. Mitigation: WAL archival, replication slot management (Postgres replication slots prevent WAL recycling before a replica consumes it).
 
-- **Recovery time explosion**: After a crash, the database replays all WAL since the last checkpoint. If checkpoints are infrequent and write volume is high, recovery can take tens of minutes. During this time, the database is unavailable. Mitigation: frequent checkpoints, monitor `recovery_target_timeline`, consider maxing out `checkpoint_completion_target`.
+- **Recovery time explosion**: After a crash, the database replays all WAL since the last checkpoint. If checkpoints are infrequent and write volume is high, recovery can take tens of minutes. During this time, the database is unavailable. Mitigation: frequent checkpoints — in Postgres, tune `checkpoint_timeout` and `max_wal_size` to bound how much WAL replay can accumulate.
 
 ## Architecture Diagram
 
@@ -132,7 +132,7 @@ sequenceDiagram
 ## Real-World Case Studies
 
 - **PostgreSQL (WAL Shipping)**: Postgres uses the WAL as the primary mechanism for **Streaming Replication**. The primary node streams the WAL bytes directly to the replica, which "replays" them in real-time. This ensures the replica stays within milliseconds of the primary without any additional application logic.
-- **MySQL (Redo vs Binlog)**: InnoDB has its own "Redo Log" (WAL) for internal crash recovery. MySQL also has a "Binary Log" (Binlog) for replication. This means every write is actually recorded **twice** (once in Redo, once in Binlog), a phenomenon known as "Double-Write Buffering" that ensures data integrity at the cost of some performance.
+- **MySQL (Redo vs Binlog)**: InnoDB has its own "Redo Log" (WAL) for internal crash recovery. MySQL also has a "Binary Log" (Binlog) for replication. This means every write is actually recorded **twice** (once in Redo, once in Binlog), kept consistent by an internal two-phase commit that ensures data integrity at the cost of some performance.
 - **Apache Kafka (The WAL as a Service)**: Kafka is essentially a distributed WAL turned into a product. It takes the "append-only log" concept of a database and makes it the primary interface, allowing multiple consumers to "replay" the log independently at their own pace.
 
 ## Connections

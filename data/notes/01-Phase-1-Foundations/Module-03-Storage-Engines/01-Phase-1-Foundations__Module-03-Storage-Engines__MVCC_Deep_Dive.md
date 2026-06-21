@@ -61,7 +61,7 @@ Spanner uses MVCC with **true timestamps** from TrueTime (GPS + atomic clock-syn
 | Version storage | In heap table (inline) | Undo log (separate) | Versioned storage with timestamps |
 | Bloat / cleanup | VACUUM required | Purge thread (automatic) | Automatic (version retention window) |
 | Old version read cost | Direct (versions are in the heap) | Chain walk (undo log traversal) | Efficient (timestamped versions) |
-| Transaction ID size | 32-bit (wraparound risk) | 64-bit | Timestamps (no wraparound) |
+| Transaction ID size | 32-bit (wraparound risk) | 48-bit (6-byte) | Timestamps (no wraparound) |
 | Max isolation level | Serializable (SSI) | Repeatable Read (default), Serializable (via locking) | External consistency (linearizable) |
 | Distribution | Single-node (logical replication for multi-node) | Single-node (Group Replication for multi-node) | Globally distributed (native) |
 
@@ -85,7 +85,7 @@ MVCC enables multiple isolation levels by controlling *which snapshot* a transac
 | MySQL/InnoDB (undo log + in-place) | Lower — only changed fields in undo log | Reconstructs old versions on read (undo traversal) | Moderate — purge thread cleans undo | Write-heavy OLTP, mixed read/write workloads |
 | Oracle (undo tablespace) | Similar to InnoDB | Snapshot too old errors under extreme load | Moderate | Enterprise OLTP, long-running reporting |
 | CockroachDB/Spanner (intent + MVCC) | Low — intent keys + versioned KV | Good — timestamp-based reads | Distributed GC, more complex | Globally distributed OLTP |
-| Append-only (Datomic, LMDB) | None — never overwrites | Excellent — no reconstruction needed | Storage grows forever without compaction | Audit logs, event sourcing, immutable data |
+| Append-only / copy-on-write (Datomic, LMDB) | None — never overwrites in place | Excellent — no reconstruction needed | Datomic's history grows without compaction; LMDB recycles old pages via a free list | Audit logs, event sourcing, immutable data |
 
 **The GC problem is universal**: Every MVCC implementation accumulates old versions. The question is where the garbage lives (heap tuples, undo logs, version chains) and how it's cleaned up. Long-running transactions are the enemy of every approach — they pin old versions, preventing cleanup, which eventually degrades performance for everyone.
 
